@@ -32,7 +32,7 @@ def main():
 
     finally:
         os.chdir(original_dir)
-        shutil.rmtree(tmp_dir)
+        shutil.rmtree(tmp_dir, ignore_errors=True)
         print(f"[CI local] Cleaned up sandbox: {tmp_dir}")
 
     print("[CI local] OK: S1+S2 PASS")
