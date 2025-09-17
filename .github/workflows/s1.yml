@@ -1,10 +1,14 @@
-name: S1
-on: [push, pull_request]
-jobs:
-  s1:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: {python-version: '3.11'}
-      - run: python3 spec_pack/tools/run_s1.py
+`yaml
+  name: S1
+  on: [push, pull_request]
+  jobs:
+    s1:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - uses: actions/setup-python@v5
+          with: {python-version: '3.11'}
+        - name: Install dependencies
+          run: pip install -r spec_pack/requirements.txt
+        - run: python3 spec_pack/tools/run_s1.py
+  `
