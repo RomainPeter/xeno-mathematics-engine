@@ -1,78 +1,100 @@
-`yaml
-  name: Proof CI (A2H+S1+S2 strict)
+name: Proof Nightly
+on:
+schedule:
+cron: "0 2 * * *"   # 02:00 UTC quotidien
+workflow_dispatch:
+concurrency:
+group: proof-nightly
+cancel-in-progress: true
+jobs:
+nightly:
+runs-on: ubuntu-latest
+steps:
+name: Checkout repository
+uses: actions/checkout@v4
 
-  on:
-    pull_request:
-      branches:
-        - "main"
-    push:
-      branches:
-        - "main"
+name: Setup Python
+uses: actions/setup-python@v5
+with:
+python-version: "3.11"
 
-  concurrency:
-    group: proof-ci-${{ github.ref }}
-    cancel-in-progress: true
+name: Install dependencies
+run: |
+if [ -f spec_pack/requirements.txt ]; then
+pip install -r spec_pack/requirements.txt
+else
+pip install --quiet pyyaml
+fi
 
-  jobs:
-    proof:
-      runs-on: ubuntu-latest
-      permissions:
-        contents: read
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@v4
+name: A2H check
+run: python3 spec_pack/tools/a2h_compile.py --check
 
-        - name: Setup Python
-          uses: actions/setup-python@v5
-          with:
-            python-version: "3.11"
+name: S1 checks
+run: python3 spec_pack/tools/run_s1.py
 
-        - name: Install dependencies
-          run: pip install -r spec_pack/requirements.txt
+name: S2 inject
+run: python3 spec_pack/tools/s2_contradiction.py
 
-        - name: A2H check (Ambition→Hostility consistency)
-          run: python3 spec_pack/tools/a2h_compile.py --check
+name: S2 check
+run: python3 spec_pack/tools/s2_check.py
 
-        - name: S1 checks (minimality, trace bound, provenance)
-          run: python3 spec_pack/tools/run_s1.py
+name: Compile A2H (emit)
+run: python3 spec_pack/tools/a2h_compile.py --emit
 
-        - name: S2 inject (contradiction)
-          run: python3 spec_pack/tools/s2_contradiction.py
+name: Merklize journal
+run: python3 spec_pack/tools/merkle_hasher.py --in spec_pack/samples/journal.ndjson --out spec_pack/samples/journal.ndjson
 
-        - name: S2 check (retro-rule, contested, S1 still PASS)
-          run: python3 spec_pack/tools/s2_check.py
+name: Generate metrics and trace
+run: python3 spec_pack/tools/gen_metrics.py
 
-    a2h-report:
-      if: github.event_name == 'push'
-      needs: proof
-      runs-on: ubuntu-latest
-      permissions:
-        contents: read
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@v4
+name: Generate nightly summary
+run: |
+python3 - <<'PY'
+import json, os
+repo=os.environ.get('GITHUB_REPOSITORY','')
+run_id=os.environ.get('GITHUB_RUN_ID','')
+run_url=f"https://github.com/{repo}/actions/runs/{run_id}"
+def jload(p, default=None):
+try:
+with open(p,'r',encoding='utf-8') as f: return json.load(f)
+except Exception: return default
+def ndjson_last(p):
+try:
+with open(p,'r',encoding='utf-8') as f:
+lines=[l for l in f if l.strip()]
+return json.loads(lines[-1]) if lines else {}
+except Exception: return {}
+met=jload('spec_pack/metrics.json', {}) or {}
+last=ndjson_last('spec_pack/samples/journal.ndjson') or {}
+merkle=last.get('merkle_root_day','')
+s1=str(met.get('s1_pass', False))
+counts=met.get('counts', {})
+trace=met.get('trace', {})
+k_bound=met.get('k_bound', 10)
+report='spec_pack/compiled/hostility_report.md'
+lines=[]
+lines.append(f"Proof Nightly — run {run_id}")
+lines.append("")
+lines.append(f"- S1 pass: {s1}")
+lines.append(f"- Decisions: {counts.get('decisions',0)}, Evidence: {counts.get('evidence',0)}, Journal entries: {counts.get('journal_entries',0)}")
+lines.append(f"- Trace avg/max/min: {trace.get('avg_length',0)}/{trace.get('max_length',0)}/{trace.get('min_length',0)} (≤K={k_bound}? {trace.get('within_k', True)})")
+lines.append(f"- Merkle root (day): {merkle}")
+if os.path.exists(report):
+lines.append(f"- Hostility report: {report}")
+lines.append(f"- Run URL: {run_url}")
+out=os.environ.get('GITHUB_STEP_SUMMARY')
+with open(out,'w',encoding='utf-8') as f: f.write("\n".join(lines)+"\n")
+print("Summary written.")
+PY
 
-        - name: Setup Python
-          uses: actions/setup-python@v5
-          with:
-            python-version: "3.11"
-
-        - name: Install dependencies
-          run: pip install -r spec_pack/requirements.txt
-
-        - name: Compile A2H (emit artifacts)
-          run: python3 spec_pack/tools/a2h_compile.py --emit
-
-        - name: Merklize journal
-          run: python3 spec_pack/tools/merkle_hasher.py --in spec_pack/samples/journal.ndjson --out
-  spec_pack/samples/journal.ndjson
-
-        - name: Upload A2H report artifacts
-          uses: actions/upload-artifact@v4
-          with:
-            name: a2h-report-${{ github.sha }}
-            path: |
-              spec_pack/compiled/**
-              spec_pack/samples/journal.ndjson
-            if-no-files-found: warn
-  `
+name: Upload artifacts
+uses: actions/upload-artifact@v4
+with:
+name: proof-nightly-${{ github.run_id }}
+path: |
+spec_pack/compiled/**
+spec_pack/metrics.json
+spec_pack/trace.graph.json
+spec_pack/samples/journal.ndjson
+if-no-files-found: warn
+retention-days: 14
