@@ -1,36 +1,20 @@
 name: S1
 on:
 push:
-branches: [ "main" ]
+branches:
+main
 pull_request:
-branches: [ "main" ]
-concurrency:
-group: s1-${{ github.ref }}
-cancel-in-progress: true
+branches:
+main
 jobs:
 s1:
 runs-on: ubuntu-latest
-permissions:
-contents: read
 steps:
 name: Checkout
 uses: actions/checkout@v4
-
 name: Setup Python
 uses: actions/setup-python@v5
 with:
-python-version: "3.11"
-
-name: Install dependencies (optional)
-run: |
-if [ -f spec_pack/requirements.txt ]; then
-pip install -r spec_pack/requirements.txt
-fi
-
-name: Run S1 checks
+python-version: '3.11'
+name: Run S1
 run: python3 spec_pack/tools/run_s1.py
-
-Ensuite:
-git add .github/workflows/s1.yml
-git commit -m "fix: S1 workflow YAML"
-git push
