@@ -1,0 +1,89 @@
+{
+  "edges": [
+    {
+      "from": "G-1",
+      "to": "O-1",
+      "rule": "minimality→obligation"
+    },
+    {
+      "from": "G-1",
+      "to": "I-6",
+      "rule": "minimality→invariant"
+    },
+    {
+      "from": "G-2",
+      "to": "O-2",
+      "rule": "journal→obligation"
+    },
+    {
+      "from": "G-2",
+      "to": "I-7",
+      "rule": "journal→invariant"
+    },
+    {
+      "from": "G-3",
+      "to": "O-3",
+      "rule": "audit24h→obligation"
+    },
+    {
+      "from": "G-4",
+      "to": "O-4",
+      "rule": "trace_bound→obligation"
+    },
+    {
+      "from": "G-4",
+      "to": "I-5",
+      "rule": "trace_bound→invariant"
+    },
+    {
+      "from": "G-5",
+      "to": "I-1",
+      "rule": "monotonicity→invariant"
+    },
+    {
+      "from": "C-3",
+      "to": "O-5",
+      "rule": "provenance→obligation"
+    },
+    {
+      "from": "C-3",
+      "to": "I-2",
+      "rule": "provenance→invariant"
+    },
+    {
+      "from": "C-4",
+      "to": "O-6",
+      "rule": "determinism→obligation"
+    },
+    {
+      "from": "C-4",
+      "to": "I-3",
+      "rule": "determinism→invariant"
+    },
+    {
+      "from": "C-5",
+      "to": "O-7",
+      "rule": "air_gapped→obligation"
+    },
+    {
+      "from": "NN-2",
+      "to": "I-4",
+      "rule": "reversibility→invariant"
+    },
+    {
+      "from": "NN-3",
+      "to": "O-12",
+      "rule": "no_blackbox→obligation"
+    },
+    {
+      "from": "TA-1",
+      "to": "O-8",
+      "rule": "malicious_auditor→deny_with_proof"
+    },
+    {
+      "from": "TA-2",
+      "to": "O-10",
+      "rule": "data_poisoner→retro_implication"
+    }
+  ]
+}
