@@ -1,0 +1,59 @@
+name: Proof CI (A2H+S1+S2 strict)
+on:
+  pull_request:
+    branches: [ "main" ]
+  push:
+    branches: [ "main" ]
+concurrency:
+  group: proof-ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps
+        run: pip install --quiet pyyaml
+      - name: A2H check (Ambition→Hostility consistency)
+        run: python3 spec_pack/tools/a2h_compile.py --check
+      - name: S1 (minimality, trace bound, provenance)
+        run: python3 spec_pack/tools/run_s1.py
+      - name: S2 inject (contradiction)
+        run: python3 spec_pack/tools/s2_contradiction.py
+      - name: S2 check (retro-rule, contested, S1 still PASS)
+        run: python3 spec_pack/tools/s2_check.py
+
+  a2h-report:
+    if: github.event_name == 'push'
+    needs: proof
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps
+        run: pip install --quiet pyyaml
+      - name: Compile A2H (emit artifacts)
+        run: python3 spec_pack/tools/a2h_compile.py --emit
+      - name: Merklize journal
+        run: python3 spec_pack/tools/merkle_hasher.py --in spec_pack/samples/journal.ndjson --out spec_pack/samples/journal.ndjson
+      - name: Upload A2H report artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: a2h-report-${{ github.sha }}
+          path: |
+            spec_pack/compiled/**
+            spec_pack/samples/journal.ndjson
+          if-no-files-found: warn

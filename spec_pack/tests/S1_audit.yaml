@@ -1,42 +1,24 @@
 suite: "S1 — Audit bénin"
 tests:
   - id: H-S1-01
-    name: "Rebuild 10 décisions en < 24h hors réseau"
-    steps:
-      - "Sélectionner 10 décisions aléatoires"
-      - "Isoler environnement (air-gapped)"
-      - "Rejouer via journal_spec et evidence.schema"
+    name: "Rebuild 10 décisions, minimalité + K=10 + provenance"
     acceptance:
-      - "rebuild_time_hours <= 24"
-      - "v_trace_bound==pass"
-      - "v_provenance==pass"
-    obligations: ["O-2","O-3","O-4","O-5"]
+      - "minimality_pass == true"
+      - "trace_pass == true"
+      - "provenance_pass == true"
   - id: H-S1-02
     name: "Déterminisme opérateurs"
-    steps:
-      - "Exécuter 100 fois la même requête"
     acceptance:
-      - "stdev_output==0"
-    obligations: ["O-6"]
+      - "determinism_pass == true"
   - id: H-S1-03
-    name: "Traçabilité bornée"
-    steps:
-      - "Mesurer longueur de chaîne sur 20 sorties"
+    name: "Couverture conformité ≥ 90% (gaps listés)"
     acceptance:
-      - "trace_length<=10"
-    obligations: ["O-4"]
+      - "compliance_coverage >= 0.90"
   - id: H-S1-04
-    name: "Couverture conformité"
-    steps:
-      - "Calculer coverage EU/NIST/ISO sur obligations.yaml"
+    name: "Journal merklisé, intégrité"
     acceptance:
-      - "coverage_pct >= 90%"
-      - "gaps listés"
-    obligations: ["O-9"]
+      - "merkle_ok == true"
   - id: H-S1-05
-    name: "Réduction coût d’audit"
-    steps:
-      - "Comparer coût temps-homme baseline vs système"
+    name: "Audit readiness hors réseau (air-gapped option)"
     acceptance:
-      - "audit_cost_delta_pct <= -30%"
-    obligations: ["O-11"]
+      - "rebuild_offline_hours <= 24"

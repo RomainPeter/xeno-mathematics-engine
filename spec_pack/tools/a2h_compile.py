@@ -26,7 +26,7 @@ def ensure_dirs():
 def ids_from_yaml(path, prefix):
     if not os.path.exists(path): return set()
     ids=set()
-    pat = re.compile(rf"\b{prefix}-[0-9]{{2,3}}\b")
+    pat = re.compile(rf"\b{prefix}-[A-Z0-9-]+\b")
     with open(path,"r",encoding="utf-8") as f:
         for line in f:
             ids.update(pat.findall(line))

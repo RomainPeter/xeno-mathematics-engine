@@ -3,9 +3,9 @@ Ambition: Symbiotic AI — Mémoire probatoire (id ANF-001, v0.2)
 Mission: Fournir une mémoire probatoire auditable (minimalité, traçabilité bornée) pour IA régulée.
 
 Required:
-- Obligations: ['O-1', 'O-2', 'O-4', 'O-5'] → missing vs manual: ['O-1', 'O-2', 'O-4', 'O-5']
-- Invariants:  ['I-1', 'I-2', 'I-3', 'I-4', 'I-5', 'I-6', 'I-7'] → missing vs manual: ['I-1', 'I-2', 'I-3', 'I-4', 'I-5', 'I-6', 'I-7']
-- Tests:       S1=False (need ['H-S1-01']), S2=False (need ['H-S2-01'])
+- Obligations: ['O-1', 'O-2', 'O-4', 'O-5'] → missing vs manual: none
+- Invariants:  ['I-1', 'I-2', 'I-3', 'I-4', 'I-5', 'I-6', 'I-7'] → missing vs manual: none
+- Tests:       S1=True (need ['H-S1-01']), S2=True (need ['H-S2-01'])
 
 Optional (not required to pass):
 - Obligations: ['O-10', 'O-12', 'O-3', 'O-6', 'O-7', 'O-8']

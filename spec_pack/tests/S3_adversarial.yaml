@@ -1,40 +1,22 @@
-suite: "S3 — Adversarial/Enquête"
+suite: "S3 — Adversarial / Enquête"
 tests:
   - id: H-S3-01
-    name: "Data poisoning sur attribut critique"
-    steps:
-      - "Introduire attribut contradictoire"
-      - "Détecter conflit, quarantainer, marquer 'contested'"
+    name: "Data poisoning sur attribut critique → quarantaine + chaîne de preuve"
     acceptance:
-      - "no_unflagged_impact==true"
-      - "proof_of_integrity==true"
-    obligations: ["O-5"]
+      - "poisoning_contained == true"
   - id: H-S3-02
-    name: "Minimalité sous stress"
-    steps:
-      - "Requête complexe avec 50+ candidats"
-      - "Vérifier hitting-set minimal"
+    name: "Subpoena: gel d’état + export chaîne de preuve reproductible"
     acceptance:
-      - "min_hitting_set==true"
-    obligations: ["O-1"]
+      - "frozen_state_exported == true"
   - id: H-S3-03
-    name: "Air-gapped parity"
-    steps:
-      - "Comparer résultats online vs air-gapped"
+    name: "Malicious auditor: deny-with-proof sur demandes hors-scope"
     acceptance:
-      - "feature_parity_airgapped==true"
-    obligations: ["O-7"]
+      - "deny_with_proof == true"
   - id: H-S3-04
-    name: "Deny-with-proof"
-    steps:
-      - "Soumettre requêtes hors-scope contradictoires"
+    name: "Non-réductibilité: homomorphism test vers RAG vectoriel échoue"
     acceptance:
-      - "deny_with_proof_rate==100%"
-    obligations: ["O-8"]
+      - "non_reducibility_preserved == true"
   - id: H-S3-05
-    name: "Black-box guard"
-    steps:
-      - "Activer feature non justifiable sur chemin critique"
+    name: "Incident sévère → rétro-implication génère nouvelle règle stable"
     acceptance:
-      - "blackbox_usage_on_critical==0"
-    obligations: ["O-12"]
+      - "new_rule_stable == true"

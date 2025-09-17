@@ -1,84 +1,78 @@
 - id: O-1
-  text: "Calculer et livrer pour chaque réponse un ensemble d’évidence minimal (aucun élément redondant)."
-  metric: "min_hitting_set == true"
-  test_ids: ["H-S1-01", "H-S3-02"]
-  severity: "high"
+  text: "Minimalité de l’évidence (aucun item redondant)"
+  metric: "|E| minimal"
+  tests: ["H-S1-01"]
   source: ["G-1"]
-  derivation_path: ["ANF.guarantees.G-1"]
+  verifiers: ["v_minimality"]
+
 - id: O-2
-  text: "Générer un journal de preuve horodaté, append-only, pour chaque sortie."
-  metric: "journal_entries >= 1 && append_only==true"
-  test_ids: ["H-S1-01", "H-S2-02"]
-  severity: "high"
-  source: ["G-2", "NN-1"]
-  derivation_path: ["ANF.guarantees.G-2", "ANF.non_negotiables.NN-1"]
+  text: "Journal de preuve complet, append-only, horodaté"
+  metric: "trace_steps <= K"
+  tests: ["H-S1-01","H-S1-04"]
+  source: ["G-2"]
+  verifiers: ["v_trace_bound","v_provenance"]
+
 - id: O-3
-  text: "Reconstruction hors réseau de 100% des décisions demandées en < 24h."
-  metric: "rebuild_time_hours <= 24"
-  test_ids: ["H-S1-01"]
-  severity: "high"
-  source: ["G-3", "C-5"]
-  derivation_path: ["ANF.guarantees.G-3", "ANF.constraints.C-5"]
+  text: "Audit readiness 24h (reconstruction hors réseau)"
+  metric: "T_rebuild <= 24h"
+  tests: ["H-S1-05"]
+  source: ["G-3"]
+  verifiers: ["v_trace_bound","v_provenance"]
+
 - id: O-4
-  text: "Chaîne de justification ≤ K=10 liens pour toute sortie."
-  metric: "trace_length <= 10"
-  test_ids: ["H-S1-03"]
-  severity: "medium"
+  text: "Borne de traçabilité K"
+  metric: "K = 10"
+  tests: ["H-S1-01"]
   source: ["G-4"]
-  derivation_path: ["ANF.guarantees.G-4"]
+  verifiers: ["v_trace_bound"]
+
 - id: O-5
-  text: "Implémenter un contrôle de provenance content-addressed pour chaque EvidenceItem."
-  metric: "sha256_present==true"
-  test_ids: ["H-S2-02", "H-S3-01"]
-  severity: "high"
-  source: ["NN-1", "C-3"]
-  derivation_path: ["ANF.non_negotiables.NN-1", "ANF.constraints.C-3"]
+  text: "Provenance requise pour toute pièce d’évidence"
+  metric: "provenance_complete = true"
+  tests: ["H-S1-01"]
+  source: ["C-3"]
+  verifiers: ["v_provenance"]
+
 - id: O-6
-  text: "Supporter exécution déterministe des opérateurs de requête."
-  metric: "stdev_output==0 over 100 runs"
-  test_ids: ["H-S1-02"]
-  severity: "high"
+  text: "Déterminisme des opérateurs de requête"
+  metric: "variance_outputs = 0"
+  tests: ["H-S1-02"]
   source: ["C-4"]
-  derivation_path: ["ANF.constraints.C-4"]
+  verifiers: ["v_determinism"]
+
 - id: O-7
-  text: "Assurer une option d’exécution air-gapped sans perte de couverture."
-  metric: "feature_parity_airgapped==true"
-  test_ids: ["H-S3-03"]
-  severity: "medium"
+  text: "Option air-gapped disponible pour MVP"
+  metric: "air_gapped_option = true"
+  tests: ["H-S1-05"]
   source: ["C-5"]
-  derivation_path: ["ANF.constraints.C-5"]
+
 - id: O-8
-  text: "Mettre en échec les requêtes hors-scope par 'deny-with-proof'."
-  metric: "deny_with_proof_rate==100%"
-  test_ids: ["H-S3-04"]
-  severity: "medium"
+  text: "Deny-with-proof pour hors-scope / demandes contradictoires"
+  metric: "deny_with_proof_enabled = true"
+  tests: ["H-S3-03"]
   source: ["TA-1"]
-  derivation_path: ["ANF.threat_actors.TA-1"]
+
 - id: O-9
-  text: "Cartographier O* vers EU AI Act (Art.9/10/12/13/15), NIST AI RMF, ISO/IEC 42001 avec gaps explicites."
-  metric: "coverage_pct >= 90%"
-  test_ids: ["H-S1-04"]
-  severity: "medium"
-  source: ["STD-1", "STD-2", "STD-3"]
-  derivation_path: ["ANF.standards"]
+  text: "Cartographie conformité maintenue, couverture >= 90% avec gaps"
+  metric: "coverage >= 90%"
+  tests: ["H-S1-03"]
+  source: ["standards: EU_AI_Act, NIST_AI_RMF, ISO_IEC_42001"]
+
 - id: O-10
-  text: "Détecter contradictions et produire rétro-implication (nouvelle règle) en ≤ 2h."
-  metric: "retro_rule_time_hours <= 2"
-  test_ids: ["H-S2-01"]
-  severity: "high"
+  text: "Rétro-implication sur contradiction + quarantaine des décisions impactées"
+  metric: "retro_rule_added = true; contested_marked = true"
+  tests: ["H-S2-01","H-S2-02"]
   source: ["TA-2"]
-  derivation_path: ["ANF.threat_actors.TA-2"]
+  verifiers: ["v_provenance"]
+
 - id: O-11
-  text: "Réduire le coût d’audit d’au moins 30% vs. baseline documentée."
-  metric: "audit_cost_delta_pct <= -30%"
-  test_ids: ["H-S1-05"]
-  severity: "medium"
+  text: "Réduction du coût d’audit"
+  metric: "audit_cost_reduction >= 30%"
+  tests: ["H-S1-03"]
   source: ["C-2"]
-  derivation_path: ["ANF.constraints.C-2"]
+
 - id: O-12
-  text: "Bloquer toute fonctionnalité non justifiable (black-box) sur les chemins critiques."
-  metric: "blackbox_usage_on_critical==0"
-  test_ids: ["H-S3-05"]
-  severity: "high"
+  text: "Interdiction des fonctionnalités boîte noire"
+  metric: "blackbox_features = 0"
+  tests: ["H-S3-04"]
   source: ["NN-3"]
-  derivation_path: ["ANF.non_negotiables.NN-3"]
