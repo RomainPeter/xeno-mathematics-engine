@@ -1,18 +1,24 @@
 `yaml
   name: Proof Nightly
+
   on:
     schedule:
       - cron: "0 2   *"   # 02:00 UTC quotidien
-    workflow_dispatch:
+    workflow_dispatch: {}
+
   concurrency:
     group: proof-nightly
     cancel-in-progress: true
+
   jobs:
     nightly:
       runs-on: ubuntu-latest
       steps:
-        - uses: actions/checkout@v4
-        - uses: actions/setup-python@v5
+        - name: Checkout repository
+          uses: actions/checkout@v4
+
+        - name: Setup Python
+          uses: actions/setup-python@v5
           with:
             python-version: "3.11"
 
@@ -22,7 +28,7 @@
         - name: A2H check
           run: python3 spec_pack/tools/a2h_compile.py --check
 
-        - name: S1
+        - name: S1 checks
           run: python3 spec_pack/tools/run_s1.py
 
         - name: S2 inject
@@ -38,10 +44,10 @@
           run: python3 spec_pack/tools/merkle_hasher.py --in spec_pack/samples/journal.ndjson --out
   spec_pack/samples/journal.ndjson
 
-        - name: Generate metrics/trace
+        - name: Generate metrics and trace
           run: python3 spec_pack/tools/gen_metrics.py
 
-        - name: Nightly summary
+        - name: Generate nightly summary
           env:
             GITHUB_STEP_SUMMARY: ${{ github.step_summary }}
           run: |
