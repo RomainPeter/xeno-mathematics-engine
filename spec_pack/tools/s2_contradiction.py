@@ -145,7 +145,7 @@ retro_rules:
 
     # 5) Recompute merkle chain on the journal
     if os.path.exists(MERKLE):
-        subprocess.run(["C:\\Users\\romai\\AppData\\Local\\Programs\\Python\\Python313\\python.exe", MERKLE, "--in", JOURNAL, "--out", JOURNAL], check=True)
+        subprocess.run([sys.executable, MERKLE, "--in", JOURNAL, "--out", JOURNAL], check=True)
     else:
         print("WARN: merkle_hasher.py not found; journal not rehashed", file=sys.stderr)
 

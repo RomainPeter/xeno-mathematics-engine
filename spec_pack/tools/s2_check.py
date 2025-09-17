@@ -49,7 +49,7 @@ def main():
         time_ok = retro_rule_time_hours <= 2.0
 
     # 4) S1 still passes
-    p = subprocess.run(["C:\\Users\\romai\\AppData\\Local\\Programs\\Python\\Python313\\python.exe","spec_pack/tools/run_s1.py"], capture_output=True, text=True)
+    p = subprocess.run([sys.executable,"spec_pack/tools/run_s1.py"], capture_output=True, text=True)
     s1_pass = (p.returncode == 0)
 
     summary = {
