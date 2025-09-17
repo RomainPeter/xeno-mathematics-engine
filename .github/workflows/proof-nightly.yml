@@ -1,0 +1,41 @@
+name: Proof Nightly
+on:
+  schedule:
+    - cron: "0 2 * * *"   # 02:00 UTC quotidien
+  workflow_dispatch:
+concurrency:
+  group: proof-nightly
+  cancel-in-progress: true
+jobs:
+  nightly:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: A2H check
+        run: python3 spec_pack/tools/a2h_compile.py --check
+      - name: S1
+        run: python3 spec_pack/tools/run_s1.py
+      - name: S2 inject
+        run: python3 spec_pack/tools/s2_contradiction.py
+      - name: S2 check
+        run: python3 spec_pack/tools/s2_check.py
+      - name: Compile A2H (emit)
+        run: python3 spec_pack/tools/a2h_compile.py --emit
+      - name: Merklize journal
+        run: python3 spec_pack/tools/merkle_hasher.py --in spec_pack/samples/journal.ndjson --out spec_pack/samples/journal.ndjson
+      - name: Generate metrics/trace
+        run: python3 spec_pack/tools/gen_metrics.py
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: proof-nightly-${{ github.run_id }}
+          path: |
+            spec_pack/compiled/**
+            spec_pack/metrics.json
+            spec_pack/trace.graph.json
+            spec_pack/samples/journal.ndjson
+          if-no-files-found: warn
+          retention-days: 14

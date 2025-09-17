@@ -2,6 +2,7 @@
 Ambition→Hostility compiler and Logical Safe for regulated AI. We don’t promise — we compile ambition into obligations, invariants, and hostile tests, and we carry proofs.
 
 [![Proof CI](https://github.com/romainpeter/architect-of-proof/actions/workflows/proof-ci.yml/badge.svg?branch=main)](https://github.com/romainpeter/architect-of-proof/actions/workflows/proof-ci.yml)
+[![Proof Nightly](https://github.com/romainpeter/architect-of-proof/actions/workflows/proof-nightly.yml/badge.svg)](https://github.com/romainpeter/architect-of-proof/actions/workflows/proof-nightly.yml)
 
 Quickstart
 - make a2h      # compile Ambition → Hostility, emit report, journalize and merklize
