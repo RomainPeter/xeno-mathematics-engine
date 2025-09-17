@@ -1,0 +1,40 @@
+- id: I-1
+  predicate: "Monotonicité des garanties sous ajout de contraintes."
+  scope: "Global"
+  proof_sketch: "Ordre par raffinement des attributs; meet réduit l’extension; obligations sont fermées par ajout."
+  derivation_path: ["G-5"]
+- id: I-2
+  predicate: "Conservation de provenance (hash, signature) sur 100% des items."
+  scope: "Evidence Layer"
+  proof_sketch: "Content addressing + append-only log; aucune opération destructive."
+  derivation_path: ["NN-1"]
+- id: I-3
+  predicate: "Déterminisme des opérateurs de requête."
+  scope: "Query Engine"
+  proof_sketch: "Implémentation pure (pas d’état caché); seeds fixés; sans nondeterminism."
+  derivation_path: ["C-4"]
+- id: I-4
+  predicate: "Reversibilité des mappings (privé ↔ standard)."
+  scope: "Compliance Mapper"
+  proof_sketch: "Conserver tables de correspondance + preuve de biunivocité locale."
+  derivation_path: ["NN-2"]
+- id: I-5
+  predicate: "Traçabilité bornée (≤ K)."
+  scope: "Proof Journal"
+  proof_sketch: "Contrainte sur profondeur du graphe de justification."
+  derivation_path: ["G-4"]
+- id: I-6
+  predicate: "Minimalité de couverture (hitting-set)."
+  scope: "Evidence Selector"
+  proof_sketch: "Algorithme de minimisation avec check de domination."
+  derivation_path: ["G-1"]
+- id: I-7
+  predicate: "Séparation lecture/écriture du journal (WORM)."
+  scope: "Journal"
+  proof_sketch: "Stockage append-only; verrous; merkle root périodique."
+  derivation_path: ["G-2"]
+- id: I-8
+  predicate: "Non-réductibilité aux systèmes de similarité vectorielle sans réintroduction d’opérateurs de lattice."
+  scope: "Architecture"
+  proof_sketch: "Test d’homomorphisme négatif; obligation PO correspondante."
+  derivation_path: ["Manifesto/Falsif."]

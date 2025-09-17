@@ -1,0 +1,13 @@
+Standard,Ref,Obligation,Invariant,Coverage,Notes
+EU_AI_Act,Art.9(1-3)_Risk_Management,O-11;O-1;O-10,I-1;I-6,High,"Processus, preuves d’évaluation, amélioration"
+EU_AI_Act,Art.10(2-5)_Data_and_Data_Governance,O-5;O-2,I-2;I-7,High,"Provenance, intégrité, qualité"
+EU_AI_Act,Art.12(1)_Transparency,O-2;O-4,I-5,High,"Traçabilité, explicabilité"
+EU_AI_Act,Art.13(1)_Human_Oversight,O-8;O-3,,Medium,"Deny-with-proof, relecture"
+EU_AI_Act,Art.15(1-3)_Accuracy_Robustness_Cybersecurity,O-6;O-10,I-3,Medium,"Déterminisme, incident"
+NIST_AI_RMF,Govern_Function_(GV.1–GV.6),O-2;O-9,I-7;I-4,High,"Gouvernance et journalisation"
+NIST_AI_RMF,Map_Function_(MP.1–MP.4),O-9,,Medium,"Cartographie exigences"
+NIST_AI_RMF,Measure_Function_(ME.1–ME.4),O-1;O-4;O-6,I-3;I-6,High,"Mesures techniques"
+NIST_AI_RMF,Manage_Function_(MG.1–MG.4),O-10;O-11,,Medium,"Réponse incident et coûts"
+ISO_IEC_42001,Clause_8_Operation,O-3;O-6,I-3,Medium,"Opérations contrôlées"
+ISO_IEC_42001,Clause_9_Performance_Evaluation,O-11;O-9,,Medium,"Évaluation de performance"
+ISO_IEC_42001,Clause_10_Improvement,O-10,I-1,Medium,"Amélioration continue"

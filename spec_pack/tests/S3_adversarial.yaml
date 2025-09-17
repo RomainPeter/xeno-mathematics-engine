@@ -1,0 +1,40 @@
+suite: "S3 — Adversarial/Enquête"
+tests:
+  - id: H-S3-01
+    name: "Data poisoning sur attribut critique"
+    steps:
+      - "Introduire attribut contradictoire"
+      - "Détecter conflit, quarantainer, marquer 'contested'"
+    acceptance:
+      - "no_unflagged_impact==true"
+      - "proof_of_integrity==true"
+    obligations: ["O-5"]
+  - id: H-S3-02
+    name: "Minimalité sous stress"
+    steps:
+      - "Requête complexe avec 50+ candidats"
+      - "Vérifier hitting-set minimal"
+    acceptance:
+      - "min_hitting_set==true"
+    obligations: ["O-1"]
+  - id: H-S3-03
+    name: "Air-gapped parity"
+    steps:
+      - "Comparer résultats online vs air-gapped"
+    acceptance:
+      - "feature_parity_airgapped==true"
+    obligations: ["O-7"]
+  - id: H-S3-04
+    name: "Deny-with-proof"
+    steps:
+      - "Soumettre requêtes hors-scope contradictoires"
+    acceptance:
+      - "deny_with_proof_rate==100%"
+    obligations: ["O-8"]
+  - id: H-S3-05
+    name: "Black-box guard"
+    steps:
+      - "Activer feature non justifiable sur chemin critique"
+    acceptance:
+      - "blackbox_usage_on_critical==0"
+    obligations: ["O-12"]

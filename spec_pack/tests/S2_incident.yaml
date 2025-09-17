@@ -1,0 +1,13 @@
+suite: "S2 — Incident"
+tests:
+  - id: H-S2-01
+    name: "Hallucination/Contradiction → rétro-implication ≤ 2h"
+    steps:
+      - "python3 spec_pack/tools/s2_contradiction.py"
+      - "python3 spec_pack/tools/s2_check.py"
+    acceptance:
+      - "no_unflagged_impacted==true"
+      - "retro_rule_exists==true"
+      - "retro_rule_time_hours<=2"
+      - "S1_still_PASS==true"
+    obligations: ["O-10","O-2","O-5"]

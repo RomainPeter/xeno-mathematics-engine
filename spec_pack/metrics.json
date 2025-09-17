@@ -1,0 +1,9 @@
+{
+  "version": "0.1.1",
+  "decisions": 10,
+  "evidence": 13,
+  "journal_entries": 12,
+  "s1_pass": true,
+  "trace_bound_K": 10,
+  "avg_trace_length": 4.5
+}
