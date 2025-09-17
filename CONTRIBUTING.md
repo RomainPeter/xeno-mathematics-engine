@@ -1,0 +1,3 @@
+- Use Conventional Commits (feat:, fix:, docs:, chore:).
+- Before pushing: run make a2h && make s1 && make s2 (or rely on hooks).
+- Open PRs to main; Proof CI must pass (A2H+S1+S2).
