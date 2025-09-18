@@ -2,3 +2,5 @@
 {"id":"INC-1758038603-retro","timestamp":"2025-09-16T16:03:23.784063+00:00","type":"retro_rule_created","rule_id":"RR-0001","covers_attribute":"provenance"}
 {"id":"INC-1758135276","timestamp":"2025-09-17T18:54:36.528917+00:00","type":"contradiction_injection","attribute":"provenance","antagonist":"deny_provenance","evidence_id":"EVID-X-POISON"}
 {"id":"INC-1758135276-retro","timestamp":"2025-09-17T18:54:36.530167+00:00","type":"retro_rule_created","rule_id":"RR-0001","covers_attribute":"provenance"}
+{"id":"INC-1758228745","timestamp":"2025-09-18T20:52:25.349340+00:00","type":"contradiction_injection","attribute":"provenance","antagonist":"deny_provenance","evidence_id":"EVID-X-POISON"}
+{"id":"INC-1758228745-retro","timestamp":"2025-09-18T20:52:25.350664+00:00","type":"retro_rule_created","rule_id":"RR-0001","covers_attribute":"provenance"}

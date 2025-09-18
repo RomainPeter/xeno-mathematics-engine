@@ -22,18 +22,16 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
-        run: |
-          if [ -f spec_pack/requirements.txt ]; then
-          pip install -r spec_pack/requirements.txt
-          else
-          pip install --quiet pyyaml
-          fi
-          
+      - name: Install deps
+        run: pip install -r spec_pack/requirements.txt || pip install --quiet pyyaml z3-solver
+
+      - name: A2H semantics
+        run: python3 spec_pack/tools/a2h_semantics.py --check
+
       - name: A2H check
         run: python3 spec_pack/tools/a2h_compile.py --check
 
-      - name: S1 checks
+      - name: S1
         run: python3 spec_pack/tools/run_s1.py
 
       - name: S2 inject

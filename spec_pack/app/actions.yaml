@@ -1,0 +1,7 @@
+type: Retrieval
+pre: ["O-1","O-4","I-5"]
+post: ["O-2"]
+verifier: "v_minimality"
+evidence_required: ["E:min:set","E:trace:≤10"]
+on_fail: { escalate_to: ["owner"] }
+journal_entry: true
