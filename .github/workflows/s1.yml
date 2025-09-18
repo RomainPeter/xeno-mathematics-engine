@@ -2,22 +2,26 @@ name: S1
 on:
   push:
     branches:
-      - main  # CORRIGÉ : "main" est maintenant un élément de liste
+      - main
   pull_request:
     branches:
-      - main  # CORRIGÉ : "main" est maintenant un élément de liste
+      - main
 
 jobs:
   s1:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout # CORRIGÉ : Chaque étape commence par un tiret
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Python # CORRIGÉ : Chaque étape commence par un tiret
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          
-      - name: Run S1 # CORRIGÉ : Chaque étape commence par un tiret
+      
+      # ÉTAPE AJOUTÉE PAR COPILOT - C'EST LA CORRECTION
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Run S1
         run: python3 spec_pack/tools/run_s1.py
