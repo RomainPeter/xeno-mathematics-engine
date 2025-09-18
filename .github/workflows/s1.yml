@@ -1,20 +1,23 @@
 name: S1
 on:
-push:
-branches:
-main
-pull_request:
-branches:
-main
+  push:
+    branches:
+      - main  # CORRIGÉ : "main" est maintenant un élément de liste
+  pull_request:
+    branches:
+      - main  # CORRIGÉ : "main" est maintenant un élément de liste
+
 jobs:
-s1:
-runs-on: ubuntu-latest
-steps:
-name: Checkout
-uses: actions/checkout@v4
-name: Setup Python
-uses: actions/setup-python@v5
-with:
-python-version: '3.11'
-name: Run S1
-run: python3 spec_pack/tools/run_s1.py
+  s1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout # CORRIGÉ : Chaque étape commence par un tiret
+        uses: actions/checkout@v4
+
+      - name: Setup Python # CORRIGÉ : Chaque étape commence par un tiret
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Run S1 # CORRIGÉ : Chaque étape commence par un tiret
+        run: python3 spec_pack/tools/run_s1.py
