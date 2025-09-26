@@ -1,6 +1,13 @@
-"""
-Vérifieur et système d'attestation pour le Proof Engine for Code v0.
-Gère la vérification des PCAPs et l'attestation.
-"""
+"""Compatibility shim for verifier imports."""
 
-__version__ = "0.1.0"
+from proofengine import verifier as _impl
+
+__all__ = getattr(_impl, "__all__", [])
+
+
+def __getattr__(name):  # pragma: no cover
+    return getattr(_impl, name)
+
+
+def __setattr__(name, value):  # pragma: no cover
+    setattr(_impl, name, value)

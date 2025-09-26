@@ -1,22 +1,279 @@
 {
-  "ts": 1758895185.6311953,
-  "pcap_count": 3,
+  "ts": 1758898305.7759278,
+  "pcap_count": 10,
   "verdicts": [
     {
       "file": "1758891093060_f81ed47f.json",
       "operator": "plan",
-      "verdict": null
+      "case_id": "demo_case",
+      "verdict": null,
+      "timestamp": "2025-09-26T12:51:33Z",
+      "obligations": [
+        "tests_ok",
+        "lint_ok",
+        "types_ok",
+        "security_ok",
+        "complexity_ok",
+        "docstring_ok"
+      ],
+      "justification": {
+        "time_ms": 7119,
+        "retries": 0,
+        "backtracks": 0,
+        "audit_cost": 0.0,
+        "audit_cost_ms": 0,
+        "risk": 0.0,
+        "tech_debt": 0,
+        "llm_time_ms": null,
+        "model": null,
+        "notes": null
+      }
     },
     {
       "file": "1758891110343_dff30d8c.json",
       "operator": "rollback",
-      "verdict": "fail"
+      "case_id": "demo_case",
+      "verdict": "fail",
+      "timestamp": "2025-09-26T12:51:50Z",
+      "obligations": [
+        "tests_ok",
+        "lint_ok",
+        "types_ok",
+        "security_ok",
+        "complexity_ok",
+        "docstring_ok"
+      ],
+      "justification": {
+        "time_ms": 0,
+        "retries": 0,
+        "backtracks": 1,
+        "audit_cost": 0.0,
+        "audit_cost_ms": 0,
+        "risk": 0.0,
+        "tech_debt": 0,
+        "llm_time_ms": null,
+        "model": null,
+        "notes": null
+      }
     },
     {
       "file": "1758891115750_d106a6a2.json",
       "operator": "replan",
-      "verdict": "fail"
+      "case_id": "demo_case",
+      "verdict": "fail",
+      "timestamp": "2025-09-26T12:51:55Z",
+      "obligations": [
+        "tests_ok",
+        "lint_ok",
+        "types_ok",
+        "security_ok",
+        "complexity_ok",
+        "docstring_ok",
+        "no_regex_backtracking"
+      ],
+      "justification": {
+        "time_ms": 5397,
+        "retries": 0,
+        "backtracks": 0,
+        "audit_cost": 0.0,
+        "audit_cost_ms": 0,
+        "risk": 0.0,
+        "tech_debt": 0,
+        "llm_time_ms": null,
+        "model": null,
+        "notes": null
+      }
+    },
+    {
+      "file": "1758898305630_3dcfb8fc.json",
+      "operator": "plan",
+      "case_id": "test_case",
+      "verdict": "pass",
+      "timestamp": "2025-09-26T14:51:45Z",
+      "obligations": [
+        "tests_ok",
+        "lint_ok",
+        "types_ok",
+        "security_ok",
+        "complexity_ok",
+        "docstring_ok"
+      ],
+      "justification": {
+        "time_ms": 0,
+        "retries": 0,
+        "backtracks": 0,
+        "audit_cost": 0.0,
+        "audit_cost_ms": 0,
+        "risk": 0.0,
+        "tech_debt": 0,
+        "llm_time_ms": 1000,
+        "model": "x-ai/grok-4-fast:free",
+        "notes": null
+      }
+    },
+    {
+      "file": "1758898305637_88212509.json",
+      "operator": "verify",
+      "case_id": "test_case",
+      "verdict": "fail",
+      "timestamp": "2025-09-26T14:51:45Z",
+      "obligations": [
+        "tests_ok",
+        "lint_ok",
+        "types_ok",
+        "security_ok",
+        "complexity_ok",
+        "docstring_ok"
+      ],
+      "justification": {
+        "time_ms": 0,
+        "retries": 0,
+        "backtracks": 0,
+        "audit_cost": 0.0,
+        "audit_cost_ms": 0,
+        "risk": 0.0,
+        "tech_debt": 0,
+        "llm_time_ms": null,
+        "model": null,
+        "notes": null
+      }
+    },
+    {
+      "file": "1758898305638_4d395bde.json",
+      "operator": "verify",
+      "case_id": "test_case",
+      "verdict": "pass",
+      "timestamp": "2025-09-26T14:51:45Z",
+      "obligations": [
+        "tests_ok",
+        "lint_ok",
+        "types_ok",
+        "security_ok",
+        "complexity_ok",
+        "docstring_ok"
+      ],
+      "justification": {
+        "time_ms": 0,
+        "retries": 0,
+        "backtracks": 0,
+        "audit_cost": 0.0,
+        "audit_cost_ms": 0,
+        "risk": 0.0,
+        "tech_debt": 0,
+        "llm_time_ms": null,
+        "model": null,
+        "notes": null
+      }
+    },
+    {
+      "file": "1758898305642_7ec644ed.json",
+      "operator": "verify",
+      "case_id": "test_case",
+      "verdict": "fail",
+      "timestamp": "2025-09-26T14:51:45Z",
+      "obligations": [
+        "tests_ok",
+        "lint_ok",
+        "types_ok",
+        "security_ok",
+        "complexity_ok",
+        "docstring_ok"
+      ],
+      "justification": {
+        "time_ms": 0,
+        "retries": 0,
+        "backtracks": 0,
+        "audit_cost": 0.0,
+        "audit_cost_ms": 0,
+        "risk": 0.0,
+        "tech_debt": 0,
+        "llm_time_ms": null,
+        "model": null,
+        "notes": null
+      }
+    },
+    {
+      "file": "1758898305646_0bf48a06.json",
+      "operator": "rollback",
+      "case_id": "test_case",
+      "verdict": "fail",
+      "timestamp": "2025-09-26T14:51:45Z",
+      "obligations": [
+        "tests_ok",
+        "lint_ok",
+        "types_ok",
+        "security_ok",
+        "complexity_ok",
+        "docstring_ok"
+      ],
+      "justification": {
+        "time_ms": 0,
+        "retries": 0,
+        "backtracks": 1,
+        "audit_cost": 0.0,
+        "audit_cost_ms": 0,
+        "risk": 0.0,
+        "tech_debt": 0,
+        "llm_time_ms": null,
+        "model": null,
+        "notes": null
+      }
+    },
+    {
+      "file": "1758898305647_35821cba.json",
+      "operator": "replan",
+      "case_id": "test_case",
+      "verdict": "pass",
+      "timestamp": "2025-09-26T14:51:45Z",
+      "obligations": [
+        "tests_ok",
+        "lint_ok",
+        "types_ok",
+        "security_ok",
+        "complexity_ok",
+        "docstring_ok"
+      ],
+      "justification": {
+        "time_ms": 0,
+        "retries": 0,
+        "backtracks": 0,
+        "audit_cost": 0.0,
+        "audit_cost_ms": 0,
+        "risk": 0.0,
+        "tech_debt": 0,
+        "llm_time_ms": 800,
+        "model": null,
+        "notes": null
+      }
+    },
+    {
+      "file": "1758898305756_fb321d3c.json",
+      "operator": "plan",
+      "case_id": "test_case",
+      "verdict": "pass",
+      "timestamp": "2025-09-26T14:51:45Z",
+      "obligations": [
+        "tests_ok",
+        "lint_ok",
+        "types_ok",
+        "security_ok",
+        "complexity_ok",
+        "docstring_ok"
+      ],
+      "justification": {
+        "time_ms": 0,
+        "retries": 0,
+        "backtracks": 0,
+        "audit_cost": 0.0,
+        "audit_cost_ms": 0,
+        "risk": 0.0,
+        "tech_debt": 0,
+        "llm_time_ms": 1000,
+        "model": null,
+        "notes": null
+      }
     }
   ],
-  "digest": "e29d1ff39141cd272864a9289ae6eb06c5af27242d2731eddea709998b426b3f"
+  "digest": "607f26d58523794681dc4dd36634883c4eddfddde4277f0887ded2376e9f846a",
+  "signature": null
 }

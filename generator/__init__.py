@@ -1,6 +1,13 @@
-"""
-Générateur stochastique pour le Proof Engine for Code v0.
-Génère des variantes de patches avec LLM.
-"""
+"""Compatibility shim for legacy generator imports."""
 
-__version__ = "0.1.0"
+from proofengine import generator as _impl
+
+__all__ = getattr(_impl, "__all__", [])
+
+
+def __getattr__(name):  # pragma: no cover
+    return getattr(_impl, name)
+
+
+def __setattr__(name, value):  # pragma: no cover
+    setattr(_impl, name, value)

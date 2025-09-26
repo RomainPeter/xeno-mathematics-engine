@@ -3,13 +3,14 @@ Système de politiques et d'obligations pour la vérification déterministe.
 Implémente les vérifications: pytest, ruff, mypy, radon, etc.
 """
 
+import ast
+import os
+import re
 import subprocess
 import tempfile
-import os
-import ast
-import re
 from typing import Any, Dict, List, Optional, Tuple
-from ..core.schemas import Proof, VJustification
+
+from proofengine.core.schemas import Proof, VJustification
 
 
 class PolicyEngine:

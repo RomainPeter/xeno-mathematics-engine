@@ -6,7 +6,8 @@ Applique des transformations sur le code pour générer des variantes.
 import random
 import re
 from typing import Any, Dict, List, Optional, Tuple
-from ..core.schemas import ActionVariant, VJustification
+
+from proofengine.core.schemas import ActionVariant, VJustification
 
 
 class CodeMutator:

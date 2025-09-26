@@ -8,8 +8,10 @@ import subprocess
 import tempfile
 import time
 from typing import Any, Dict, List, Optional, Tuple
-from ..core.schemas import PCAP, Proof, VJustification
-from ..obligations.policies import PolicyEngine
+
+from proofengine.core.schemas import PCAP, Proof, VJustification
+
+from obligations.policies import PolicyEngine
 
 
 class DeterministicRunner:

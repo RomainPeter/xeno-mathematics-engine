@@ -5,9 +5,11 @@ Rejoue les PCAPs et vérifie l'intégrité des preuves.
 
 import hashlib
 from typing import Any, Dict, List, Optional, Tuple
-from ..core.schemas import PCAP, Proof, VJustification
-from ..core.hashing import hash_pcap, verify_pcap_integrity
-from .deterministic import DeterministicRunner
+
+from proofengine.core.hashing import hash_pcap
+from proofengine.core.schemas import PCAP, Proof, VJustification
+
+from runner.deterministic import DeterministicRunner
 
 
 class Verifier:

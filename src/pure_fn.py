@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import math
 from statistics import mean, median, pstdev
-from typing import Iterable, List, Optional, Sequence
+from typing import List, Optional, Sequence
 
 
 def calculate_fibonacci(n: int) -> int:

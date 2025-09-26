@@ -1,4 +1,4 @@
-"""Utility package providing demo implementations for tests."""
+"""Re-export demo utilities for tests."""
 
 from .sanitize import sanitize_input, validate_email, clean_html, escape_sql
 from .rate_limiter import RateLimiter, SlidingWindowRateLimiter, RateLimitManager

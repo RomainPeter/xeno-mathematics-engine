@@ -5,8 +5,9 @@ Calcule l'utilité attendue et les probabilités de succès.
 
 import math
 from typing import Any, Dict, List, Optional, Tuple
-from ..core.schemas import ActionVariant, VJustification, PCAP
-from ..core.delta import DeltaCalculator
+
+from proofengine.core.delta import DeltaCalculator
+from proofengine.core.schemas import ActionVariant, PCAP, VJustification
 
 
 class UtilityCalculator:

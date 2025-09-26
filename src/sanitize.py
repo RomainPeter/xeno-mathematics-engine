@@ -3,13 +3,12 @@
 from __future__ import annotations
 
 import re
-from html import escape
 
 MAX_LENGTH = 1000
 _SQL_KEYWORDS = {"drop", "table", "insert", "delete", "update"}
 
 
-def sanitize_input(text: str) -> str:
+def sanitize_input(text: str | None) -> str:
     if text is None:
         return ""
 

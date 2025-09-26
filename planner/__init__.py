@@ -1,6 +1,13 @@
-"""
-Planificateur métacognitif pour le Proof Engine for Code v0.
-Gère la planification avec LLM et prompts spécialisés.
-"""
+"""Compatibility shim for legacy planner imports."""
 
-__version__ = "0.1.0"
+from proofengine import planner as _impl
+
+__all__ = getattr(_impl, "__all__", [])
+
+
+def __getattr__(name):  # pragma: no cover
+    return getattr(_impl, name)
+
+
+def __setattr__(name, value):  # pragma: no cover
+    setattr(_impl, name, value)

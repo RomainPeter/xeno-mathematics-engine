@@ -1,0 +1,57 @@
+{
+  "ts": "2025-09-26T14:51:45Z",
+  "operator": "plan",
+  "case_id": "test_case",
+  "action": null,
+  "pre": {
+    "H": [
+      "goal:test goal"
+    ],
+    "K": [
+      "tests_ok",
+      "lint_ok",
+      "types_ok",
+      "security_ok",
+      "complexity_ok",
+      "docstring_ok"
+    ]
+  },
+  "post": {
+    "plan": [
+      "step1",
+      "step2"
+    ]
+  },
+  "pre_hash": null,
+  "post_hash": null,
+  "obligations": [
+    "tests_ok",
+    "lint_ok",
+    "types_ok",
+    "security_ok",
+    "complexity_ok",
+    "docstring_ok"
+  ],
+  "justification": {
+    "time_ms": 0,
+    "retries": 0,
+    "backtracks": 0,
+    "audit_cost": 0.0,
+    "audit_cost_ms": 0,
+    "risk": 0.0,
+    "tech_debt": 0,
+    "llm_time_ms": 1000,
+    "model": null,
+    "notes": null
+  },
+  "proofs": [],
+  "proof_state_hash": "13a839fa9e6023d4626e71504cabba9141fdc463e171df7561d5a48088b31382",
+  "toolchain": {
+    "planner": "metacognitive"
+  },
+  "llm_meta": {
+    "latency_ms": 1000
+  },
+  "verdict": "pass",
+  "pcap_hash": null
+}

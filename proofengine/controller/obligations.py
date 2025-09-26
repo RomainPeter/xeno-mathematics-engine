@@ -1,61 +1,113 @@
-import subprocess, json, os, shutil
-from typing import Dict, Tuple
+"""Obligation checks used by deterministic controller tests."""
 
-def run(cmd: list[str], cwd: str) -> Tuple[int, str, str]:
-    p = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True)
-    return p.returncode, p.stdout, p.stderr
+from __future__ import annotations
 
-def ensure_tools():
-    # install test deps if missing (best effort)
-    if shutil.which("pytest") is None:
-        try: 
-            subprocess.run(["python", "-m", "pip", "install", "pytest", "flake8", "mypy", "bandit", "radon"], check=False)
-        except Exception: 
-            pass
+import json
+import os
+import subprocess
+from pathlib import Path
+from typing import Callable, Dict, List, Tuple
 
-def check_tests(cwd): 
-    return run(["pytest", "-q"], cwd)[0] == 0
+from proofengine.core.schemas import ObligationResults
 
-def check_flake8(cwd): 
-    return run(["flake8", "."], cwd)[0] == 0
 
-def check_mypy(cwd): 
-    return run(["mypy", "."], cwd)[0] == 0
+def _run_command_impl(command: List[str], cwd: str) -> Tuple[int, str, str]:
+    result = subprocess.run(command, cwd=cwd, capture_output=True, text=True)
+    return result.returncode, result.stdout, result.stderr
 
-def check_bandit(cwd): 
-    return run(["bandit", "-q", "-r", "."], cwd)[0] == 0
 
-def check_complexity(cwd, max_cc=10):
-    code, out, _ = run(["radon", "cc", "-s", "-j", "."], cwd)
-    if code != 0: 
+def _resolve_runner() -> Callable[[List[str], str], Tuple[int, str, str]]:
+    try:
+        from controller import obligations as legacy  # type: ignore
+
+        candidate = getattr(legacy, "run_command", None)
+        if candidate is not None and candidate is not run_command:
+            return candidate  # patched version supplied by tests
+    except Exception:  # pragma: no cover - defensive
+        pass
+    return _run_command_impl
+
+
+def run_command(command: List[str], cwd: str) -> Tuple[int, str, str]:
+    runner = _resolve_runner()
+    return runner(command, cwd)
+
+
+def check_tests(cwd: str) -> bool:
+    code, *_ = run_command(["pytest", "-q"], cwd)
+    return code == 0
+
+
+def check_flake8(cwd: str) -> bool:
+    code, *_ = run_command(["flake8", "."], cwd)
+    return code == 0
+
+
+def check_mypy(cwd: str) -> bool:
+    code, *_ = run_command(["mypy", ".", "--ignore-missing-imports"], cwd)
+    return code == 0
+
+
+def check_bandit(cwd: str) -> bool:
+    code, *_ = run_command(["bandit", "-q", "-r", "."], cwd)
+    return code == 0
+
+
+def check_complexity(cwd: str, max_cc: int = 10) -> bool:
+    code, stdout, _ = run_command(["radon", "cc", "-s", "-j", "."], cwd)
+    if code != 0:
         return False
     try:
-        data = json.loads(out or "{}")
-    except Exception:
+        payload = json.loads(stdout or "{}")
+    except json.JSONDecodeError:
         return False
-    for _file, funcs in data.items():
-        for f in funcs:
-            if f.get("complexity", 0) > max_cc:
+    for functions in payload.values():
+        for item in functions:
+            if item.get("complexity", 0) > max_cc:
                 return False
     return True
 
-def check_docstrings(cwd):
-    ok = True
-    for root, _, files in os.walk(cwd):
-        for fn in files:
-            if fn.endswith(".py") and not fn.startswith("_"):
-                with open(os.path.join(root, fn), "r", encoding="utf-8") as f:
-                    content = f.read().lstrip()
-                    if not content.startswith('"""') and not content.startswith("'''"):
-                        ok = False
-    return ok
 
-def evaluate_all(cwd: str) -> Dict[str, bool]:
+def check_docstrings(cwd: str) -> bool:
+    for path in Path(cwd).rglob("*.py"):
+        if path.name.startswith("_"):
+            continue
+        with path.open("r", encoding="utf-8") as handle:
+            content = handle.read().lstrip()
+            if not content.startswith('"""') and not content.startswith("'''"):
+                return False
+    return True
+
+
+def evaluate_obligations(cwd: str) -> ObligationResults:
+    return ObligationResults(
+        tests_ok=check_tests(cwd),
+        lint_ok=check_flake8(cwd),
+        types_ok=check_mypy(cwd),
+        security_ok=check_bandit(cwd),
+        complexity_ok=check_complexity(cwd),
+        docstring_ok=check_docstrings(cwd),
+    )
+
+
+def get_obligation_details(cwd: str) -> Dict[str, Dict[str, str]]:
     return {
-        "tests_ok": check_tests(cwd),
-        "lint_ok": check_flake8(cwd),
-        "types_ok": check_mypy(cwd),
-        "security_ok": check_bandit(cwd),
-        "complexity_ok": check_complexity(cwd),
-        "docstring_ok": check_docstrings(cwd),
+        "tests": {"command": "pytest -q", "cwd": cwd},
+        "lint": {"command": "flake8 .", "cwd": cwd},
+        "types": {"command": "mypy .", "cwd": cwd},
+        "security": {"command": "bandit -q -r .", "cwd": cwd},
+        "complexity": {"command": "radon cc -s -j .", "cwd": cwd},
+        "docstring": {"check": "static", "cwd": cwd},
+    }
+
+
+def get_violation_summary(results: ObligationResults) -> Dict[str, object]:
+    violations = [name for name, ok in results.model_dump().items() if not ok]
+    total = len(results.model_dump())
+    passed = total - len(violations)
+    return {
+        "total_violations": len(violations),
+        "violations": violations,
+        "success_rate": passed / total if total else 0.0,
+        "all_passed": len(violations) == 0,
     }

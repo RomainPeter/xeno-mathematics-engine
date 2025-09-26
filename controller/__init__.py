@@ -1,6 +1,3 @@
-"""
-Contrôleur déterministe pour le Proof Engine for Code v0.
-Gère les obligations, patches et vérifications.
-"""
+"""Compatibility shim for legacy controller imports."""
 
-__version__ = "0.1.0"
+from proofengine.controller import *  # noqa: F401,F403
