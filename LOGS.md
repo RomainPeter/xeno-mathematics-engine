@@ -1,8 +1,8 @@
 # ProofEngine – LOGS.md
 
 ## Run metadata
-- Timestamp: 2025-09-26T13:06:09.651455Z
-- Commit: 9996163 | Tag: 9996163
+- Timestamp: 2025-09-26T13:59:45.998554Z
+- Commit: 675b9eb | Tag: v0.3.0
 - OS/Python: Windows 11 | Python 3.13.7
 - Model: unknown-model
 - PCAP files: 3 | Digest: e29d1ff39141cd272864a9289ae6eb06c5af27242d2731eddea709998b426b3f
