@@ -15,7 +15,7 @@ from tenacity import retry, stop_after_attempt, wait_exponential_jitter
 @dataclass
 class LLMConfig:
     """Configuration du client LLM."""
-    model: str = os.getenv("OPENROUTER_MODEL", "x-ai/grok-2-fast")
+    model: str = os.getenv("OPENROUTER_MODEL", "x-ai/grok-4-fast:free")
     base_url: str = "https://openrouter.ai/api/v1"
     api_key: str = os.getenv("OPENROUTER_API_KEY", "")
     referer: str = os.getenv("HTTP_REFERER", "https://example.com")

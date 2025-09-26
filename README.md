@@ -14,7 +14,7 @@ Hybrid proof‑carrying orchestration: stochastic generation inside, determinist
 ## Quickstart
 1) `python3 -m venv .venv && source .venv/bin/activate`
 2) `pip install -r requirements.txt`
-3) `cp .env.example .env`  # add OPENROUTER_API_KEY and OPENROUTER_MODEL (e.g., x-ai/grok-2-fast)
+3) `cp .env.example .env`  # add OPENROUTER_API_KEY and OPENROUTER_MODEL (e.g., x-ai/grok-4-fast:free)
 4) `make verify`
 5) `make demo`
 6) `make audit-pack`

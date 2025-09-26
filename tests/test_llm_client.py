@@ -14,7 +14,7 @@ class TestLLMConfig:
     def test_default_config(self):
         """Test de la configuration par défaut."""
         config = LLMConfig()
-        assert config.model == "x-ai/grok-2-fast"
+        assert config.model == "x-ai/grok-4-fast:free"
         assert config.base_url == "https://openrouter.ai/api/v1"
         assert config.cache_dir == "out/llm_cache"
     
@@ -191,14 +191,14 @@ class TestLLMClientIntegration:
             
             assert data["plan"] == ["step1", "step2"]
             assert data["est_success"] == 0.8
-            assert meta["model"] == "x-ai/grok-2-fast"
+            assert meta["model"] == "x-ai/grok-4-fast:free"
             assert "latency_ms" in meta
             
             # Vérifier que l'API a été appelée avec les bons paramètres
             mock_client.chat.completions.create.assert_called_once()
             call_args = mock_client.chat.completions.create.call_args
             
-            assert call_args[1]["model"] == "x-ai/grok-2-fast"
+            assert call_args[1]["model"] == "x-ai/grok-4-fast:free"
             assert call_args[1]["temperature"] == 0.7
             assert call_args[1]["seed"] == 42
             assert call_args[1]["response_format"]["type"] == "json_object"

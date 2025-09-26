@@ -22,7 +22,7 @@ class TestPCAPSchemas:
             audit_cost_ms=500,
             tech_debt=1,
             llm_time_ms=800,
-            model="grok-2-fast"
+            model="x-ai/grok-4-fast:free"
         )
         
         assert justification.time_ms == 1000
@@ -30,7 +30,7 @@ class TestPCAPSchemas:
         assert justification.audit_cost_ms == 500
         assert justification.tech_debt == 1
         assert justification.llm_time_ms == 800
-        assert justification.model == "grok-2-fast"
+        assert justification.model == "x-ai/grok-4-fast:free"
     
     def test_pcap_creation(self):
         """Test de création d'un PCAP."""
