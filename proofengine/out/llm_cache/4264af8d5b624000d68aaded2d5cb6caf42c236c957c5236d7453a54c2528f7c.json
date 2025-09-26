@@ -1,0 +1,30 @@
+{
+  "data": {
+    "patch_unified": "--- /dev/null\n+++ main.py\n@@ -0,0 +1,32 @@\n+import re\n+\n+def validate_email(email: str) -> bool:\n+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'\n+    return bool(re.match(pattern, email))\n+\n+if __name__ == \"__main__\":\n+    # Simple tests\n+    assert validate_email(\"test@example.com\") == True\n+    assert validate_email(\"user.name@domain.co.uk\") == True\n+    assert validate_email(\"invalid-email\") == False\n+    assert validate_email(\"@missing.com\") == False\n+    assert validate_email(\"missing@\") == False\n+    print(\"All tests passed!\")\n+",
+    "rationale": "Implements the requested validate_email function using regex for basic email validation and includes simple assertion-based tests. Satisfies the task as K is empty.",
+    "predicted_obligations_satisfied": [],
+    "risk_score": 0.1,
+    "notes": "Assumes Python; adds to new file main.py with minimal, reversible addition. Basic regex; not comprehensive validation."
+  },
+  "_meta": {
+    "model": "x-ai/grok-4-fast:free",
+    "latency_ms": 7463,
+    "usage": {
+      "completion_tokens": 813,
+      "prompt_tokens": 278,
+      "total_tokens": 1091,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 540,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 151
+      }
+    },
+    "prompt_hash": "4264af8d5b624000d68aaded2d5cb6caf42c236c957c5236d7453a54c2528f7c",
+    "cache_hit": false
+  }
+}

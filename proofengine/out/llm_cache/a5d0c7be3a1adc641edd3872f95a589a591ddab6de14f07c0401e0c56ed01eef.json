@@ -1,0 +1,30 @@
+{
+  "data": {
+    "patch_unified": "--- /dev/null\n+++ src/math.py\n@@ -0,0 +1,6 @@\n+def mathematical_calculation(x, y):\n+    \"\"\"\n+    Simple mathematical function: computes x + y * 2.\n+    \"\"\"\n+    return x + y * 2\n+",
+    "rationale": "The task requires implementing a mathematical calculation function. With empty obligations (K), this minimal patch adds a simple, reversible function to a new file, satisfying the task without dependencies or risks.",
+    "predicted_obligations_satisfied": [],
+    "risk_score": 0.1,
+    "notes": "Assumes Python; function is basic and does not break any tests (none specified). Changes are minimal and additive."
+  },
+  "_meta": {
+    "model": "x-ai/grok-4-fast:free",
+    "latency_ms": 5420,
+    "usage": {
+      "completion_tokens": 655,
+      "prompt_tokens": 276,
+      "total_tokens": 931,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 503,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 156
+      }
+    },
+    "prompt_hash": "a5d0c7be3a1adc641edd3872f95a589a591ddab6de14f07c0401e0c56ed01eef",
+    "cache_hit": false
+  }
+}

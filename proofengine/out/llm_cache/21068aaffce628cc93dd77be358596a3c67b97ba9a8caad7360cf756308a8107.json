@@ -1,0 +1,30 @@
+{
+  "data": {
+    "patch_unified": "--- /dev/null\n+++ email_validator.py\n@@ -0,0 +1,32 @@\n+import re\n+\n+def validate_email(email: str) -> bool:\n+    \"\"\"\n+    Validate an email address using regex.\n+    Note: This is a basic validation; full RFC compliance is complex.\n+    \"\"\"\n+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'\n+    return bool(re.match(pattern, email))\n+\n+# Basic tests\n+def test_validate_email():\n+    assert validate_email('test@example.com') == True\n+    assert validate_email('user.name+tag@sub.domain.co.uk') == True\n+    assert validate_email('invalid-email') == False\n+    assert validate_email('no@at.com') == False\n+    assert validate_email('user@com') == False  # missing TLD\n+    assert validate_email('user@.com') == False  # invalid domain\n+    assert validate_email('@example.com') == False  # missing local part\n+    print('All tests passed!')\n+\n+if __name__ == '__main__':\n+    test_validate_email()\n+",
+    "rationale": "No obligations (K) specified. This patch adds a new Python file implementing a basic email validation function using regex, along with simple assertion-based tests, directly fulfilling the task request while keeping changes minimal and reversible (new file).",
+    "predicted_obligations_satisfied": [],
+    "risk_score": 0.1,
+    "notes": "Assumes Python; basic regex avoids over-complexity. Tests are inline for simplicity; no external deps beyond stdlib."
+  },
+  "_meta": {
+    "model": "x-ai/grok-4-fast:free",
+    "latency_ms": 8076,
+    "usage": {
+      "completion_tokens": 873,
+      "prompt_tokens": 278,
+      "total_tokens": 1151,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 496,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 152
+      }
+    },
+    "prompt_hash": "21068aaffce628cc93dd77be358596a3c67b97ba9a8caad7360cf756308a8107",
+    "cache_hit": false
+  }
+}

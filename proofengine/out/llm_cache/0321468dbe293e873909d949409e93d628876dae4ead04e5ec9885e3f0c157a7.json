@@ -1,0 +1,30 @@
+{
+  "data": {
+    "patch_unified": "",
+    "rationale": "No obligations specified, so no patch is needed to improve compliance.",
+    "predicted_obligations_satisfied": [],
+    "risk_score": 0,
+    "notes": "Minimal response for simple test case with empty obligations."
+  },
+  "_meta": {
+    "model": "x-ai/grok-4-fast:free",
+    "latency_ms": 2863,
+    "usage": {
+      "completion_tokens": 289,
+      "prompt_tokens": 269,
+      "total_tokens": 558,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 243,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 120
+      }
+    },
+    "prompt_hash": "0321468dbe293e873909d949409e93d628876dae4ead04e5ec9885e3f0c157a7",
+    "cache_hit": false
+  }
+}

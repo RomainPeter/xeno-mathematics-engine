@@ -1,0 +1,30 @@
+{
+  "data": {
+    "patch_unified": "--- /dev/null\n+++ rate_limiter.py\n@@ -0,0 +1,14 @@\nimport time\nfrom collections import deque\n\n\nclass RateLimiter:\n    def __init__(self, max_requests: int, window_size: float):\n        self.max_requests = max_requests\n        self.window_size = window_size\n        self.requests = deque()\n\n    def is_allowed(self) -> bool:\n        now = time.time()\n        while self.requests and now - self.requests[0] > self.window_size:\n            self.requests.popleft()\n        if len(self.requests) < self.max_requests:\n            self.requests.append(now)\n            return True\n        return False\n",
+    "rationale": "Creates a new RateLimiter class with sliding window logic using a deque for efficient timestamp management, fulfilling the task to implement the class as no obligations (K) are specified.",
+    "predicted_obligations_satisfied": [],
+    "risk_score": 0.1,
+    "notes": "Minimal implementation in Python; assumes seconds for window_size; reversible by removing the file."
+  },
+  "_meta": {
+    "model": "x-ai/grok-4-fast:free",
+    "latency_ms": 11166,
+    "usage": {
+      "completion_tokens": 910,
+      "prompt_tokens": 277,
+      "total_tokens": 1187,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 686,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 151
+      }
+    },
+    "prompt_hash": "5131d8a8b7f3e8fae35bc76fef06f8a8156e0b2cd69467a8981924597c83eaa5",
+    "cache_hit": false
+  }
+}

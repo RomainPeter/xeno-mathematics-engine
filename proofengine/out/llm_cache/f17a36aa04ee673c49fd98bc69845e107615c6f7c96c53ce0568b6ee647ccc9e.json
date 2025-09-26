@@ -1,0 +1,35 @@
+{
+  "data": {
+    "plan": [
+      "research_secure_logging_practices",
+      "design_secure_architecture",
+      "implement_basic_logging",
+      "add_security_controls",
+      "test_and_audit"
+    ],
+    "est_success": 0.85,
+    "est_cost": 15,
+    "notes": "Starting from empty state, prioritize security research and design to minimize risks early; plan focuses on foundational secure development steps."
+  },
+  "_meta": {
+    "model": "x-ai/grok-4-fast:free",
+    "latency_ms": 5162,
+    "usage": {
+      "completion_tokens": 423,
+      "prompt_tokens": 274,
+      "total_tokens": 697,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 358,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 120
+      }
+    },
+    "prompt_hash": "f17a36aa04ee673c49fd98bc69845e107615c6f7c96c53ce0568b6ee647ccc9e",
+    "cache_hit": false
+  }
+}

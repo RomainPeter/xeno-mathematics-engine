@@ -1,0 +1,22 @@
+{
+  "ts": 1758891969.1535552,
+  "pcap_count": 3,
+  "verdicts": [
+    {
+      "file": "1758891093060_f81ed47f.json",
+      "operator": "plan",
+      "verdict": null
+    },
+    {
+      "file": "1758891110343_dff30d8c.json",
+      "operator": "rollback",
+      "verdict": "fail"
+    },
+    {
+      "file": "1758891115750_d106a6a2.json",
+      "operator": "replan",
+      "verdict": "fail"
+    }
+  ],
+  "digest": "e29d1ff39141cd272864a9289ae6eb06c5af27242d2731eddea709998b426b3f"
+}
