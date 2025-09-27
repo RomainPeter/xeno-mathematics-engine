@@ -12,6 +12,7 @@ on:
 jobs:
   bench:
     runs-on: ubuntu-latest
+    needs: []  # Add explicit dependency on bench-baseline job
     steps:
       - uses: actions/checkout@v4
       
@@ -21,11 +22,13 @@ jobs:
       
       - run: pip install -r requirements.txt
       
-      - name: Download baseline metrics
-        uses: actions/download-artifact@v4
-        with:
-          name: metrics_baseline
-          path: artifacts/bench_public/
+      - name: Generate baseline metrics
+        run: |
+          python scripts/bench_2cat.py \
+            --suite corpus/s2pp/suite.json \
+            --modes baseline \
+            --runs 3 \
+            --out artifacts/bench_public/baseline/
       
       - name: Run active benchmark
         run: |
@@ -33,10 +36,10 @@ jobs:
             --suite corpus/s2pp/suite.json \
             --modes active \
             --runs 3 \
-            --out artifacts/bench_public/
+            --out artifacts/bench_public/active/
       
       - name: Upload active metrics
         uses: actions/upload-artifact@v4
         with:
           name: metrics_active
-          path: artifacts/bench_public/
+          path: artifacts/bench_public/active/
