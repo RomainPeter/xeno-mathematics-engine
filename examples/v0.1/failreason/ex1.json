@@ -1,7 +1,0 @@
-{
-  "version": "0.1.0",
-  "code": "parse_error",
-  "message": "LLM output JSON invalid at char 57",
-  "refs": ["step:s1"],
-  "data": { "char": 57 }
-}
