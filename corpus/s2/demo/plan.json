@@ -1,0 +1,23 @@
+{
+  "failreason": "api.semver_missing",
+  "operator": "Normalize",
+  "steps": [
+    {
+      "id": "step1",
+      "operator": "Meet",
+      "params": {
+        "goal": "Add semantic versioning to API"
+      }
+    }
+  ],
+  "goal": "Implement semantic versioning for API breaking changes",
+  "budgets": {
+    "time_ms": 300000,
+    "audit_cost": 1.0,
+    "max_replans": 2
+  },
+  "metadata": {
+    "api_version": "1.0.0",
+    "breaking_changes": true
+  }
+}

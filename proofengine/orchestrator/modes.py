@@ -38,11 +38,11 @@ class ActiveResult:
     """Result from active mode execution."""
 
     success: bool
-    applied_strategy: Optional[str]
-    new_plan: Optional[Dict[str, Any]]
-    two_cell: Optional[Dict[str, Any]]
-    confidence: float
-    rationale: str
+    applied_strategy: Optional[str] = None
+    new_plan: Optional[Dict[str, Any]] = None
+    two_cell: Optional[Dict[str, Any]] = None
+    confidence: float = 0.0
+    rationale: str = ""
     selection_result: Optional[SelectionResult] = None
     error: Optional[str] = None
     rollback_triggered: bool = False
@@ -199,15 +199,16 @@ class TwoCategoryOrchestrator:
         if context.depth >= max_depth:
             return False
 
-        # Check budget constraints
-        current_time = context.plan.get("budgets", {}).get("time_ms", 0)
+        # Check budget constraints - use plan budgets as current, context budgets as limits
+        plan_budgets = context.plan.get("budgets", {})
+        current_time = plan_budgets.get("time_ms", 0)
         max_time = context.budgets.get("time_ms", float("inf"))
-        if current_time >= max_time:
+        if current_time > max_time:
             return False
 
-        current_cost = context.plan.get("budgets", {}).get("audit_cost", 0.0)
+        current_cost = plan_budgets.get("audit_cost", 0.0)
         max_cost = context.budgets.get("audit_cost", float("inf"))
-        if current_cost >= max_cost:
+        if current_cost > max_cost:
             return False
 
         # Check for cycles (simplified)

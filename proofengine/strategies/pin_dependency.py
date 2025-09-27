@@ -20,9 +20,11 @@ class PinDependencyStrategy(Strategy):
 
     def __init__(self):
         """Initialize the pin dependency strategy."""
-        self.id = "pin_dependency"
-        self.trigger_failreasons = ["policy.dependency_pin_required"]
-        self.expected_outcomes = ["policy_clean", "security_improved"]
+        super().__init__(
+            id="pin_dependency",
+            trigger_codes=["policy.dependency_pin_required"],
+            expected_outcomes=["policy_clean", "security_improved"],
+        )
         self.guards = Guards(
             max_depth=2,
             max_rewrites_per_fr=1,

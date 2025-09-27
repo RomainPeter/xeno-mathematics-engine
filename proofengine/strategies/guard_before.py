@@ -20,9 +20,11 @@ class GuardBeforeStrategy(Strategy):
 
     def __init__(self):
         """Initialize the guard before strategy."""
-        self.id = "guard_before"
-        self.trigger_failreasons = ["policy.secret", "policy.egress"]
-        self.expected_outcomes = ["policy_clean", "security_improved", "must_block"]
+        super().__init__(
+            id="guard_before",
+            trigger_codes=["policy.secret", "policy.egress"],
+            expected_outcomes=["policy_clean", "security_improved", "must_block"],
+        )
         self.guards = Guards(
             max_depth=2,
             max_rewrites_per_fr=1,

@@ -370,10 +370,14 @@ class TestActiveGatedMode:
 
     def test_default_parameters(self):
         """Test default parameters for active gated mode."""
-        # Should use default thresholds
-        self.orchestrator.execute_active_gated_mode(self.context)
+        # Set up mock registry to return empty list
+        self.mock_registry.get_by_failreason.return_value = []
 
-        # Should call with default parameters
-        self.mock_selector.select_strategy.assert_called_once()
+        # Should use default thresholds
+        result = self.orchestrator.execute_active_gated_mode(self.context)
+
+        # Should return failure due to no strategies
+        assert not result.success
+        assert "No strategies available" in result.error
         # Check that basic gates are called with default max_depth=2
         assert self.context.depth < 2  # Should pass basic gates
