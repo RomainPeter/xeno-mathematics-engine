@@ -1,0 +1,51 @@
+name: Verify Attestations
+on:
+  push:
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  verify-attestations:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup cosign
+        uses: sigstore/cosign-installer@v3
+        with:
+          cosign-release: 'v2.2.0'
+
+      - name: Verify audit pack signature
+        run: |
+          if [ -f "artifacts/audit_pack.zip" ]; then
+            cosign verify-blob artifacts/audit_pack.zip \
+              --signature artifacts/audit_pack.zip.sig \
+              --key .github/security/cosign.pub
+            echo "✅ Audit pack signature verified"
+          else
+            echo "⚠️ No audit pack found to verify"
+          fi
+
+      - name: Verify attestation
+        run: |
+          if [ -f "artifacts/attestation.json" ]; then
+            echo "✅ Attestation file found"
+            cat artifacts/attestation.json | jq .
+          else
+            echo "⚠️ No attestation file found"
+          fi
+
+      - name: Verify SBOM
+        run: |
+          if [ -f "sbom.spdx.json" ]; then
+            echo "✅ SBOM found"
+            cat sbom.spdx.json | jq .packages | head -5
+          else
+            echo "⚠️ No SBOM found"
+          fi

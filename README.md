@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # dancing-machines — Proof Orchestrator Fit Probe
 
 ## Short
@@ -14,8 +13,8 @@ Hybrid proof‑carrying orchestration: stochastic generation inside, determinist
 
 ## Quickstart
 1) `python3 -m venv .venv && source .venv/bin/activate`
-2) `pip install -r requirements.txt`
-3) `cp .env.example .env`  # add OPENROUTER_API_KEY and OPENROUTER_MODEL (e.g., moonshotai/kimi-k2:free)
+2) `pip install -r requirements.lock`
+3) `cp env.example .env`  # add OPENROUTER_API_KEY and OPENROUTER_MODEL (e.g., moonshotai/kimi-k2:free)
 4) `make verify`
 5) `make demo`
 6) `make audit-pack`
@@ -36,6 +35,13 @@ Hybrid proof‑carrying orchestration: stochastic generation inside, determinist
 - `docs/2pager.md` (architecture and metrics)
 - `dist/audit_pack_<tag>.zip` (one‑file bundle)
 
+## Security & Supply-chain
+- **Hermetic Verification**: Docker sandbox with no-network, resource quotas
+- **Attestations**: Cosign signatures on audit packs
+- **SBOM**: Software Bill of Materials (SPDX 2.3)
+- **Vulnerability Scanning**: Trivy/Grype integration
+- **Policy Enforcement**: OPA rules for secrets, semver, API changes
+
 ## Alignment with Math Inc vision
 - Expansion (stochastic exploration) + Compression (deterministic verification) per step.
 - Network value via reuse/connectivity; audit surface for large‑scale autoformalization.
@@ -44,8 +50,3 @@ Hybrid proof‑carrying orchestration: stochastic generation inside, determinist
 ## Limitations
 - Demo in code space only; no claim about Lean/tactics performance.
 - LLM ping requires OpenRouter API key; replay uses local cache.
-
-=======
-# dancing-machines
-Proog engine with orchestrator
->>>>>>> origin/main
