@@ -31,13 +31,8 @@ click==8.3.0
     #   black
     #   typer
 colorama==0.4.6
-    # via
-    #   bandit
-    #   click
-    #   pytest
-    #   radon
-    #   tqdm
-cryptography==43.0.3
+    # via radon
+cryptography==46.0.1
     # via -r requirements.in
 distlib==0.4.0
     # via virtualenv
