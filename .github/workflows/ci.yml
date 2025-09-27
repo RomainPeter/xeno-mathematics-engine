@@ -98,6 +98,11 @@ jobs:
       - name: Run schema validation
         run: python scripts/test_roundtrip.py
 
+      - name: Run LLM tests (offline)
+        run: |
+          python -m pytest tests/test_llm_client_v2.py -v
+          python -m pytest tests/test_orchestrator_llm.py -v
+
       - name: Verify (online if key, else skip)
         shell: bash
         run: |
@@ -114,8 +119,11 @@ jobs:
           python scripts/audit_pack.py || true
           python scripts/make_logs.py || true
 
-      - name: Run demo-s1
+      - name: Run demo-s1 (stub)
         run: python orchestrator/skeleton.py --plan plans/plan-hello.json --state state/x-hello.json
+
+      - name: Run demo-s1-llm (mock)
+        run: python orchestrator/skeleton_llm.py --plan plans/plan-hello.json --state state/x-hello.json --llm mock
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
