@@ -169,3 +169,24 @@ expected-fail-s2:
 	@echo "🧪 Testing S2 vendors expected-fail cases..."
 	. .venv/bin/activate && $(PY) -m pytest tests/s2_vendors_test.py -v
 	@echo "✅ S2 vendors expected-fail tests completed"
+
+# Delta calibration and bench public targets
+bench-baseline:
+	@echo "📊 Running baseline benchmark..."
+	. .venv/bin/activate && $(PY) scripts/bench_2cat.py --suite corpus/bench_public/suite.json --mode baseline --runs 3 --out artifacts/bench_public/metrics_baseline.json
+	@echo "✅ Baseline benchmark completed"
+
+bench-active:
+	@echo "📊 Running active benchmark..."
+	. .venv/bin/activate && $(PY) scripts/bench_2cat.py --suite corpus/bench_public/suite.json --mode active --runs 3 --out artifacts/bench_public/metrics_active.json
+	@echo "✅ Active benchmark completed"
+
+delta-calibrate:
+	@echo "🔧 Calibrating delta weights..."
+	. .venv/bin/activate && $(PY) scripts/delta_calibrate.py --runs artifacts/bench_public/metrics_baseline.json artifacts/bench_public/metrics_active.json --out configs/weights.json --report artifacts/bench_public/delta_report.json
+	@echo "✅ Delta calibration completed"
+
+repro-public:
+	@echo "🔄 Running public reproduction..."
+	bash scripts/repro_public.sh
+	@echo "✅ Public reproduction completed"

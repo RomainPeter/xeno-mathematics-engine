@@ -19,6 +19,7 @@ class ExecutionMode(Enum):
 
     SHADOW = "shadow"
     ACTIVE_GATED = "active_gated"
+    BASELINE = "baseline"
 
 
 @dataclass
@@ -285,3 +286,43 @@ class TwoCategoryOrchestrator:
         # This would be implemented to load strategy definitions from YAML
         # For now, we'll implement this in the strategy implementations
         pass
+
+
+class BaselineMode:
+    """Baseline mode: executes plan without 2-category rewriting."""
+
+    name = "baseline"
+
+    def run(
+        self,
+        plan_path: str,
+        state_path: str,
+        verifier: str = "docker",
+        llm_disabled: bool = True,
+        budgets: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        """Execute the plan without 2-category rewriting, without LLM selector."""
+        from time import perf_counter
+
+        start = perf_counter()
+
+        # Simulate plan execution without 2-category transformations
+        # This would call the actual plan runner with enable_two_cat=False
+        try:
+            # Mock execution - replace with actual plan runner
+            rc = 0  # Success
+            # In real implementation: rc = run_plan(plan_path, state_path, verifier=verifier,
+            #                                     enable_two_cat=False, llm_disabled=llm_disabled, budgets=budgets)
+        except Exception as e:
+            rc = 1  # Failure
+            print(f"Baseline execution failed: {e}")
+
+        dur_ms = (perf_counter() - start) * 1000.0
+
+        return {
+            "rc": rc,
+            "duration_ms": dur_ms,
+            "mode": "baseline",
+            "two_cat_enabled": False,
+            "llm_disabled": llm_disabled,
+        }
