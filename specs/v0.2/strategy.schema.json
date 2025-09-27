@@ -1,0 +1,125 @@
+{
+  "$id": "https://spec.proof.engine/v0.2/strategy.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Strategy Definition",
+  "type": "object",
+  "properties": {
+    "version": { "type": "string", "const": "0.2.0" },
+    "id": { "type": "string" },
+    "trigger": {
+      "type": "object",
+      "properties": {
+        "failreason_codes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 1
+        },
+        "operator": { "type": "string" },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "required": ["failreason_codes"],
+      "additionalProperties": false
+    },
+    "rewrite": {
+      "type": "object",
+      "properties": {
+        "insert": {
+          "type": "object",
+          "properties": {
+            "at": { "type": "string" },
+            "steps": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "operator": { "type": "string" },
+                  "params": { "type": "object" }
+                },
+                "required": ["operator"],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": ["at", "steps"],
+          "additionalProperties": false
+        },
+        "replace": {
+          "type": "object",
+          "properties": {
+            "at": { "type": "string" },
+            "with": {
+              "type": "object",
+              "properties": {
+                "operator": { "type": "string" },
+                "params": { "type": "object" }
+              },
+              "required": ["operator"],
+              "additionalProperties": false
+            }
+          },
+          "required": ["at", "with"],
+          "additionalProperties": false
+        },
+        "branch": {
+          "type": "object",
+          "properties": {
+            "at": { "type": "string" },
+            "branches": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "condition": { "type": "string" },
+                  "steps": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "operator": { "type": "string" },
+                        "params": { "type": "object" }
+                      },
+                      "required": ["operator"],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": ["condition", "steps"],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": ["at", "branches"],
+          "additionalProperties": false
+        },
+        "params_patch": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "guards": {
+      "type": "object",
+      "properties": {
+        "max_depth": { "type": "integer", "minimum": 1, "maximum": 2 },
+        "max_rewrites_per_fr": { "type": "integer", "minimum": 1, "maximum": 1 },
+        "stop_if_plan_grows": { "type": "boolean" },
+        "max_plan_size_increase": { "type": "integer", "minimum": 0 }
+      },
+      "required": ["max_depth", "max_rewrites_per_fr"],
+      "additionalProperties": false
+    },
+    "expected_outcomes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["must_block", "must_pass", "coverage_increase", "policy_clean", "pass_or_block"]
+      }
+    }
+  },
+  "required": ["version", "id", "trigger", "rewrite", "guards", "expected_outcomes"],
+  "additionalProperties": false
+}

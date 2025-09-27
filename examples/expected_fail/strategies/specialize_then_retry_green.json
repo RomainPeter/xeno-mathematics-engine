@@ -1,0 +1,95 @@
+{
+  "test_case": "specialize_then_retry_green",
+  "description": "Green case: contract.ambiguous_spec failure after strategy application",
+  "input": {
+    "plan": {
+      "version": "0.1.0",
+      "id": "test_plan",
+      "goal": "Test ambiguous specification",
+      "steps": [
+        {
+          "id": "specialize_generalize1",
+          "operator": "Specialize",
+          "params": {
+            "questions": [
+              "clarify: inputs",
+              "clarify: outputs",
+              "clarify: constraints"
+            ]
+          }
+        },
+        {
+          "id": "generalize1",
+          "operator": "Generalize",
+          "params": {
+            "hypothesis": "Clarified specification"
+          }
+        }
+      ],
+      "budgets": {
+        "time_ms": 1000,
+        "audit_cost": 10.0,
+        "max_replans": 3
+      }
+    },
+    "failreason": {
+      "version": "0.2.0",
+      "code": "contract.ambiguous_spec",
+      "message": "Specification is ambiguous",
+      "refs": ["generalize1"],
+      "data": {
+        "operator": "Generalize",
+        "params": {
+          "hypothesis": "Unclear specification"
+        }
+      },
+      "runner": "verifier",
+      "severity": "medium",
+      "tags": ["contract", "specification"]
+    },
+    "context": {
+      "operator": "Generalize",
+      "current_step": {
+        "id": "generalize1",
+        "operator": "Generalize",
+        "params": {
+          "hypothesis": "Clarified specification"
+        }
+      },
+      "history": [],
+      "budgets": {
+        "time_ms": 1000,
+        "audit_cost": 10.0
+      }
+    }
+  },
+  "expected_after": {
+    "success": true,
+    "error": null,
+    "steps_executed": 2,
+    "accept_rate": 1.0,
+    "two_cell": {
+      "version": "0.2.0",
+      "id": "two_cell_specialize_then_retry_*",
+      "from_op": "Generalize",
+      "to_choreo": ["Specialize"],
+      "trigger": {
+        "failreason": "contract.ambiguous_spec",
+        "operator": "Generalize"
+      },
+      "budgets": {
+        "time_ms": 1000,
+        "audit_cost": 10.0,
+        "max_depth": 2,
+        "max_rewrites_per_fr": 1
+      },
+      "evidence": {
+        "prompt_hash": "*",
+        "model": "deterministic",
+        "n": 1,
+        "votes": 1,
+        "latency_ms": 0
+      }
+    }
+  }
+}
