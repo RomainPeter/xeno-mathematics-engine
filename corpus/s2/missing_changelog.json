@@ -1,0 +1,45 @@
+{
+  "id": "s2_missing_changelog",
+  "title": "Missing Changelog Entry",
+  "description": "Code changes without corresponding changelog entry",
+  "category": "hostile",
+  "expected_fail": true,
+  "constraints": [
+    "All changes must be documented in CHANGELOG",
+    "Breaking changes must be highlighted",
+    "Version bump required for changes"
+  ],
+  "obligations": [
+    "k-changelog-required",
+    "k-version-bump",
+    "k-breaking-change-docs"
+  ],
+  "hostile_indicators": [
+    "missing_changelog",
+    "undocumented_change",
+    "version_not_bumped"
+  ],
+  "test_cases": [
+    {
+      "name": "changelog_present",
+      "description": "CHANGELOG must be updated",
+      "expected": "fail"
+    },
+    {
+      "name": "version_bumped",
+      "description": "Version must be incremented",
+      "expected": "fail"
+    },
+    {
+      "name": "breaking_documented",
+      "description": "Breaking changes must be documented",
+      "expected": "fail"
+    }
+  ],
+  "delta_weights": {
+    "H": 0.2,
+    "E": 0.3,
+    "K": 0.4,
+    "A": 0.1
+  }
+}

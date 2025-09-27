@@ -1,0 +1,45 @@
+{
+  "id": "s2_path_traversal",
+  "title": "Path Traversal Attempt",
+  "description": "Attempt to access files outside allowed directory",
+  "category": "hostile",
+  "expected_fail": true,
+  "constraints": [
+    "Path traversal must be blocked",
+    "Input validation required",
+    "Sandboxed file access only"
+  ],
+  "obligations": [
+    "k-no-path-traversal",
+    "k-input-validation",
+    "k-sandboxed-access"
+  ],
+  "hostile_indicators": [
+    "path_traversal",
+    "directory_escape",
+    "unsafe_file_access"
+  ],
+  "test_cases": [
+    {
+      "name": "path_traversal_blocked",
+      "description": "Path traversal attempts must be blocked",
+      "expected": "fail"
+    },
+    {
+      "name": "input_validated",
+      "description": "File paths must be validated",
+      "expected": "fail"
+    },
+    {
+      "name": "sandboxed_access",
+      "description": "File access must be sandboxed",
+      "expected": "fail"
+    }
+  ],
+  "delta_weights": {
+    "H": 0.6,
+    "E": 0.2,
+    "K": 0.1,
+    "A": 0.1
+  }
+}

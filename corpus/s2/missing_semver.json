@@ -1,0 +1,45 @@
+{
+  "id": "s2_missing_semver",
+  "title": "Missing Semantic Versioning",
+  "description": "Version not bumped according to semver rules",
+  "category": "hostile",
+  "expected_fail": true,
+  "constraints": [
+    "Semantic versioning required",
+    "Breaking changes = major version bump",
+    "New features = minor version bump"
+  ],
+  "obligations": [
+    "k-semver-compliance",
+    "k-version-bump-required",
+    "k-breaking-change-major"
+  ],
+  "hostile_indicators": [
+    "version_not_bumped",
+    "semver_violation",
+    "breaking_without_major"
+  ],
+  "test_cases": [
+    {
+      "name": "semver_compliant",
+      "description": "Version must follow semver rules",
+      "expected": "fail"
+    },
+    {
+      "name": "breaking_major_bump",
+      "description": "Breaking changes require major version bump",
+      "expected": "fail"
+    },
+    {
+      "name": "feature_minor_bump",
+      "description": "New features require minor version bump",
+      "expected": "fail"
+    }
+  ],
+  "delta_weights": {
+    "H": 0.2,
+    "E": 0.3,
+    "K": 0.4,
+    "A": 0.1
+  }
+}

@@ -47,6 +47,15 @@ demo-s1-mock:
 demo-s1-docker:
 	. .venv/bin/activate && $(PY) orchestrator/skeleton_llm.py --plan plans/plan-hello.json --state state/x-hello.json --llm mock --verifier docker
 
+demo-s2:
+	. .venv/bin/activate && $(PY) scripts/metrics.py --tasks corpus/s2 --output artifacts/s2_metrics
+
+delta-calibration:
+	. .venv/bin/activate && jupyter nbconvert --to html notebook/delta_calibration.ipynb
+
+test-rules:
+	. .venv/bin/activate && $(PY) tests/test_rules.py
+
 verifier-docker:
 	. .venv/bin/activate && $(PY) scripts/verifier.py --runner docker --pcap examples/v0.1/pcap/ex1.json
 

@@ -1,0 +1,45 @@
+{
+  "id": "s2_nondeterministic_seed",
+  "title": "Non-deterministic Seed Usage",
+  "description": "Code uses random without proper seeding",
+  "category": "hostile",
+  "expected_fail": true,
+  "constraints": [
+    "Random must be seeded for reproducibility",
+    "PYTHONHASHSEED=0 required",
+    "Deterministic behavior mandatory"
+  ],
+  "obligations": [
+    "k-seeded-random",
+    "k-deterministic-execution",
+    "k-reproducible-builds"
+  ],
+  "hostile_indicators": [
+    "unseeded_random",
+    "non_deterministic_hash",
+    "unreproducible_output"
+  ],
+  "test_cases": [
+    {
+      "name": "seeded_random",
+      "description": "Random number generation must be seeded",
+      "expected": "fail"
+    },
+    {
+      "name": "deterministic_hash",
+      "description": "Hash functions must be deterministic",
+      "expected": "fail"
+    },
+    {
+      "name": "reproducible_output",
+      "description": "Output must be reproducible",
+      "expected": "fail"
+    }
+  ],
+  "delta_weights": {
+    "H": 0.1,
+    "E": 0.5,
+    "K": 0.3,
+    "A": 0.1
+  }
+}
