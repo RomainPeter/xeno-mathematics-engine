@@ -26,7 +26,7 @@ cffi==2.0.0
     # via cryptography
 cfgv==3.4.0
     # via pre-commit
-click==8.3.0
+click==8.1.7
     # via
     #   black
     #   typer
@@ -129,7 +129,7 @@ pyyaml==6.0.3
     # via
     #   bandit
     #   pre-commit
-pyyaml-ft==8.0.0
+# pyyaml-ft==8.0.0  # Incompatible with Python 3.9, requires >=3.13
     # via libcst
 radon==6.0.1
     # via -r requirements.in
