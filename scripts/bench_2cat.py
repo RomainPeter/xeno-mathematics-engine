@@ -9,8 +9,11 @@ import argparse
 import subprocess
 import statistics
 import time
+import sys
 from pathlib import Path
 from typing import Dict, List, Any
+
+from proofengine.metrics import enforce_fairness_gate
 
 
 def run_once(
@@ -64,6 +67,8 @@ def main():
     parser.add_argument("--out", required=True, help="Output JSON file")
     parser.add_argument("--verifier", default="docker", help="Verifier to use")
     parser.add_argument("--llm", default="disabled", help="LLM mode")
+    parser.add_argument("--compare", help="Compare with baseline metrics file")
+    parser.add_argument("--fairness", action="store_true", help="Enable fairness mode")
 
     args = parser.parse_args()
 
@@ -105,6 +110,16 @@ def main():
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     Path(args.out).write_text(json.dumps(results, indent=2))
     print(f"Results saved to: {args.out}")
+
+    # Fairness gate: compare with baseline if provided
+    if args.compare and args.mode != "baseline":
+        print(f"🔍 Checking fairness gate against: {args.compare}")
+        try:
+            enforce_fairness_gate(args.compare, args.out)
+            print("✅ Fairness gate passed: WorkUnits identical")
+        except SystemExit:
+            print("❌ Fairness gate failed: WorkUnits differ")
+            sys.exit(1)
 
 
 if __name__ == "__main__":
