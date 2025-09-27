@@ -129,41 +129,51 @@ jobs:
       - name: Run demo-s1-llm (mock)
         run: python orchestrator/skeleton_llm.py --plan plans/plan-hello.json --state state/x-hello.json --llm mock
 
-    demo-s1-docker:
-      runs-on: ubuntu-latest
-      timeout-minutes: 20
-      steps:
-        - uses: actions/checkout@v4
-        - uses: actions/setup-python@v5
-          with: { python-version: '3.11' }
-        - run: pip install -r requirements.lock
-        - name: Build verifier image
-          run: docker build -t proofengine/verifier:0.1.0 -f Dockerfile.verifier .
-        - name: Demo S1 (docker verifier)
-          run: python orchestrator/skeleton_llm.py --plan plans/plan-hello.json --state state/x-hello.json --llm mock --verifier docker
-        - name: Egress test must fail
-          run: |
-            set +e
-            docker run --rm --network=none busybox sh -c "wget -qO- https://example.com"
-            test $? -ne 0 && echo "No egress OK" && exit 0
-            echo "Egress unexpectedly allowed" && exit 1
-        - uses: actions/upload-artifact@v4
-          with: { name: audit-pack-docker, path: artifacts/ }
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-pack
+          path: |
+            out/
+            LOGS.md
+            docs/2pager.md
+          if-no-files-found: warn
 
-    expected-fail-docker:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
-        - uses: actions/setup-python@v5
-          with: { python-version: '3.11' }
-        - run: pip install -r requirements.lock
-        - run: docker build -t proofengine/verifier:0.1.0 -f Dockerfile.verifier .
-        - name: Expected fail (policy_violation, docker)
-          run: |
-            set +e
-            python scripts/verifier.py --runner docker --pcap examples/expected_fail/pcap-secret.json
-            test $? -ne 0 && echo "Expected failure OK" && exit 0
-            echo "Verifier should have failed" && exit 1
+  demo-s1-docker:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - run: pip install -r requirements.lock
+      - name: Build verifier image
+        run: docker build -t proofengine/verifier:0.1.0 -f Dockerfile.verifier .
+      - name: Demo S1 (docker verifier)
+        run: python orchestrator/skeleton_llm.py --plan plans/plan-hello.json --state state/x-hello.json --llm mock --verifier docker
+      - name: Egress test must fail
+        run: |
+          set +e
+          docker run --rm --network=none busybox sh -c "wget -qO- https://example.com"
+          test $? -ne 0 && echo "No egress OK" && exit 0
+          echo "Egress unexpectedly allowed" && exit 1
+      - uses: actions/upload-artifact@v4
+        with: { name: audit-pack-docker, path: artifacts/ }
+
+  expected-fail-docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - run: pip install -r requirements.lock
+      - run: docker build -t proofengine/verifier:0.1.0 -f Dockerfile.verifier .
+      - name: Expected fail (policy_violation, docker)
+        run: |
+          set +e
+          python scripts/verifier.py --runner docker --pcap examples/expected_fail/pcap-secret.json
+          test $? -ne 0 && echo "Expected failure OK" && exit 0
+          echo "Verifier should have failed" && exit 1
 
   macos-tests:
     runs-on: macos-latest
