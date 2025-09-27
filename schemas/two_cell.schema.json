@@ -1,0 +1,124 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TwoCell Schema",
+  "description": "Schema for 2-category transformation cells with fairness and proof guarantees",
+  "type": "object",
+  "properties": {
+    "cell_id": {
+      "type": "string",
+      "description": "Unique identifier for the TwoCell"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO timestamp of cell creation"
+    },
+    "strategy_applied": {
+      "type": "string",
+      "description": "ID of the strategy applied"
+    },
+    "plan_before": {
+      "type": "object",
+      "description": "Plan state before transformation"
+    },
+    "plan_after": {
+      "type": "object", 
+      "description": "Plan state after transformation"
+    },
+    "phi_before": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Φ value before transformation"
+    },
+    "phi_after": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Φ value after transformation"
+    },
+    "phi_decrease": {
+      "type": "boolean",
+      "description": "Whether Φ strictly decreased (phi_after < phi_before - ε)"
+    },
+    "signature": {
+      "type": "object",
+      "properties": {
+        "alg": {
+          "type": "string",
+          "enum": ["HMAC-SHA256", "COSIGN"],
+          "description": "Signature algorithm"
+        },
+        "key_id": {
+          "type": "string",
+          "description": "Key identifier used for signing"
+        },
+        "value": {
+          "type": "string",
+          "description": "Base64-encoded signature"
+        }
+      },
+      "required": ["alg", "key_id", "value"],
+      "description": "Cryptographic signature of the TwoCell"
+    },
+    "obligations_added": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of obligations added by this transformation"
+    },
+    "delta_v_predicted": {
+      "type": "number",
+      "description": "Predicted value change (ΔV) before application"
+    },
+    "delta_v_observed": {
+      "type": "number", 
+      "description": "Observed value change (ΔV) after application"
+    },
+    "selection_result": {
+      "type": "object",
+      "properties": {
+        "candidates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "strategy_id": {"type": "string"},
+              "score": {"type": "number"},
+              "confidence": {"type": "number"}
+            }
+          }
+        },
+        "chosen": {
+          "type": "object",
+          "properties": {
+            "id": {"type": "string"},
+            "score": {"type": "number"},
+            "why": {"type": "string"}
+          }
+        }
+      },
+      "description": "Strategy selection details"
+    },
+    "work_units": {
+      "type": "object",
+      "properties": {
+        "operators_run": {"type": "integer", "minimum": 0},
+        "proofs_checked": {"type": "integer", "minimum": 0},
+        "tests_run": {"type": "integer", "minimum": 0},
+        "opa_rules_evaluated": {"type": "integer", "minimum": 0}
+      },
+      "required": ["operators_run", "proofs_checked", "tests_run", "opa_rules_evaluated"],
+      "description": "Work units performed during transformation"
+    }
+  },
+  "required": [
+    "cell_id",
+    "timestamp", 
+    "strategy_applied",
+    "phi_before",
+    "phi_after",
+    "phi_decrease",
+    "signature"
+  ],
+  "additionalProperties": false
+}
