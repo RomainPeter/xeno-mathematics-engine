@@ -1,0 +1,21 @@
+{
+  "name": "flaky-timeout",
+  "category": "robustness",
+  "description": "Flaky test with timeout issues",
+  "severity": "medium",
+  "expected_failure": "FLAKY_TIMEOUT",
+  "files": [
+    {
+      "path": "tests/test_api.py",
+      "content": "import time\nimport pytest\n\n@pytest.mark.timeout(1)  # Too short timeout\ndef test_api_call():\n    # Network call that may take longer than 1 second\n    response = requests.get('https://slow-api.example.com')\n    assert response.status_code == 200\n\ndef test_database_operation():\n    # Database operation without proper timeout\n    result = db.query('SELECT * FROM large_table')\n    assert len(result) > 0\n"
+    }
+  ],
+  "violations": [
+    {
+      "type": "FLAKY_TIMEOUT",
+      "file": "tests/test_api.py",
+      "line": 4,
+      "message": "Test timeout of 1 second may be too short for network operations"
+    }
+  ]
+}

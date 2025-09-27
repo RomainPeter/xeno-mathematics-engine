@@ -190,3 +190,45 @@ repro-public:
 	@echo "🔄 Running public reproduction..."
 	bash scripts/repro_public.sh
 	@echo "✅ Public reproduction completed"
+
+# S2++ targets
+s2pp-shadow:
+	@echo "🔍 Running S2++ shadow mode..."
+	. .venv/bin/activate && $(PY) scripts/bench_2cat.py --suite corpus/s2pp/suite.json --modes baseline --runs 1 --out artifacts/s2pp/shadow
+	@echo "✅ S2++ shadow mode completed"
+
+s2pp-active:
+	@echo "🚀 Running S2++ active mode..."
+	. .venv/bin/activate && $(PY) scripts/bench_2cat.py --suite corpus/s2pp/suite.json --modes active --runs 1 --out artifacts/s2pp/active
+	@echo "✅ S2++ active mode completed"
+
+s2pp-bench:
+	@echo "📊 Running S2++ benchmark..."
+	. .venv/bin/activate && $(PY) scripts/bench_2cat.py --suite corpus/s2pp/suite.json --modes baseline,active --runs 3 --out artifacts/s2pp/bench
+	@echo "✅ S2++ benchmark completed"
+
+s2pp-delta-calibrate:
+	@echo "🔧 Calibrating S2++ delta weights..."
+	. .venv/bin/activate && $(PY) scripts/delta_calibrate.py --input artifacts/s2pp/bench/metrics.csv --out configs/weights_v2.json --report artifacts/s2pp/delta_report.json --bootstrap 1000
+	@echo "✅ S2++ delta calibration completed"
+
+repro-public-s2pp:
+	@echo "🔄 Running S2++ public reproduction..."
+	. .venv/bin/activate && $(PY) scripts/bench_2cat.py --suite corpus/s2pp/suite.json --modes baseline,active --runs 3 --out artifacts/s2pp/repro
+	. .venv/bin/activate && $(PY) scripts/delta_calibrate.py --input artifacts/s2pp/repro/metrics.csv --out configs/weights_v2.json --report artifacts/s2pp/delta_report.json --bootstrap 1000
+	@echo "📦 Creating audit pack..."
+	. .venv/bin/activate && $(PY) scripts/audit_pack.py --output artifacts/s2pp/audit_pack.zip
+	@echo "🔐 Signing audit pack..."
+	cosign sign-blob --key .github/security/cosign.key artifacts/s2pp/audit_pack.zip --output artifacts/s2pp/audit.sig
+	@echo "✅ S2++ public reproduction completed"
+
+# PR F1 Expected-fail targets
+expected-fail-pii:
+	@echo "🧪 Testing PII expected-fail cases..."
+	. .venv/bin/activate && $(PY) scripts/bench_2cat.py --suite corpus/s2pp/suite.json --modes expected_fail --runs 1 --out artifacts/s2pp/expected_fail_pii --filter pii-logging
+	@echo "✅ PII expected-fail tests completed"
+
+expected-fail-license:
+	@echo "🧪 Testing License expected-fail cases..."
+	. .venv/bin/activate && $(PY) scripts/bench_2cat.py --suite corpus/s2pp/suite.json --modes expected_fail --runs 1 --out artifacts/s2pp/expected_fail_license --filter license-violation-agpl
+	@echo "✅ License expected-fail tests completed"

@@ -1,0 +1,25 @@
+{
+  "name": "api-param-rename",
+  "category": "api-governance", 
+  "description": "API parameter renamed without proper deprecation",
+  "severity": "high",
+  "expected_failure": "API_PARAM_RENAME",
+  "files": [
+    {
+      "path": "src/api.py",
+      "content": "def create_user(name, email, user_id=None):\n    # Parameter 'user_id' renamed to 'id' without deprecation\n    return User(name=name, email=email, id=user_id)\n"
+    },
+    {
+      "path": "src/client.py",
+      "content": "from api import create_user\n\n# Client uses old parameter name\nuser = create_user('John', 'john@example.com', user_id=123)  # Will fail\n"
+    }
+  ],
+  "violations": [
+    {
+      "type": "API_PARAM_RENAME", 
+      "file": "src/api.py",
+      "line": 1,
+      "message": "Parameter 'user_id' renamed to 'id' without deprecation notice"
+    }
+  ]
+}

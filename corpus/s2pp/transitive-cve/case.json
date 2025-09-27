@@ -1,0 +1,25 @@
+{
+  "name": "transitive-cve",
+  "category": "supply-chain",
+  "description": "Transitive dependency with CVE vulnerability",
+  "severity": "high",
+  "expected_failure": "TRANSITIVE_CVE", 
+  "files": [
+    {
+      "path": "package.json",
+      "content": "{\n  \"name\": \"my-app\",\n  \"dependencies\": {\n    \"express\": \"^4.18.0\",\n    \"lodash\": \"^4.17.0\"\n  }\n}"
+    },
+    {
+      "path": "package-lock.json",
+      "content": "{\n  \"dependencies\": {\n    \"express\": {\n      \"version\": \"4.18.0\",\n      \"dependencies\": {\n        \"qs\": {\n          \"version\": \"6.7.0\",\n          \"vulnerabilities\": [\"CVE-2022-24999\"]\n        }\n      }\n    }\n  }\n}"
+    }
+  ],
+  "violations": [
+    {
+      "type": "TRANSITIVE_CVE",
+      "file": "package-lock.json",
+      "line": 8,
+      "message": "Transitive dependency 'qs@6.7.0' has CVE-2022-24999 vulnerability"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "name": "license-violation-agpl",
+  "category": "security-compliance",
+  "description": "AGPL license violation with allowlist/denylist policy",
+  "severity": "critical",
+  "expected_failure": "LICENSE_VIOLATION_AGPL",
+  "files": [
+    {
+      "path": "package.json",
+      "content": "{\n  \"name\": \"my-app\",\n  \"dependencies\": {\n    \"express\": \"^4.18.0\",\n    \"agpl-licensed-package\": \"^1.0.0\"\n  }\n}"
+    },
+    {
+      "path": "package-lock.json",
+      "content": "{\n  \"dependencies\": {\n    \"express\": {\n      \"version\": \"4.18.0\",\n      \"license\": \"MIT\"\n    },\n    \"agpl-licensed-package\": {\n      \"version\": \"1.0.0\",\n      \"license\": \"AGPL-3.0\"\n    }\n  }\n}"
+    },
+    {
+      "path": "sbom.json",
+      "content": "{\n  \"packages\": [\n    {\n      \"name\": \"express\",\n      \"licenseConcluded\": \"MIT\"\n    },\n    {\n      \"name\": \"agpl-licensed-package\",\n      \"licenseConcluded\": \"AGPL-3.0\"\n    }\n  ]\n}"
+    }
+  ],
+  "violations": [
+    {
+      "type": "LICENSE_VIOLATION_AGPL",
+      "file": "package-lock.json",
+      "line": 8,
+      "message": "AGPL-3.0 license detected for 'agpl-licensed-package' - not in allowlist"
+    },
+    {
+      "type": "LICENSE_VIOLATION_AGPL",
+      "file": "sbom.json",
+      "line": 8,
+      "message": "AGPL-3.0 license in SBOM - requires exception file"
+    }
+  ],
+  "policy_flags": {
+    "license": {
+      "unknown": "warn",
+      "allowlist": ["MIT", "Apache-2.0", "BSD-2-Clause", "BSD-3-Clause", "MPL-2.0", "ISC"],
+      "denylist": ["AGPL-3.0", "AGPL-3.0-only", "AGPL-3.0-or-later", "GPL-3.0", "GPL-3.0-only", "GPL-3.0-or-later", "SSPL-1.0"]
+    }
+  },
+  "expected_solution": {
+    "action": "replace_agpl_dependency",
+    "description": "Replace AGPL-licensed package with MIT/Apache alternative or add to LICENSE_EXCEPTION.whitelist",
+    "exception_file": "LICENSE_EXCEPTION.whitelist",
+    "exception_content": "# AGPL exception for agpl-licensed-package\n# Justification: Critical functionality, no MIT alternative available\nagpl-licensed-package: AGPL-3.0\n"
+  }
+}

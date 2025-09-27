@@ -1,0 +1,25 @@
+{
+  "name": "api-default-change",
+  "category": "api-governance",
+  "description": "API default parameter changed without version bump",
+  "severity": "high",
+  "expected_failure": "API_DEFAULT_CHANGE",
+  "files": [
+    {
+      "path": "src/api.py",
+      "content": "def process_data(data, format='json', version=1):\n    # Changed default from 'xml' to 'json' without version bump\n    return process(data, format, version)\n"
+    },
+    {
+      "path": "src/client.py", 
+      "content": "from api import process_data\n\n# Client expects XML format by default\nresult = process_data({'key': 'value'})  # Will get JSON instead of XML\n"
+    }
+  ],
+  "violations": [
+    {
+      "type": "API_DEFAULT_CHANGE",
+      "file": "src/api.py",
+      "line": 1,
+      "message": "Default parameter 'format' changed from 'xml' to 'json' without version bump"
+    }
+  ]
+}

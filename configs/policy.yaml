@@ -1,0 +1,11 @@
+# Policy configuration for PR F1
+# Configuration des politiques par défaut
+
+pii:
+  fr_nir: false  # NIR français désactivé par défaut
+  email: true
+  phone_e164: true
+  ssn_us: true
+
+license:
+  unknown: "warn"  # UNKNOWN/NOASSERTION = warning

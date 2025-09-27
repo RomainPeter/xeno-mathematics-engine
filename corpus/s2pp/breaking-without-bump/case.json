@@ -1,0 +1,25 @@
+{
+  "name": "breaking-without-bump",
+  "category": "api-governance",
+  "description": "Breaking change without semantic version bump",
+  "severity": "critical",
+  "expected_failure": "BREAKING_WITHOUT_BUMP",
+  "files": [
+    {
+      "path": "package.json",
+      "content": "{\n  \"name\": \"my-package\",\n  \"version\": \"1.2.3\",\n  \"dependencies\": {\n    \"lodash\": \"^4.17.0\"\n  }\n}"
+    },
+    {
+      "path": "src/api.js",
+      "content": "// Breaking change: removed function without version bump\nexport function processData(data) {\n  // Old function removed\n  return newProcessData(data);\n}\n"
+    }
+  ],
+  "violations": [
+    {
+      "type": "BREAKING_WITHOUT_BUMP",
+      "file": "package.json", 
+      "line": 3,
+      "message": "Breaking change detected but version not bumped to 2.0.0"
+    }
+  ]
+}

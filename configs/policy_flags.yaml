@@ -1,0 +1,59 @@
+# Policy flags for PR F
+# Configuration des politiques par défaut
+
+pii:
+  # PII detection scope
+  fr_nir: false  # NIR français désactivé par défaut (trop de faux positifs)
+  email: true
+  phone_e164: true
+  ssn_us: true
+  
+  # Scan scope
+  scan_diff_only: true
+  scan_directories: ["src/", "config/", "scripts/"]
+  exclude_directories: ["tests/", "fixtures/", "docs/", "examples/"]
+  
+  # Redaction
+  auto_redact_logs: true
+  redaction_pattern: "REDACTED_{TYPE}"
+
+license:
+  # License policy
+  unknown: "warn"  # UNKNOWN/NOASSERTION = warning, pas blocant
+  
+  # Allowlist (permissive)
+  allowlist:
+    - "MIT"
+    - "Apache-2.0"
+    - "BSD-2-Clause"
+    - "BSD-3-Clause"
+    - "MPL-2.0"
+    - "ISC"
+    - "GPL-2.0-with-classpath-exception"
+  
+  # Denylist (incompatible)
+  denylist:
+    - "AGPL-3.0"
+    - "AGPL-3.0-only"
+    - "AGPL-3.0-or-later"
+    - "GPL-3.0"
+    - "GPL-3.0-only"
+    - "GPL-3.0-or-later"
+    - "SSPL-1.0"
+  
+  # Dual licensing
+  dual_license_allow: true
+  
+  # Exception file
+  exception_file: "LICENSE_EXCEPTION.whitelist"
+
+calibration:
+  # δ v2 calibration method
+  method: "grid_bootstrap"  # grid+bootstrap par défaut
+  bootstrap_samples: 1000
+  grid_resolution: 0.05
+  min_correlation: 0.6
+  
+  # Future: sklearn fallback
+  sklearn_fallback: false
+  sklearn_threshold: 50  # Basculer sur sklearn si > 50 cas

@@ -1,0 +1,31 @@
+{
+  "name": "secret-committed",
+  "category": "security-compliance",
+  "description": "Secret credentials committed to repository",
+  "severity": "critical",
+  "expected_failure": "SECRET_COMMITTED",
+  "files": [
+    {
+      "path": "config/secrets.py",
+      "content": "# Hardcoded secrets in source code\nAPI_KEY = 'sk-1234567890abcdef'\nDB_PASSWORD = 'super_secret_password_123'\nJWT_SECRET = 'my_jwt_secret_key_here'\n"
+    },
+    {
+      "path": "src/app.py",
+      "content": "from config.secrets import API_KEY, DB_PASSWORD\n\n# Using hardcoded secrets\ndef connect_db():\n    return connect(host='localhost', password=DB_PASSWORD)\n"
+    }
+  ],
+  "violations": [
+    {
+      "type": "SECRET_COMMITTED",
+      "file": "config/secrets.py",
+      "line": 2,
+      "message": "API key 'sk-1234567890abcdef' committed to repository"
+    },
+    {
+      "type": "SECRET_COMMITTED", 
+      "file": "config/secrets.py",
+      "line": 3,
+      "message": "Database password committed to repository"
+    }
+  ]
+}
