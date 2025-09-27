@@ -47,6 +47,8 @@ class TestStrategySelector:
 
     def test_filter_by_whitelist(self):
         """Test strategy filtering by whitelist."""
+        # Set the strategy ID to match the whitelist
+        self.mock_strategy.id = "specialize_then_retry"
         strategies = [self.mock_strategy]
 
         # Test with matching failreason
@@ -61,12 +63,21 @@ class TestStrategySelector:
 
     def test_create_selection_prompt(self):
         """Test prompt creation for LLM."""
+        # Set up proper mock strategy attributes
+        self.mock_strategy.id = "specialize_then_retry"
+        self.mock_strategy.trigger_failreasons = ["contract.ambiguous_spec"]
+        self.mock_strategy.expected_outcomes = ["pass_or_block"]
+        self.mock_strategy.guards.max_depth = 2
+        self.mock_strategy.guards.max_rewrites_per_fr = 1
+        self.mock_strategy.guards.stop_if_plan_grows = False
+        self.mock_strategy.guards.max_plan_size_increase = 2
+
         strategies = [self.mock_strategy]
         prompt = self.selector._create_selection_prompt(self.context, strategies)
 
         assert "contract.ambiguous_spec" in prompt
         assert "Generalize" in prompt
-        assert "test_strategy" in prompt
+        assert "specialize_then_retry" in prompt
         assert "JSON" in prompt
 
     def test_parse_llm_response_valid(self):
@@ -170,9 +181,18 @@ class TestStrategySelector:
 
     def test_select_strategy_success(self):
         """Test successful strategy selection."""
+        # Set up proper mock strategy
+        self.mock_strategy.id = "specialize_then_retry"
+        self.mock_strategy.trigger_failreasons = ["contract.ambiguous_spec"]
+        self.mock_strategy.expected_outcomes = ["pass_or_block"]
+        self.mock_strategy.guards.max_depth = 2
+        self.mock_strategy.guards.max_rewrites_per_fr = 1
+        self.mock_strategy.guards.stop_if_plan_grows = False
+        self.mock_strategy.guards.max_plan_size_increase = 2
+
         # Mock LLM response
         mock_response = LLMResponse(
-            content='{"selected_strategy": {"id": "test_strategy", "score": 0.8, "confidence": 0.9, "reason": "Good fit", "expected_gain": 0.7, "risk_assessment": "low"}, "alternative_strategies": [], "reasoning": {"analysis": "Good strategy"}}',
+            content='{"selected_strategy": {"id": "specialize_then_retry", "score": 0.8, "confidence": 0.9, "reason": "Good fit", "expected_gain": 0.7, "risk_assessment": "low"}, "alternative_strategies": [], "reasoning": {"analysis": "Good strategy"}}',
             model="kimi/kimi-2",
             usage={"prompt_tokens": 100, "completion_tokens": 50, "total_tokens": 150},
             latency_ms=100,
@@ -184,7 +204,7 @@ class TestStrategySelector:
         result = self.selector.select_strategy(self.context, strategies)
 
         assert isinstance(result, SelectionResult)
-        assert result.strategy_id == "test_strategy"
+        assert result.strategy_id == "specialize_then_retry"
         self.mock_llm_client.generate.assert_called_once()
 
     def test_select_strategy_llm_failure(self):

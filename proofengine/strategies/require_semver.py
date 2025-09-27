@@ -30,12 +30,13 @@ class RequireSemverStrategy(Strategy):
 
     def create_rewrite_plan(self, context: StrategyContext) -> RewritePlan:
         """Create rewrite plan to add semver normalization."""
+        current_step_id = context.current_step.get("id", "step1")
         return RewritePlan(
             operation=RewriteOperation.INSERT,
-            at="before:current",
+            at=f"before:{current_step_id}",
             steps=[
                 {
-                    "id": f"normalize_semver_{context.current_step.get('id', 'unknown')}",
+                    "id": f"normalize_semver_{current_step_id}",
                     "operator": "Normalize",
                     "params": {
                         "target": "semver",
