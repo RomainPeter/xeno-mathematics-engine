@@ -1,5 +1,6 @@
-# Vulnerable lock file
+# Vulnerable lock file - BEFORE pin_dependency strategy
 requests==2.28.1
 urllib3==1.26.5
 cryptography==43.0.3
+requestss==1.0.0
 typosquat-package==1.0.0

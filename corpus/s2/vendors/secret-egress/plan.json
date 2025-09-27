@@ -20,6 +20,8 @@
     "vendor": "secret-egress",
     "scenario": "secret_leak_prevention",
     "secrets_detected": true,
-    "egress_attempted": true
+    "egress_attempted": true,
+    "api_key": "sk_live_1234567890abcdef",
+    "egress_target": "https://api.external-service.com/data"
   }
 }

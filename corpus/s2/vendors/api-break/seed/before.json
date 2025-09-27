@@ -5,7 +5,11 @@
   "changelog_updated": false,
   "api_tests_missing": true,
   "api_tests_present": false,
+  "endpoint_changed": true,
+  "version_bump_type": "minor",
   "endpoint": "/api/v1/users",
   "method": "POST",
-  "required_param_added": "email_verification_token"
+  "required_param_added": "email_verification_token",
+  "api_version": "1.0.0",
+  "new_version": "2.0.0"
 }
