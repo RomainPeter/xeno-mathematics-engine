@@ -20,6 +20,9 @@
     "api_version": "1.0.0",
     "breaking_changes": true,
     "vendor": "api-break",
-    "scenario": "public_endpoint_modified"
+    "scenario": "public_endpoint_modified",
+    "endpoint": "/api/v1/users",
+    "method": "POST",
+    "required_param_added": "email_verification_token"
   }
 }

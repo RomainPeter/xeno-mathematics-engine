@@ -7,12 +7,15 @@
     "breaking_changes": true,
     "changelog_updated": false,
     "api_tests_missing": true,
-    "api_tests_present": false
+    "api_tests_present": false,
+    "endpoint_changed": true,
+    "version_bump_type": "minor"
   },
   "expected_result": "deny",
   "expected_deny_messages": [
     "API version changed without semantic versioning bump",
     "Breaking changes require changelog update",
-    "API compatibility tests required for version changes"
+    "API compatibility tests required for version changes",
+    "Endpoint changes require major version bump"
   ]
 }

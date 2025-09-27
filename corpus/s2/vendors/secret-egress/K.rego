@@ -22,10 +22,25 @@ deny contains msg if {
     msg := "API keys must not be stored in plaintext"
 }
 
+# Deny if secrets in environment variables
+deny contains msg if {
+    input.secrets_in_env == true
+    msg := "Secrets must not be stored in environment variables"
+}
+
+# Deny if external API calls without authorization
+deny contains msg if {
+    input.external_api_calls == true
+    input.api_calls_authorized == false
+    msg := "External API calls must be authorized"
+}
+
 # Allow if all security requirements met
 allow if {
     input.secrets_detected == false
     input.egress_attempted == false
     input.api_keys_encrypted == true
+    input.secrets_in_env == false
+    input.external_api_calls == false
     input.guard_checks_passed == true
 }

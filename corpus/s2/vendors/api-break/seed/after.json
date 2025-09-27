@@ -5,9 +5,16 @@
   "changelog_updated": true,
   "api_tests_missing": false,
   "api_tests_present": true,
-  "endpoint": "/api/v1/users",
+  "endpoint_changed": true,
+  "version_bump_type": "major",
+  "endpoint": "/api/v2/users",
   "method": "POST",
   "required_param_added": "email_verification_token",
-  "version": "2.0.0",
-  "changelog_entry": "BREAKING: Added required email_verification_token parameter to POST /api/v1/users"
+  "api_version": "2.0.0",
+  "new_version": "2.0.0",
+  "changelog_entry": "BREAKING: Added required email_verification_token parameter to POST /api/v2/users",
+  "compatibility_tests": [
+    "test_api_v1_compatibility",
+    "test_api_v2_new_requirements"
+  ]
 }

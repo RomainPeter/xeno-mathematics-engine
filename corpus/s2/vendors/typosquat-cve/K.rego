@@ -22,10 +22,17 @@ deny contains msg if {
     msg := sprintf("Typosquatting detected in package: %s", [input.package_name])
 }
 
+# Deny if vulnerable packages detected
+deny contains msg if {
+    input.vulnerable_packages_detected == true
+    msg := "Vulnerable packages detected in dependencies"
+}
+
 # Allow if all security requirements met
 allow if {
     input.dependency_pinned == true
     input.cve_detected == false
     input.typosquat_detected == false
+    input.vulnerable_packages_detected == false
     input.sbom_updated == true
 }
