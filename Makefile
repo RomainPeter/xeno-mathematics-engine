@@ -181,6 +181,23 @@ bench-active:
 	. .venv/bin/activate && $(PY) scripts/bench_2cat.py --suite corpus/bench_public/suite.json --mode active --runs 3 --out artifacts/bench_public/metrics_active.json
 	@echo "✅ Active benchmark completed"
 
+# Performance-optimized benchmarks
+bench-baseline-fast:
+	@echo "🚀 Running baseline benchmark (optimized)..."
+	. .venv/bin/activate && $(PY) scripts/bench_2cat.py --suite corpus/bench_public/suite.json --mode baseline --runs 3 --out artifacts/bench_public/metrics_baseline.json --parallel --workers 4 --compact-json --profile
+	@echo "✅ Baseline benchmark (optimized) completed"
+
+bench-active-fast:
+	@echo "🚀 Running active benchmark (optimized)..."
+	. .venv/bin/activate && $(PY) scripts/bench_2cat.py --suite corpus/bench_public/suite.json --mode active --runs 3 --out artifacts/bench_public/metrics_active.json --parallel --workers 4 --compact-json --profile
+	@echo "✅ Active benchmark (optimized) completed"
+
+# Cache warmup
+cache-warmup:
+	@echo "🔥 Warming up caches..."
+	. .venv/bin/activate && $(PY) scripts/bench_2cat.py --suite corpus/bench_public/suite.json --mode baseline --runs 1 --out artifacts/bench_public/warmup.json --cache-warmup artifacts/cache_warmup.json
+	@echo "✅ Cache warmup completed"
+
 delta-calibrate:
 	@echo "🔧 Calibrating delta weights..."
 	. .venv/bin/activate && $(PY) scripts/delta_calibrate.py --runs artifacts/bench_public/metrics_baseline.json artifacts/bench_public/metrics_active.json --out configs/weights.json --report artifacts/bench_public/delta_report.json
