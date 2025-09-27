@@ -71,7 +71,7 @@ libcst==1.8.5
     # via -r requirements.in
 mando==0.7.1
     # via radon
-markdown-it-py==4.0.0
+markdown-it-py==3.0.0
     # via rich
 mccabe==0.7.0
     # via flake8
@@ -177,4 +177,4 @@ typing-inspection==0.4.1
     # via pydantic
 virtualenv==20.34.0
     # via pre-commit
-libcst==1.4.0
+# libcst==1.4.0  # Duplicate, keeping libcst==1.8.5
