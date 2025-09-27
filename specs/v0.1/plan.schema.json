@@ -1,0 +1,46 @@
+{
+  "$id": "https://spec.proof.engine/v0.1/plan.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Strategic Plan Π",
+  "type": "object",
+  "properties": {
+    "version": { "type": "string", "const": "0.1.0" },
+    "id": { "type": "string" },
+    "goal": { "type": "string" },
+    "status": { "type": "string", "enum": ["pending","running","completed","failed"] },
+    "steps": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/Step" },
+      "minItems": 1
+    },
+    "budgets": { "$ref": "#/$defs/Budgets" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["version","id","goal","steps"],
+  "additionalProperties": false,
+  "$defs": {
+    "Budgets": {
+      "type": "object",
+      "properties": {
+        "time_ms": { "type": "integer", "minimum": 0 },
+        "audit_cost": { "type": "number", "minimum": 0 },
+        "max_replans": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "Step": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "operator": { "type": "string", "enum": ["Meet","Refute","Generalize","Specialize","Contrast","Normalize","Verify"] },
+        "input_refs": { "type": "array", "items": { "type": "string" } },
+        "params": { "type": "object" },
+        "expected": { "type": "string" },
+        "budget": { "$ref": "#/$defs/Budgets" }
+      },
+      "required": ["id","operator"],
+      "additionalProperties": false
+    }
+  }
+}

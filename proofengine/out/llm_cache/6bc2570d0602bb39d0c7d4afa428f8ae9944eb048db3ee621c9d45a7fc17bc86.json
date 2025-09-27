@@ -1,0 +1,33 @@
+{
+  "data": {
+    "patch_unified": "--- utils.py\n+++ utils.py\n@@ -1,5 +1,6 @@\nimport ast\n \n def process_input(user_input):\n-    return eval(user_input)\n+    # Sanitize input to prevent arbitrary code execution\n+    return ast.literal_eval(user_input)\n",
+    "rationale": "Replaces unsafe eval() with ast.literal_eval() to safely evaluate literal inputs only, eliminating arbitrary code execution risks while minimally altering functionality. Docstrings remain unchanged, satisfying 'docstring_ok'.",
+    "predicted_obligations_satisfied": [
+      "no eval",
+      "docstring_ok"
+    ],
+    "risk_score": 0.1,
+    "notes": "Assumes utils.py contains a function using eval on user input; patch is reversible and preserves behavior for valid literals."
+  },
+  "_meta": {
+    "model": "x-ai/grok-4-fast:free",
+    "latency_ms": 9659,
+    "usage": {
+      "completion_tokens": 716,
+      "prompt_tokens": 282,
+      "total_tokens": 998,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 560,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 120
+      }
+    },
+    "prompt_hash": "6bc2570d0602bb39d0c7d4afa428f8ae9944eb048db3ee621c9d45a7fc17bc86",
+    "cache_hit": false
+  }
+}

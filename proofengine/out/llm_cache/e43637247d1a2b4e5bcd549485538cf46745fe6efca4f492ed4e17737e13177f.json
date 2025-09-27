@@ -1,0 +1,33 @@
+{
+  "data": {
+    "plan": [
+      "define_function_skeleton",
+      "implement_regex_validation",
+      "add_basic_tests"
+    ],
+    "est_success": 0.95,
+    "est_cost": 15,
+    "notes": "Start with skeleton for structure, add core regex for validation to minimize errors, then tests to verify and reduce risk."
+  },
+  "_meta": {
+    "model": "x-ai/grok-4-fast:free",
+    "latency_ms": 4437,
+    "usage": {
+      "completion_tokens": 416,
+      "prompt_tokens": 275,
+      "total_tokens": 691,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 362,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 120
+      }
+    },
+    "prompt_hash": "e43637247d1a2b4e5bcd549485538cf46745fe6efca4f492ed4e17737e13177f",
+    "cache_hit": false
+  }
+}

@@ -1,0 +1,22 @@
+suite: "S3 — Adversarial / Enquête"
+tests:
+  - id: H-S3-01
+    name: "Data poisoning sur attribut critique → quarantaine + chaîne de preuve"
+    acceptance:
+      - "poisoning_contained == true"
+  - id: H-S3-02
+    name: "Subpoena: gel d’état + export chaîne de preuve reproductible"
+    acceptance:
+      - "frozen_state_exported == true"
+  - id: H-S3-03
+    name: "Malicious auditor: deny-with-proof sur demandes hors-scope"
+    acceptance:
+      - "deny_with_proof == true"
+  - id: H-S3-04
+    name: "Non-réductibilité: homomorphism test vers RAG vectoriel échoue"
+    acceptance:
+      - "non_reducibility_preserved == true"
+  - id: H-S3-05
+    name: "Incident sévère → rétro-implication génère nouvelle règle stable"
+    acceptance:
+      - "new_rule_stable == true"

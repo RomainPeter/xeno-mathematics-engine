@@ -1,0 +1,10 @@
+{"id":"DEC-0001","question_attrs":["risk_mgmt","data_gov"],"evidence_ids":["EVID-0001"],"proof_journal_id":"JRNL-20250916-0001","trace_length":3}
+{"id":"DEC-0002","question_attrs":["transparency","human_oversight"],"evidence_ids":["EVID-0002"],"proof_journal_id":"JRNL-20250916-0002","trace_length":4}
+{"id":"DEC-0003","question_attrs":["robustness","risk_mgmt"],"evidence_ids":["EVID-0007"],"proof_journal_id":"JRNL-20250916-0003","trace_length":5}
+{"id":"DEC-0004","question_attrs":["provenance","transparency"],"evidence_ids":["EVID-0004"],"proof_journal_id":"JRNL-20250916-0004","trace_length":2}
+{"id":"DEC-0005","question_attrs":["determinism"],"evidence_ids":["EVID-0005"],"proof_journal_id":"JRNL-20250916-0005","trace_length":3}
+{"id":"DEC-0006","question_attrs":["audit_readiness","provenance"],"evidence_ids":["EVID-0009"],"proof_journal_id":"JRNL-20250916-0006","trace_length":6}
+{"id":"DEC-0007","question_attrs":["trace_bound"],"evidence_ids":["EVID-0010"],"proof_journal_id":"JRNL-20250916-0007","trace_length":4}
+{"id":"DEC-0008","question_attrs":["compliance_map"],"evidence_ids":["EVID-0012"],"proof_journal_id":"JRNL-20250916-0008","trace_length":5}
+{"id":"DEC-0009","question_attrs":["risk_mgmt","provenance"],"evidence_ids":["EVID-0001","EVID-0006"],"proof_journal_id":"JRNL-20250916-0009","trace_length":6}
+{"id":"DEC-0010","question_attrs":["human_oversight","audit_readiness","provenance"],"evidence_ids":["EVID-0008","EVID-0009"],"proof_journal_id":"JRNL-20250916-0010","trace_length":7}

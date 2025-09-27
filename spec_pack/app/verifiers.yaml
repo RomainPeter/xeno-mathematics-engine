@@ -1,0 +1,31 @@
+verifiers:
+  - id: v_minimality
+    input: ["candidate_set","constraints"]
+    output: {"min_hitting_set": "boolean", "witnesses": "array"}
+    method: "Test de domination; suppression gourmande + backtrack si nécessaire"
+    obligations: ["O-1"]
+  - id: v_trace_bound
+    input: ["journal_entry"]
+    output: {"trace_length": "integer", "within_bound": "boolean"}
+    method: "Parcours du graphe de justification"
+    obligations: ["O-4"]
+  - id: v_provenance
+    input: ["evidence_item"]
+    output: {"hash_valid": "boolean", "signature_valid": "boolean"}
+    method: "Recalcul SHA-256; vérif signature"
+    obligations: ["O-5","O-2"]
+  - id: v_compliance_link
+    input: ["obligations.yaml","compliance_map.csv"]
+    output: {"coverage_pct": "number"}
+    method: "Agrégation mapping + calcul couverture"
+    obligations: ["O-9"]
+  - id: v_monotonicity
+    input: ["query_constraints_before","query_constraints_after","result_sets"]
+    output: {"monotonic": "boolean"}
+    method: "Comparer extensions (après ⊆ avant)"
+    obligations: ["I-1","O-6"]
+  - id: v_blackbox_guard
+    input: ["execution_plan"]
+    output: {"blackbox_usage_on_critical": "integer"}
+    method: "Analyse statique du plan"
+    obligations: ["O-12"]

@@ -1,0 +1,10 @@
+{"id":"DEC-0001","contested":false,"reason":null}
+{"id":"DEC-0002","contested":false,"reason":null}
+{"id":"DEC-0003","contested":false,"reason":null}
+{"id":"DEC-0004","contested":true,"reason":"conflict(provenance)"}
+{"id":"DEC-0005","contested":false,"reason":null}
+{"id":"DEC-0006","contested":true,"reason":"conflict(provenance)"}
+{"id":"DEC-0007","contested":false,"reason":null}
+{"id":"DEC-0008","contested":false,"reason":null}
+{"id":"DEC-0009","contested":true,"reason":"conflict(provenance)"}
+{"id":"DEC-0010","contested":true,"reason":"conflict(provenance)"}

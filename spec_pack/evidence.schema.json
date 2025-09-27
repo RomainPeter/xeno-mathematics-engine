@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/evidence.schema.json",
+  "title": "EvidenceItem",
+  "type": "object",
+  "required": ["id", "type", "content_hash", "created_at", "source", "attributes", "provenance"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-zA-Z0-9\\-\\-]{6,}$"},
+    "type": {"type": "string", "enum": ["document", "record", "decision", "dataset", "model_card", "log"]},
+    "title": {"type": "string"},
+    "content_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "source": {
+      "type": "object",
+      "required": ["system", "location"],
+      "properties": {
+        "system": {"type": "string"},
+        "location": {"type": "string"},
+        "uri": {"type": "string"},
+        "signature": {"type": "string"}
+      }
+    },
+    "attributes": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "obligations": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^[oO\\-\\-][0-9]+$"}
+    },
+    "provenance": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["parent_id", "relation", "hash"],
+        "properties": {
+          "parent_id": {"type": "string"},
+          "relation": {"type": "string", "enum": ["derived_from", "supports", "refutes", "mapped_from"]},
+          "hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+        }
+      }
+    },
+    "journal_refs": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^[jJ][rR][nN][lL][-\\-][0-9A-Z\\-]+"}
+    },
+    "confidentiality": {"type": "string", "enum": ["public", "internal", "restricted", "secret"]},
+    "pii_present": {"type": "boolean"},
+    "tags": {"type": "array", "items": {"type": "string"}}
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "data": {
+    "patch_unified": "--- /dev/null\n+++ email_validator.py\n@@ -0,0 +1,20 @@\n+import re\n+\n+def validate_email(email):\n+    \"\"\"\n+    Validate an email address using regex.\n+    \"\"\"\n+    if not isinstance(email, str):\n+        return False\n+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'\n+    return bool(re.match(pattern, email))\n+\n+# Simple tests\n+def run_tests():\n+    tests = [\n+        ('test@example.com', True),\n+        ('invalid@', False),\n+        ('user.name@domain.co.uk', True),\n+        ('no@at.sign', False)\n+    ]\n+    all_pass = True\n+    for email, expected in tests:\n+        result = validate_email(email)\n+        if result != expected:\n+            print(f'Failed: {email} -> {result} != {expected}')\n+            all_pass = False\n+    print('All tests passed!' if all_pass else 'Some tests failed.')\n+\n+if __name__ == '__main__':\n+    run_tests()\n",
+    "rationale": "Implements a validate_email function using regex for basic email validation and includes simple tests, directly addressing the task. With empty obligations (K), this satisfies the implementation requirement without violating any constraints.",
+    "predicted_obligations_satisfied": [],
+    "risk_score": 0.1,
+    "notes": "New file created with minimal, reversible addition. Regex is a standard, non-external dependency. Tests are basic and non-breaking."
+  },
+  "_meta": {
+    "model": "x-ai/grok-4-fast:free",
+    "latency_ms": 9043,
+    "usage": {
+      "completion_tokens": 1107,
+      "prompt_tokens": 278,
+      "total_tokens": 1385,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 734,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 272
+      }
+    },
+    "prompt_hash": "622becc620c246fb57d29b4a4b6167d601b5a7c4af81c913695f3900b01ede0a",
+    "cache_hit": false
+  }
+}

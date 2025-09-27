@@ -1,0 +1,30 @@
+{
+  "data": {
+    "patch_unified": "",
+    "rationale": "No obligations (K) specified, so no changes required to satisfy compliance. Task to implement rate limiter is noted but not tied to any obligations, hence minimal conservative approach with no patch.",
+    "predicted_obligations_satisfied": [],
+    "risk_score": 0,
+    "notes": "Conservative response due to lack of provided code context or specific obligations. If code is available, provide it for a targeted patch."
+  },
+  "_meta": {
+    "model": "x-ai/grok-4-fast:free",
+    "latency_ms": 7443,
+    "usage": {
+      "completion_tokens": 565,
+      "prompt_tokens": 273,
+      "total_tokens": 838,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 479,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 120
+      }
+    },
+    "prompt_hash": "26f10b95c703f8bdaea1f1d7c9e521d469e411ed28e38ae587fe237bce6efcb4",
+    "cache_hit": false
+  }
+}

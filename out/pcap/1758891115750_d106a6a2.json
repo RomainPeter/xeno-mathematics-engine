@@ -1,0 +1,50 @@
+{
+  "ts": "2025-09-26T12:51:55Z",
+  "operator": "replan",
+  "case_id": "demo_case",
+  "pre": {
+    "K_prev": [
+      "tests_ok",
+      "lint_ok",
+      "types_ok",
+      "security_ok",
+      "complexity_ok",
+      "docstring_ok"
+    ]
+  },
+  "post": {
+    "K_new": [
+      "tests_ok",
+      "lint_ok",
+      "types_ok",
+      "security_ok",
+      "complexity_ok",
+      "docstring_ok",
+      "no_regex_backtracking"
+    ],
+    "plan": []
+  },
+  "obligations": [
+    "tests_ok",
+    "lint_ok",
+    "types_ok",
+    "security_ok",
+    "complexity_ok",
+    "docstring_ok",
+    "no_regex_backtracking"
+  ],
+  "justification": {
+    "time_ms": 5397,
+    "backtracks": 0,
+    "audit_cost_ms": 0,
+    "tech_debt": 0,
+    "llm_time_ms": null,
+    "model": null
+  },
+  "proof_state_hash": "19d7b6fdd70b49f55ad5810954d8ae58f9e2537d248ef67b00a4575d4f681ff3",
+  "toolchain": {
+    "python": "3.11"
+  },
+  "llm_meta": null,
+  "verdict": "fail"
+}

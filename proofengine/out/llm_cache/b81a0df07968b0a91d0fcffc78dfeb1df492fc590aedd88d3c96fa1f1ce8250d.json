@@ -1,0 +1,34 @@
+{
+  "data": {
+    "plan": [
+      "define_function_signature",
+      "implement_pure_logic",
+      "add_type_hints",
+      "document_purity"
+    ],
+    "est_success": 0.95,
+    "est_cost": 15,
+    "notes": "Start with basics to ensure purity from the outset, minimizing later refactoring."
+  },
+  "_meta": {
+    "model": "x-ai/grok-4-fast:free",
+    "latency_ms": 5061,
+    "usage": {
+      "completion_tokens": 417,
+      "prompt_tokens": 276,
+      "total_tokens": 693,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 367,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 153
+      }
+    },
+    "prompt_hash": "b81a0df07968b0a91d0fcffc78dfeb1df492fc590aedd88d3c96fa1f1ce8250d",
+    "cache_hit": false
+  }
+}

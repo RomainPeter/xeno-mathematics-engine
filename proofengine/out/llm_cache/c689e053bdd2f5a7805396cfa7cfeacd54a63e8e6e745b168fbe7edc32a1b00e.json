@@ -1,0 +1,30 @@
+{
+  "data": {
+    "patch_unified": "--- /dev/null\n+++ utils.py\n@@ -0,0 +1,9 @@\n+import re\n+\n+def validate_email(email: str) -> bool:\n+    \"\"\"\n+    Validate an email address using a basic regex pattern.\n+    \"\"\"\n+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'\n+    return bool(re.match(pattern, email))\n+",
+    "rationale": "Creates a new email validation function as requested, satisfying the task with a minimal, safe implementation. No obligations (K) to satisfy.",
+    "predicted_obligations_satisfied": [],
+    "risk_score": 0.1,
+    "notes": "Assumes Python; adds to a new utils.py file. Conservative basic regex validation without external dependencies."
+  },
+  "_meta": {
+    "model": "x-ai/grok-4-fast:free",
+    "latency_ms": 7974,
+    "usage": {
+      "completion_tokens": 827,
+      "prompt_tokens": 276,
+      "total_tokens": 1103,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 642,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 120
+      }
+    },
+    "prompt_hash": "c689e053bdd2f5a7805396cfa7cfeacd54a63e8e6e745b168fbe7edc32a1b00e",
+    "cache_hit": false
+  }
+}

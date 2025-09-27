@@ -1,0 +1,30 @@
+{
+  "data": {
+    "patch_unified": "--- /dev/null\n+++ b/rate_limiter.py\n@@ -0,0 +1,15 @@\n+import time\n+\n+class RateLimiter:\n+    def __init__(self, max_requests: int, time_window: int):\n+        self.max_requests = max_requests\n+        self.time_window = time_window\n+        self.requests = []\n+\n+    def is_allowed(self) -> bool:\n+        now = time.time()\n+        self.requests = [r for r in self.requests if now - r < self.time_window]\n+        if len(self.requests) < self.max_requests:\n+            self.requests.append(now)\n+            return True\n+        return False\n",
+    "rationale": "Implements a basic sliding window rate limiter in Python to fulfill the task, with no obligations to satisfy.",
+    "predicted_obligations_satisfied": [],
+    "risk_score": 0.2,
+    "notes": "Minimal, standalone implementation; assumes Python environment. Reversible by removing the file."
+  },
+  "_meta": {
+    "model": "x-ai/grok-4-fast:free",
+    "latency_ms": 7993,
+    "usage": {
+      "completion_tokens": 894,
+      "prompt_tokens": 273,
+      "total_tokens": 1167,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 676,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 267
+      }
+    },
+    "prompt_hash": "5225614454b251a7103b2fed783b029e27aac61811e73b5bfdb658a9801f8c60",
+    "cache_hit": false
+  }
+}

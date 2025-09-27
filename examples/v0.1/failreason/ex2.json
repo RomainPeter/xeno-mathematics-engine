@@ -1,0 +1,7 @@
+{
+  "version": "0.1.0",
+  "code": "policy_violation",
+  "message": "Secret detected in diff",
+  "refs": ["pcap-002"],
+  "data": { "file": "api/routes.py" }
+}

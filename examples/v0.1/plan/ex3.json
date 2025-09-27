@@ -1,0 +1,11 @@
+{
+  "version": "0.1.0",
+  "id": "plan-003",
+  "goal": "Normalize naming and verify tests",
+  "status": "running",
+  "steps": [
+    { "id": "s1", "operator": "Normalize", "params": { "rule": "snake_case" }, "expected": "codebase normalized" },
+    { "id": "s2", "operator": "Verify", "input_refs": ["pcap-003"], "expected": "tests green" }
+  ],
+  "budgets": { "time_ms": 2000, "audit_cost": 0.2, "max_replans": 1 }
+}

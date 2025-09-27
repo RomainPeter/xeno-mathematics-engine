@@ -1,0 +1,30 @@
+{
+  "data": {
+    "patch_unified": "--- /dev/null\n+++ ratelimiter.py\n@@ -0,0 +1,32 @@\n+from collections import deque\n+from time import time\n+\n+\n+class RateLimiter:\n+    \"\"\"\n+    Rate limiter using sliding window.\n+    Tracks request timestamps in a deque, removing old ones.\n+    \"\"\"\n+\n+    def __init__(self, max_requests: int, window_seconds: int):\n+        \"\"\"\n+        :param max_requests: Max requests allowed in window\n+        :param window_seconds: Time window in seconds\n+        \"\"\"\n+        self.max_requests = max_requests\n+        self.window_seconds = window_seconds\n+        self.requests = deque()\n+\n+    def allow(self) -> bool:\n+        \"\"\"\n+        Check if a new request is allowed.\n+        Returns True if allowed, else False.\n+        Also adds current timestamp if allowed.\n+        \"\"\"\n+        now = time()\n+        # Remove old requests outside window\n+        while self.requests and now - self.requests[0] > self.window_seconds:\n+            self.requests.popleft()\n+\n+        if len(self.requests) < self.max_requests:\n+            self.requests.append(now)\n+            return True\n+        return False\n+",
+    "rationale": "Creates a new RateLimiter class implementing sliding window rate limiting using a deque for efficient timestamp management. Satisfies the task as no obligations (K) exist, providing a minimal, functional implementation.",
+    "predicted_obligations_satisfied": [],
+    "risk_score": 0.1,
+    "notes": "Assumes Python; new file patch from empty. Conservative: no external deps beyond stdlib, reversible by removing file. SEED ignored as deterministic."
+  },
+  "_meta": {
+    "model": "x-ai/grok-4-fast:free",
+    "latency_ms": 7683,
+    "usage": {
+      "completion_tokens": 779,
+      "prompt_tokens": 277,
+      "total_tokens": 1056,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 400,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 271
+      }
+    },
+    "prompt_hash": "c3c155255d7728716141ef786e45fe399bc44f4b497d9d050c824ce8f7e11f49",
+    "cache_hit": false
+  }
+}
