@@ -165,21 +165,21 @@ jobs:
             test $? -ne 0 && echo "Expected failure OK" && exit 0
             echo "Verifier should have failed" && exit 1
 
-    macos-tests:
-      runs-on: macos-latest
-      timeout-minutes: 20
-      steps:
-        - uses: actions/checkout@v4
-        - uses: actions/setup-python@v5
-          with: { python-version: '3.11' }
-        - uses: actions/cache@v4
-          with:
-            path: ~/.cache/pip
-            key: pip-${{ runner.os }}-${{ hashFiles('requirements.lock') }}
-        - run: pip install -r requirements.lock
-        - run: pytest -q -k "not docker"  # skip docker tests
-        - run: make validate
-        - run: python scripts/test_roundtrip.py
+  macos-tests:
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ runner.os }}-${{ hashFiles('requirements.lock') }}
+      - run: pip install -r requirements.lock
+      - run: pytest -q -k "not docker"  # skip docker tests
+      - run: make validate
+      - run: python scripts/test_roundtrip.py
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
