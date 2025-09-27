@@ -1,24 +1,29 @@
-package proof.no_secrets
+package proofengine.policy.no_secrets
 
-deny[msg] {
-    input.diff.contains_secret == true
-    msg := "secret detected in diff"
+# No secrets policy
+import rego.v1
+
+# Deny if secrets detected
+deny contains msg if {
+    input.secrets_detected == true
+    msg := "Secrets detected in codebase"
 }
 
-# Additional rules for secret detection
-deny[msg] {
-    contains(input.code, "sk-")
-    msg := "API key pattern detected"
+# Deny if API keys in plaintext
+deny contains msg if {
+    input.api_keys_plaintext == true
+    msg := "API keys must not be stored in plaintext"
 }
 
-deny[msg] {
-    contains(input.code, "password")
-    contains(input.code, "=")
-    msg := "password assignment detected"
+# Deny if secrets in environment variables
+deny contains msg if {
+    input.secrets_in_env == true
+    msg := "Secrets must not be stored in environment variables"
 }
 
-deny[msg] {
-    contains(input.code, "token")
-    contains(input.code, "=")
-    msg := "token assignment detected"
+# Allow if no secrets detected
+allow if {
+    input.secrets_detected == false
+    input.api_keys_plaintext == false
+    input.secrets_in_env == false
 }

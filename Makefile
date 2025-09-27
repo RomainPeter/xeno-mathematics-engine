@@ -145,3 +145,27 @@ expected-fail-2cat:
 	@echo "🧪 Testing 2-category expected-fail cases..."
 	. .venv/bin/activate && $(PY) scripts/test_strategies_expected_fail.py
 	@echo "✅ 2-category expected-fail tests completed"
+
+# S2 Vendors targets
+demo-s2:
+	@echo "🎯 Running S2 vendors demo..."
+	. .venv/bin/activate && $(PY) scripts/bench_s2_vendors.py --mode both
+	@echo "✅ S2 vendors demo completed"
+
+s2-active:
+	@echo "🚀 Running S2 active mode..."
+	. .venv/bin/activate && $(PY) scripts/run_active_mock.py --plan corpus/s2/vendors/api-break/plan.json
+	. .venv/bin/activate && $(PY) scripts/run_active_mock.py --plan corpus/s2/vendors/typosquat-cve/plan.json
+	. .venv/bin/activate && $(PY) scripts/run_active_mock.py --plan corpus/s2/vendors/secret-egress/plan.json
+	@echo "✅ S2 active mode completed"
+
+s2-bench:
+	@echo "📊 Running S2 vendors benchmark..."
+	. .venv/bin/activate && $(PY) scripts/bench_s2_vendors.py --mode both --output artifacts/s2_vendors_benchmark.json
+	@echo "✅ S2 vendors benchmark completed"
+
+# Expected-fail tests for S2 vendors
+expected-fail-s2:
+	@echo "🧪 Testing S2 vendors expected-fail cases..."
+	. .venv/bin/activate && $(PY) -m pytest tests/s2_vendors_test.py -v
+	@echo "✅ S2 vendors expected-fail tests completed"

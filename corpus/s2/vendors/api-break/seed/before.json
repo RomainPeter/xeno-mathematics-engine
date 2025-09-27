@@ -1,0 +1,11 @@
+{
+  "api_version_changed": true,
+  "semver_bump": false,
+  "breaking_changes": true,
+  "changelog_updated": false,
+  "api_tests_missing": true,
+  "api_tests_present": false,
+  "endpoint": "/api/v1/users",
+  "method": "POST",
+  "required_param_added": "email_verification_token"
+}

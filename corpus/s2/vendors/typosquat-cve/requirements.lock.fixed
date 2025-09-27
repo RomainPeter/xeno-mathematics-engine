@@ -1,0 +1,5 @@
+# Secure lock file after pin_dependency strategy
+requests==2.31.0  # Pinned to secure version
+urllib3==2.0.7    # Pinned to secure version  
+cryptography==46.0.1  # Pinned to secure version
+requests-oauthlib==1.3.1  # Replaced typosquat package

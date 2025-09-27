@@ -1,0 +1,5 @@
+# Vulnerable dependencies for testing
+requests==2.28.1  # CVE-2023-32681
+urllib3==1.26.5   # CVE-2023-45853
+cryptography==43.0.3  # CVE-2023-23931
+typosquat-package==1.0.0  # Simulated typosquat

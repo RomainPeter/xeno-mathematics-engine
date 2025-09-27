@@ -1,0 +1,18 @@
+{
+  "test_name": "api-break_before",
+  "description": "API breaking change without semver/changelog (should fail)",
+  "input": {
+    "api_version_changed": true,
+    "semver_bump": false,
+    "breaking_changes": true,
+    "changelog_updated": false,
+    "api_tests_missing": true,
+    "api_tests_present": false
+  },
+  "expected_result": "deny",
+  "expected_deny_messages": [
+    "API version changed without semantic versioning bump",
+    "Breaking changes require changelog update",
+    "API compatibility tests required for version changes"
+  ]
+}
