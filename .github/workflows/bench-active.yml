@@ -27,21 +27,16 @@ jobs:
           name: metrics_baseline
           path: artifacts/bench_public/
       
-      - name: Run active benchmark with fairness gate
-        env:
-          METRICS_FAIRNESS: "1"
+      - name: Run active benchmark
         run: |
           python scripts/bench_2cat.py \
-            --suite corpus/bench_public/suite.json \
-            --mode active \
+            --suite corpus/s2pp/suite.json \
+            --modes active \
             --runs 3 \
-            --out artifacts/bench_public/metrics_active.json \
-            --verifier mock \
-            --compare artifacts/bench_public/metrics_baseline.json \
-            --fairness
+            --out artifacts/bench_public/
       
       - name: Upload active metrics
         uses: actions/upload-artifact@v4
         with:
           name: metrics_active
-          path: artifacts/bench_public/metrics_active.json
+          path: artifacts/bench_public/

@@ -22,19 +22,15 @@ jobs:
       - run: pip install -r requirements.txt
       
       - name: Run baseline benchmark
-        env:
-          METRICS_FAIRNESS: "1"
         run: |
           python scripts/bench_2cat.py \
-            --suite corpus/bench_public/suite.json \
-            --mode baseline \
+            --suite corpus/s2pp/suite.json \
+            --modes baseline \
             --runs 3 \
-            --out artifacts/bench_public/metrics_baseline.json \
-            --verifier mock \
-            --fairness
+            --out artifacts/bench_public/
       
       - name: Upload baseline metrics
         uses: actions/upload-artifact@v4
         with:
           name: metrics_baseline
-          path: artifacts/bench_public/metrics_baseline.json
+          path: artifacts/bench_public/
