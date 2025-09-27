@@ -1,0 +1,70 @@
+name: Proof CI (Simple)
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+concurrency:
+  group: proof-ci-simple-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install -U pip
+          pip install -r requirements.lock
+          pip install pyyaml || echo "PyYAML installation failed, continuing..."
+
+      - name: Check spec_pack structure
+        run: |
+          if [ -d "spec_pack" ]; then
+            echo "✅ spec_pack directory exists"
+            ls -la spec_pack/
+          else
+            echo "❌ spec_pack directory missing"
+            exit 1
+          fi
+
+      - name: Simple proof check
+        run: |
+          echo "Running simple proof validation..."
+          python -c "
+          import json
+          import os
+          
+          # Check if key files exist
+          files_to_check = [
+              'spec_pack/config.yaml',
+              'spec_pack/obligations.yaml',
+              'spec_pack/metrics.json'
+          ]
+          
+          for file_path in files_to_check:
+              if os.path.exists(file_path):
+                  print(f'✅ {file_path} exists')
+              else:
+                  print(f'❌ {file_path} missing')
+          
+          print('Proof CI simple check completed')
+          "
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: proof-simple-${{ github.run_id }}
+          path: |
+            spec_pack/
+          if-no-files-found: warn

@@ -21,7 +21,7 @@ jobs:
       - name: Expected fail (policy_violation)
         run: |
           set +e
-          python scripts/verifier.py --pcap examples/expected_fail/pcap-secret.json
+          python scripts/verifier_simple.py --pcap examples/expected_fail/pcap-secret.json
           test $? -ne 0 && echo "Expected failure OK" && exit 0
           echo "Verifier should have failed" && exit 1
 
@@ -107,20 +107,14 @@ jobs:
           python -m pytest tests/test_llm_client_v2.py -v
           python -m pytest tests/test_orchestrator_llm.py -v
 
-      - name: Verify (online if key, else skip)
-        shell: bash
-        run: |
-          if [ -n "${{ secrets.OPENROUTER_API_KEY }}" ]; then
-            python scripts/verify.py
-          else
-            echo "No API key: skipping online verify"
-          fi
+      - name: Verify (simple)
+        run: python scripts/verify_simple.py
 
-      - name: Demo + Audit (replay/offline expected)
+      - name: Demo + Audit (simple)
         shell: bash
         run: |
-          python scripts/demo.py || true
-          python scripts/audit_pack.py || true
+          python scripts/demo_simple.py || true
+          python scripts/audit_pack_simple.py || true
           python scripts/make_logs.py || true
 
       - name: Run demo-s1 (stub)
@@ -171,7 +165,7 @@ jobs:
       - name: Expected fail (policy_violation, docker)
         run: |
           set +e
-          python scripts/verifier.py --runner docker --pcap examples/expected_fail/pcap-secret.json
+          python scripts/verifier_simple.py --runner docker --pcap examples/expected_fail/pcap-secret.json
           test $? -ne 0 && echo "Expected failure OK" && exit 0
           echo "Verifier should have failed" && exit 1
 

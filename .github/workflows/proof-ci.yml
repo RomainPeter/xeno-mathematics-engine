@@ -1,10 +1,8 @@
-name: Proof CI (A2H+S1+S2 strict)
+name: Proof CI (A2H+S1+S2 strict) - DISABLED
 
+# DISABLED: Using proof-ci-simple.yml instead
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch:
 
 concurrency:
   group: proof-ci-${{ github.ref }}

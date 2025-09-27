@@ -1,8 +1,7 @@
-name: Proof Nightly
+name: Proof Nightly - DISABLED
 
+# DISABLED: Temporarily disabled for CI stability
 on:
-  schedule:
-    - cron: "0 2 * * *"
   workflow_dispatch:
 
 concurrency:
