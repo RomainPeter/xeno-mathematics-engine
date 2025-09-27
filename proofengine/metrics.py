@@ -104,10 +104,18 @@ class ExecutionMetrics:
             "timestamp": self.timestamp,
         }
 
-    def save_fair_metrics(self, output_path: str) -> None:
+    def save_fair_metrics(self, output_path: str, compact: bool = True) -> None:
         """Save metrics in fairness format."""
         Path(output_path).parent.mkdir(parents=True, exist_ok=True)
-        Path(output_path).write_text(json.dumps(self.to_dict(), indent=2))
+
+        if compact:
+            # Compact JSON for performance
+            json_str = json.dumps(self.to_dict(), separators=(",", ":"))
+        else:
+            # Pretty JSON for readability
+            json_str = json.dumps(self.to_dict(), indent=2)
+
+        Path(output_path).write_text(json_str)
 
     @classmethod
     def load_fair_metrics(cls, input_path: str) -> "ExecutionMetrics":
