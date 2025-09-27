@@ -1,4 +1,5 @@
-# Proof Orchestrator – Fit Probe
+<<<<<<< HEAD
+# dancing-machines — Proof Orchestrator Fit Probe
 
 ## Short
 Hybrid proof‑carrying orchestration: stochastic generation inside, deterministic verification outside. Every step is a PCAP (typed journal, obligations K, cost vector V, delta δ), with a deterministic verifier and replayable audit pack.
@@ -44,4 +45,7 @@ Hybrid proof‑carrying orchestration: stochastic generation inside, determinist
 - Demo in code space only; no claim about Lean/tactics performance.
 - LLM ping requires OpenRouter API key; replay uses local cache.
 
-**License**: Apache-2.0
+=======
+# dancing-machines
+Proog engine with orchestrator
+>>>>>>> origin/main
