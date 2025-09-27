@@ -14,7 +14,7 @@ jobs:
       - uses: actions/setup-python@v5
         with: { python-version: "3.11" }
       - run: pip install -r requirements.txt
-      - run: python scripts/bench_2cat.py --suite corpus/bench_public/suite.json --mode baseline --runs 1 --out artifacts/bench_public/metrics_baseline.json
-      - run: python scripts/bench_2cat.py --suite corpus/bench_public/suite.json --mode active --runs 1 --out artifacts/bench_public/metrics_active.json
+      - run: python scripts/bench_2cat.py --suite corpus/bench_public/suite.json --mode baseline --runs 1 --out artifacts/bench_public/metrics_baseline.json --verifier mock
+      - run: python scripts/bench_2cat.py --suite corpus/bench_public/suite.json --mode active --runs 1 --out artifacts/bench_public/metrics_active.json --verifier mock
       - uses: actions/upload-artifact@v4
         with: { name: bench_public, path: artifacts/bench_public }
