@@ -24,4 +24,4 @@ black==25.9.0
 ruff==0.13.1
 
 # Security & SBOM
-cryptography==43.0.3
+cryptography==46.0.1
