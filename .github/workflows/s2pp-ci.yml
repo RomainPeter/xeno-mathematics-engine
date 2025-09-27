@@ -21,10 +21,10 @@ jobs:
       run: |
         pip install -r requirements.txt
         pip install -r spec_pack/requirements.txt
+        pip install numpy scipy scikit-learn pandas
     
     - name: Run S2++ shadow mode
       run: |
-        make s2pp-shadow
         python scripts/bench_2cat.py --suite corpus/s2pp/suite.json --modes baseline --runs 1 --out artifacts/s2pp/shadow
     
     - name: Upload shadow artifacts
@@ -48,10 +48,10 @@ jobs:
       run: |
         pip install -r requirements.txt
         pip install -r spec_pack/requirements.txt
+        pip install numpy scipy scikit-learn pandas
     
     - name: Run S2++ active mode
       run: |
-        make s2pp-active
         python scripts/bench_2cat.py --suite corpus/s2pp/suite.json --modes active --runs 1 --out artifacts/s2pp/active
     
     - name: Upload active artifacts
@@ -78,6 +78,7 @@ jobs:
       run: |
         pip install -r requirements.txt
         pip install -r spec_pack/requirements.txt
+        pip install numpy scipy scikit-learn pandas
     
     - name: Run expected fail tests
       run: |
@@ -118,6 +119,7 @@ jobs:
       run: |
         pip install -r requirements.txt
         pip install -r spec_pack/requirements.txt
+        pip install numpy scipy scikit-learn pandas
     
     - name: Run full benchmark
       run: |
@@ -163,7 +165,10 @@ jobs:
     
     - name: Generate audit pack
       run: |
-        make repro-public-s2pp
+        python scripts/bench_2cat.py --suite corpus/s2pp/suite.json --modes baseline,active --runs 3 --out artifacts/s2pp/repro
+        python scripts/delta_calibrate.py --input artifacts/s2pp/repro/metrics.csv --out configs/weights_v2.json --report artifacts/s2pp/delta_report.json --bootstrap 1000
+        mkdir -p artifacts/s2pp
+        zip -r artifacts/s2pp/audit_pack.zip artifacts/s2pp/repro/*.json configs/weights_v2.json configs/policy.yaml
     
     - name: Upload benchmark artifacts
       uses: actions/upload-artifact@v3

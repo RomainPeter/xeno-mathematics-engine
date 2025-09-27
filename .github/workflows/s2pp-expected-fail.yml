@@ -21,10 +21,11 @@ jobs:
       run: |
         pip install -r requirements.txt
         pip install -r spec_pack/requirements.txt
+        pip install numpy scipy scikit-learn pandas
     
     - name: Run PII expected-fail tests
       run: |
-        python scripts/bench_2cat.py --suite corpus/s2pp/suite.json --modes expected_fail --runs 1 --out artifacts/s2pp/expected_fail_pii --filter pii-logging
+        python scripts/bench_2cat.py --suite corpus/s2pp/suite.json --modes expected_fail --runs 1 --out artifacts/s2pp/expected_fail_pii
     
     - name: Verify PII expected failures
       run: |
@@ -60,10 +61,11 @@ jobs:
       run: |
         pip install -r requirements.txt
         pip install -r spec_pack/requirements.txt
+        pip install numpy scipy scikit-learn pandas
     
     - name: Run License expected-fail tests
       run: |
-        python scripts/bench_2cat.py --suite corpus/s2pp/suite.json --modes expected_fail --runs 1 --out artifacts/s2pp/expected_fail_license --filter license-violation-agpl
+        python scripts/bench_2cat.py --suite corpus/s2pp/suite.json --modes expected_fail --runs 1 --out artifacts/s2pp/expected_fail_license
     
     - name: Verify License expected failures
       run: |
@@ -100,6 +102,7 @@ jobs:
       run: |
         pip install -r requirements.txt
         pip install -r spec_pack/requirements.txt
+        pip install numpy scipy scikit-learn pandas
     
     - name: Generate fairness report
       run: |
