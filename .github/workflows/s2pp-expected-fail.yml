@@ -42,7 +42,7 @@ jobs:
         "
     
     - name: Upload PII expected fail artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: s2pp-expected-fail-pii
         path: artifacts/s2pp/expected_fail_pii/
@@ -82,7 +82,7 @@ jobs:
         "
     
     - name: Upload License expected fail artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: s2pp-expected-fail-license
         path: artifacts/s2pp/expected_fail_license/
@@ -111,16 +111,17 @@ jobs:
     
     - name: Generate audit pack
       run: |
-        Compress-Archive -Path artifacts/s2pp/fairness/*.json,configs/weights_v2.json,configs/policy.yaml -DestinationPath artifacts/s2pp/audit_pack.zip -Force
+        mkdir -p artifacts/s2pp
+        zip -r artifacts/s2pp/audit_pack.zip artifacts/s2pp/fairness/*.json configs/weights_v2.json configs/policy.yaml
     
     - name: Upload fairness report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: s2pp-fairness-report
         path: artifacts/s2pp/fairness_report.json
     
     - name: Upload audit pack
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: s2pp-audit-pack
         path: artifacts/s2pp/audit_pack.zip

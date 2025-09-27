@@ -28,7 +28,7 @@ jobs:
         python scripts/bench_2cat.py --suite corpus/s2pp/suite.json --modes baseline --runs 1 --out artifacts/s2pp/shadow
     
     - name: Upload shadow artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: s2pp-shadow-artifacts
         path: artifacts/s2pp/shadow/
@@ -55,7 +55,7 @@ jobs:
         python scripts/bench_2cat.py --suite corpus/s2pp/suite.json --modes active --runs 1 --out artifacts/s2pp/active
     
     - name: Upload active artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: s2pp-active-artifacts
         path: artifacts/s2pp/active/
@@ -99,7 +99,7 @@ jobs:
         "
     
     - name: Upload expected fail artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: s2pp-expected-fail-${{ matrix.category }}
         path: artifacts/s2pp/expected_fail_${{ matrix.category }}/
@@ -171,13 +171,13 @@ jobs:
         zip -r artifacts/s2pp/audit_pack.zip artifacts/s2pp/repro/*.json configs/weights_v2.json configs/policy.yaml
     
     - name: Upload benchmark artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: s2pp-bench-artifacts
         path: artifacts/s2pp/bench/
     
     - name: Upload audit pack
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: s2pp-audit-pack
         path: artifacts/s2pp/audit_pack.zip
