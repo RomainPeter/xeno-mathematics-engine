@@ -61,7 +61,7 @@ class TestProofEngineOrchestrator:
                     est_success=0.8,
                     est_cost=2.0,
                     notes="Test plan",
-                    llm_meta={"latency_ms": 1000, "model": "x-ai/grok-4-fast:free"},
+                    llm_meta={"latency_ms": 1000, "model": "moonshotai/kimi-k2:free"},
                 )
 
                 with patch("core.pcap.write_pcap") as mock_write:

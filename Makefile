@@ -1,10 +1,15 @@
 PY=python3
 
-.PHONY: setup verify demo audit-pack logs release schema-test validate fmt demo-s1
+.PHONY: setup verify demo audit-pack logs release schema-test validate fmt demo-s1 deps-lock
 
 setup:
 	$(PY) -m venv .venv && . .venv/bin/activate && pip install -U pip && pip install -r requirements.txt
 	@echo "Copy .env.example to .env and set OPENROUTER_* vars."
+
+deps-lock:
+	pip install pip-tools
+	pip-compile requirements.in
+	@echo "Dependencies locked in requirements.txt"
 
 verify:
 	. .venv/bin/activate && $(PY) scripts/verify.py

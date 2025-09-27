@@ -28,7 +28,7 @@ class TestPCAPSchemas:
             audit_cost_ms=500,
             tech_debt=1,
             llm_time_ms=800,
-            model="x-ai/grok-4-fast:free",
+            model="moonshotai/kimi-k2:free",
         )
 
         assert justification.time_ms == 1000
@@ -36,7 +36,7 @@ class TestPCAPSchemas:
         assert justification.audit_cost_ms == 500
         assert justification.tech_debt == 1
         assert justification.llm_time_ms == 800
-        assert justification.model == "x-ai/grok-4-fast:free"
+        assert justification.model == "moonshotai/kimi-k2:free"
 
     def test_pcap_creation(self):
         """Test de création d'un PCAP."""

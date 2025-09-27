@@ -1,0 +1,6 @@
+{
+  "diff": {
+    "contains_secret": true
+  },
+  "code": "def process_data(data):\n    api_key = \"sk-1234567890abcdef\"\n    return data + api_key"
+}
