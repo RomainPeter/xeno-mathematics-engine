@@ -1,0 +1,43 @@
+{
+  "$id": "https://spec.proof.engine/v0.1/prompt_contract.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PromptContract v0.1",
+  "type": "object",
+  "properties": {
+    "version": { "type": "string", "const": "0.1.0" },
+    "role": { 
+      "type": "string", 
+      "enum": ["Meet", "Generalize", "Refute", "Specialize", "Contrast", "Normalize", "Verify"] 
+    },
+    "task": { "type": "string" },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "value": { "type": "string" }
+        },
+        "required": ["name", "type", "value"],
+        "additionalProperties": false
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "output_schema_uri": { "type": "string" },
+    "budgets": {
+      "type": "object",
+      "properties": {
+        "tokens": { "type": "integer", "minimum": 1, "maximum": 800 },
+        "latency_ms": { "type": "integer", "minimum": 100, "maximum": 10000 }
+      },
+      "required": ["tokens", "latency_ms"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["version", "role", "task", "inputs", "constraints", "output_schema_uri", "budgets"],
+  "additionalProperties": false
+}

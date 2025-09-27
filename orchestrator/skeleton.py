@@ -11,17 +11,21 @@ from datetime import datetime
 import hashlib
 import uuid
 
+# Import LLM adapter
+from adapter_llm import OrchestratorLLMAdapter
+
 
 class OrchestratorError(Exception):
     pass
 
 
 class Orchestrator:
-    def __init__(self, plan_path, state_path):
+    def __init__(self, plan_path, state_path, llm_adapter=None):
         self.plan_path = Path(plan_path)
         self.state_path = Path(state_path)
         self.plan = None
         self.state = None
+        self.llm_adapter = llm_adapter or OrchestratorLLMAdapter()
         self.metrics = {
             "accept_rate": 0.0,
             "replans_count": 0,
@@ -203,14 +207,14 @@ class Orchestrator:
         """Handle step failure"""
         print(f"❌ Step {step['id']} failed - triggering replan")
 
-        # Create FailReason
-        fail_reason = {
-            "version": "0.1.0",
-            "code": "test_failure",
-            "message": f"Step {step['id']} verification failed",
-            "refs": [step["id"]],
-            "data": {"step_operator": step["operator"]},
-        }
+        # Create FailReason (for future use)
+        # fail_reason = {
+        #     "version": "0.1.0",
+        #     "code": "test_failure",
+        #     "message": f"Step {step['id']} verification failed",
+        #     "refs": [step["id"]],
+        #     "data": {"step_operator": step["operator"]},
+        # }
 
         # Update metrics
         self.metrics["replans_count"] += 1
