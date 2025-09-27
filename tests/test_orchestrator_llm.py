@@ -5,7 +5,6 @@ Tests for Orchestrator LLM adapter
 import tempfile
 from unittest.mock import patch, MagicMock
 
-
 from orchestrator.adapter_llm import OrchestratorLLMAdapter, PromptContract
 
 

@@ -1,215 +1,206 @@
+#!/usr/bin/env python3
 """
-Tests pour le client LLM.
+Tests for LLM Client v0.1 with auto-consistency
 """
-
-import pytest
 import os
+import tempfile
+import time
 from unittest.mock import patch, MagicMock
+
 from proofengine.core.llm_client import LLMClient, LLMConfig
 
 
-class TestLLMConfig:
-    """Tests pour la configuration LLM."""
+class TestLLMClient:
+    """Test LLM Client functionality"""
 
-    def test_default_config(self):
-        """Test de la configuration par défaut."""
+    def setup_method(self):
+        """Setup test environment"""
+        self.temp_dir = tempfile.mkdtemp()
+        self.config = LLMConfig(
+            api_key="test-key",
+            cache_dir=os.path.join(self.temp_dir, "cache"),
+            logs_dir=os.path.join(self.temp_dir, "logs"),
+            n_consistency=2,  # Reduced for testing
+            temperature=0.0,
+        )
+        self.client = LLMClient(self.config)
+
+    def teardown_method(self):
+        """Cleanup test environment"""
+        import shutil
+
+        shutil.rmtree(self.temp_dir, ignore_errors=True)
+
+    def test_config_defaults(self):
+        """Test configuration defaults"""
         config = LLMConfig()
         assert config.model == "moonshotai/kimi-k2:free"
-        assert config.base_url == "https://openrouter.ai/api/v1"
-        assert config.cache_dir == "out/llm_cache"
-
-    def test_config_from_env(self):
-        """Test de la configuration depuis les variables d'environnement."""
-        with patch.dict(
-            os.environ,
-            {
-                "OPENROUTER_MODEL": "test-model",
-                "OPENROUTER_API_KEY": "test-key",
-                "HTTP_REFERER": "test-referer",
-                "X_TITLE": "test-title",
-            },
-        ):
-            config = LLMConfig()
-            assert config.model == "test-model"
-            assert config.api_key == "test-key"
-            assert config.referer == "test-referer"
-            assert config.title == "test-title"
-
-
-class TestLLMClient:
-    """Tests pour le client LLM."""
-
-    def test_init_without_api_key(self):
-        """Test d'initialisation sans clé API."""
-        with patch.dict(os.environ, {}, clear=True):
-            with pytest.raises(RuntimeError, match="OPENROUTER_API_KEY missing"):
-                LLMClient()
-
-    def test_init_with_api_key(self):
-        """Test d'initialisation avec clé API."""
-        with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key"}):
-            client = LLMClient()
-            assert client.cfg.api_key == "test-key"
+        assert config.temperature == 0.0
+        assert config.top_p == 1.0
+        assert config.max_tokens == 800
+        assert config.n_consistency == 3
 
     def test_cache_key_generation(self):
-        """Test de génération des clés de cache."""
-        with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key"}):
-            client = LLMClient()
+        """Test cache key generation"""
+        prompt = "test prompt"
+        params = {"test": "value"}
+        key1 = self.client._get_cache_key(prompt, params)
+        key2 = self.client._get_cache_key(prompt, params)
+        assert key1 == key2  # Deterministic
 
-            key1 = client._cache_key("system", "user", 42)
-            key2 = client._cache_key("system", "user", 42)
-            key3 = client._cache_key("system", "user", 43)
+        # Different params should generate different keys
+        params2 = {"test": "different"}
+        key3 = self.client._get_cache_key(prompt, params2)
+        assert key1 != key3
 
-            assert key1 == key2
-            assert key1 != key3
+    def test_cache_operations(self):
+        """Test cache save/load operations"""
+        cache_key = "test_key"
+        test_data = {"response": "test", "timestamp": time.time()}
 
-    @patch("core.llm_client.OpenAI")
-    def test_generate_json_success(self, mock_openai):
-        """Test de génération JSON réussie."""
-        with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key"}):
-            # Mock de la réponse OpenAI
-            mock_response = MagicMock()
-            mock_response.choices = [MagicMock()]
-            mock_response.choices[0].message.content = '{"result": "success"}'
-            mock_response.usage = MagicMock()
-            mock_response.usage.model_dump.return_value = {"tokens": 100}
+        # Save to cache
+        self.client._save_to_cache(cache_key, test_data)
 
-            mock_client = MagicMock()
-            mock_client.chat.completions.create.return_value = mock_response
-            mock_openai.return_value = mock_client
+        # Load from cache
+        cached_data = self.client._get_from_cache(cache_key)
+        assert cached_data == test_data
 
-            client = LLMClient()
-            data, meta = client.generate_json("system", "user", seed=42)
+        # Non-existent key
+        assert self.client._get_from_cache("non_existent") is None
 
-            assert data == {"result": "success"}
-            assert "latency_ms" in meta
-            assert "model" in meta
+    def test_response_scoring(self):
+        """Test response scoring logic"""
+        # Valid JSON response
+        valid_response = '{"plan": ["step1", "step2"], "success": 0.8}'
+        score1 = self.client._score_response(valid_response, "plan.schema.json")
+        assert score1 > 0.5
 
-    @patch("core.llm_client.OpenAI")
-    def test_generate_json_error(self, mock_openai):
-        """Test de génération JSON avec erreur."""
-        with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key"}):
-            mock_client = MagicMock()
-            mock_client.chat.completions.create.side_effect = Exception("API Error")
-            mock_openai.return_value = mock_client
+        # Invalid JSON
+        invalid_response = "not json"
+        score2 = self.client._score_response(invalid_response, "plan.schema.json")
+        assert score2 == 0.0
 
-            client = LLMClient()
+        # Empty response
+        empty_response = "{}"
+        score3 = self.client._score_response(empty_response, "plan.schema.json")
+        assert score3 < score1
 
-            with pytest.raises(RuntimeError, match="LLM API error"):
-                client.generate_json("system", "user")
+    def test_select_best_response(self):
+        """Test best response selection"""
+        responses = [
+            {
+                "choices": [
+                    {"message": {"content": '{"plan": ["good"], "success": 0.9}'}}
+                ]
+            },
+            {
+                "choices": [
+                    {"message": {"content": '{"plan": ["bad"], "success": 0.1}'}}
+                ]
+            },
+            {"choices": [{"message": {"content": "invalid json"}}]},
+        ]
 
-    @patch("core.llm_client.OpenAI")
-    def test_ping_success(self, mock_openai):
-        """Test de ping réussi."""
-        with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key"}):
-            # Mock de la réponse
-            mock_response = MagicMock()
-            mock_response.choices = [MagicMock()]
-            mock_response.choices[0].message.content = '{"ping": true}'
-            mock_response.usage = MagicMock()
-            mock_response.usage.model_dump.return_value = {"tokens": 10}
+        best = self.client._select_best_response(responses, "plan.schema.json")
+        assert "good" in best["choices"][0]["message"]["content"]
 
-            mock_client = MagicMock()
-            mock_client.chat.completions.create.return_value = mock_response
-            mock_openai.return_value = mock_client
+    @patch("proofengine.core.llm_client.OpenAI")
+    def test_mock_api_call(self, mock_openai):
+        """Test API call with mocked client"""
+        # Mock the OpenAI client
+        mock_client = MagicMock()
+        mock_openai.return_value = mock_client
 
-            client = LLMClient()
-            result = client.ping()
+        # Mock response
+        mock_response = MagicMock()
+        mock_response.choices = [MagicMock()]
+        mock_response.choices[0].message.content = '{"plan": ["test"], "success": 0.8}'
+        mock_response.usage = MagicMock()
+        mock_response.usage.model_dump.return_value = {"total_tokens": 100}
 
-            assert result["status"] == "ok"
-            assert "response" in result
-            assert "meta" in result
+        mock_client.chat.completions.create.return_value = mock_response
 
-    @patch("core.llm_client.OpenAI")
-    def test_ping_error(self, mock_openai):
-        """Test de ping avec erreur."""
-        with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key"}):
-            mock_client = MagicMock()
-            mock_client.chat.completions.create.side_effect = Exception(
-                "Connection error"
-            )
-            mock_openai.return_value = mock_client
+        # Create client with mocked OpenAI
+        client = LLMClient(self.config)
+        client.client = mock_client
 
-            client = LLMClient()
-            result = client.ping()
+        messages = [{"role": "user", "content": "test"}]
+        response, meta = client.call_with_consistency(messages)
 
-            assert result["status"] == "error"
-            assert "error" in result
+        assert "choices" in response
+        assert meta["cache_hit"] is False
+        assert meta["consistency_calls"] == 2  # n_consistency
 
-    def test_clear_cache(self):
-        """Test de nettoyage du cache."""
-        with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key"}):
-            client = LLMClient()
+    def test_offline_mode(self):
+        """Test offline mode (no API key)"""
+        config = LLMConfig(api_key="")
+        client = LLMClient(config)
 
-            # Mock du répertoire de cache
-            with patch("os.listdir", return_value=["file1.json", "file2.json"]):
-                with patch("os.path.join", side_effect=lambda *args: "/".join(args)):
-                    with patch("os.remove") as mock_remove:
-                        count = client.clear_cache()
+        # Should work in offline mode
+        messages = [{"role": "user", "content": "test"}]
+        response, meta = client.call_with_consistency(messages)
 
-                        assert count == 2
-                        assert mock_remove.call_count == 2
+        assert "choices" in response
+        assert meta["cache_hit"] is False
 
-    def test_get_cache_stats(self):
-        """Test des statistiques du cache."""
-        with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key"}):
-            client = LLMClient()
+    def test_determinism(self):
+        """Test deterministic behavior with temperature=0"""
+        messages = [{"role": "user", "content": "test"}]
 
-            # Mock des statistiques du cache
-            with patch("os.path.exists", return_value=True):
-                with patch("os.listdir", return_value=["file1.json", "file2.json"]):
-                    with patch("os.path.getsize", return_value=1024):
-                        stats = client.get_cache_stats()
+        # First call
+        response1, meta1 = self.client.call_with_consistency(messages)
 
-                        assert stats["count"] == 2
-                        assert stats["size_bytes"] == 2048
-                        assert "cache_dir" in stats
+        # Second call should be cached
+        response2, meta2 = self.client.call_with_consistency(messages)
 
+        assert meta2["cache_hit"] is True
+        assert response1 == response2
 
-class TestLLMClientIntegration:
-    """Tests d'intégration pour le client LLM."""
+    def test_log_redaction(self):
+        """Test log redaction functionality"""
+        prompt = "Use API key sk-1234567890abcdef"
+        redacted = self.client._redact_prompt(prompt)
 
-    @patch("core.llm_client.OpenAI")
-    def test_full_workflow(self, mock_openai):
-        """Test du workflow complet."""
-        with patch.dict(os.environ, {"OPENROUTER_API_KEY": "test-key"}):
-            # Mock de la réponse
-            mock_response = MagicMock()
-            mock_response.choices = [MagicMock()]
-            mock_response.choices[
-                0
-            ].message.content = '{"plan": ["step1", "step2"], "est_success": 0.8}'
-            mock_response.usage = MagicMock()
-            mock_response.usage.model_dump.return_value = {"tokens": 150}
+        assert "sk-REDACTED-" in redacted
+        assert "sk-1234567890abcdef" not in redacted
 
-            mock_client = MagicMock()
-            mock_client.chat.completions.create.return_value = mock_response
-            mock_openai.return_value = mock_client
+    def test_hmac_signing(self):
+        """Test HMAC log signing"""
+        prompt_hash = "abc123"
+        resp_hash = "def456"
 
-            client = LLMClient()
+        signature1 = self.client._sign_log(prompt_hash, resp_hash)
+        signature2 = self.client._sign_log(prompt_hash, resp_hash)
 
-            # Test de génération
-            data, meta = client.generate_json(
-                "You are a planner",
-                "Create a plan for task X",
-                seed=42,
-                temperature=0.7,
-            )
+        assert signature1 == signature2  # Deterministic
+        assert len(signature1) == 64  # SHA256 hex length
 
-            assert data["plan"] == ["step1", "step2"]
-            assert data["est_success"] == 0.8
-            assert meta["model"] == "moonshotai/kimi-k2:free"
-            assert "latency_ms" in meta
+    def test_ping_offline(self):
+        """Test ping in offline mode"""
+        config = LLMConfig(api_key="")
+        client = LLMClient(config)
 
-            # Vérifier que l'API a été appelée avec les bons paramètres
-            mock_client.chat.completions.create.assert_called_once()
-            call_args = mock_client.chat.completions.create.call_args
+        result = client.ping()
+        assert result["ok"] is True
+        assert result["model"] == "mock"
 
-            assert call_args[1]["model"] == "moonshotai/kimi-k2:free"
-            assert call_args[1]["temperature"] == 0.7
-            assert call_args[1]["seed"] == 42
-            assert call_args[1]["response_format"]["type"] == "json_object"
+    @patch("proofengine.core.llm_client.OpenAI")
+    def test_ping_online(self, mock_openai):
+        """Test ping with real API"""
+        mock_client = MagicMock()
+        mock_openai.return_value = mock_client
 
+        mock_response = MagicMock()
+        mock_response.choices = [MagicMock()]
+        mock_response.choices[0].message.content = "pong"
+        mock_response.usage = MagicMock()
+        mock_response.usage.model_dump.return_value = {"total_tokens": 10}
 
-if __name__ == "__main__":
-    pytest.main([__file__])
+        mock_client.chat.completions.create.return_value = mock_response
+
+        client = LLMClient(self.config)
+        client.client = mock_client
+
+        result = client.ping()
+        assert result["ok"] is True
+        assert "latency_ms" in result
