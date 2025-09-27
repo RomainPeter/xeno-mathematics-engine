@@ -50,6 +50,7 @@ class StrategyContext:
     current_step: Dict[str, Any]
     history: List[Dict[str, Any]]
     budgets: Dict[str, Any]
+    depth: int = 0  # Explicit depth counter for rewrite operations
 
 
 class Strategy(ABC):

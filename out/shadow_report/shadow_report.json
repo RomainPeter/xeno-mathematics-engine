@@ -1,9 +1,11 @@
 {
   "mode": "shadow",
-  "timestamp": "2025-09-27T18:12:53.593884",
+  "timestamp": "2025-09-27T18:29:10.795491",
   "proposals": [
     {
       "strategy_id": "specialize_then_retry",
+      "failreason": "contract.ambiguous_spec",
+      "operator": "Generalize",
       "rewrite_plan": {
         "operation": "insert",
         "at": "before:current",
@@ -36,6 +38,8 @@
     },
     {
       "strategy_id": "add_missing_tests",
+      "failreason": "coverage.missing_tests",
+      "operator": "Verify",
       "rewrite_plan": {
         "operation": "insert",
         "at": "before:Verify",
@@ -69,6 +73,8 @@
     },
     {
       "strategy_id": "require_semver",
+      "failreason": "api.semver_missing",
+      "operator": "Normalize",
       "rewrite_plan": {
         "operation": "insert",
         "at": "before:current",
@@ -101,6 +107,8 @@
     },
     {
       "strategy_id": "changelog_or_block",
+      "failreason": "api.changelog_missing",
+      "operator": "Normalize",
       "rewrite_plan": {
         "operation": "insert",
         "at": "before:current",
@@ -133,6 +141,8 @@
     },
     {
       "strategy_id": "decompose_meet",
+      "failreason": "runner.test_failure",
+      "operator": "Meet",
       "rewrite_plan": {
         "operation": "replace",
         "at": "meet1",
@@ -164,6 +174,8 @@
     },
     {
       "strategy_id": "retry_with_hardening",
+      "failreason": "nondet.flaky_test",
+      "operator": "Meet",
       "rewrite_plan": {
         "operation": "insert",
         "at": "before:current",

@@ -79,6 +79,8 @@ class TwoCategoryOrchestrator:
 
                     proposal = {
                         "strategy_id": strategy.id,
+                        "failreason": context.failreason,
+                        "operator": context.operator,
                         "rewrite_plan": {
                             "operation": rewrite_plan.operation.value,
                             "at": rewrite_plan.at,

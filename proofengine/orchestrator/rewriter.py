@@ -74,19 +74,21 @@ class PlanRewriter:
                 error=f"Strategy {strategy.id} cannot be applied to context",
             )
 
-        # Check depth limits
-        current_depth = context.history.count("rewrite")
-        if not self.checker.check_depth_limit(current_depth, strategy.guards.max_depth):
+        # Check depth limits using explicit depth counter
+        if not self.checker.check_depth_limit(context.depth, strategy.guards.max_depth):
             return RewriteResult(
                 success=False,
-                error=f"Depth limit exceeded: {current_depth} > {strategy.guards.max_depth}",
+                error=f"Depth limit exceeded: {context.depth} > {strategy.guards.max_depth}",
             )
 
-        # Check for cycles
+        # Check for cycles BEFORE adding to detector
         if self.cycle_detector.has_cycle(plan):
             return RewriteResult(
                 success=False, error="Cycle detected in plan", cycle_detected=True
             )
+
+        # Add current plan to cycle detector AFTER checking for cycles
+        self.cycle_detector.add_plan_hash(plan)
 
         # Create rewrite plan
         try:
@@ -108,6 +110,10 @@ class PlanRewriter:
         if not self.checker.check_budget_constraints(plan, new_plan, context.budgets):
             return RewriteResult(success=False, error="Budget constraints violated")
 
+        # Check plan growth guard
+        if not self.checker.check_plan_growth_guard(plan, new_plan, strategy):
+            return RewriteResult(success=False, error="Plan growth guard violated")
+
         # Check expected outcomes
         if not self.checker.check_expected_outcomes(strategy, context):
             return RewriteResult(success=False, error="Expected outcomes not met")
@@ -115,11 +121,8 @@ class PlanRewriter:
         # Create two_cell record
         two_cell = self._create_two_cell(strategy, rewrite_plan, context, new_plan)
 
-        # Add plan hash to cycle detector
-        self.cycle_detector.add_plan_hash(new_plan)
-
         return RewriteResult(
-            success=True, new_plan=new_plan, two_cell=two_cell, depth=current_depth + 1
+            success=True, new_plan=new_plan, two_cell=two_cell, depth=context.depth + 1
         )
 
     def _apply_rewrite_plan(
@@ -168,19 +171,25 @@ class PlanRewriter:
         plan["steps"][step_pos] = rewrite_plan.with_step
 
     def _apply_branch(self, plan: Dict[str, Any], rewrite_plan: RewritePlan) -> None:
-        """Apply branch operation."""
+        """Apply branch operation.
+
+        NOTE: This is a simplified implementation that only handles the first branch.
+        A full implementation would need to:
+        1. Evaluate branch conditions
+        2. Handle multiple branches with proper control flow
+        3. Manage branch state and execution context
+
+        For now, we raise an exception to prevent silent failures.
+        """
         if not rewrite_plan.branches:
             return
 
-        # For now, implement simple branching logic
-        # In a full implementation, this would handle conditional execution
-        step_pos = self._find_step_position(plan, rewrite_plan.at)
-        if step_pos is None:
-            raise ValueError(f"Step not found: {rewrite_plan.at}")
-
-        # Insert first branch steps
-        for i, step in enumerate(rewrite_plan.branches[0]["steps"]):
-            plan["steps"].insert(step_pos + i, step)
+        # Branching is not fully implemented - raise explicit exception
+        raise NotImplementedError(
+            "Branch operation is not fully implemented. "
+            "This would require conditional execution logic and proper branch management. "
+            "Consider using INSERT or REPLACE operations instead."
+        )
 
     def _apply_params_patch(
         self, plan: Dict[str, Any], rewrite_plan: RewritePlan

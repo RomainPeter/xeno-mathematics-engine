@@ -6,7 +6,7 @@ Executes S1 in shadow mode and produces report with proposals.
 import json
 import sys
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import List
 from datetime import datetime
 
 # Add the project root to the Python path
@@ -295,8 +295,8 @@ class ShadowReportGenerator:
         print("\nProposals by FailReason:")
         failreason_counts = {}
         for proposal in report.proposals:
-            # Extract failreason from proposal context
-            failreason = proposal.get("trigger", {}).get("failreason", "unknown")
+            # Extract failreason from proposal
+            failreason = proposal.get("failreason", "unknown")
             failreason_counts[failreason] = failreason_counts.get(failreason, 0) + 1
 
         for failreason, count in failreason_counts.items():
@@ -325,7 +325,9 @@ def main():
         )
         return False
 
-    print(f"\n✅ Shadow report generated successfully with {len(report.proposals)} proposals")
+    print(
+        f"\n✅ Shadow report generated successfully with {len(report.proposals)} proposals"
+    )
     return True
 
 
