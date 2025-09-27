@@ -1,6 +1,6 @@
 PY=python3
 
-.PHONY: setup verify demo audit-pack logs release schema-test validate fmt demo-s1 deps-lock build-verifier-pinned audit
+.PHONY: setup verify demo audit-pack logs release schema-test validate fmt demo-s1 deps-lock build-verifier-pinned audit 2cat-shadow 2cat-active s2-bench 2cat-report
 
 setup:
 	$(PY) -m venv .venv && . .venv/bin/activate && pip install -U pip && pip install -r requirements.txt
@@ -112,3 +112,36 @@ rebuild-hash-equal:
 		exit 1; \
 	fi
 	@rm -f hash1.txt hash2.txt
+
+# 2-Category transformation targets
+2cat-shadow:
+	@echo "🔍 Running 2-category shadow mode..."
+	. .venv/bin/activate && $(PY) scripts/2cat_shadow_report.py
+	@echo "✅ Shadow report generated"
+
+2cat-active:
+	@echo "🚀 Running 2-category active mode..."
+	. .venv/bin/activate && $(PY) scripts/2cat_active_mode.py
+	@echo "✅ Active mode completed"
+
+s2-bench:
+	@echo "📊 Running S2 benchmark..."
+	. .venv/bin/activate && $(PY) scripts/bench_2cat.py
+	@echo "✅ S2 benchmark completed"
+
+2cat-report:
+	@echo "📈 Generating 2-category report..."
+	. .venv/bin/activate && $(PY) scripts/generate_2cat_report.py
+	@echo "✅ 2-category report generated"
+
+# Test 2-category strategies
+test-2cat:
+	@echo "🧪 Testing 2-category strategies..."
+	. .venv/bin/activate && $(PY) -m pytest tests/strategies/ -v
+	@echo "✅ 2-category strategy tests completed"
+
+# Expected-fail tests for 2-category
+expected-fail-2cat:
+	@echo "🧪 Testing 2-category expected-fail cases..."
+	. .venv/bin/activate && $(PY) scripts/test_strategies_expected_fail.py
+	@echo "✅ 2-category expected-fail tests completed"

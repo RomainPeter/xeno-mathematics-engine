@@ -1,0 +1,201 @@
+{
+  "mode": "shadow",
+  "timestamp": "2025-09-27T18:12:53.593884",
+  "proposals": [
+    {
+      "strategy_id": "specialize_then_retry",
+      "rewrite_plan": {
+        "operation": "insert",
+        "at": "before:current",
+        "steps": [
+          {
+            "id": "specialize_generalize1",
+            "operator": "Specialize",
+            "params": {
+              "questions": [
+                "clarify: inputs",
+                "clarify: outputs",
+                "clarify: constraints"
+              ]
+            },
+            "expected": "Clarified specification"
+          }
+        ],
+        "with_step": null,
+        "branches": null,
+        "params_patch": null
+      },
+      "success_probability": 0.8,
+      "expected_outcomes": [
+        "pass_or_block"
+      ],
+      "guards": {
+        "max_depth": 2,
+        "max_rewrites_per_fr": 1
+      }
+    },
+    {
+      "strategy_id": "add_missing_tests",
+      "rewrite_plan": {
+        "operation": "insert",
+        "at": "before:Verify",
+        "steps": [
+          {
+            "id": "test_coverage_verify1",
+            "operator": "Meet",
+            "params": {
+              "hypothesis": "Test coverage is sufficient",
+              "evidence_types": [
+                "test",
+                "coverage_report"
+              ],
+              "min_coverage": 0.8
+            },
+            "expected": "Coverage requirements met"
+          }
+        ],
+        "with_step": null,
+        "branches": null,
+        "params_patch": null
+      },
+      "success_probability": 0.9,
+      "expected_outcomes": [
+        "coverage_increase"
+      ],
+      "guards": {
+        "max_depth": 2,
+        "max_rewrites_per_fr": 1
+      }
+    },
+    {
+      "strategy_id": "require_semver",
+      "rewrite_plan": {
+        "operation": "insert",
+        "at": "before:current",
+        "steps": [
+          {
+            "id": "normalize_semver_normalize1",
+            "operator": "Normalize",
+            "params": {
+              "target": "semver",
+              "version_scheme": "semantic",
+              "bump_type": "patch",
+              "require_changelog": true
+            },
+            "expected": "Semantic versioning applied"
+          }
+        ],
+        "with_step": null,
+        "branches": null,
+        "params_patch": null
+      },
+      "success_probability": 0.9,
+      "expected_outcomes": [
+        "must_block",
+        "policy_clean"
+      ],
+      "guards": {
+        "max_depth": 2,
+        "max_rewrites_per_fr": 1
+      }
+    },
+    {
+      "strategy_id": "changelog_or_block",
+      "rewrite_plan": {
+        "operation": "insert",
+        "at": "before:current",
+        "steps": [
+          {
+            "id": "require_changelog_normalize2",
+            "operator": "Normalize",
+            "params": {
+              "target": "changelog",
+              "format": "keepachangelog",
+              "require_entry": true,
+              "block_on_missing": true
+            },
+            "expected": "Changelog entry present"
+          }
+        ],
+        "with_step": null,
+        "branches": null,
+        "params_patch": null
+      },
+      "success_probability": 0.2,
+      "expected_outcomes": [
+        "must_block",
+        "policy_clean"
+      ],
+      "guards": {
+        "max_depth": 2,
+        "max_rewrites_per_fr": 1
+      }
+    },
+    {
+      "strategy_id": "decompose_meet",
+      "rewrite_plan": {
+        "operation": "replace",
+        "at": "meet1",
+        "steps": null,
+        "with_step": {
+          "id": "decomposed_meet1",
+          "operator": "Meet",
+          "params": {
+            "hypothesis": "Decomposed hypotheses",
+            "sub_hypotheses": [
+              "A",
+              "B"
+            ],
+            "evidence_types": []
+          },
+          "expected": "All sub-hypotheses supported"
+        },
+        "branches": null,
+        "params_patch": null
+      },
+      "success_probability": 0.8,
+      "expected_outcomes": [
+        "pass_or_block"
+      ],
+      "guards": {
+        "max_depth": 2,
+        "max_rewrites_per_fr": 1
+      }
+    },
+    {
+      "strategy_id": "retry_with_hardening",
+      "rewrite_plan": {
+        "operation": "insert",
+        "at": "before:current",
+        "steps": [
+          {
+            "id": "harden_meet2",
+            "operator": "Normalize",
+            "params": {
+              "target": "test_environment",
+              "fix_seed": true,
+              "seed_value": 42,
+              "retry_count": 3,
+              "timeout_ms": 30000
+            },
+            "expected": "Deterministic test execution"
+          }
+        ],
+        "with_step": null,
+        "branches": null,
+        "params_patch": null
+      },
+      "success_probability": 0.9,
+      "expected_outcomes": [
+        "pass_or_block"
+      ],
+      "guards": {
+        "max_depth": 2,
+        "max_rewrites_per_fr": 1
+      }
+    }
+  ],
+  "total_strategies_evaluated": 6,
+  "applicable_strategies": 6,
+  "success_rate": 1.0
+}

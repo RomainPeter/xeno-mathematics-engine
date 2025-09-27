@@ -1,0 +1,84 @@
+{
+  "test_case": "specialize_then_retry_red",
+  "description": "Red case: contract.ambiguous_spec failure before strategy application",
+  "input": {
+    "plan": {
+      "version": "0.1.0",
+      "id": "test_plan",
+      "goal": "Test ambiguous specification",
+      "steps": [
+        {
+          "id": "generalize1",
+          "operator": "Generalize",
+          "params": {
+            "hypothesis": "Unclear specification"
+          }
+        }
+      ],
+      "budgets": {
+        "time_ms": 1000,
+        "audit_cost": 10.0,
+        "max_replans": 3
+      }
+    },
+    "failreason": {
+      "version": "0.2.0",
+      "code": "contract.ambiguous_spec",
+      "message": "Specification is ambiguous",
+      "refs": ["generalize1"],
+      "data": {
+        "operator": "Generalize",
+        "params": {
+          "hypothesis": "Unclear specification"
+        }
+      },
+      "runner": "verifier",
+      "severity": "medium",
+      "tags": ["contract", "specification"]
+    },
+    "context": {
+      "operator": "Generalize",
+      "current_step": {
+        "id": "generalize1",
+        "operator": "Generalize",
+        "params": {
+          "hypothesis": "Unclear specification"
+        }
+      },
+      "history": [],
+      "budgets": {
+        "time_ms": 1000,
+        "audit_cost": 10.0
+      }
+    }
+  },
+  "expected_before": {
+    "success": false,
+    "error": "contract.ambiguous_spec",
+    "steps_executed": 0,
+    "accept_rate": 0.0
+  },
+  "strategy_application": {
+    "strategy_id": "specialize_then_retry",
+    "can_apply": true,
+    "rewrite_plan": {
+      "operation": "insert",
+      "at": "before:current",
+      "steps": [
+        {
+          "id": "specialize_generalize1",
+          "operator": "Specialize",
+          "params": {
+            "questions": [
+              "clarify: inputs",
+              "clarify: outputs",
+              "clarify: constraints"
+            ]
+          },
+          "expected": "Clarified specification"
+        }
+      ]
+    },
+    "success_probability": 0.8
+  }
+}

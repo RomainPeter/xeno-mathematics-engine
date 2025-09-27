@@ -1,0 +1,51 @@
+{
+  "$id": "https://spec.proof.engine/v0.2/failreason.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FailReason v0.2 (Granular)",
+  "type": "object",
+  "properties": {
+    "version": { "type": "string", "const": "0.2.0" },
+    "code": {
+      "type": "string",
+      "enum": [
+        "parse.json_syntax_error",
+        "parse.yaml_syntax_error",
+        "parse.schema_validation_error",
+        "schema.missing_required_field",
+        "schema.invalid_type",
+        "schema.constraint_violation",
+        "runner.pytest_failure",
+        "runner.opa_policy_violation",
+        "runner.static_analysis_failure",
+        "runner.verifier_timeout",
+        "policy.semver_violation",
+        "policy.changelog_missing",
+        "policy.secret_detection",
+        "policy.breaking_change",
+        "budget.time_exceeded",
+        "budget.audit_cost_exceeded",
+        "budget.max_replans_exceeded",
+        "contract.ambiguous_spec",
+        "contract.missing_obligation",
+        "contract.insufficient_coverage",
+        "coverage.missing_tests",
+        "coverage.insufficient_branch_coverage",
+        "coverage.insufficient_line_coverage",
+        "nondet.flaky_test",
+        "nondet.race_condition",
+        "nondet.seed_dependent",
+        "api.semver_missing",
+        "api.changelog_missing",
+        "api.breaking_change"
+      ]
+    },
+    "message": { "type": "string" },
+    "refs": { "type": "array", "items": { "type": "string" } },
+    "data": { "type": "object" },
+    "runner": { "type": "string", "enum": ["pytest", "opa", "static", "verifier"] },
+    "severity": { "type": "string", "enum": ["low", "medium", "high", "critical"] },
+    "tags": { "type": "array", "items": { "type": "string" } }
+  },
+  "required": ["version", "code", "message"],
+  "additionalProperties": false
+}
