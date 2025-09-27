@@ -1,0 +1,41 @@
+FROM python:3.11-slim AS base
+
+# Environment variables for Python optimization
+ENV PIP_NO_CACHE_DIR=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/verifier
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    curl \
+    tini \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /verifier
+
+# Copy requirements and install Python dependencies
+COPY requirements.lock /verifier/requirements.lock
+RUN pip install --no-deps --requirement requirements.lock
+
+# Install OPA binary
+RUN curl -sL https://openpolicyagent.org/downloads/latest/opa_linux_amd64_static \
+    -o /usr/local/bin/opa && chmod +x /usr/local/bin/opa
+
+# Copy verifier scripts
+COPY scripts/ /verifier/scripts/
+COPY proofengine/ /verifier/proofengine/
+COPY policy/ /verifier/policy/
+
+# Create non-root user for security
+RUN groupadd -r verifier && useradd -r -g verifier verifier
+RUN chown -R verifier:verifier /verifier
+USER verifier
+
+# Use tini as entrypoint for proper signal handling
+ENTRYPOINT ["/usr/bin/tini", "--"]
+
+# Default command
+CMD ["python", "scripts/verifier.py", "--help"]

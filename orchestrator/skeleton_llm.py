@@ -18,12 +18,13 @@ class OrchestratorError(Exception):
 
 
 class Orchestrator:
-    def __init__(self, plan_path, state_path, llm_adapter=None):
+    def __init__(self, plan_path, state_path, llm_adapter=None, verifier_mode="local"):
         self.plan_path = Path(plan_path)
         self.state_path = Path(state_path)
         self.plan = None
         self.state = None
         self.llm_adapter = llm_adapter or OrchestratorLLMAdapter()
+        self.verifier_mode = verifier_mode
         self.metrics = {
             "accept_rate": 0.0,
             "replans_count": 0,
@@ -166,6 +167,9 @@ def main():
     parser.add_argument(
         "--llm", choices=["kimi", "mock"], default="kimi", help="LLM to use"
     )
+    parser.add_argument(
+        "--verifier", choices=["local", "docker"], default="local", help="Verifier mode"
+    )
 
     args = parser.parse_args()
 
@@ -188,7 +192,7 @@ def main():
         llm_adapter = OrchestratorLLMAdapter()
 
     try:
-        orchestrator = Orchestrator(args.plan, args.state, llm_adapter)
+        orchestrator = Orchestrator(args.plan, args.state, llm_adapter, args.verifier)
         orchestrator.run()
     except OrchestratorError as e:
         print(f"❌ Orchestrator error: {e}")

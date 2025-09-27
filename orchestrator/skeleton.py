@@ -20,12 +20,13 @@ class OrchestratorError(Exception):
 
 
 class Orchestrator:
-    def __init__(self, plan_path, state_path, llm_adapter=None):
+    def __init__(self, plan_path, state_path, llm_adapter=None, verifier_mode="local"):
         self.plan_path = Path(plan_path)
         self.state_path = Path(state_path)
         self.plan = None
         self.state = None
         self.llm_adapter = llm_adapter or OrchestratorLLMAdapter()
+        self.verifier_mode = verifier_mode
         self.metrics = {
             "accept_rate": 0.0,
             "replans_count": 0,
@@ -153,15 +154,63 @@ class Orchestrator:
         return proofs
 
     def verify_pcap(self, pcap):
-        """Verify PCAP (stub implementation)"""
+        """Verify PCAP using specified verifier mode"""
+        if self.verifier_mode == "docker":
+            return self._verify_pcap_docker(pcap)
+        else:
+            return self._verify_pcap_local(pcap)
+
+    def _verify_pcap_local(self, pcap):
+        """Verify PCAP using local verifier"""
         # Mock verification: 70% success rate
         import random
 
         success_rate = 0.7
-
         if random.random() < success_rate:
             return "accepted"
         else:
+            return "rejected"
+
+    def _verify_pcap_docker(self, pcap):
+        """Verify PCAP using Docker verifier"""
+        try:
+            from proofengine.verifier.docker_runner import DockerRunner
+
+            runner = DockerRunner()
+            if not runner.build_image():
+                print("❌ Failed to build Docker image")
+                return "rejected"
+
+            # Create temporary PCAP file
+            import tempfile
+
+            with tempfile.NamedTemporaryFile(
+                mode="w", suffix=".json", delete=False
+            ) as f:
+                json.dump(pcap, f)
+                temp_pcap = Path(f.name)
+
+            try:
+                result = runner.run_verification([temp_pcap], timeout_s=60)
+
+                if result.get("error"):
+                    print(f"❌ Docker verification failed: {result['error']}")
+                    return "rejected"
+
+                if result.get("exit_code") == 0:
+                    print("✅ Docker verification passed")
+                    return "accepted"
+                else:
+                    print(
+                        f"❌ Docker verification failed (exit code: {result['exit_code']})"
+                    )
+                    return "rejected"
+
+            finally:
+                temp_pcap.unlink()
+
+        except Exception as e:
+            print(f"❌ Docker verification error: {e}")
             return "rejected"
 
     def update_state_accepted(self, step, pcap):

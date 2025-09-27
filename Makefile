@@ -41,4 +41,13 @@ demo-s1-llm:
 demo-s1-mock:
 	. .venv/bin/activate && $(PY) orchestrator/skeleton_llm.py --plan plans/plan-hello.json --state state/x-hello.json --llm mock
 
+demo-s1-docker:
+	. .venv/bin/activate && $(PY) orchestrator/skeleton_llm.py --plan plans/plan-hello.json --state state/x-hello.json --llm mock --verifier docker
+
+verifier-docker:
+	. .venv/bin/activate && $(PY) scripts/verifier.py --runner docker --pcap examples/v0.1/pcap/ex1.json
+
+docker-build:
+	docker build -t proofengine/verifier:0.1.0 -f Dockerfile.verifier .
+
 ci-local: verify demo audit-pack
