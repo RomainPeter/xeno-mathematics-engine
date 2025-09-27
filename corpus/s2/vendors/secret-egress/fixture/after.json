@@ -1,0 +1,13 @@
+{
+  "secrets_detected": false,
+  "egress_attempted": false,
+  "egress_authorized": true,
+  "api_keys_plaintext": false,
+  "api_keys_encrypted": true,
+  "guard_checks_passed": true,
+  "script_path": "script_calls_net.py",
+  "secrets_found": [],
+  "egress_targets": [],
+  "guard_checks": ["no-secrets", "no-egress"],
+  "redaction_applied": true
+}

@@ -1,0 +1,25 @@
+{
+  "failreason": "policy.dependency_pin_required",
+  "operator": "Normalize",
+  "steps": [
+    {
+      "id": "step1",
+      "operator": "Meet",
+      "params": {
+        "goal": "Pin vulnerable dependencies"
+      }
+    }
+  ],
+  "goal": "Secure dependencies against typosquatting and CVE vulnerabilities",
+  "budgets": {
+    "time_ms": 300000,
+    "audit_cost": 1.0,
+    "max_replans": 2
+  },
+  "metadata": {
+    "vendor": "typosquat-cve",
+    "scenario": "vulnerable_dependency",
+    "cve_detected": true,
+    "typosquat_risk": true
+  }
+}
