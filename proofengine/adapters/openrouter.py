@@ -6,7 +6,7 @@ import os
 from typing import Dict, Any, List, Optional
 from dataclasses import dataclass
 
-from ..core.llm_client_v2 import LLMClient, LLMConfig
+from ..core.llm_client import LLMClient, LLMConfig
 
 
 @dataclass

@@ -38,6 +38,9 @@ demo-s1:
 demo-s1-llm:
 	. .venv/bin/activate && $(PY) orchestrator/skeleton_llm.py --plan plans/plan-hello.json --state state/x-hello.json --llm kimi
 
+demo-llm:
+	. .venv/bin/activate && $(PY) orchestrator/skeleton_llm.py --plan plans/plan-hello.json --state state/x-hello.json --llm kimi --verifier local
+
 demo-s1-mock:
 	. .venv/bin/activate && $(PY) orchestrator/skeleton_llm.py --plan plans/plan-hello.json --state state/x-hello.json --llm mock
 

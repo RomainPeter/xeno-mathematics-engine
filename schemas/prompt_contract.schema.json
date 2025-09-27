@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://spec.proof.engine/v0.1/prompt_contract.schema.json",
+  "title": "Prompt Contract v0.1",
+  "description": "Schema for structured LLM prompt contracts, ensuring consistent input/output.",
+  "type": "object",
+  "required": ["version", "role", "task", "inputs", "constraints", "output_schema_uri", "budgets"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^0\\.1\\.0$",
+      "description": "Version of the PromptContract schema."
+    },
+    "role": {
+      "type": "string",
+      "enum": ["Meet", "Generalize", "Refute"],
+      "description": "The role of the LLM in this interaction (e.g., planning, action generation, failure analysis)."
+    },
+    "task": {
+      "type": "string",
+      "description": "A clear, concise description of the task the LLM needs to perform."
+    },
+    "inputs": {
+      "type": "array",
+      "description": "List of structured inputs provided to the LLM.",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "value"],
+        "properties": {
+          "name": {"type": "string"},
+          "type": {"type": "string"},
+          "value": {"type": "string", "description": "JSON string representation of the input value."}
+        }
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "description": "List of constraints the LLM must adhere to (e.g., 'JSON output only', 'Consider all obligations').",
+      "items": {"type": "string"}
+    },
+    "output_schema_uri": {
+      "type": "string",
+      "format": "uri",
+      "description": "URI pointing to the JSON schema that the LLM's output must conform to."
+    },
+    "budgets": {
+      "type": "object",
+      "description": "Resource budgets for the LLM call.",
+      "required": ["tokens", "latency_ms"],
+      "properties": {
+        "tokens": {"type": "integer", "minimum": 1},
+        "latency_ms": {"type": "integer", "minimum": 1}
+      }
+    }
+  },
+  "additionalProperties": false
+}
