@@ -1,0 +1,29 @@
+{
+  "version": "0.1.0",
+  "entries": [
+    {
+      "id": "j-01",
+      "ts": "2025-09-26T08:10:00Z",
+      "operator": "Refute",
+      "input_refs": ["h-2","e-3"],
+      "output_refs": ["h-2-rejected"],
+      "obligations_checked": [],
+      "proofs_attached": ["p-7"],
+      "costs": { "time_ms": 800, "audit_cost": 0.1, "security_risk": 0.0, "info_loss": 0.0, "tech_debt": 0.0 },
+      "prev_entry_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "entry_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    },
+    {
+      "id": "j-02",
+      "ts": "2025-09-26T08:12:00Z",
+      "operator": "Generalize",
+      "input_refs": ["h-3","e-4"],
+      "output_refs": ["h-3'"],
+      "obligations_checked": ["k-sec-1"],
+      "proofs_attached": [],
+      "costs": { "time_ms": 450, "audit_cost": 0.05, "security_risk": 0.0, "info_loss": 0.1, "tech_debt": 0.0 },
+      "prev_entry_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "entry_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+    }
+  ]
+}

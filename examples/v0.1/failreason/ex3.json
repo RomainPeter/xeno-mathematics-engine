@@ -1,0 +1,6 @@
+{
+  "version": "0.1.0",
+  "code": "budget_exceeded",
+  "message": "Plan time > budget",
+  "data": { "time_ms": 6500, "budget": 5000 }
+}

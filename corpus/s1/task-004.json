@@ -1,0 +1,17 @@
+{
+  "id": "task-004",
+  "title": "Add missing test",
+  "description": "Add unit test for calculate_total() function",
+  "input": {
+    "function": "calculate_total",
+    "file": "math_utils.py",
+    "test_cases": ["empty_list", "single_item", "multiple_items"]
+  },
+  "expected": {
+    "test_added": true,
+    "coverage_increased": true,
+    "all_tests_pass": true
+  },
+  "constraints": ["k-coverage-1"],
+  "category": "testing"
+}

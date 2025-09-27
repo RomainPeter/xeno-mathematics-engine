@@ -1,0 +1,17 @@
+{
+  "id": "task-002", 
+  "title": "Fix off-by-one in loop",
+  "description": "Fix off-by-one error in range() loop",
+  "input": {
+    "file": "algorithms.py",
+    "line": 15,
+    "issue": "range(0, len(items)) should be range(len(items))"
+  },
+  "expected": {
+    "bug_fixed": true,
+    "tests_pass": true,
+    "no_regressions": true
+  },
+  "constraints": ["k-perf-1"],
+  "category": "bugfix"
+}

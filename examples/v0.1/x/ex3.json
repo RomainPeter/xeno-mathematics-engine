@@ -1,0 +1,38 @@
+{
+  "version": "0.1.0",
+  "H": [
+    {
+      "id": "h-2",
+      "title": "Performance budget respected",
+      "body": "Latency p95 < 120ms",
+      "status": "supported",
+      "evidence_ids": ["e-2","e-3"],
+      "created_at": "2025-09-26T06:00:00Z",
+      "updated_at": "2025-09-26T07:00:00Z"
+    }
+  ],
+  "E": [
+    {
+      "id": "e-2",
+      "kind": "runlog",
+      "uri": "s3://benchmarks/latency.json",
+      "hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "created_at": "2025-09-25T21:00:00Z"
+    },
+    {
+      "id": "e-3",
+      "kind": "test",
+      "uri": "file://tests/test_perf.py::test_p95",
+      "hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "created_at": "2025-09-25T21:05:00Z"
+    }
+  ],
+  "K": [
+    { "id": "k-perf-1", "source": "internal", "rule": "p95<=120ms", "severity": "high" }
+  ],
+  "A": [
+    { "id": "a-1", "type": "doc", "ref_ids": ["h-2","e-2","k-perf-1"], "produced_by_journal_id": "j-77", "meta": { "title": "Perf Report" } }
+  ],
+  "J": { "version": "0.1.0", "entries": [] },
+  "Sigma": { "repo": "ssh://git/repo", "branch": "main" }
+}

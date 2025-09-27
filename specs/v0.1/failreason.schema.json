@@ -1,0 +1,27 @@
+{
+  "$id": "https://spec.proof.engine/v0.1/failreason.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FailReason",
+  "type": "object",
+  "properties": {
+    "version": { "type": "string", "const": "0.1.0" },
+    "code": {
+      "type": "string",
+      "enum": [
+        "parse_error",
+        "test_failure",
+        "policy_violation",
+        "budget_exceeded",
+        "verification_timeout",
+        "type_error",
+        "missing_obligation",
+        "insufficient_coverage"
+      ]
+    },
+    "message": { "type": "string" },
+    "refs": { "type": "array", "items": { "type": "string" } },
+    "data": { "type": "object" }
+  },
+  "required": ["version","code","message"],
+  "additionalProperties": false
+}

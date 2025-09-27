@@ -1,0 +1,16 @@
+{
+  "id": "task-005",
+  "title": "Fix lint errors",
+  "description": "Fix ruff E/F errors in codebase",
+  "input": {
+    "errors": ["E501 line too long", "F401 unused import"],
+    "files": ["main.py", "utils.py"]
+  },
+  "expected": {
+    "lint_clean": true,
+    "no_new_errors": true,
+    "code_quality_improved": true
+  },
+  "constraints": ["k-lint-1"],
+  "category": "quality"
+}

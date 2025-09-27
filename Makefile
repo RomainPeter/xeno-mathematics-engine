@@ -1,6 +1,6 @@
 PY=python3
 
-.PHONY: setup verify demo audit-pack logs release
+.PHONY: setup verify demo audit-pack logs release schema-test validate fmt demo-s1
 
 setup:
 	$(PY) -m venv .venv && . .venv/bin/activate && pip install -U pip && pip install -r requirements.txt
@@ -20,3 +20,14 @@ logs:
 
 release: audit-pack logs
 	. .venv/bin/activate && $(PY) scripts/make_release.py
+
+validate:
+	$(PY) scripts/test_roundtrip.py
+
+fmt:
+	black . && ruff check --fix .
+
+demo-s1:
+	. .venv/bin/activate && $(PY) orchestrator/skeleton.py --plan plans/plan-hello.json --state state/x-hello.json
+
+ci-local: verify demo audit-pack

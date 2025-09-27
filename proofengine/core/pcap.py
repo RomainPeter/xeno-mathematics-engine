@@ -56,7 +56,11 @@ def verify_pcap_chain(directory: str = "out/pcap") -> Dict[str, object]:
             errors.append(f"{os.path.basename(path)}: {exc}")
 
     if errors:
-        return {"status": "error", "count": len(files), "files": verified, "errors": errors}
+        return {
+            "status": "error",
+            "count": len(files),
+            "files": verified,
+            "errors": errors,
+        }
 
     return {"status": "ok", "count": len(files), "files": verified}
-

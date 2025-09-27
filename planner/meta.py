@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import itertools
 import time
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
 from proofengine.core.schemas import PlanProposal, VJustification, XState
@@ -54,7 +54,10 @@ class MetacognitivePlanner:
         obligations: List[str],
         history: List[Dict[str, Any]],
     ) -> PlanProposal:
-        actions = [f"Analyse {item}" for item in obligations[:3]] or ["Inspect codebase", "Run tests"]
+        actions = [f"Analyse {item}" for item in obligations[:3]] or [
+            "Inspect codebase",
+            "Run tests",
+        ]
         proposal = PlanProposal(
             plan=actions,
             est_success=0.7,
@@ -96,12 +99,14 @@ class MetacognitivePlanner:
         new_state = XState(**state.to_dict())
         for idx, action in enumerate(actions):
             verdict = "pass" if action.confidence >= 0.5 else "fail"
-            history.append({
-                "action_id": action.action_id,
-                "verdict": verdict,
-                "cost": action.estimated_cost.to_dict(),
-                "timestamp": self._timestamp(),
-            })
+            history.append(
+                {
+                    "action_id": action.action_id,
+                    "verdict": verdict,
+                    "cost": action.estimated_cost.to_dict(),
+                    "timestamp": self._timestamp(),
+                }
+            )
             if verdict == "fail" and budget and budget.get("max_retries", 0) == 0:
                 break
         success = all(entry["verdict"] == "pass" for entry in history)
@@ -139,12 +144,18 @@ class MetacognitivePlanner:
             ("verify", "Vérifier les obligations"),
         ]
         actions = []
-        for idx, (slug, description) in enumerate(itertools.islice(itertools.cycle(templates), 3)):
+        for idx, (slug, description) in enumerate(
+            itertools.islice(itertools.cycle(templates), 3)
+        ):
             actions.append(
                 PlannedAction(
                     action_id=f"{slug}-{idx}",
                     description=f"{description} pour {goal}",
-                    estimated_cost=VJustification(time_ms=200 + idx * 50, audit_cost=0.5 + idx * 0.1, risk=0.1 * idx),
+                    estimated_cost=VJustification(
+                        time_ms=200 + idx * 50,
+                        audit_cost=0.5 + idx * 0.1,
+                        risk=0.1 * idx,
+                    ),
                     confidence=0.7 - idx * 0.1,
                 )
             )
@@ -157,7 +168,11 @@ class MetacognitivePlanner:
                 "plan_type": plan_type,
                 "timestamp": self._timestamp(),
                 "est_success": getattr(plan, "est_success", 0.6),
-                "plan": getattr(plan, "plan", [action.description for action in getattr(plan, "actions", [])]),
+                "plan": getattr(
+                    plan,
+                    "plan",
+                    [action.description for action in getattr(plan, "actions", [])],
+                ),
             }
         )
 

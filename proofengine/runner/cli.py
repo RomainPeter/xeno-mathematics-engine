@@ -7,6 +7,7 @@ from proofengine.generator.stochastic import propose_actions
 
 app = typer.Typer(no_args_is_help=True)
 
+
 @app.command("ping")
 def ping():
     try:
@@ -15,6 +16,7 @@ def ping():
         print({"ok": True, "ping": res})
     except LLMError as e:
         print({"ok": False, "error": str(e)})
+
 
 @app.command("propose-plan")
 def cli_propose_plan(
@@ -26,6 +28,7 @@ def cli_propose_plan(
     res = propose_plan(goal, x_summary, obligations, history)
     print(json.dumps(res, ensure_ascii=False, indent=2))
 
+
 @app.command("propose-actions")
 def cli_propose_actions(
     task: str = typer.Option(..., "--task"),
@@ -35,6 +38,7 @@ def cli_propose_actions(
 ):
     res = propose_actions(task, context, obligations, k=k, temperature=0.8)
     print(json.dumps(res, ensure_ascii=False, indent=2))
+
 
 if __name__ == "__main__":
     app()

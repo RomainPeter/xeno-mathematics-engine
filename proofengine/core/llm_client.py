@@ -16,13 +16,29 @@ load_dotenv()
 
 @dataclass
 class LLMConfig:
-    model: str = field(default_factory=lambda: os.getenv("OPENROUTER_MODEL", "x-ai/grok-4-fast:free").strip())
-    base_url: str = field(default_factory=lambda: os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"))
-    api_key: str = field(default_factory=lambda: os.getenv("OPENROUTER_API_KEY", "").strip())
-    referer: str = field(default_factory=lambda: os.getenv("HTTP_REFERER", "https://example.com"))
+    model: str = field(
+        default_factory=lambda: os.getenv(
+            "OPENROUTER_MODEL", "x-ai/grok-4-fast:free"
+        ).strip()
+    )
+    base_url: str = field(
+        default_factory=lambda: os.getenv(
+            "OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"
+        )
+    )
+    api_key: str = field(
+        default_factory=lambda: os.getenv("OPENROUTER_API_KEY", "").strip()
+    )
+    referer: str = field(
+        default_factory=lambda: os.getenv("HTTP_REFERER", "https://example.com")
+    )
     title: str = field(default_factory=lambda: os.getenv("X_TITLE", "ProofEngine Demo"))
-    timeout: float = field(default_factory=lambda: float(os.getenv("OPENROUTER_TIMEOUT_SECS", "60")))
-    cache_dir: str = field(default_factory=lambda: os.getenv("PROOFENGINE_LLM_CACHE", "out/llm_cache"))
+    timeout: float = field(
+        default_factory=lambda: float(os.getenv("OPENROUTER_TIMEOUT_SECS", "60"))
+    )
+    cache_dir: str = field(
+        default_factory=lambda: os.getenv("PROOFENGINE_LLM_CACHE", "out/llm_cache")
+    )
 
 
 class LLMClient:
@@ -38,11 +54,18 @@ class LLMClient:
         if not self.cfg.api_key and not self.offline:
             raise RuntimeError("OPENROUTER_API_KEY missing")
 
-        self.client = None if self.offline else OpenAI(
-            base_url=self.cfg.base_url,
-            api_key=self.cfg.api_key,
-            default_headers={"HTTP-Referer": self.cfg.referer, "X-Title": self.cfg.title},
-            timeout=self.cfg.timeout,
+        self.client = (
+            None
+            if self.offline
+            else OpenAI(
+                base_url=self.cfg.base_url,
+                api_key=self.cfg.api_key,
+                default_headers={
+                    "HTTP-Referer": self.cfg.referer,
+                    "X-Title": self.cfg.title,
+                },
+                timeout=self.cfg.timeout,
+            )
         )
 
     def _cache_key(self, system: str, user: str, seed: Optional[int]) -> str:
@@ -81,7 +104,9 @@ class LLMClient:
         temperature: float = 0.7,
         max_tokens: int = 1000,
     ) -> Tuple[Dict[str, Any], Dict[str, Any]]:
-        diversity = f"DVAL::{random.randint(0, 10**9)}" if seed is None else f"SEED::{seed}"
+        diversity = (
+            f"DVAL::{random.randint(0, 10**9)}" if seed is None else f"SEED::{seed}"
+        )
         user_payload = f"{user}\n\n{diversity}"
         cache_key = self._cache_key(system, user_payload, seed)
 
@@ -114,7 +139,11 @@ class LLMClient:
         except json.JSONDecodeError:
             start_idx = content.find("{")
             end_idx = content.rfind("}")
-            data = json.loads(content[start_idx : end_idx + 1]) if start_idx != -1 and end_idx != -1 else {}
+            data = (
+                json.loads(content[start_idx : end_idx + 1])
+                if start_idx != -1 and end_idx != -1
+                else {}
+            )
 
         usage = getattr(response, "usage", None)
         meta = {
@@ -152,7 +181,7 @@ class LLMClient:
     def ping(self) -> Dict[str, Any]:
         try:
             data, meta = self.generate_json(
-                "Respond with JSON {\"ok\": true, \"model\": \"...\"}",
+                'Respond with JSON {"ok": true, "model": "..."}',
                 "Confirm availability",
                 seed=1,
                 temperature=0.0,
@@ -161,4 +190,3 @@ class LLMClient:
             return {"status": "ok", "response": data, "meta": meta}
         except Exception as exc:  # noqa: BLE001
             return {"status": "error", "error": str(exc)}
-

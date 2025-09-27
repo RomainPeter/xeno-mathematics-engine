@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Dict, Iterable, List, Optional, Sequence
+from typing import Dict, Iterable, Optional, Sequence
 
 from .schemas import DeltaMetrics, XState
 
@@ -37,8 +37,8 @@ def edit_distance(seq1: Sequence[str], seq2: Sequence[str]) -> int:
         for j in range(1, len(seq2) + 1):
             cost = 0 if seq1[i - 1] == seq2[j - 1] else 1
             dp[i][j] = min(
-                dp[i - 1][j] + 1,      # deletion
-                dp[i][j - 1] + 1,      # insertion
+                dp[i - 1][j] + 1,  # deletion
+                dp[i][j - 1] + 1,  # insertion
                 dp[i - 1][j - 1] + cost,  # substitution
             )
 
@@ -66,7 +66,14 @@ def compute_delta(
     dAST = min(1.0, 0.1 * changed_count)
 
     penalty = min(1.0, 0.1 * violations)
-    delta_total = min(1.0, weights[0] * dH + weights[1] * dE + weights[2] * dK + weights[3] * dAST + penalty)
+    delta_total = min(
+        1.0,
+        weights[0] * dH
+        + weights[1] * dE
+        + weights[2] * dK
+        + weights[3] * dAST
+        + penalty,
+    )
 
     return DeltaMetrics(
         dH=dH,
@@ -82,7 +89,12 @@ class DeltaCalculator:
     """Helper exposing richer delta computations for planners and reports."""
 
     def __init__(self, weights: Optional[Dict[str, float]] = None):
-        self.weights: Dict[str, float] = weights or {"H": 0.25, "E": 0.25, "K": 0.25, "AST": 0.25}
+        self.weights: Dict[str, float] = weights or {
+            "H": 0.25,
+            "E": 0.25,
+            "K": 0.25,
+            "AST": 0.25,
+        }
 
     def calculate_delta(
         self,
@@ -99,8 +111,12 @@ class DeltaCalculator:
             before.K,
             after.K,
             changed_paths=changed_paths,
-            weights=(self.weights["H"], self.weights["E"], self.weights["K"], self.weights["AST"]),
+            weights=(
+                self.weights["H"],
+                self.weights["E"],
+                self.weights["K"],
+                self.weights["AST"],
+            ),
             violations=violations,
         )
         return metrics.to_dict()
-

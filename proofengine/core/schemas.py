@@ -208,4 +208,3 @@ class Attestation(BaseModel):
     verdicts: List[Dict[str, Any]]
     digest: str
     signature: Optional[str] = None
-

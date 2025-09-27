@@ -1,0 +1,8 @@
+{
+  "version": "0.1.0",
+  "id": "plan-002",
+  "goal": "Refute unsafe input handling",
+  "steps": [
+    { "id": "s1", "operator": "Refute", "input_refs": ["h-unsafe-1","e-case-1"], "expected": "hypothesis refuted" }
+  ]
+}

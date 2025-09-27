@@ -37,7 +37,9 @@ class Workspace:
 
     def _apply_with_patch(self, patch_text: str) -> bool:
         try:
-            with tempfile.NamedTemporaryFile(mode="w", suffix=".patch", delete=False) as handle:
+            with tempfile.NamedTemporaryFile(
+                mode="w", suffix=".patch", delete=False
+            ) as handle:
                 handle.write(patch_text)
                 temp_patch = handle.name
             subprocess.run(
@@ -50,7 +52,7 @@ class Workspace:
         except subprocess.CalledProcessError:
             return False
         finally:
-            if 'temp_patch' in locals():
+            if "temp_patch" in locals():
                 os.unlink(temp_patch)
 
     def get_changed_files(self) -> List[str]:
@@ -110,11 +112,15 @@ class PatchManager:
             return result
 
         lines = patch_text.splitlines()
-        if not any(line.startswith(('---', '+++')) for line in lines):
+        if not any(line.startswith(("---", "+++")) for line in lines):
             result["errors"].append("Invalid patch format")
             return result
 
-        python_targets = [line.split()[-1] for line in lines if line.startswith('+++') and line.endswith('.py')]
+        python_targets = [
+            line.split()[-1]
+            for line in lines
+            if line.startswith("+++") and line.endswith(".py")
+        ]
         if python_targets:
             result["warnings"].append(f"Python files affected: {python_targets}")
 
@@ -127,20 +133,32 @@ class PatchManager:
             return {"success": False, "validation": validation}
         with Workspace(self.base_dir) as workspace:
             if workspace.apply_unified_diff(patch_text):
-                return {"success": True, "workspace": workspace.get_status(), "validation": validation}
-        return {"success": False, "validation": validation, "error": "Patch application failed"}
+                return {
+                    "success": True,
+                    "workspace": workspace.get_status(),
+                    "validation": validation,
+                }
+        return {
+            "success": False,
+            "validation": validation,
+            "error": "Patch application failed",
+        }
 
     def get_patch_info(self, patch_text: str) -> Dict[str, Any]:
         lines = patch_text.splitlines()
-        added = sum(1 for line in lines if line.startswith('+') and not line.startswith('+++'))
-        removed = sum(1 for line in lines if line.startswith('-') and not line.startswith('---'))
+        added = sum(
+            1 for line in lines if line.startswith("+") and not line.startswith("+++")
+        )
+        removed = sum(
+            1 for line in lines if line.startswith("-") and not line.startswith("---")
+        )
         files = set()
         for line in lines:
-            if line.startswith(('---', '+++')):
+            if line.startswith(("---", "+++")):
                 parts = line.split()
                 if len(parts) >= 2:
                     path = parts[-1]
-                    if path != '/dev/null':
+                    if path != "/dev/null":
                         files.add(path)
         return {
             "total_lines": len(lines),
@@ -150,4 +168,3 @@ class PatchManager:
             "size": len(patch_text),
             "complexity": (added + removed) / max(1, len(files)),
         }
-

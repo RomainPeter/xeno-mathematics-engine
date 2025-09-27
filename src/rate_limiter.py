@@ -66,7 +66,9 @@ class RateLimitManager:
 
     def get_limiter(self, client_id: str) -> RateLimiter:
         if client_id not in self.limiters:
-            self.limiters[client_id] = RateLimiter(self.default_capacity, self.default_refill_rate)
+            self.limiters[client_id] = RateLimiter(
+                self.default_capacity, self.default_refill_rate
+            )
         return self.limiters[client_id]
 
     def is_allowed(self, client_id: str, amount: int = 1) -> bool:

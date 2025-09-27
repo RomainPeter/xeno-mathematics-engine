@@ -6,9 +6,13 @@ import time
 from typing import Any, Dict, List, Optional, Tuple
 
 from proofengine.core.delta import compute_delta
-from proofengine.core.schemas import ObligationResults, VJustification
+from proofengine.core.schemas import VJustification
 
-from .obligations import evaluate_obligations, get_obligation_details, get_violation_summary
+from .obligations import (
+    evaluate_obligations,
+    get_obligation_details,
+    get_violation_summary,
+)
 from .patch import PatchManager, Workspace
 
 
@@ -20,7 +24,9 @@ class DeterministicController:
         self.patch_manager = PatchManager(base_dir)
         self.evaluation_history: List[Dict[str, Any]] = []
 
-    def evaluate_patch(self, patch_text: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def evaluate_patch(
+        self, patch_text: str, context: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
         context = context or {}
         start = time.time()
 
@@ -77,7 +83,9 @@ class DeterministicController:
             self._record_evaluation(patch_text, result)
             return result
 
-    def batch_evaluate(self, patches: List[str], context: Optional[Dict[str, Any]] = None) -> List[Dict[str, Any]]:
+    def batch_evaluate(
+        self, patches: List[str], context: Optional[Dict[str, Any]] = None
+    ) -> List[Dict[str, Any]]:
         results = []
         for index, patch in enumerate(patches):
             try:
@@ -85,21 +93,28 @@ class DeterministicController:
                 evaluation["patch_index"] = index
                 results.append(evaluation)
             except Exception as exc:  # noqa: BLE001
-                results.append({
-                    "success": False,
-                    "error": f"Evaluation failed: {exc}",
-                    "patch_index": index,
-                    "evaluation_time_ms": 0,
-                })
+                results.append(
+                    {
+                        "success": False,
+                        "error": f"Evaluation failed: {exc}",
+                        "patch_index": index,
+                        "evaluation_time_ms": 0,
+                    }
+                )
         return results
 
-    def get_best_patch(self, patches: List[str], context: Optional[Dict[str, Any]] = None) -> Tuple[int, Dict[str, Any]]:
+    def get_best_patch(
+        self, patches: List[str], context: Optional[Dict[str, Any]] = None
+    ) -> Tuple[int, Dict[str, Any]]:
         results = self.batch_evaluate(patches, context)
         best_score = -1.0
         best_index = -1
         for idx, result in enumerate(results):
             if result.get("success"):
-                score = 1.0 - (result.get("violations", 0) * 0.1 + result.get("delta_metrics", {}).get("delta_total", 1.0) * 0.5)
+                score = 1.0 - (
+                    result.get("violations", 0) * 0.1
+                    + result.get("delta_metrics", {}).get("delta_total", 1.0) * 0.5
+                )
                 if score > best_score:
                     best_score = score
                     best_index = idx
