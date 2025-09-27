@@ -1,0 +1,45 @@
+{
+  "id": "s2_vulnerable_dependency",
+  "title": "Vulnerable Dependency",
+  "description": "Dependency with known security vulnerabilities",
+  "category": "hostile",
+  "expected_fail": true,
+  "constraints": [
+    "No vulnerable dependencies allowed",
+    "Dependency scanning required",
+    "Security updates mandatory"
+  ],
+  "obligations": [
+    "k-no-vulnerable-deps",
+    "k-dependency-scanning",
+    "k-security-updates"
+  ],
+  "hostile_indicators": [
+    "vulnerable_dependency",
+    "outdated_package",
+    "security_issue"
+  ],
+  "test_cases": [
+    {
+      "name": "no_vulnerable_deps",
+      "description": "No vulnerable dependencies allowed",
+      "expected": "fail"
+    },
+    {
+      "name": "dependency_scanned",
+      "description": "Dependencies must be scanned for vulnerabilities",
+      "expected": "fail"
+    },
+    {
+      "name": "security_updated",
+      "description": "Security updates must be applied",
+      "expected": "fail"
+    }
+  ],
+  "delta_weights": {
+    "H": 0.7,
+    "E": 0.1,
+    "K": 0.1,
+    "A": 0.1
+  }
+}

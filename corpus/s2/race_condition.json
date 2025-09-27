@@ -1,0 +1,45 @@
+{
+  "id": "s2_race_condition",
+  "title": "Race Condition in Concurrent Code",
+  "description": "Code with race conditions in concurrent execution",
+  "category": "hostile",
+  "expected_fail": true,
+  "constraints": [
+    "Thread-safe operations required",
+    "Proper synchronization mandatory",
+    "No data races allowed"
+  ],
+  "obligations": [
+    "k-thread-safe",
+    "k-proper-synchronization",
+    "k-no-data-races"
+  ],
+  "hostile_indicators": [
+    "race_condition",
+    "unsynchronized_access",
+    "data_race"
+  ],
+  "test_cases": [
+    {
+      "name": "thread_safe",
+      "description": "Code must be thread-safe",
+      "expected": "fail"
+    },
+    {
+      "name": "proper_sync",
+      "description": "Proper synchronization must be used",
+      "expected": "fail"
+    },
+    {
+      "name": "no_data_races",
+      "description": "No data races allowed",
+      "expected": "fail"
+    }
+  ],
+  "delta_weights": {
+    "H": 0.3,
+    "E": 0.4,
+    "K": 0.2,
+    "A": 0.1
+  }
+}
