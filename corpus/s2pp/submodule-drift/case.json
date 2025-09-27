@@ -1,0 +1,10 @@
+{
+  "id": "submodule-drift",
+  "name": "Submodule Drift",
+  "description": "Git submodule pointing to different commit",
+  "category": "supply-chain",
+  "severity": "medium",
+  "plan": "plans/submodule-drift.json",
+  "state": "state/submodule-drift.json",
+  "expected_failure": "SUBMODULE_DRIFT"
+}

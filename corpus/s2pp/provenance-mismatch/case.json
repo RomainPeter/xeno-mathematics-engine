@@ -1,0 +1,10 @@
+{
+  "id": "provenance-mismatch",
+  "name": "Provenance Mismatch",
+  "description": "Build provenance verification failure",
+  "category": "supply-chain",
+  "severity": "high",
+  "plan": "plans/provenance-mismatch.json",
+  "state": "state/provenance-mismatch.json",
+  "expected_failure": "PROVENANCE_MISMATCH"
+}

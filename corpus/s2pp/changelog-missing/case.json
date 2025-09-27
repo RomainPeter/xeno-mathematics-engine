@@ -1,0 +1,10 @@
+{
+  "id": "changelog-missing",
+  "name": "Changelog Missing",
+  "description": "API change without corresponding changelog entry",
+  "category": "api-governance",
+  "severity": "medium",
+  "plan": "plans/changelog-missing.json",
+  "state": "state/changelog-missing.json",
+  "expected_failure": "CHANGELOG_MISSING"
+}

@@ -1,0 +1,10 @@
+{
+  "id": "perf-budget-p95",
+  "name": "Performance Budget P95",
+  "description": "P95 latency exceeds performance budget",
+  "category": "robustness",
+  "severity": "medium",
+  "plan": "plans/perf-budget-p95.json",
+  "state": "state/perf-budget-p95.json",
+  "expected_failure": "PERF_BUDGET_P95"
+}

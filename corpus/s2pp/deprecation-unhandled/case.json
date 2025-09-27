@@ -1,0 +1,10 @@
+{
+  "id": "deprecation-unhandled",
+  "name": "Deprecation Unhandled",
+  "description": "Deprecated API usage without proper handling",
+  "category": "api-governance",
+  "severity": "medium",
+  "plan": "plans/deprecation-unhandled.json",
+  "state": "state/deprecation-unhandled.json",
+  "expected_failure": "DEPRECATION_UNHANDLED"
+}

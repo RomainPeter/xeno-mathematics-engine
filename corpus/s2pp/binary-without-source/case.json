@@ -1,0 +1,10 @@
+{
+  "id": "binary-without-source",
+  "name": "Binary Without Source",
+  "description": "Binary artifact without corresponding source code",
+  "category": "security-compliance",
+  "severity": "medium",
+  "plan": "plans/binary-without-source.json",
+  "state": "state/binary-without-source.json",
+  "expected_failure": "BINARY_WITHOUT_SOURCE"
+}

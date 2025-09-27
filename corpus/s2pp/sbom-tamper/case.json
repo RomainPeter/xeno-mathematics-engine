@@ -1,0 +1,10 @@
+{
+  "id": "sbom-tamper",
+  "name": "SBOM Tamper",
+  "description": "SBOM tampering or inconsistency detected",
+  "category": "supply-chain",
+  "severity": "high",
+  "plan": "plans/sbom-tamper.json",
+  "state": "state/sbom-tamper.json",
+  "expected_failure": "SBOM_TAMPER"
+}
