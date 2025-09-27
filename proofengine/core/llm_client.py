@@ -18,7 +18,7 @@ load_dotenv()
 class LLMConfig:
     model: str = field(
         default_factory=lambda: os.getenv(
-            "OPENROUTER_MODEL", "x-ai/grok-4-fast:free"
+            "OPENROUTER_MODEL", "moonshotai/kimi-k2:free"
         ).strip()
     )
     base_url: str = field(

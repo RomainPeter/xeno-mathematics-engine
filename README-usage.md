@@ -8,7 +8,7 @@ python3 -m venv .venv && source .venv/bin/activate  # Windows: .venv\Scripts\act
 pip install -r requirements.txt
 
 # 2. Configure
-cp .env.example .env  # Add OPENROUTER_API_KEY and OPENROUTER_MODEL
+cp .env.example .env  # Add OPENROUTER_API_KEY and OPENROUTER_MODEL (moonshotai/kimi-k2:free)
 
 # 3. Validate & Demo
 make validate        # Schema validation
