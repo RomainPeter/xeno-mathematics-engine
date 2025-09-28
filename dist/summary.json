@@ -1,5 +1,5 @@
 {
-  "version": "v0.1.0",
+  "version": "v2.0.0",
   "config": {
     "include_aggregates": false,
     "weight_key": "n_items",
@@ -19,7 +19,7 @@
   },
   "by_group": {},
   "runs": [],
-  "generated_at": "2025-09-28T13:38:31.925021",
+  "generated_at": "2025-09-28T13:46:11.995634",
   "reproducibility": {
     "deterministic": true,
     "seeds_provided": true,

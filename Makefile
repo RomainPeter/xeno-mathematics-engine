@@ -544,3 +544,9 @@ all-new: hardening-v011 grove-complete
 # T04: Summary validation
 validate-summary:
 	$(PY) -c "import json,sys; from pefc.metrics.validator import validate_summary_doc; from pathlib import Path; d=json.load(open('dist/summary.json')); validate_summary_doc(d, Path('schema/summary.schema.json'))" && echo "✅ Summary validation passed"
+
+# T05: Configuration
+export PEFC_CONFIG ?= config/pack.yaml
+
+public-bench-pack-config:
+	$(PY) scripts/build_public_bench_pack.py --config $(PEFC_CONFIG)
