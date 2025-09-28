@@ -1,0 +1,34 @@
+{
+  "id": "regtech_code_v1",
+  "closure": "exact",
+  "oracle_endpoints": {
+    "opa_cmd": "opa",
+    "rego_pkg": "policy",
+    "static_analysis": "bandit"
+  },
+  "cost_model": {
+    "V_dims": ["time_ms", "audit_cost", "legal_risk", "tech_debt", "novelty", "coverage"],
+    "units": {
+      "time_ms": "ms",
+      "audit_cost": "USD",
+      "legal_risk": "score",
+      "tech_debt": "score",
+      "novelty": "score",
+      "coverage": "score"
+    }
+  },
+  "evidence_types": ["ci_logs", "opa_result", "static_analysis"],
+  "admissible_equations": [
+    "Normalize∘Normalize=Normalize",
+    "Verify∘Verify=Verify", 
+    "Meet assoc/comm/idemp",
+    "Normalize∘Retrieve ↔ Retrieve∘Normalize",
+    "Verify∘Normalize ↔ Normalize∘Verify"
+  ],
+  "risk_policy": {
+    "cvar_alpha": 0.9
+  },
+  "timeouts": {
+    "verify_ms": 8000
+  }
+}

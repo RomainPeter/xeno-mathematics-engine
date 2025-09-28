@@ -1,0 +1,9 @@
+{
+  "goal": "synthesize_choreography",
+  "k": 3,
+  "diversity_keys": ["operation_sequence", "parallel_execution"],
+  "hard_constraints": ["must satisfy post-conditions", "respect budget V"],
+  "output_contract": {
+    "fields": ["operations", "pre_conditions", "post_conditions", "guards", "budget", "diversity_key"]
+  }
+}

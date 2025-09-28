@@ -1,0 +1,45 @@
+{
+  "name": "pii-logging",
+  "category": "security-compliance",
+  "description": "PII data logged in plaintext with high precision detection",
+  "severity": "high",
+  "expected_failure": "PII_LOGGING",
+  "files": [
+    {
+      "path": "src/auth.py",
+      "content": "import logging\n\nlogger = logging.getLogger(__name__)\n\ndef authenticate_user(email, password):\n    # PII logged in plaintext - should be detected\n    logger.info(f'User login attempt: {email}')\n    logger.debug(f'Password hash: {hash(password)}')\n    \n    # SSN logged - should be detected\n    user_ssn = '123-45-6789'\n    logger.info(f'User SSN: {user_ssn}')\n    \n    # Phone number E.164 - should be detected\n    phone = '+33123456789'\n    logger.info(f'User phone: {phone}')\n"
+    },
+    {
+      "path": "tests/test_auth.py",
+      "content": "# Test fixtures - should be excluded from PII detection\nuser_email = 'test@example.com'\nuser_ssn = '123-45-6789'  # Test value, should not trigger\n"
+    }
+  ],
+  "violations": [
+    {
+      "type": "PII_LOGGING",
+      "file": "src/auth.py",
+      "line": 6,
+      "message": "Email address logged in plaintext"
+    },
+    {
+      "type": "PII_LOGGING",
+      "file": "src/auth.py",
+      "line": 10,
+      "message": "SSN '123-45-6789' logged in plaintext"
+    },
+    {
+      "type": "PII_LOGGING",
+      "file": "src/auth.py",
+      "line": 13,
+      "message": "Phone number '+33123456789' logged in plaintext"
+    }
+  ],
+  "policy_flags": {
+    "pii": {
+      "fr_nir": false,
+      "email": true,
+      "phone_e164": true,
+      "ssn_us": true
+    }
+  }
+}

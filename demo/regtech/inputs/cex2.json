@@ -1,0 +1,11 @@
+{
+  "data_class": "sensitive",
+  "has_legal_basis": true,
+  "legal_basis_valid": false,
+  "retention_period": 365,
+  "max_retention_period": 30,
+  "user_role": "authenticated",
+  "data_purpose": "marketing",
+  "user_consent": false,
+  "data_scope": "excessive"
+}

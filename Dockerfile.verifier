@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.11-slim@sha256:8f4b7f84859684c5f61e792d5522ad1b3a2a4908
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \

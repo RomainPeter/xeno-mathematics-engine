@@ -1,0 +1,10 @@
+{
+  "id": "unpinned-dep-drift",
+  "name": "Unpinned Dependency Drift",
+  "description": "Dependency version drift due to unpinned versions",
+  "category": "supply-chain",
+  "severity": "medium",
+  "plan": "plans/unpinned-dep-drift.json",
+  "state": "state/unpinned-dep-drift.json",
+  "expected_failure": "UNPINNED_DEP_DRIFT"
+}

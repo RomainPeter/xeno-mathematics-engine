@@ -1,0 +1,57 @@
+{
+  "$id": "https://spec.proof.engine/v0.1/composite-op.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Composite Operation / Choreography",
+  "type": "object",
+  "properties": {
+    "version": { "type": "string", "const": "0.1.0" },
+    "id": { "type": "string" },
+    "ops": {
+      "type": "array",
+      "items": { 
+        "type": "string",
+        "enum": ["Meet", "Generalize", "Specialize", "Contrast", "Refute", "Normalize", "Verify", "Abduce"]
+      },
+      "description": "Sequence of operators in the choreography"
+    },
+    "pre": {
+      "type": "object",
+      "description": "Preconditions on input state X"
+    },
+    "post": {
+      "type": "object", 
+      "description": "Postconditions on output state X"
+    },
+    "guards": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "K constraints that must be satisfied"
+    },
+    "budgets": { "$ref": "#/$defs/V" },
+    "diversity_keys": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Keys for diversity computation (attributes, implications, operator patterns)"
+    },
+    "rationale": { 
+      "type": "string",
+      "description": "Justification for this choreography"
+    }
+  },
+  "required": ["version", "id", "ops", "guards", "budgets"],
+  "additionalProperties": false,
+  "$defs": {
+    "V": {
+      "type": "object",
+      "properties": {
+        "time_ms": { "type": "integer", "minimum": 0 },
+        "audit_cost": { "type": "number", "minimum": 0 },
+        "legal_risk": { "type": "number", "minimum": 0 },
+        "tech_debt": { "type": "number", "minimum": 0 }
+      },
+      "required": ["time_ms", "audit_cost", "legal_risk", "tech_debt"],
+      "additionalProperties": false
+    }
+  }
+}
+

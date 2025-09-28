@@ -1,0 +1,10 @@
+{
+  "id": "nondet-ordering",
+  "name": "Non-Deterministic Ordering",
+  "description": "Non-deterministic test ordering causing flaky tests",
+  "category": "robustness",
+  "severity": "medium",
+  "plan": "plans/nondet-ordering.json",
+  "state": "state/nondet-ordering.json",
+  "expected_failure": "NONDET_ORDERING"
+}

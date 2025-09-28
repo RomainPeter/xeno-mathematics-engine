@@ -1,0 +1,27 @@
+{
+  "name": "random-seed-missing",
+  "category": "robustness",
+  "description": "Random operations without seed for reproducibility",
+  "severity": "medium",
+  "expected_failure": "RANDOM_SEED_MISSING",
+  "files": [
+    {
+      "path": "src/utils.py",
+      "content": "import random\nimport numpy as np\n\ndef generate_test_data():\n    # Random operations without seed\n    data = [random.randint(1, 100) for _ in range(1000)]\n    \n    # Numpy random without seed\n    matrix = np.random.rand(10, 10)\n    \n    return data, matrix\n\ndef shuffle_list(items):\n    # Shuffle without seed\n    random.shuffle(items)\n    return items\n"
+    }
+  ],
+  "violations": [
+    {
+      "type": "RANDOM_SEED_MISSING",
+      "file": "src/utils.py",
+      "line": 5,
+      "message": "Random operations without seed for reproducibility"
+    },
+    {
+      "type": "RANDOM_SEED_MISSING",
+      "file": "src/utils.py", 
+      "line": 8,
+      "message": "Numpy random operations without seed"
+    }
+  ]
+}

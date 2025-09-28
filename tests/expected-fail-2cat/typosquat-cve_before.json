@@ -1,0 +1,22 @@
+{
+  "test_name": "typosquat-cve_before",
+  "description": "Vulnerable dependencies and typosquatting (should fail)",
+  "input": {
+    "dependency_unpinned": true,
+    "cve_detected": true,
+    "cve_severity": "CRITICAL",
+    "cve_id": "CVE-2023-32681",
+    "typosquat_detected": true,
+    "package_name": "requestss",
+    "vulnerable_packages_detected": true,
+    "dependency_pinned": false,
+    "sbom_updated": false
+  },
+  "expected_result": "deny",
+  "expected_deny_messages": [
+    "Dependencies must be pinned to specific versions",
+    "Critical vulnerability detected: CVE-2023-32681",
+    "Typosquatting detected in package: requestss",
+    "Vulnerable packages detected in dependencies"
+  ]
+}

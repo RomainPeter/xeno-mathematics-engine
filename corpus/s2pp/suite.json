@@ -1,0 +1,73 @@
+{
+  "name": "S2++ Suite",
+  "version": "v0.4.0-s2pp",
+  "description": "Extended S2 corpus with 20+ cases including API governance, supply-chain, security, and robustness",
+  "categories": {
+    "api-governance": {
+      "description": "API and governance violations",
+      "cases": [
+        "api-default-change",
+        "api-param-rename", 
+        "breaking-without-bump",
+        "changelog-missing",
+        "deprecation-unhandled",
+        "public-endpoint-removed"
+      ]
+    },
+    "supply-chain": {
+      "description": "Dependency and supply-chain security",
+      "cases": [
+        "typosquat-requests",
+        "transitive-cve",
+        "unpinned-dep-drift",
+        "image-tag-floating",
+        "sbom-tamper",
+        "provenance-mismatch",
+        "submodule-drift"
+      ]
+    },
+    "security-compliance": {
+      "description": "Security and compliance violations",
+      "cases": [
+        "secret-committed",
+        "egress-attempt",
+        "pii-logging",
+        "license-violation-agpl",
+        "binary-without-source"
+      ]
+    },
+    "robustness": {
+      "description": "Execution robustness and performance",
+      "cases": [
+        "flaky-timeout",
+        "random-seed-missing",
+        "perf-budget-p95",
+        "nondet-ordering"
+      ]
+    }
+  },
+  "expected_failures": {
+    "api-default-change": "API_DEFAULT_CHANGE",
+    "api-param-rename": "API_PARAM_RENAME",
+    "breaking-without-bump": "BREAKING_WITHOUT_BUMP",
+    "changelog-missing": "CHANGELOG_MISSING",
+    "deprecation-unhandled": "DEPRECATION_UNHANDLED",
+    "public-endpoint-removed": "PUBLIC_ENDPOINT_REMOVED",
+    "typosquat-requests": "TYPOSQUAT_REQUESTS",
+    "transitive-cve": "TRANSITIVE_CVE",
+    "unpinned-dep-drift": "UNPINNED_DEP_DRIFT",
+    "image-tag-floating": "IMAGE_TAG_FLOATING",
+    "sbom-tamper": "SBOM_TAMPER",
+    "provenance-mismatch": "PROVENANCE_MISMATCH",
+    "submodule-drift": "SUBMODULE_DRIFT",
+    "secret-committed": "SECRET_COMMITTED",
+    "egress-attempt": "EGRESS_ATTEMPT",
+    "pii-logging": "PII_LOGGING",
+    "license-violation-agpl": "LICENSE_VIOLATION_AGPL",
+    "binary-without-source": "BINARY_WITHOUT_SOURCE",
+    "flaky-timeout": "FLAKY_TIMEOUT",
+    "random-seed-missing": "RANDOM_SEED_MISSING",
+    "perf-budget-p95": "PERF_BUDGET_P95",
+    "nondet-ordering": "NONDET_ORDERING"
+  }
+}

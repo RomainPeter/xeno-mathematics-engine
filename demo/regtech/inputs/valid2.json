@@ -1,0 +1,12 @@
+{
+  "data_class": "non_sensitive",
+  "has_legal_basis": false,
+  "legal_basis_valid": false,
+  "retention_period": 365,
+  "max_retention_period": 365,
+  "user_role": "guest",
+  "data_purpose": "analytics",
+  "analytics_detailed": false,
+  "analytics_consent": false
+}
+

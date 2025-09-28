@@ -1,0 +1,10 @@
+{
+  "id": "public-endpoint-removed",
+  "name": "Public Endpoint Removed",
+  "description": "Public API endpoint removed without deprecation notice",
+  "category": "api-governance",
+  "severity": "high",
+  "plan": "plans/public-endpoint-removed.json",
+  "state": "state/public-endpoint-removed.json",
+  "expected_failure": "PUBLIC_ENDPOINT_REMOVED"
+}

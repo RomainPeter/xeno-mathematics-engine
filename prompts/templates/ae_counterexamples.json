@@ -1,0 +1,9 @@
+{
+  "goal": "propose_counterexamples",
+  "k": 1,
+  "diversity_keys": ["violation_type", "severity"],
+  "hard_constraints": ["must refute implication"],
+  "output_contract": {
+    "fields": ["refuted_implication", "counterexample_data", "evidence"]
+  }
+}

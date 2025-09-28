@@ -1,0 +1,10 @@
+{
+  "id": "image-tag-floating",
+  "name": "Image Tag Floating",
+  "description": "Docker image using floating tag instead of digest",
+  "category": "supply-chain",
+  "severity": "medium",
+  "plan": "plans/image-tag-floating.json",
+  "state": "state/image-tag-floating.json",
+  "expected_failure": "IMAGE_TAG_FLOATING"
+}

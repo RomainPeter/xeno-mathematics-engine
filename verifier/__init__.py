@@ -1,13 +1,11 @@
-"""Compatibility shim for verifier imports."""
+"""
+Verification components for Discovery Engine 2-Cat.
+Migrated from proof-engine-for-code.
+"""
 
-from proofengine import verifier as _impl
+from .opa_client import OPAClient
+from .static_analysis import StaticAnalyzer
+from .verifier import Verifier
+from .attestation import AttestationGenerator
 
-__all__ = getattr(_impl, "__all__", [])
-
-
-def __getattr__(name):  # pragma: no cover
-    return getattr(_impl, name)
-
-
-def __setattr__(name, value):  # pragma: no cover
-    setattr(_impl, name, value)
+__all__ = ["OPAClient", "StaticAnalyzer", "Verifier", "AttestationGenerator"]

@@ -1,0 +1,140 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LLM Selector Contract",
+  "description": "Strict JSON schema for LLM selector input/output",
+  "type": "object",
+  "properties": {
+    "input": {
+      "type": "object",
+      "properties": {
+        "failreason": {
+          "type": "string",
+          "description": "Granular failure reason code"
+        },
+        "operator": {
+          "type": "string",
+          "description": "Current operator in the plan"
+        },
+        "plan_context": {
+          "type": "object",
+          "properties": {
+            "steps": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {"type": "string"},
+                  "operator": {"type": "string"},
+                  "params": {"type": "object"}
+                }
+              }
+            },
+            "goal": {"type": "string"},
+            "budgets": {
+              "type": "object",
+              "properties": {
+                "time_ms": {"type": "number"},
+                "audit_cost": {"type": "number"},
+                "max_replans": {"type": "integer"}
+              }
+            }
+          }
+        },
+        "available_strategies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {"type": "string"},
+              "trigger_failreasons": {
+                "type": "array",
+                "items": {"type": "string"}
+              },
+              "expected_outcomes": {
+                "type": "array",
+                "items": {"type": "string"}
+              },
+              "guards": {
+                "type": "object",
+                "properties": {
+                  "max_depth": {"type": "integer"},
+                  "max_rewrites_per_fr": {"type": "integer"},
+                  "stop_if_plan_grows": {"type": "boolean"},
+                  "max_plan_size_increase": {"type": "integer"}
+                }
+              }
+            }
+          }
+        },
+        "history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "strategy_id": {"type": "string"},
+              "success": {"type": "boolean"},
+              "timestamp": {"type": "number"}
+            }
+          }
+        }
+      },
+      "required": ["failreason", "operator", "plan_context", "available_strategies"]
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "selected_strategy": {
+          "type": "object",
+          "properties": {
+            "id": {"type": "string"},
+            "score": {"type": "number", "minimum": 0, "maximum": 1},
+            "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+            "reason": {"type": "string"},
+            "expected_gain": {"type": "number"},
+            "risk_assessment": {"type": "string", "enum": ["low", "medium", "high"]}
+          },
+          "required": ["id", "score", "reason"]
+        },
+        "alternative_strategies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {"type": "string"},
+              "score": {"type": "number"},
+              "reason": {"type": "string"}
+            }
+          }
+        },
+        "reasoning": {
+          "type": "object",
+          "properties": {
+            "analysis": {"type": "string"},
+            "constraints_considered": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "budget_impact": {
+              "type": "object",
+              "properties": {
+                "time_delta": {"type": "number"},
+                "cost_delta": {"type": "number"}
+              }
+            }
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "model": {"type": "string"},
+            "timestamp": {"type": "number"},
+            "consistency_votes": {"type": "integer"},
+            "cache_hit": {"type": "boolean"}
+          }
+        }
+      },
+      "required": ["selected_strategy", "reasoning"]
+    }
+  },
+  "required": ["input", "output"]
+}

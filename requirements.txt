@@ -26,18 +26,18 @@ cffi==2.0.0
     # via cryptography
 cfgv==3.4.0
     # via pre-commit
-click==8.3.0
+click==8.1.7
     # via
     #   black
     #   typer
-colorama==0.4.6
-    # via
-    #   bandit
-    #   click
-    #   pytest
-    #   radon
-    #   tqdm
-cryptography==43.0.3
+   colorama==0.4.6
+       # via
+       #   bandit
+       #   click
+       #   pytest
+       #   radon
+       #   tqdm
+cryptography==46.0.1
     # via -r requirements.in
 distlib==0.4.0
     # via virtualenv
@@ -71,7 +71,7 @@ libcst==1.8.5
     # via -r requirements.in
 mando==0.7.1
     # via radon
-markdown-it-py==4.0.0
+markdown-it-py==3.0.0
     # via rich
 mccabe==0.7.0
     # via flake8
@@ -129,7 +129,7 @@ pyyaml==6.0.3
     # via
     #   bandit
     #   pre-commit
-pyyaml-ft==8.0.0
+# pyyaml-ft==8.0.0  # Incompatible with Python 3.9, requires >=3.13
     # via libcst
 radon==6.0.1
     # via -r requirements.in
@@ -177,3 +177,4 @@ typing-inspection==0.4.1
     # via pydantic
 virtualenv==20.34.0
     # via pre-commit
+# libcst==1.4.0  # Duplicate, keeping libcst==1.8.5

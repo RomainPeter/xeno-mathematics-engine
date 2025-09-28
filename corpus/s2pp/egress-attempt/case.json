@@ -1,0 +1,10 @@
+{
+  "id": "egress-attempt",
+  "name": "Egress Attempt",
+  "description": "Unauthorized network egress attempt detected",
+  "category": "security-compliance",
+  "severity": "high",
+  "plan": "plans/egress-attempt.json",
+  "state": "state/egress-attempt.json",
+  "expected_failure": "EGRESS_ATTEMPT"
+}
