@@ -476,3 +476,14 @@ regtech-demo:
 	@echo "🎯 Running RegTech demo..."
 	make demo || python scripts/demo_regtech_bench.py
 	@echo "✅ RegTech demo completed"
+
+# Hardening v0.1.1 targets
+determinism:
+	@echo "🔍 Checking determinism..."
+	python scripts/check_determinism.py
+	@echo "✅ Determinism check completed"
+
+calibrate-budgets:
+	@echo "📊 Calibrating budgets and timeouts..."
+	python scripts/calibrate_budgets.py
+	@echo "✅ Budget calibration completed"
