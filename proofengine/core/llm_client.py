@@ -141,9 +141,17 @@ class LLMClient:
             choices = data.get("choices", [])
             if len(choices) > 1:
                 # Return the first choice for now, but we'll implement voting
-                return choices[0]["message"]["content"], data.get("usage", {}), latency_ms
+                return (
+                    choices[0]["message"]["content"],
+                    data.get("usage", {}),
+                    latency_ms,
+                )
 
-        return data["choices"][0]["message"]["content"], data.get("usage", {}), latency_ms
+        return (
+            data["choices"][0]["message"]["content"],
+            data.get("usage", {}),
+            latency_ms,
+        )
 
     def generate(self, request: LLMRequest) -> LLMResponse:
         """Generate response with auto-consistency and caching."""

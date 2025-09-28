@@ -1,175 +1,143 @@
 #!/usr/bin/env python3
 """
-PEFC CLI - Configuration and diagnostics
+PEFC CLI - Unified CLI with Typer for pack operations
 """
+from __future__ import annotations
 import json
-import sys
 from pathlib import Path
+import typer
 from typing import Optional
 
-import typer
-from rich.console import Console
-from rich.table import Table
+from pefc.config.loader import load_config
+from pefc.logging import init_logging
+from pefc.events import get_event_bus
+from pefc.events.subscribers import LoggingSubscriber
+from pefc.pipeline.loader import load_pipeline
+from pefc.pipeline.core import PipelineRunner
+from pefc.pack.verify import verify_zip, print_manifest
+from pefc.pack.signing import sign_with_cosign
+from pefc.errors import UNEXPECTED_ERROR_EXIT_CODE
 
-from .config.loader import load_config
-from .container import ServiceContainer
-
-app = typer.Typer()
-console = Console()
+app = typer.Typer(add_completion=False, help="PEFC CLI")
+pack = typer.Typer(help="Pack operations")
+app.add_typer(pack, name="pack")
 
 
-@app.command()
-def validate(
-    config: Path = typer.Option("config/pack.yaml", help="Configuration file path"),
-    env: Optional[str] = typer.Option(None, help="Environment profile"),
+@app.callback()
+def main_cb(
+    ctx: typer.Context,
+    config: Optional[Path] = typer.Option(
+        None, "--config", help="Chemin config/pack.yaml"
+    ),
+    json_logs: Optional[bool] = typer.Option(
+        None, "--json-logs/--no-json-logs", help="Force JSON logs"
+    ),
+    log_level: str = typer.Option("INFO", "--log-level", help="Niveau de logs"),
 ):
-    """Validate configuration file."""
-    try:
-        cfg = load_config(config, env=env)
-        container = ServiceContainer(cfg)
-        errors = container.validate()
+    """PEFC CLI - Unified CLI for pack operations."""
+    cfg = load_config(path=str(config) if config else "config/pack.yaml")
+    init_logging(
+        json_mode=bool(
+            json_logs if json_logs is not None else getattr(cfg.logging, "json", False)
+        )
+    )
+    import logging
 
-        if errors:
-            console.print("[red]Configuration validation failed:[/red]")
-            for error in errors:
-                console.print(f"  • {error}")
-            sys.exit(1)
-        else:
-            console.print("[green]Configuration is valid[/green]")
-            if cfg._active_env:
-                console.print(f"Active environment: {cfg._active_env}")
+    logging.getLogger().setLevel(log_level.upper())
 
-    except Exception as e:
-        console.print(f"[red]Error loading configuration:[/red] {e}")
-        sys.exit(1)
+    # EventBus → LoggingSubscriber global
+    get_event_bus().subscribe(
+        "*", LoggingSubscriber(logging.getLogger("pefc.events")).handler, priority=-100
+    )
+    ctx.obj = {"cfg": cfg}
 
 
-@app.command()
-def show(
-    config: Path = typer.Option("config/pack.yaml", help="Configuration file path"),
-    env: Optional[str] = typer.Option(None, help="Environment profile"),
-    format: str = typer.Option("yaml", help="Output format (json/yaml)"),
+@pack.command("build")
+def pack_build(
+    ctx: typer.Context,
+    pipeline: Optional[Path] = typer.Option(
+        None, "--pipeline", help="Descriptor YAML du pipeline"
+    ),
+    strict: bool = typer.Option(
+        False, "--strict/--no-strict", help="Échoue si signature rate"
+    ),
+    out_dir: Optional[Path] = typer.Option(
+        None, "--out-dir", help="Override cfg.pack.out_dir"
+    ),
 ):
-    """Show configuration."""
-    try:
-        cfg = load_config(config, env=env)
+    """Build a pack using the specified pipeline."""
+    cfg = ctx.obj["cfg"]
+    if out_dir:
+        cfg.pack.out_dir = str(out_dir)
 
-        if format == "json":
-            # Convert to dict and remove private fields
-            data = cfg.model_dump()
-            data.pop("_base_dir", None)
-            data.pop("_active_env", None)
-            console.print(json.dumps(data, indent=2, default=str))
-        else:
-            # Show key configuration values
-            table = Table(title="Configuration")
-            table.add_column("Section", style="cyan")
-            table.add_column("Key", style="magenta")
-            table.add_column("Value", style="green")
-
-            # Pack config
-            table.add_row("pack", "version", cfg.pack.version)
-            table.add_row("pack", "pack_name", cfg.pack.pack_name)
-            table.add_row("pack", "out_dir", cfg.pack.out_dir)
-
-            # Logging config
-            table.add_row("logging", "level", cfg.logging.level)
-            table.add_row("logging", "json", str(cfg.logging.json))
-
-            # Metrics config
-            table.add_row("metrics", "sources", str(cfg.metrics.sources))
-            table.add_row("metrics", "backend", cfg.metrics.backend)
-
-            # Capabilities
-            capability_count = len(cfg.capabilities.registry)
-            table.add_row("capabilities", "registry_count", str(capability_count))
-
-            # Pipelines
-            pipeline_count = len(cfg.pipelines.defs)
-            table.add_row("pipelines", "defs_count", str(pipeline_count))
-            table.add_row("pipelines", "default", cfg.pipelines.default)
-
-            if cfg._active_env:
-                table.add_row("runtime", "active_env", cfg._active_env)
-
-            console.print(table)
-
-    except Exception as e:
-        console.print(f"[red]Error loading configuration:[/red] {e}")
-        sys.exit(1)
+    pipeline_path = str(pipeline) if pipeline else "config/pipelines/bench_pack.yaml"
+    steps = load_pipeline(pipeline_path)
+    code = PipelineRunner(cfg, strict_sign=strict).execute(steps)
+    raise typer.Exit(code)
 
 
-@app.command()
-def container(
-    config: Path = typer.Option("config/pack.yaml", help="Configuration file path"),
-    env: Optional[str] = typer.Option(None, help="Environment profile"),
+@pack.command("verify")
+def pack_verify(
+    zip_path: Path = typer.Option(..., "--zip", exists=True, readable=True),
+    sig_path: Optional[Path] = typer.Option(
+        None, "--sig", help="Chemin signature .sig"
+    ),
+    key_ref: Optional[str] = typer.Option(
+        None, "--key", help="Clé/KeyRef pour cosign verify-blob"
+    ),
+    strict: bool = typer.Option(
+        True, "--strict/--no-strict", help="Échoue si merkle/manifest incompatibles"
+    ),
 ):
-    """Diagnose service container."""
-    try:
-        cfg = load_config(config, env=env)
-        container = ServiceContainer(cfg)
+    """Verify a pack artifact (manifest, merkle, signature)."""
+    ok, report = verify_zip(zip_path, sig_path=sig_path, key_ref=key_ref, strict=strict)
+    typer.echo(json.dumps(report, ensure_ascii=False, indent=2))
+    raise typer.Exit(0 if ok else 1)
 
-        # Check for validation errors
-        errors = container.validate()
-        if errors:
-            console.print("[red]Configuration validation failed:[/red]")
-            for error in errors:
-                console.print(f"  • {error}")
-            sys.exit(1)
 
-        # Build services
-        console.print("[blue]Building services...[/blue]")
+@pack.command("manifest")
+def pack_manifest(
+    zip_path: Path = typer.Option(..., "--zip", exists=True, readable=True),
+    out: Optional[Path] = typer.Option(None, "--out"),
+    print_: bool = typer.Option(False, "--print", help="Affiche le manifest JSON"),
+):
+    """Extract or print manifest from a pack artifact."""
+    manifest = print_manifest(zip_path)
+    if out:
+        Path(out).write_text(
+            json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+    if print_ or not out:
+        typer.echo(json.dumps(manifest, ensure_ascii=False, indent=2))
+    raise typer.Exit(0)
 
-        # Event bus
-        bus = container.get_event_bus()
-        console.print(f"✓ Event bus: {type(bus).__name__}")
 
-        # Logger
-        logger = container.get_logger()
-        console.print(f"✓ Logger: {logger.name}")
+@pack.command("sign")
+def pack_sign(
+    artifact: Path = typer.Option(..., "--in", exists=True, readable=True),
+    provider: str = typer.Option("cosign", "--provider"),
+    key_ref: Optional[str] = typer.Option(None, "--key"),
+):
+    """Sign a pack artifact."""
+    if provider == "cosign":
+        try:
+            sig = sign_with_cosign(artifact, key_ref=key_ref)
+            typer.echo(str(sig))
+            raise typer.Exit(0)
+        except Exception as e:
+            typer.echo(f"Signature failed: {e}", err=True)
+            raise typer.Exit(UNEXPECTED_ERROR_EXIT_CODE)
+    else:
+        typer.echo("Unknown provider", err=True)
+        raise typer.Exit(2)
 
-        # Metrics provider
-        metrics_provider = container.get_metrics_provider()
-        console.print(f"✓ Metrics provider: {type(metrics_provider).__name__}")
 
-        # Capability registry
-        registry = container.get_capability_registry()
-        handlers = registry.list_handlers()
-        console.print(f"✓ Capability registry: {len(handlers)} handlers")
+@app.command("version")
+def version_cmd():
+    """Print version information."""
+    from pefc import __version__
 
-        # Show handlers
-        if handlers:
-            table = Table(title="Capability Handlers")
-            table.add_column("ID", style="cyan")
-            table.add_column("Version", style="magenta")
-            table.add_column("Provides", style="green")
-            table.add_column("Prerequisites", style="yellow")
-
-            for handler in handlers:
-                prereq_missing = ", ".join(handler.get("prereq_missing", []))
-                table.add_row(
-                    handler["id"],
-                    handler.get("version", "unknown"),
-                    ", ".join(handler.get("provides", [])),
-                    prereq_missing or "none",
-                )
-
-            console.print(table)
-
-        # Pipelines
-        console.print(f"✓ Pipelines: {len(cfg.pipelines.defs)} definitions")
-
-        # Show pipeline steps
-        for pipeline_name, pipeline_def in cfg.pipelines.defs.items():
-            console.print(f"\n[blue]Pipeline '{pipeline_name}':[/blue]")
-            for i, step in enumerate(pipeline_def.steps, 1):
-                console.print(f"  {i}. {step.type} ({step.name or 'unnamed'})")
-
-        console.print("\n[green]All services built successfully![/green]")
-
-    except Exception as e:
-        console.print(f"[red]Error building container:[/red] {e}")
-        sys.exit(1)
+    typer.echo(__version__)
 
 
 if __name__ == "__main__":
