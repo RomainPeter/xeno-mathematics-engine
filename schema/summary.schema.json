@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schema/summary.schema.json",
+  "title": "PEFC Pack Summary",
+  "type": "object",
+  "required": ["version", "config", "sources", "overall", "by_group", "runs"],
+  "properties": {
+    "version": { "type": "string", "minLength": 1 },
+    "config": {
+      "type": "object",
+      "required": ["include_aggregates", "weight_key", "dedup"],
+      "properties": {
+        "include_aggregates": { "type": "boolean" },
+        "weight_key": { "type": "string" },
+        "dedup": { "type": "string", "enum": ["first", "last"] }
+      },
+      "additionalProperties": true
+    },
+    "sources": {
+      "type": "object",
+      "required": ["counts", "ignored_aggregates"],
+      "properties": {
+        "counts": {
+          "type": "object",
+          "required": ["run", "aggregate"],
+          "properties": {
+            "run": { "type": "integer", "minimum": 0 },
+            "aggregate": { "type": "integer", "minimum": 0 }
+          },
+          "additionalProperties": false
+        },
+        "ignored_aggregates": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": true
+    },
+    "overall": {
+      "$ref": "#/$defs/aggBlock"
+    },
+    "by_group": {
+      "type": "object",
+      "description": "Map: group -> aggBlock",
+      "additionalProperties": { "$ref": "#/$defs/aggBlock" }
+    },
+    "runs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/runRecord" }
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "metrics": {
+      "type": "object",
+      "description": "Map: metric_name -> number",
+      "patternProperties": {
+        "^[A-Za-z0-9_.:-]+$": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "aggBlock": {
+      "type": "object",
+      "required": ["n_runs", "weight_sum", "metrics"],
+      "properties": {
+        "n_runs": { "type": "integer", "minimum": 0 },
+        "weight_sum": { "type": "number", "minimum": 0 },
+        "metrics": { "$ref": "#/$defs/metrics" }
+      },
+      "additionalProperties": false
+    },
+    "runRecord": {
+      "type": "object",
+      "required": ["run_id", "group", "weight", "metrics", "source_path"],
+      "properties": {
+        "run_id": { "type": "string", "minLength": 1 },
+        "group": { "type": "string" },
+        "weight": { "type": "number", "minimum": 0 },
+        "metrics": { "$ref": "#/$defs/metrics" },
+        "source_path": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

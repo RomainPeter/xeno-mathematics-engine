@@ -1,7 +1,7 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, Optional
 import json
 import logging
 
@@ -160,6 +160,9 @@ def build_summary(
     weight_key: str = "n_items",
     dedup: str = "first",
     version: str = "0.1.0",
+    validate: bool = False,
+    bounded_metrics: Optional[List[str]] = None,
+    schema_path: Optional[Path] = None,
 ) -> Dict[str, Any]:
     runs, meta = load_runs_from_sources(
         sources,
@@ -193,6 +196,14 @@ def build_summary(
     out_path.write_text(
         json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"
     )
+
+    if validate:
+        from pefc.metrics.validator import validate_summary_doc
+
+        sp = schema_path or Path("schema/summary.schema.json")
+        validate_summary_doc(result, sp, bounded_metrics)
+        logger.info("summary.json validated successfully")
+
     logger.info(
         "summary.json written: %s (runs=%d, aggregates_ignored=%d)",
         out_path,
