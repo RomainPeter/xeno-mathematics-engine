@@ -1,0 +1,8 @@
+{
+  "ids": {
+    "lambda": 0.6
+  },
+  "risk_policy": {
+    "cvar_alpha": 0.9
+  }
+}

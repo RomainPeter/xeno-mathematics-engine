@@ -1,7 +1,8 @@
 # Discovery Engine 2-Cat
 
-[![CI](https://github.com/RomainPeter/discovery-engine-2cat/workflows/CI/badge.svg)](https://github.com/RomainPeter/discovery-engine-2cat/actions)
-[![Attestation](https://github.com/RomainPeter/discovery-engine-2cat/workflows/Attestation/badge.svg)](https://github.com/RomainPeter/discovery-engine-2cat/actions)
+![CI](https://github.com/RomainPeter/discovery-engine-2cat/actions/workflows/ci.yml/badge.svg)
+![Nightly Bench](https://github.com/RomainPeter/discovery-engine-2cat/actions/workflows/nightly-bench.yml/badge.svg)
+![Gate Merge](https://github.com/RomainPeter/discovery-engine-2cat/actions/workflows/gate-merge.yml/badge.svg)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 

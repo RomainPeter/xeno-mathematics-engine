@@ -1,6 +1,0 @@
------BEGIN PUBLIC KEY-----
-MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEexample_public_key_for_cosign_verification
-This is a placeholder public key for cosign verification.
-In production, this would be the actual public key corresponding
-to the private key used for signing artifacts.
------END PUBLIC KEY-----

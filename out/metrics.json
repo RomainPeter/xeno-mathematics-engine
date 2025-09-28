@@ -1,0 +1,14 @@
+{
+  "coverage": {
+    "coverage_gain": 0.25
+  },
+  "novelty": {
+    "avg": 0.22
+  },
+  "incidents": {
+    "counts_by_reason": {
+      "LowCoverage": 1,
+      "ConstraintBreach": 1
+    }
+  }
+}
