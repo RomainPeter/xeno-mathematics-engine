@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DCA v0.1",
+  "description": "Data-Carrying Action schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the DCA"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["ae_query", "cegis_program"],
+      "description": "Type of DCA"
+    },
+    "context": {
+      "type": "object",
+      "description": "Context for the action"
+    },
+    "estimated_value": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number"
+      },
+      "description": "Estimated value vector"
+    },
+    "actual_value": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number"
+      },
+      "description": "Actual value vector"
+    },
+    "verdict": {
+      "type": "string",
+      "enum": ["accept", "reject", "pending"],
+      "description": "Verdict of the action"
+    },
+    "counterexample_ref": {
+      "type": "string",
+      "description": "Reference to counterexample if rejected"
+    },
+    "attestation": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "hash": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["type", "hash", "timestamp"]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of the action"
+    }
+  },
+  "required": ["id", "type", "context", "verdict", "timestamp"]
+}
+

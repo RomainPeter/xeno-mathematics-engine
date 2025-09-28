@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Cost Vector V v0.1",
+  "description": "Cost vector schema for Discovery Engine 2-Cat",
+  "type": "object",
+  "properties": {
+    "time_ms": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Time in milliseconds"
+    },
+    "audit_cost": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Audit cost"
+    },
+    "legal_risk": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Legal risk score (0-1)"
+    },
+    "tech_debt": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Technical debt score (0-1)"
+    },
+    "novelty": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Novelty score (0-1)"
+    },
+    "coverage": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Coverage score (0-1)"
+    }
+  },
+  "required": ["time_ms", "audit_cost", "legal_risk", "tech_debt", "novelty", "coverage"]
+}
+

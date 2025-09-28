@@ -1,0 +1,222 @@
+# Architecture Unifiée v0.1 Configuration
+# Configuration for the unified proof orchestration system
+
+version: "0.1.0"
+name: "Architecture Unifiée v0.1"
+
+# Domain specifications
+domains:
+  regtech_code:
+    id: "regtech-code-v1"
+    domain: "RegTech"
+    closure: "exact"
+    oracle_endpoints:
+      - name: "OPA_Rego"
+        type: "OPA"
+        endpoint: "http://localhost:8181/v1/data"
+        timeout_ms: 5000
+      - name: "Static_Analysis"
+        type: "static_analysis"
+        endpoint: "local://tools/static_analysis"
+        timeout_ms: 10000
+      - name: "Property_Tests"
+        type: "property_test"
+        endpoint: "local://tools/hypothesis"
+        timeout_ms: 30000
+    
+    cost_model:
+      dimensions: ["time_ms", "audit_cost", "legal_risk", "tech_debt"]
+      units:
+        time_ms: "milliseconds"
+        audit_cost: "USD"
+        legal_risk: "risk_score_0_1"
+        tech_debt: "debt_score_0_1"
+    
+    admissible_equations:
+      - name: "idempotence_normalize"
+        rule: "□∘□ = □"
+        guard: "K_fixed"
+        proof: "Normalize is idempotent when constraints K are fixed"
+      - name: "idempotence_verify"
+        rule: "№∘№ = №"
+        guard: "proof_validated"
+        proof: "Verify is idempotent after proof validation"
+      - name: "idempotence_meet"
+        rule: "∧∘∧ = ∧"
+        guard: "same_base"
+        proof: "Meet is idempotent on same base"
+      - name: "commutation_retrieve_normalize"
+        rule: "Retrieve∘□ ≡ □∘Retrieve"
+        guard: "K_fixed"
+        proof: "Retrieve and Normalize commute when K is fixed"
+      - name: "associativity_meet"
+        rule: "∧(∧(A,B),C) = ∧(A,∧(B,C))"
+        guard: "K_fixed"
+        proof: "Meet is associative when K is fixed"
+    
+    evidence_types:
+      - "CI_logs"
+      - "policy_proofs"
+      - "static_analysis_reports"
+      - "test_results"
+      - "compliance_mappings"
+      - "audit_trails"
+    
+    shock_ladder:
+      S1: "Basic compliance: license checks, secret detection, semver validation"
+      S2: "Integration: API change detection, dependency analysis, policy enforcement"
+      S3: "Stress: chaos testing, adversarial inputs, regulatory scenario simulation"
+    
+    risk_policy:
+      CVaR_alpha: 0.95
+      max_risk: 0.8
+      risk_weights:
+        time_ms: 0.1
+        audit_cost: 0.3
+        legal_risk: 0.4
+        tech_debt: 0.2
+
+# Exploration configuration
+exploration:
+  default_budget:
+    time_ms: 30000
+    audit_cost: 1000
+    legal_risk: 0.3
+    tech_debt: 0.2
+  
+  selection_strategies:
+    - name: "bandit"
+      type: "contextual_bandit"
+      parameters:
+        alpha: 1.0
+        beta: 1.0
+        exploration_constant: 1.4
+    - name: "mcts"
+      type: "monte_carlo_tree_search"
+      parameters:
+        exploration_constant: 1.4
+        max_iterations: 100
+    - name: "pareto"
+      type: "pareto_optimal"
+      parameters:
+        dominance_threshold: 0.1
+  
+  diversity_config:
+    target_diversity: 0.8
+    min_novelty: 0.6
+    diversity_keys:
+      - "attributes"
+      - "implications"
+      - "operator_patterns"
+  
+  convergence:
+    max_iterations: 10
+    convergence_threshold: 0.1
+    improvement_window: 3
+
+# E-graph configuration
+egraph:
+  rules:
+    - name: "idempotence_normalize"
+      pattern: "normalize_chain"
+      equivalent: "single_normalize"
+      guard: "K_fixed"
+    - name: "idempotence_verify"
+      pattern: "verify_chain"
+      equivalent: "single_verify"
+      guard: "proof_validated"
+    - name: "commutation_retrieve_normalize"
+      pattern: "retrieve_normalize_chain"
+      equivalent: "normalize_retrieve_chain"
+      guard: "K_fixed"
+  
+  canonicalization:
+    hash_algorithm: "sha256"
+    include_metadata: true
+    preserve_structure: true
+
+# LLM configuration
+llm:
+  micro_prompts:
+    implications:
+      template: "prompts/ae_implications.tpl"
+      max_candidates: 5
+      confidence_threshold: 0.6
+    counterexamples:
+      template: "prompts/ae_counterexamples.tpl"
+      max_candidates: 3
+      evidence_required: true
+    choreographies:
+      template: "prompts/cegis_choreography.tpl"
+      max_candidates: 5
+      diversity_required: true
+  
+  generation:
+    temperature: 0.7
+    max_tokens: 1000
+    timeout_ms: 30000
+    retry_attempts: 3
+
+# Anti-fragility configuration
+antifragility:
+  incident_handling:
+    auto_recovery: true
+    escalation_threshold: 3
+    recovery_timeout_ms: 10000
+  
+  failure_reasons:
+    - code: "LowNovelty"
+      handler: "increase_diversity"
+      new_constraints: ["diversity_boost"]
+    - code: "LowCoverage"
+      handler: "expand_search_space"
+      new_constraints: ["coverage_requirement"]
+    - code: "HighRisk"
+      handler: "reduce_risk_tolerance"
+      new_constraints: ["risk_mitigation"]
+    - code: "ConstraintBreach"
+      handler: "add_constraint_tests"
+      new_constraints: ["enhanced_validation"]
+    - code: "OracleTimeout"
+      handler: "increase_timeout"
+      new_constraints: ["extended_timeout"]
+  
+  governance:
+    seed_tracking: true
+    prompt_hash_verification: true
+    attestation_required: true
+    reproducibility_checks: true
+
+# Performance configuration
+performance:
+  parallel_execution:
+    max_workers: 4
+    timeout_per_worker: 30000
+  
+  caching:
+    enabled: true
+    cache_size: 1000
+    ttl_seconds: 3600
+  
+  monitoring:
+    metrics_collection: true
+    performance_tracking: true
+    resource_monitoring: true
+
+# Output configuration
+output:
+  artifacts_dir: "out/unified_architecture"
+  results_format: "json"
+  include_metadata: true
+  compression: true
+  
+  logging:
+    level: "INFO"
+    format: "json"
+    file: "logs/unified_architecture.log"
+  
+  reporting:
+    generate_summary: true
+    include_visualizations: true
+    export_artifacts: true
+

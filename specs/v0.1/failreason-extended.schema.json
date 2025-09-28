@@ -1,0 +1,47 @@
+{
+  "$id": "https://spec.proof.engine/v0.1/failreason-extended.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Extended FailReason Taxonomy",
+  "type": "object",
+  "properties": {
+    "version": { "type": "string", "const": "0.1.0" },
+    "id": { "type": "string" },
+    "code": {
+      "type": "string",
+      "enum": [
+        "LowNovelty",
+        "LowCoverage", 
+        "HighRisk",
+        "ConstraintBreach",
+        "NonMinCoverage",
+        "Incoherent",
+        "OracleTimeout",
+        "FlakyEvidence"
+      ]
+    },
+    "context": {
+      "type": "object",
+      "description": "Context where the failure occurred"
+    },
+    "handlers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "action": { "type": "string" },
+          "new_K": { "type": "array", "items": { "type": "string" } },
+          "tests": { "type": "array", "items": { "type": "string" } },
+          "e_rules": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["action"]
+      }
+    },
+    "recovery_strategy": {
+      "type": "string",
+      "enum": ["retry", "replan", "escalate", "abort"]
+    }
+  },
+  "required": ["version", "id", "code", "handlers", "recovery_strategy"],
+  "additionalProperties": false
+}
+

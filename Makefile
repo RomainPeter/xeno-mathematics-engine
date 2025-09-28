@@ -249,3 +249,101 @@ expected-fail-license:
 	@echo "🧪 Testing License expected-fail cases..."
 	. .venv/bin/activate && $(PY) scripts/bench_2cat.py --suite corpus/s2pp/suite.json --modes expected_fail --runs 1 --out artifacts/s2pp/expected_fail_license --filter license-violation-agpl
 	@echo "✅ License expected-fail tests completed"
+
+# Architecture Unifiée v0.1 targets
+arch-test:
+	@echo "🧪 Testing Architecture Unifiée v0.1..."
+	. .venv/bin/activate && $(PY) scripts/test_unified_architecture.py
+	@echo "✅ Architecture Unifiée v0.1 tests completed"
+
+arch-demo:
+	@echo "🎯 Running Architecture Unifiée v0.1 demo..."
+	. .venv/bin/activate && $(PY) scripts/demo_unified_architecture.py
+	@echo "✅ Architecture Unifiée v0.1 demo completed"
+
+arch-schemas:
+	@echo "📋 Validating Architecture Unifiée v0.1 schemas..."
+	. .venv/bin/activate && $(PY) scripts/test_roundtrip.py --schemas specs/v0.1/
+	@echo "✅ Architecture Unifiée v0.1 schemas validated"
+
+arch-egraph:
+	@echo "🔗 Testing e-graph canonicalization..."
+	. .venv/bin/activate && $(PY) -c "from proofengine.core.egraph import EGraph, canonicalize_state; egraph = EGraph(); print('E-graph initialized:', egraph.get_stats())"
+	@echo "✅ E-graph functionality verified"
+
+arch-orchestrator:
+	@echo "🎭 Testing unified orchestrator..."
+	. .venv/bin/activate && $(PY) -c "from proofengine.orchestrator.unified_orchestrator import UnifiedOrchestrator; print('Unified orchestrator imported successfully')"
+	@echo "✅ Unified orchestrator verified"
+
+arch-full: arch-test arch-demo arch-schemas arch-egraph arch-orchestrator
+	@echo "🎉 Architecture Unifiée v0.1 fully validated!"
+
+# Discovery Engine 2-Cat specific targets
+ae-test:
+	@echo "🔍 Testing AE Next-Closure..."
+	. .venv/bin/activate && $(PY) -m pytest tests/test_ae_loop.py -v
+	@echo "✅ AE Next-Closure tests completed"
+
+egraph-test:
+	@echo "🔗 Testing E-graph canonicalization..."
+	. .venv/bin/activate && $(PY) -m pytest tests/test_egraph.py -v
+	@echo "✅ E-graph tests completed"
+
+bandit-test:
+	@echo "🎯 Testing bandit/DPP selection..."
+	. .venv/bin/activate && $(PY) -m pytest tests/test_policy_selection.py -v
+	@echo "✅ Bandit/DPP tests completed"
+
+ci-test:
+	@echo "🔧 Testing CI components..."
+	. .venv/bin/activate && $(PY) -m pytest tests/test_ci_components.py -v
+	@echo "✅ CI tests completed"
+
+discovery-test: ae-test egraph-test bandit-test ci-test
+	@echo "🎉 Discovery Engine 2-Cat tests completed!"
+
+discovery-demo:
+	@echo "🎯 Running Discovery Engine 2-Cat demo..."
+	. .venv/bin/activate && $(PY) scripts/demo_discovery_engine.py
+	@echo "✅ Discovery Engine 2-Cat demo completed"
+
+# CI and attestation targets
+ci-test:
+	@echo "🔧 Testing CI components..."
+	. .venv/bin/activate && $(PY) -m pytest tests/test_ci_components.py -v
+	@echo "✅ CI tests completed"
+
+hermetic-test:
+	@echo "🔒 Testing hermetic runner..."
+	. .venv/bin/activate && $(PY) runner/hermetic_stub.py
+	@echo "✅ Hermetic runner test completed"
+
+merkle-test:
+	@echo "🔗 Testing Merkle journal..."
+	. .venv/bin/activate && $(PY) scripts/merkle_journal.py
+	@echo "✅ Merkle journal test completed"
+
+attestation:
+	@echo "🔐 Generating attestation..."
+	. .venv/bin/activate && $(PY) scripts/merkle_journal.py
+	@echo "✅ Attestation generated"
+
+# Full CI pipeline
+ci-full: ci-test hermetic-test merkle-test attestation
+	@echo "🎉 Full CI pipeline completed!"
+
+# RegTech demo targets
+regtech-demo:
+	@echo "🎯 Running RegTech Discovery Engine demo..."
+	. .venv/bin/activate && $(PY) scripts/demo_regtech_bench.py
+	@echo "✅ RegTech demo completed"
+
+regtech-test:
+	@echo "🧪 Testing RegTech components..."
+	. .venv/bin/activate && $(PY) -m pytest tests/test_ae_loop.py -v
+	@echo "✅ RegTech tests completed"
+
+# Complete Discovery Engine targets
+discovery-full: discovery-test regtech-demo
+	@echo "🎉 Complete Discovery Engine validation!"

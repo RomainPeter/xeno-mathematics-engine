@@ -1,0 +1,96 @@
+{
+  "$id": "https://spec.proof.engine/v0.1/domain-spec.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Domain Specification (Adapter)",
+  "type": "object",
+  "properties": {
+    "version": { "type": "string", "const": "0.1.0" },
+    "id": { "type": "string" },
+    "domain": { 
+      "type": "string",
+      "enum": ["RegTech", "Code", "Math", "Finance", "Healthcare"]
+    },
+    "closure": {
+      "type": "string",
+      "enum": ["exact", "prob", "defeasible"],
+      "description": "Type of closure computation"
+    },
+    "oracle_endpoints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string", "enum": ["OPA", "Rego", "static_analysis", "SMT", "property_test"] },
+          "endpoint": { "type": "string" },
+          "timeout_ms": { "type": "integer", "minimum": 0 }
+        },
+        "required": ["name", "type", "endpoint"]
+      }
+    },
+    "cost_model": {
+      "type": "object",
+      "properties": {
+        "dimensions": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "units": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      },
+      "required": ["dimensions", "units"]
+    },
+    "admissible_equations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "rule": { "type": "string" },
+          "guard": { "type": "string" },
+          "proof": { "type": "string" }
+        },
+        "required": ["name", "rule"]
+      }
+    },
+    "evidence_types": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Types of evidence this domain can produce"
+    },
+    "shock_ladder": {
+      "type": "object",
+      "properties": {
+        "S1": { "type": "string", "description": "Basic compliance checks" },
+        "S2": { "type": "string", "description": "Integration tests" },
+        "S3": { "type": "string", "description": "Stress/chaos tests" }
+      }
+    },
+    "risk_policy": {
+      "type": "object",
+      "properties": {
+        "CVaR_alpha": { "type": "number", "minimum": 0, "maximum": 1 },
+        "max_risk": { "type": "number" },
+        "risk_weights": { "$ref": "#/$defs/V" }
+      }
+    }
+  },
+  "required": ["version", "id", "domain", "closure", "oracle_endpoints", "cost_model"],
+  "additionalProperties": false,
+  "$defs": {
+    "V": {
+      "type": "object",
+      "properties": {
+        "time_ms": { "type": "integer", "minimum": 0 },
+        "audit_cost": { "type": "number", "minimum": 0 },
+        "legal_risk": { "type": "number", "minimum": 0 },
+        "tech_debt": { "type": "number", "minimum": 0 }
+      },
+      "required": ["time_ms", "audit_cost", "legal_risk", "tech_debt"],
+      "additionalProperties": false
+    }
+  }
+}
+

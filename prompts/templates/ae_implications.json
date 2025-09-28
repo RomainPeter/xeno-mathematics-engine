@@ -1,0 +1,9 @@
+{
+  "goal": "propose_implications",
+  "k": 8,
+  "diversity_keys": ["attributes", "clause_type"],
+  "hard_constraints": ["must respect obligations K"],
+  "output_contract": {
+    "fields": ["premises", "conclusion", "justification", "diversity_key"]
+  }
+}

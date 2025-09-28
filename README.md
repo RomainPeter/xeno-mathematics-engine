@@ -1,52 +1,98 @@
-# dancing-machines — Proof Orchestrator Fit Probe
+# Discovery Engine 2-Cat
 
-## Short
-Hybrid proof‑carrying orchestration: stochastic generation inside, deterministic verification outside. Every step is a PCAP (typed journal, obligations K, cost vector V, delta δ), with a deterministic verifier and replayable audit pack.
+[![CI](https://github.com/RomainPeter/discovery-engine-2cat/workflows/CI/badge.svg)](https://github.com/RomainPeter/discovery-engine-2cat/actions)
+[![Attestation](https://github.com/RomainPeter/discovery-engine-2cat/workflows/Attestation/badge.svg)](https://github.com/RomainPeter/discovery-engine-2cat/actions)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-## Scope
-- **Today**: code demo (replayable, offline via cache).
-- **Tomorrow**: portability to formal mathematics (Gauss‑like pipelines). This is a fit probe, not a Lean integration.
+Orchestrateur 2-cat, AE/CEGIS, e-graphs, bandit/MCTS, domain adapters, benchmarks.
 
-## Why
-- Lower oversight cost; raise auditability and reproducibility by construction.
-- Structure failures into "incident → rule → non‑regression" loops.
+## Architecture
 
-## Quickstart
-1) `python3 -m venv .venv && source .venv/bin/activate`
-2) `pip install -r requirements.lock`
-3) `cp env.example .env`  # add OPENROUTER_API_KEY and OPENROUTER_MODEL (e.g., moonshotai/kimi-k2:free)
-4) `make verify`
-5) `make demo`
-6) `make audit-pack`
-7) `make logs`
-8) `make release`
+Ce repository contient l'agent de découverte basé sur l'Architecture Unifiée v0.1, utilisant le Proof Engine comme dépendance versionnée.
 
-## Verification in 2 minutes
-- `make verify`        # LLM ping + JSON strict
-- `make demo`          # Plan → Variants → (fail → incident → replan) → success
-- `make audit-pack`    # out/audit/attestation.json (digest, count, verdicts)
-- `make logs`          # LOGS.md (timeline, obligations snapshot, delta_mean if available)
-- `make release`       # dist/audit_pack_<tag>.zip
+### Structure
 
-## Artifacts
-- `out/pcap/*.json` (chained Proof‑Carrying Actions)
-- `out/audit/attestation.json` (SHA256 digest, verdicts)
-- `LOGS.md` (annotated timeline)
-- `docs/2pager.md` (architecture and metrics)
-- `dist/audit_pack_<tag>.zip` (one‑file bundle)
+```
+discovery-engine-2cat/
+├── external/
+│   └── proof-engine-core/          # Submodule @ tag v0.1.0
+├── orchestrator/                   # Orchestrateur principal
+├── methods/                        # Méthodes AE/CEGIS/e-graph
+├── domain/                         # Domain adapters
+├── schemas/                        # JSON Schemas v0.1
+├── bench/                          # Benchmarks + baselines
+├── ci/                            # CI/CD + attestations
+└── prompts/                       # Micro-prompts LLM
+```
 
-## Security & Supply-chain
-- **Hermetic Verification**: Docker sandbox with no-network, resource quotas
-- **Attestations**: Cosign signatures on audit packs
-- **SBOM**: Software Bill of Materials (SPDX 2.3)
-- **Vulnerability Scanning**: Trivy/Grype integration
-- **Policy Enforcement**: OPA rules for secrets, semver, API changes
+### Composants
 
-## Alignment with Math Inc vision
-- Expansion (stochastic exploration) + Compression (deterministic verification) per step.
-- Network value via reuse/connectivity; audit surface for large‑scale autoformalization.
-- Portable orchestration layer; no Lean dependency in this probe.
+- **AE (Attribute Exploration)**: Next-closure algorithm avec oracle Verifier
+- **CEGIS**: Counter-Example Guided Inductive Synthesis
+- **E-graphs**: Canonicalisation et anti-redondance structurelle
+- **Sélection**: Bandit contextuel, MCTS, Pareto
+- **Domain Adapters**: RegTech/Code, etc.
 
-## Limitations
-- Demo in code space only; no claim about Lean/tactics performance.
-- LLM ping requires OpenRouter API key; replay uses local cache.
+### Utilisation
+
+```bash
+# Tests
+make ae-test          # Test AE Next-Closure
+make egraph-test      # Test E-graph canonicalization
+make bandit-test      # Test bandit/DPP selection
+make ci-test          # Test CI components
+
+# Démo
+make discovery-demo   # Démo complète
+
+# CI Pipeline
+make ci-full          # Pipeline CI complet
+make hermetic-test    # Test runner hermétique
+make merkle-test      # Test journal Merkle
+make attestation      # Génération attestation
+```
+
+### Dépendances
+
+- **proof-engine-core**: Noyau stable (PCAP, runner hermétique, attestations)
+- **Python 3.10+**: Runtime
+- **OPA**: Oracle pour vérification
+- **Static Analysis**: Outils d'analyse statique
+
+### Versioning
+
+- **discovery-engine**: v0.x (exploration et orchestration)
+- **proof-engine-core**: v0.x (noyau stable)
+- Compatibilité: `proof-engine-core>=0.1.0,<0.2.0`
+
+## Développement
+
+### Migration depuis proof-engine-for-code
+
+Ce repository a été créé en migrant les composants d'exploration depuis le Proof Engine principal pour permettre un développement indépendant et accéléré.
+
+### Garde-faus
+
+- Aucune modification directe de `proof-engine-core`
+- Toute évolution du core → PR sur proof-engine-core → nouveau tag → bump submodule
+- Attestations distinctes par repository
+- Versionnage coordonné avec contraintes de compatibilité
+
+## CI/CD
+
+### Workflows
+
+- **CI**: Tests sur Python 3.10, 3.11, 3.12 avec matrix
+- **Attestation**: Génération d'attestations avec Merkle root
+- **Hermetic Runner**: Exécution reproductible avec enregistrement
+
+### Artifacts
+
+- **Merkle Root**: Hachage d'intégrité du journal
+- **Attestation**: Signature des composants
+- **Test Results**: Résultats des tests avec couverture
+
+## License
+
+Voir LICENSE pour les détails.

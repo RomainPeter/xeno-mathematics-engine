@@ -1,0 +1,93 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DomainSpec v0.1",
+  "description": "Domain specification for Discovery Engine 2-Cat",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the domain"
+    },
+    "closure": {
+      "type": "string",
+      "enum": ["exact", "approximate", "heuristic"],
+      "description": "Closure type for the domain"
+    },
+    "oracle_endpoints": {
+      "type": "object",
+      "properties": {
+        "opa_cmd": {
+          "type": "string",
+          "default": "opa",
+          "description": "OPA command for policy evaluation"
+        },
+        "rego_pkg": {
+          "type": "string",
+          "default": "policy",
+          "description": "Rego package name"
+        },
+        "static_analysis": {
+          "type": "string",
+          "description": "Static analysis tool command"
+        }
+      },
+      "required": ["opa_cmd", "rego_pkg"]
+    },
+    "cost_model": {
+      "type": "object",
+      "properties": {
+        "V_dims": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Cost vector dimensions"
+        },
+        "units": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Units for each dimension"
+        }
+      },
+      "required": ["V_dims"]
+    },
+    "evidence_types": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Types of evidence supported"
+    },
+    "admissible_equations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Admissible equations for e-graph rules"
+    },
+    "risk_policy": {
+      "type": "object",
+      "properties": {
+        "cvar_alpha": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Conditional Value at Risk parameter"
+        }
+      }
+    },
+    "timeouts": {
+      "type": "object",
+      "properties": {
+        "verify_ms": {
+          "type": "integer",
+          "minimum": 1000,
+          "description": "Verification timeout in milliseconds"
+        }
+      }
+    }
+  },
+  "required": ["id", "closure", "oracle_endpoints", "cost_model", "evidence_types", "admissible_equations"]
+}

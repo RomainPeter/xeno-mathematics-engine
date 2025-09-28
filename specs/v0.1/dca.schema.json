@@ -1,0 +1,73 @@
+{
+  "$id": "https://spec.proof.engine/v0.1/dca.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Decision Context Artifact (DCA)",
+  "type": "object",
+  "properties": {
+    "version": { "type": "string", "const": "0.1.0" },
+    "id": { "type": "string" },
+    "type": { 
+      "type": "string", 
+      "enum": ["AE_query", "CEGIS_prog"] 
+    },
+    "context_hash": { 
+      "type": "string", 
+      "pattern": "^[A-Fa-f0-9]{64}$",
+      "description": "Hash of X_subset context"
+    },
+    "query_or_prog": { 
+      "type": "string",
+      "description": "The implication query (A⇒B) or synthesized program"
+    },
+    "V_hat": { "$ref": "#/$defs/V" },
+    "S_hat": { "$ref": "#/$defs/S" },
+    "V_actual": { "$ref": "#/$defs/V" },
+    "S_actual": { "$ref": "#/$defs/S" },
+    "coverage_delta": { "type": "number" },
+    "novelty": { "type": "number", "minimum": 0, "maximum": 1 },
+    "verdict": { 
+      "type": "string", 
+      "enum": ["accept", "reject"] 
+    },
+    "counterexample_ref": { 
+      "type": "string",
+      "description": "Reference to PCAP counterexample if verdict=reject"
+    },
+    "egraph_class": { 
+      "type": "string",
+      "description": "Canonical e-graph equivalence class"
+    },
+    "links": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "References to Journal entries"
+    }
+  },
+  "required": ["version", "id", "type", "context_hash", "query_or_prog", "V_hat", "S_hat", "V_actual", "S_actual", "verdict"],
+  "additionalProperties": false,
+  "$defs": {
+    "V": {
+      "type": "object",
+      "properties": {
+        "time_ms": { "type": "integer", "minimum": 0 },
+        "audit_cost": { "type": "number", "minimum": 0 },
+        "legal_risk": { "type": "number", "minimum": 0 },
+        "tech_debt": { "type": "number", "minimum": 0 }
+      },
+      "required": ["time_ms", "audit_cost", "legal_risk", "tech_debt"],
+      "additionalProperties": false
+    },
+    "S": {
+      "type": "object",
+      "properties": {
+        "info_gain": { "type": "number" },
+        "coverage_gain": { "type": "number" },
+        "MDL_drop": { "type": "number" },
+        "novelty": { "type": "number", "minimum": 0, "maximum": 1 }
+      },
+      "required": ["info_gain", "coverage_gain", "MDL_drop", "novelty"],
+      "additionalProperties": false
+    }
+  }
+}
+
