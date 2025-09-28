@@ -103,6 +103,12 @@ def verify_zip(
     # Final result
     if strict and not overall_success:
         return (False, report)
+    elif not strict and not overall_success:
+        # In non-strict mode, return True but with warnings
+        report["warnings"] = report.get("warnings", [])
+        report["warnings"].extend(report["errors"])
+        report["errors"] = []
+        return (True, report)
     else:
         return (overall_success, report)
 

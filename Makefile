@@ -565,3 +565,45 @@ pack-manifest:
 
 pack-sign:
 	pefc pack sign --in dist/*.zip --provider cosign
+
+# Test targets
+.PHONY: test test-cov test-fast test-slow test-all test-cli test-pipeline test-manifest test-metrics test-summary test-capabilities test-logging test-dedup
+
+test:
+	python -m pytest tests/ -v
+
+test-cov:
+	python -m pytest tests/ -v --cov=pefc --cov-report=html --cov-report=term
+
+test-fast:
+	python -m pytest tests/ -v -m "not slow"
+
+test-slow:
+	python -m pytest tests/ -v -m "slow"
+
+test-all:
+	python -m pytest tests/ -v --cov=pefc --cov-report=html --cov-report=term --cov-fail-under=80
+
+test-cli:
+	python -m pytest tests/test_cli_*.py -v
+
+test-pipeline:
+	python -m pytest tests/test_pipeline_*.py -v
+
+test-manifest:
+	python -m pytest tests/test_manifest_*.py -v
+
+test-metrics:
+	python -m pytest tests/test_metrics_*.py -v
+
+test-summary:
+	python -m pytest tests/test_summary_*.py -v
+
+test-capabilities:
+	python -m pytest tests/test_capabilities_*.py -v
+
+test-logging:
+	python -m pytest tests/test_logging_*.py -v
+
+test-dedup:
+	python -m pytest tests/test_zip_dedup_*.py -v

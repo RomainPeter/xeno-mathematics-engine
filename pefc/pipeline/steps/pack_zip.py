@@ -20,7 +20,7 @@ class PackZip(PackStep):
 
         # Determine output path
         out_path = self.config.get(
-            "out", f"dist/{ctx.cfg.pack.pack_name}-{ctx.cfg.pack.version}.zip"
+            "out", f"{ctx.cfg.pack.pack_name}-{ctx.cfg.pack.version}.zip"
         )
         if not Path(out_path).is_absolute():
             out_path = ctx.out_dir / out_path
