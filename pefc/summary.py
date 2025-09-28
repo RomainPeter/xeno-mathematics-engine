@@ -158,6 +158,7 @@ def build_summary(
     prefer_backend: str | None = None,
     bounded_metrics: Optional[List[str]] = None,
     schema_path: Optional[Path] = None,
+    provider=None,
 ) -> Dict[str, Any]:
     """
     Build summary with optimized aggregation backends.
@@ -178,12 +179,17 @@ def build_summary(
     """
     from pefc.errors import ValidationError  # T07
 
-    runs, meta = load_runs_from_sources(
-        sources,
-        include_aggregates=include_aggregates,
-        weight_key=weight_key,
-        dedup=dedup,
-    )
+    if provider is not None:
+        from pefc.metrics.parse import provider_to_runs
+
+        runs, meta = provider_to_runs(provider, include_aggregates, weight_key, dedup)
+    else:
+        runs, meta = load_runs_from_sources(
+            sources,
+            include_aggregates=include_aggregates,
+            weight_key=weight_key,
+            dedup=dedup,
+        )
     aggs = aggregate_backend(runs, prefer_backend)
     result = {
         "version": version,

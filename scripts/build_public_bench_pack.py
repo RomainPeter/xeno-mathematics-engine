@@ -21,6 +21,7 @@ from pefc.config.loader import get_config
 from pefc.summary import build_summary
 from pefc.pack.merkle import build_entries, compute_merkle_root, build_manifest
 from pefc.pack.zipper import ZipAdder
+from pefc.metrics.build_provider import build_provider
 
 # Initialize logging (will be reconfigured with config)
 logger = get_logger(__name__)
@@ -46,6 +47,7 @@ class PublicBenchPackBuilder:
         validate: bool = False,
         bounded_metrics: Optional[list[str]] = None,
         version: str = "v0.1.0",
+        provider=None,
     ) -> dict:
         """Build summary.json with aggregated metrics using new API."""
         logger.info("Building summary.json", extra={"event": "summary.build.start"})
@@ -65,6 +67,7 @@ class PublicBenchPackBuilder:
             validate=validate,
             bounded_metrics=bounded_metrics,
             schema_path=Path("schema/summary.schema.json"),
+            provider=provider,
         )
 
         # Add legacy fields for backward compatibility
@@ -487,6 +490,12 @@ Examples:
     )
     if hasattr(config, "_base_dir"):
         logger.info("Base directory", extra={"kv": {"base_dir": str(config._base_dir)}})
+
+    # Build provider if configured
+    provider = None
+    if getattr(config.metrics, "provider", None):
+        provider = build_provider(config)
+        logger.info("Using metrics provider", extra={"provider": provider.describe()})
 
     # Run pack build with error handling
     result = run_pack_build(

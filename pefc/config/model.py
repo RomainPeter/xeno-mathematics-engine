@@ -8,6 +8,34 @@ class LoggingConfig(BaseModel):
     json_mode: bool = False
 
 
+class JsonProviderConfig(BaseModel):
+    paths: List[str] = Field(default_factory=lambda: ["bench/metrics"])
+
+
+class BenchAPIProviderConfig(BaseModel):
+    base_url: str = "https://bench.example.com/api"
+    project_id: str = "proj-123"
+    token_env: str = "BENCH_API_TOKEN"
+    params: dict = Field(default_factory=dict)
+
+
+class CacheProviderConfig(BaseModel):
+    path: str = ".cache/metrics-runs.jsonl"
+    mode: Literal["read", "write", "rw"] = "rw"
+
+
+class CompositeProviderConfig(BaseModel):
+    providers: List[dict] = Field(default_factory=list)
+
+
+class ProviderConfig(BaseModel):
+    kind: Literal["json", "bench_api", "cache", "composite"] = "json"
+    json: JsonProviderConfig = Field(default_factory=JsonProviderConfig)
+    bench_api: BenchAPIProviderConfig = Field(default_factory=BenchAPIProviderConfig)
+    cache: CacheProviderConfig = Field(default_factory=CacheProviderConfig)
+    composite: CompositeProviderConfig = Field(default_factory=CompositeProviderConfig)
+
+
 class MetricsConfig(BaseModel):
     sources: List[str] = Field(default_factory=lambda: ["bench/metrics/**/*.json"])
     include_aggregates: bool = False
@@ -16,6 +44,7 @@ class MetricsConfig(BaseModel):
     bounded_metrics: List[str] = Field(default_factory=list)
     schema_path: str = "schema/summary.schema.json"
     backend: str = "auto"  # auto, polars, pandas, python
+    provider: Optional[ProviderConfig] = None
 
 
 class MerkleConfig(BaseModel):
