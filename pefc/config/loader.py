@@ -1,159 +1,119 @@
 from __future__ import annotations
 import os
+import re
 import yaml
 from pathlib import Path
-from typing import Optional, Dict, Any
-import logging
-
-from pydantic import ValidationError as PydanticValidationError
-
-from pefc.errors import ConfigError
-
+from typing import Any, Dict, Union, Optional
 from .model import RootConfig
 
-logger = logging.getLogger(__name__)
 
-# Cache global pour éviter de recharger
-_config_cache: Optional[RootConfig] = None
+def load_yaml(path: Path) -> Dict[str, Any]:
+    """Load YAML file and return parsed content."""
+    with open(path, "r", encoding="utf-8") as f:
+        return yaml.safe_load(f)
 
 
-def load_config(path: Optional[Path] = None) -> RootConfig:
-    """
-    Charge la configuration depuis un fichier YAML.
+def deep_merge(a: Dict[str, Any], b: Dict[str, Any]) -> Dict[str, Any]:
+    """Deep merge dictionary b into a."""
+    result = a.copy()
 
-    Priorité:
-    1. CLI --config
-    2. ENV PEFC_CONFIG
-    3. config/pack.yaml (par défaut)
-    """
-    if path is None:
-        # Vérifier ENV PEFC_CONFIG
-        env_config = os.getenv("PEFC_CONFIG")
-        if env_config:
-            path = Path(env_config)
+    for key, value in b.items():
+        if key in result and isinstance(result[key], dict) and isinstance(value, dict):
+            result[key] = deep_merge(result[key], value)
         else:
-            # Par défaut
-            path = Path("config/pack.yaml")
+            result[key] = value
 
-    if not path.exists():
-        logger.warning(f"Config file not found: {path}, using defaults")
-        return RootConfig()
+    return result
 
-    logger.info(f"Loading config from: {path}")
 
-    # Charger YAML
-    try:
-        with open(path, "r", encoding="utf-8") as f:
-            data = yaml.safe_load(f) or {}
-    except OSError as exc:
-        raise ConfigError(f"Unable to read config file {path}: {exc}") from exc
-    except yaml.YAMLError as exc:
-        raise ConfigError(f"Invalid YAML in config file {path}: {exc}") from exc
+def expand_env(obj: Any) -> Any:
+    """Recursively expand environment variables in strings."""
+    if isinstance(obj, str):
+        # Support ${VAR} and ${VAR:-default} patterns
+        def replace_var(match):
+            var_name = match.group(1)
+            default = match.group(2) if match.group(2) else ""
+            return os.getenv(var_name, default)
 
-    # Appliquer les overrides ENV
-    data = _apply_env_overrides(data)
+        return re.sub(r"\$\{([^:}]+)(?::-([^}]*))?\}", replace_var, obj)
+    elif isinstance(obj, dict):
+        return {k: expand_env(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [expand_env(item) for item in obj]
+    else:
+        return obj
 
-    # Valider avec Pydantic
-    try:
-        config = RootConfig.model_validate(data)
-    except PydanticValidationError as exc:
-        raise ConfigError(f"Configuration validation failed: {exc}") from exc
 
-    # Stocker le répertoire de base pour la résolution des chemins
-    config._base_dir = path.parent
+def normalize_paths(obj: Any, base_dir: Path) -> Any:
+    """Normalize relative paths relative to base directory."""
+    if isinstance(obj, str) and not Path(obj).is_absolute():
+        # Only normalize if it looks like a path (contains / or ends with common extensions)
+        if "/" in obj or obj.endswith((".json", ".yaml", ".yml", ".md", ".txt")):
+            return str(base_dir / obj)
+    elif isinstance(obj, dict):
+        return {k: normalize_paths(v, base_dir) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [normalize_paths(item, base_dir) for item in obj]
+
+    return obj
+
+
+def get_active_env(env: Optional[str] = None) -> Optional[str]:
+    """Get active environment from various sources."""
+    if env:
+        return env
+    return os.getenv("PEFC_ENV")
+
+
+def load_config(
+    path: Union[str, Path], env: Optional[str] = None, env_prefix: str = "PEFC_"
+) -> RootConfig:
+    """Load configuration with environment overrides and validation."""
+    config_path = Path(path)
+    base_dir = config_path.parent
+
+    # Load base configuration
+    config_data = load_yaml(config_path)
+
+    # Apply environment profile if specified
+    active_env = get_active_env(env)
+    if (
+        active_env
+        and "profiles" in config_data
+        and active_env in config_data["profiles"]
+    ):
+        profile_data = config_data["profiles"][active_env]
+        config_data = deep_merge(config_data, profile_data)
+
+    # Apply environment variable overrides
+    env_overrides = {}
+    for key, value in os.environ.items():
+        if key.startswith(env_prefix):
+            config_key = key[len(env_prefix) :].lower()
+            # Handle nested keys like PEFC_PACK_VERSION -> pack.version
+            if "_" in config_key:
+                parts = config_key.split("_")
+                if len(parts) >= 2:
+                    section = parts[0]
+                    field = "_".join(parts[1:])
+                    if section not in env_overrides:
+                        env_overrides[section] = {}
+                    env_overrides[section][field] = value
+            else:
+                env_overrides[config_key] = value
+
+    if env_overrides:
+        config_data = deep_merge(config_data, env_overrides)
+
+    # Expand environment variables in strings
+    config_data = expand_env(config_data)
+
+    # Normalize relative paths
+    config_data = normalize_paths(config_data, base_dir)
+
+    # Create and validate configuration
+    config = RootConfig.model_validate(config_data)
+    config._base_dir = str(base_dir)
+    config._active_env = active_env
 
     return config
-
-
-def get_config(path: Optional[Path] = None, cache: bool = True) -> RootConfig:
-    """
-    Récupère la configuration avec cache optionnel.
-    """
-    global _config_cache
-
-    if cache and _config_cache is not None:
-        return _config_cache
-
-    config = load_config(path)
-
-    if cache:
-        _config_cache = config
-
-    return config
-
-
-def _apply_env_overrides(data: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Applique les overrides depuis les variables d'environnement.
-    """
-    overrides = []
-
-    # Pack overrides
-    if "PEFC_VERSION" in os.environ:
-        data.setdefault("pack", {})["version"] = os.environ["PEFC_VERSION"]
-        overrides.append("PEFC_VERSION")
-
-    if "PEFC_PACK_NAME" in os.environ:
-        data.setdefault("pack", {})["pack_name"] = os.environ["PEFC_PACK_NAME"]
-        overrides.append("PEFC_PACK_NAME")
-
-    if "PEFC_OUT_DIR" in os.environ:
-        data.setdefault("pack", {})["out_dir"] = os.environ["PEFC_OUT_DIR"]
-        overrides.append("PEFC_OUT_DIR")
-
-    # Logging overrides
-    if "PEFC_LOG_LEVEL" in os.environ:
-        data.setdefault("logging", {})["level"] = os.environ["PEFC_LOG_LEVEL"]
-        overrides.append("PEFC_LOG_LEVEL")
-
-    if "PEFC_LOG_JSON" in os.environ:
-        data.setdefault("logging", {})["json_mode"] = os.environ[
-            "PEFC_LOG_JSON"
-        ].lower() in ("true", "1", "yes")
-        overrides.append("PEFC_LOG_JSON")
-
-    # Metrics overrides
-    if "PEFC_METRICS_INCLUDE_AGGREGATES" in os.environ:
-        data.setdefault("metrics", {})["include_aggregates"] = os.environ[
-            "PEFC_METRICS_INCLUDE_AGGREGATES"
-        ].lower() in ("true", "1", "yes")
-        overrides.append("PEFC_METRICS_INCLUDE_AGGREGATES")
-
-    if "PEFC_METRICS_WEIGHT_KEY" in os.environ:
-        data.setdefault("metrics", {})["weight_key"] = os.environ[
-            "PEFC_METRICS_WEIGHT_KEY"
-        ]
-        overrides.append("PEFC_METRICS_WEIGHT_KEY")
-
-    if "PEFC_METRICS_DEDUP" in os.environ:
-        dedup_value = os.environ["PEFC_METRICS_DEDUP"]
-        if dedup_value in ("first", "last"):
-            data.setdefault("metrics", {})["dedup"] = dedup_value
-            overrides.append("PEFC_METRICS_DEDUP")
-
-    if overrides:
-        logger.info(f"Applied ENV overrides: {', '.join(overrides)}")
-
-    return data
-
-
-def expand_globs(patterns: list[str], base_dir: Path) -> list[Path]:
-    """
-    Résout les patterns glob relativement au répertoire de base.
-    """
-    from glob import glob
-
-    resolved = []
-    for pattern in patterns:
-        # Résoudre relativement au répertoire de base
-        full_pattern = base_dir / pattern
-        matches = glob(str(full_pattern), recursive=True)
-        resolved.extend(Path(m) for m in matches)
-
-    return resolved
-
-
-def clear_cache():
-    """Efface le cache de configuration."""
-    global _config_cache
-    _config_cache = None

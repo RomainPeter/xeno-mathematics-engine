@@ -1,8 +1,84 @@
 from __future__ import annotations
-from typing import Any, Dict, List, Literal, Optional
-from pydantic import BaseModel, Field
+from typing import Any, Dict, List, Optional
+from pydantic import BaseModel, Field, ConfigDict
 
-from pefc.policy.config import PolicyConfig
+
+class PackConfig(BaseModel):
+    """Configuration for pack generation."""
+
+    version: str = "v0.1.0"
+    pack_name: str = "bench_pack"
+    out_dir: str = "dist"
+    zip_name: str = "{pack_name}-{version}.zip"
+    include_manifest: bool = True
+    include_merkle: bool = True
+
+
+class LoggingConfig(BaseModel):
+    """Configuration for logging."""
+
+    level: str = "INFO"
+    json_mode: bool = False
+    gha_annotations: bool = True
+
+
+class MetricsConfig(BaseModel):
+    """Configuration for metrics processing."""
+
+    sources: List[str] = Field(default_factory=lambda: ["bench/metrics/**/*.json"])
+    include_aggregates: bool = False
+    weight_key: str = "n_items"
+    dedup: str = "first"
+    backend: str = "auto"
+    reduce_policy: str = "intersect"
+    bounded_metrics: List[str] = Field(
+        default_factory=lambda: ["coverage_gain", "novelty_avg"]
+    )
+    schema_path: Optional[str] = "schema/summary.schema.json"
+
+
+class MerkleConfig(BaseModel):
+    """Configuration for Merkle tree computation."""
+
+    chunk_size: int = 65536
+    algorithm: str = "sha256"
+
+
+class SignConfig(BaseModel):
+    """Configuration for signing."""
+
+    enabled: bool = False
+    provider: str = "cosign"
+    key_ref: Optional[str] = None
+    required: bool = False
+
+
+class OnePagerConfig(BaseModel):
+    """Configuration for one-pager generation."""
+
+    template_path: Optional[str] = None
+    output_file: str = "ONEPAGER.md"
+
+
+class DocsConfig(BaseModel):
+    """Configuration for documentation generation."""
+
+    onepager: OnePagerConfig = Field(default_factory=OnePagerConfig)
+
+
+class SBOMConfig(BaseModel):
+    """Configuration for SBOM."""
+
+    path: Optional[str] = None
+
+
+class CapabilityItem(BaseModel):
+    """Configuration for a capability."""
+
+    id: str
+    module: str
+    enabled: bool = True
+    params: Dict[str, Any] = Field(default_factory=dict)
 
 
 class CapabilitiesConfig(BaseModel):
@@ -10,99 +86,47 @@ class CapabilitiesConfig(BaseModel):
 
     allowlist: List[str] = Field(default_factory=list)
     denylist: List[str] = Field(default_factory=list)
-    registry: List[Dict[str, Any]] = Field(default_factory=list)
+    registry: List[CapabilityItem] = Field(default_factory=list)
 
 
-class LoggingConfig(BaseModel):
-    level: str = "INFO"
-    json_mode: bool = False
+class StepDescriptor(BaseModel):
+    """Descriptor for a pipeline step."""
+
+    type: str
+    name: Optional[str] = None
+    params: Dict[str, Any] = Field(default_factory=dict)
 
 
-class JsonProviderConfig(BaseModel):
-    paths: List[str] = Field(default_factory=lambda: ["bench/metrics"])
+class PipelineDescriptor(BaseModel):
+    """Descriptor for a pipeline."""
+
+    name: str
+    steps: List[StepDescriptor] = Field(default_factory=list)
 
 
-class BenchAPIProviderConfig(BaseModel):
-    base_url: str = "https://bench.example.com/api"
-    project_id: str = "proj-123"
-    token_env: str = "BENCH_API_TOKEN"
-    params: dict = Field(default_factory=dict)
+class PipelinesConfig(BaseModel):
+    """Configuration for pipelines."""
 
-
-class CacheProviderConfig(BaseModel):
-    path: str = ".cache/metrics-runs.jsonl"
-    mode: Literal["read", "write", "rw"] = "rw"
-
-
-class CompositeProviderConfig(BaseModel):
-    providers: List[dict] = Field(default_factory=list)
-
-
-class ProviderConfig(BaseModel):
-    kind: Literal["json", "bench_api", "cache", "composite"] = "json"
-    json: JsonProviderConfig = Field(default_factory=JsonProviderConfig)
-    bench_api: BenchAPIProviderConfig = Field(default_factory=BenchAPIProviderConfig)
-    cache: CacheProviderConfig = Field(default_factory=CacheProviderConfig)
-    composite: CompositeProviderConfig = Field(default_factory=CompositeProviderConfig)
-
-
-class MetricsConfig(BaseModel):
-    sources: List[str] = Field(default_factory=lambda: ["bench/metrics/**/*.json"])
-    include_aggregates: bool = False
-    weight_key: str = "n_items"
-    dedup: Literal["first", "last"] = "first"
-    bounded_metrics: List[str] = Field(default_factory=list)
-    schema_path: str = "schema/summary.schema.json"
-    backend: str = "auto"  # auto, polars, pandas, python
-    provider: Optional[ProviderConfig] = None
-
-
-class MerkleConfig(BaseModel):
-    style: str = "v1"
-    chunk_size: int = 1048576
-
-
-class SignConfig(BaseModel):
-    """Digital signature configuration."""
-
-    enabled: bool = False
-    key_ref: str | None = None
-    algorithm: str = "cosign"
-
-
-class PackConfig(BaseModel):
-    version: str = "v0.1.0"
-    pack_name: str = "public-bench-pack"
-    out_dir: str = "dist"
-    zip_name: str = "{pack_name}-{version}.zip"
-    include_manifest: bool = True
-    include_merkle: bool = True
-
-
-class OnePagerConfig(BaseModel):
-    template_path: Optional[str] = None  # chemin Jinja2 optionnel
-    output_file: str = "ONEPAGER.md"  # relatif à pack.out_dir
-
-
-class DocsConfig(BaseModel):
-    onepager: OnePagerConfig = Field(default_factory=OnePagerConfig)
-
-
-class SBOMConfig(BaseModel):
-    path: Optional[str] = (
-        None  # si fourni, on le charge; sinon auto-detect dans out_dir
-    )
+    default: str = "bench_pack"
+    defs: Dict[str, PipelineDescriptor] = Field(default_factory=dict)
 
 
 class RootConfig(BaseModel):
+    """Root configuration model."""
+
+    model_config = ConfigDict(extra="forbid")
+
     pack: PackConfig = Field(default_factory=PackConfig)
+    logging: LoggingConfig = Field(default_factory=LoggingConfig)
     metrics: MetricsConfig = Field(default_factory=MetricsConfig)
     merkle: MerkleConfig = Field(default_factory=MerkleConfig)
-    logging: LoggingConfig = Field(default_factory=LoggingConfig)
     sign: SignConfig = Field(default_factory=SignConfig)
     docs: DocsConfig = Field(default_factory=DocsConfig)
     sbom: SBOMConfig = Field(default_factory=SBOMConfig)
-    policy: PolicyConfig = Field(default_factory=PolicyConfig)
     capabilities: CapabilitiesConfig = Field(default_factory=CapabilitiesConfig)
+    pipelines: PipelinesConfig = Field(default_factory=PipelinesConfig)
+    profiles: Dict[str, Dict[str, Any]] = Field(default_factory=dict)
 
-    model_config = {"extra": "forbid"}
+    # Runtime metadata
+    _base_dir: Optional[str] = None
+    _active_env: Optional[str] = None

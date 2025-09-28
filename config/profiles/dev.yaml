@@ -1,0 +1,17 @@
+# Development profile
+logging:
+  level: "DEBUG"
+  json_mode: true
+  gha_annotations: false
+
+sign:
+  enabled: false
+  required: false
+
+metrics:
+  backend: "python"  # Use Python backend for development
+  bounded_metrics: []  # Disable bounded metrics validation in dev
+
+capabilities:
+  allowlist: ["hs-tree", "opa-rego", "ids-synth"]  # Allow all in dev
+  denylist: []
