@@ -12,6 +12,12 @@ from pefc.metrics.providers import (
 
 def build_provider(cfg) -> MetricsProvider:
     """Build metrics provider from configuration."""
+    # Check if provider is configured
+    if not hasattr(cfg.metrics, "provider") or cfg.metrics.provider is None:
+        # défaut: json avec metrics.sources si présents
+        paths = [Path(p) for p in (getattr(cfg.metrics, "sources", []) or [])]
+        return JsonMetricsProvider(paths)
+
     k = cfg.metrics.provider.kind
     if k == "json":
         paths = [Path(p) for p in cfg.metrics.provider.json.paths]
@@ -33,7 +39,3 @@ def build_provider(cfg) -> MetricsProvider:
     if k == "composite":
         subs = [build_provider(sub) for sub in cfg.metrics.provider.composite.providers]
         return CompositeProvider(subs)
-
-    # défaut: json avec metrics.sources si présents
-    paths = [Path(p) for p in (getattr(cfg.metrics, "sources", []) or [])]
-    return JsonMetricsProvider(paths)
