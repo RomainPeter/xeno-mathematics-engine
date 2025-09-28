@@ -2,6 +2,8 @@ from __future__ import annotations
 from typing import Dict, Any, List
 from pefc.capabilities.base import CapabilityMetadata
 from pefc.incidents.types import CapabilityResult
+from pefc.capabilities.loader import build_capabilities
+from pefc.capabilities.manager import CapabilityManager
 
 
 class IDSHandler:
@@ -34,18 +36,20 @@ class IDSHandler:
     def handle(
         self, incident: Dict[str, Any], ctx: Dict[str, Any] | None = None
     ) -> Dict[str, Any]:
-        proofs = [
-            {
-                "type": "ids-generate-tests",
-                "n_seeds": self.n_seeds,
-                "target": incident.get("context", {}).get("target", "unknown"),
-                "criteria": ["boundary", "mutation", "adversarial"],
-            }
-        ]
+        # Use capabilities to generate PCAP
+        caps_cfg = (ctx or {}).get("capabilities_cfg") or {}
+        caps = build_capabilities(caps_cfg)
+        manager = CapabilityManager(caps)
+        pcap = manager.plan_pcap(
+            action="incident.remediation.plan",
+            incident=incident,
+            obligations=incident.get("obligations", []),
+            ctx=ctx,
+        )
         return CapabilityResult(
             handler_id=self.meta.id,
             status="planned",
-            proofs=proofs,
-            messages=["ids plan"],
-            meta={"n_seeds": self.n_seeds},
+            proofs=[],  # Now in PCAP
+            messages=["composed by capabilities"],
+            meta={"caps": pcap.meta, "pcap": pcap.model_dump()},
         ).__dict__

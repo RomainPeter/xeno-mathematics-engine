@@ -2,6 +2,8 @@ from __future__ import annotations
 from typing import Dict, Any, List
 from pefc.capabilities.base import CapabilityMetadata
 from pefc.incidents.types import CapabilityResult
+from pefc.capabilities.loader import build_capabilities
+from pefc.capabilities.manager import CapabilityManager
 
 
 class HSTreeHandler:
@@ -41,22 +43,20 @@ class HSTreeHandler:
     def handle(
         self, incident: Dict[str, Any], ctx: Dict[str, Any] | None = None
     ) -> Dict[str, Any]:
-        # Produce proof plan (not executed): justification tree + synthetic tests
-        proofs = [
-            {
-                "type": "hs-tree",
-                "inputs": {"evidence_refs": incident.get("evidence_refs", [])},
-                "steps": [
-                    {"op": "build_tree"},
-                    {"op": "emit_dot"},
-                    {"op": "check_connectivity"},
-                ],
-            }
-        ]
+        # Use capabilities to generate PCAP
+        caps_cfg = (ctx or {}).get("capabilities_cfg") or {}
+        caps = build_capabilities(caps_cfg)
+        manager = CapabilityManager(caps)
+        pcap = manager.plan_pcap(
+            action="incident.remediation.plan",
+            incident=incident,
+            obligations=incident.get("obligations", []),
+            ctx=ctx,
+        )
         return CapabilityResult(
             handler_id=self.meta.id,
             status="planned",
-            proofs=proofs,
-            messages=["hs-tree plan"],
-            meta={"params": self.params},
+            proofs=[],  # Now in PCAP
+            messages=["composed by capabilities"],
+            meta={"caps": pcap.meta, "pcap": pcap.model_dump()},
         ).__dict__
