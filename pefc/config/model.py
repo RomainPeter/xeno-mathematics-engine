@@ -15,6 +15,7 @@ class MetricsConfig(BaseModel):
     dedup: Literal["first", "last"] = "first"
     bounded_metrics: List[str] = Field(default_factory=list)
     schema_path: str = "schema/summary.schema.json"
+    backend: str = "auto"  # auto, polars, pandas, python
 
 
 class MerkleConfig(BaseModel):
