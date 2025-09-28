@@ -1,0 +1,39 @@
+# Hardening profile for production builds
+logging:
+  level: "INFO"
+  json_mode: true
+  gha_annotations: true
+
+sign:
+  enabled: true
+  required: true
+  provider: "cosign"
+  key_ref: "${COSIGN_KEY_REF:-k8s://cosign/pubbench}"
+
+metrics:
+  backend: "polars"  # Use fastest backend for production
+  bounded_metrics: ["coverage_gain", "novelty_avg", "audit_cost_p95"]
+
+capabilities:
+  allowlist: ["hs-tree", "opa-rego"]  # Only security-focused capabilities
+  denylist: ["ids-synth"]  # Exclude test synthesis in hardening
+
+pipelines:
+  defs:
+    hardening_pack:
+      name: "Hardening Pack"
+      steps:
+        - type: "collect"
+          name: "CollectSeeds"
+        - type: "compute_merkle"
+          name: "ComputeMerkle"
+        - type: "render_docs"
+          name: "OnePager"
+        - type: "pack_zip"
+          name: "Zip"
+        - type: "sign"
+          name: "Sign"
+        - type: "capability"
+          name: "RunSecurityProofs"
+          params:
+            capabilities: ["hs-tree", "opa-rego"]
