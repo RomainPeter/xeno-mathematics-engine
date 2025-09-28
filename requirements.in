@@ -25,3 +25,7 @@ ruff==0.13.1
 
 # Security & SBOM
 cryptography==46.0.1
+
+# Documentation
+mkdocs-material
+mkdocs-git-revision-date-localized-plugin
