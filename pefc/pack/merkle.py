@@ -112,13 +112,39 @@ def compute_merkle_root(entries: List[PackEntry]) -> str:
     return level[0].hex()
 
 
-def build_manifest(entries: List[PackEntry], merkle_root: str, version: str) -> Dict:
-    return {
+def build_manifest(
+    entries: List[PackEntry],
+    merkle_root: str,
+    pack_name: str,
+    version: str,
+    cli_version: str = "0.1.0",
+    signature_info: Optional[Dict] = None,
+) -> Dict:
+    """Build complete manifest with all required fields."""
+    import platform
+
+    # Calculate total size (excluding manifest.json and merkle.txt)
+    total_size = sum(
+        e.size for e in entries if e.arcname not in {"manifest.json", "merkle.txt"}
+    )
+
+    manifest = {
+        "format_version": "1.0",
+        "pack_name": pack_name,
         "version": version,
         "built_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "builder": {"cli_version": cli_version, "host": platform.node()},
+        "file_count": len(entries),
+        "total_size_bytes": total_size,
+        "merkle_root": merkle_root,
         "files": [
             {"path": e.arcname, "size": e.size, "sha256": e.sha256, "leaf": e.leaf}
             for e in entries
         ],
-        "merkle_root": merkle_root,
     }
+
+    # Add signature info if provided
+    if signature_info:
+        manifest["signature"] = signature_info
+
+    return manifest
