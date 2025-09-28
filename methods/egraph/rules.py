@@ -91,6 +91,19 @@ class EGraphRules:
                 guard="pre_condition: Normalize(x) is defined",
                 category="local_absorption",
             ),
+            # v0.2 rules
+            EquivalenceRule(
+                name="normalize_verify_commute",
+                pattern="Normalize∘Verify ↔ Verify∘Normalize",
+                guard="pre_condition: Normalize(x) and Verify(x) are defined; guard: strict",
+                category="v0.2_commutation",
+            ),
+            EquivalenceRule(
+                name="meet_absorption_local",
+                pattern="Meet(x,Meet(x,y)) ≡ Meet(x,y) when K disjoint",
+                guard="pre_condition: K(x) ∩ K(y) = ∅",
+                category="v0.2_absorption",
+            ),
         ]
 
     def get_rules_by_category(self, category: str) -> List[EquivalenceRule]:
