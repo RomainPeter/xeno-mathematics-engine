@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Literal
+from typing import List, Literal, Optional
 from pydantic import BaseModel, Field
 
 
@@ -40,11 +40,28 @@ class PackConfig(BaseModel):
     include_merkle: bool = True
 
 
+class OnePagerConfig(BaseModel):
+    template_path: Optional[str] = None  # chemin Jinja2 optionnel
+    output_file: str = "ONEPAGER.md"  # relatif à pack.out_dir
+
+
+class DocsConfig(BaseModel):
+    onepager: OnePagerConfig = Field(default_factory=OnePagerConfig)
+
+
+class SBOMConfig(BaseModel):
+    path: Optional[str] = (
+        None  # si fourni, on le charge; sinon auto-detect dans out_dir
+    )
+
+
 class RootConfig(BaseModel):
     pack: PackConfig = Field(default_factory=PackConfig)
     metrics: MetricsConfig = Field(default_factory=MetricsConfig)
     merkle: MerkleConfig = Field(default_factory=MerkleConfig)
     logging: LoggingConfig = Field(default_factory=LoggingConfig)
     sign: SignConfig = Field(default_factory=SignConfig)
+    docs: DocsConfig = Field(default_factory=DocsConfig)
+    sbom: SBOMConfig = Field(default_factory=SBOMConfig)
 
     model_config = {"extra": "forbid"}
