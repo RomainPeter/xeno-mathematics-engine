@@ -61,7 +61,7 @@ class Oracle:
         """Create input for OPA evaluation."""
         # Extract premises and conclusions
         premises = implication.get("premises", [])
-        conclusions = implication.get("conclusions", [])
+        # conclusions = implication.get("conclusions", [])  # Not used in this implementation
 
         # Create minimal input that would trigger the implication
         input_data = {}
