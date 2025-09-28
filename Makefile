@@ -545,15 +545,23 @@ all-new: hardening-v011 grove-complete
 validate-summary:
 	$(PY) -c "import json,sys; from pefc.metrics.validator import validate_summary_doc; from pathlib import Path; d=json.load(open('dist/summary.json')); validate_summary_doc(d, Path('schema/summary.schema.json'))" && echo "✅ Summary validation passed"
 
-# T05: Configuration
+# T17: CLI unifiée (Typer)
 export PEFC_CONFIG ?= config/pack.yaml
+export PIPELINE ?= config/pipelines/bench_pack.yaml
 
-public-bench-pack-config:
-	$(PY) scripts/build_public_bench_pack.py --config $(PEFC_CONFIG)
+.PHONY: public-bench-pack verify-pack pack-manifest pack-sign
 
 public-bench-pack:
-	$(PY) scripts/build_public_bench_pack.py --config $(PEFC_CONFIG) --allow-partial || test $$? -eq 10
-	@echo "Pack build completed (success or partial)"
+	pefc --config $(PEFC_CONFIG) pack build --pipeline $(PIPELINE)
 
 public-bench-pack-strict:
-	$(PY) scripts/build_public_bench_pack.py --config $(PEFC_CONFIG)
+	pefc --config $(PEFC_CONFIG) pack build --pipeline $(PIPELINE) --strict
+
+verify-pack:
+	pefc pack verify --zip dist/*.zip --strict
+
+pack-manifest:
+	pefc pack manifest --zip dist/*.zip --print
+
+pack-sign:
+	pefc pack sign --in dist/*.zip --provider cosign

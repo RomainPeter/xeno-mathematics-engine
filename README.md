@@ -37,12 +37,34 @@ discovery-engine-2cat/
 
 ### Utilisation
 
+#### CLI unifiée (T17)
+
+```bash
+# Pack operations
+pefc pack build --pipeline config/pipelines/bench_pack.yaml
+pefc pack verify --zip dist/*.zip --strict
+pefc pack manifest --zip dist/*.zip --print
+pefc pack sign --in dist/*.zip --provider cosign
+
+# Configuration
+pefc --config config/pack.yaml --json-logs pack build
+pefc version
+```
+
+#### Makefile (compatible)
+
 ```bash
 # Tests
 make ae-test          # Test AE Next-Closure
 make egraph-test      # Test E-graph canonicalization
 make bandit-test      # Test bandit/DPP selection
 make ci-test          # Test CI components
+
+# Pack operations (utilise pefc CLI)
+make public-bench-pack # Build pack avec pipeline par défaut
+make verify-pack      # Vérifier pack avec signature
+make pack-manifest    # Afficher manifest
+make pack-sign        # Signer pack
 
 # Démo
 make discovery-demo   # Démo complète
