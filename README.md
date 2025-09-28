@@ -48,8 +48,35 @@ pefc pack sign --in dist/*.zip --provider cosign
 
 # Configuration
 pefc --config config/pack.yaml --json-logs pack build
-pefc version
 ```
+
+#### CI Pack smoke-test (T19)
+
+Le CI garantit en continu l'absence de régression dans la construction et la vérification des packs :
+
+```bash
+# Test local du workflow CI
+python test_ci_workflow.py
+
+# Vérification des doublons
+python scripts/check_zip_duplicates.py dist/dist/*.zip
+
+# Vérification complète
+pefc pack verify --zip dist/dist/*.zip --strict
+```
+
+**Fonctionnalités CI :**
+- ✅ Construction automatique avec `pefc pack build`
+- ✅ Détection des doublons d'arcnames dans le ZIP
+- ✅ Vérification stricte manifest/SHA256/Merkle
+- ✅ Tests sur Python 3.10, 3.11, 3.12
+- ✅ Artefacts : ZIP, manifest.json, verify.json, merkle_root.txt
+- ✅ Résumé CI avec métriques détaillées
+
+**Déclencheurs :**
+- Push sur `main`
+- Pull requests
+- Tags `v*`
 
 #### Makefile (compatible)
 

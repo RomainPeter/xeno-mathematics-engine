@@ -72,7 +72,7 @@ def pack_build(
 
     pipeline_path = str(pipeline) if pipeline else "config/pipelines/bench_pack.yaml"
     steps = load_pipeline(pipeline_path)
-    code = PipelineRunner(cfg, strict_sign=strict).execute(steps)
+    code = PipelineRunner(cfg).execute(steps)
     raise typer.Exit(code)
 
 
