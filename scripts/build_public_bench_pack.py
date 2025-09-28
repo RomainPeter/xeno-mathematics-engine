@@ -7,8 +7,8 @@ import json
 import zipfile
 import hashlib
 import argparse
-import logging
 import sys
+import time
 from pathlib import Path
 from datetime import datetime
 from typing import Optional
@@ -19,10 +19,10 @@ from pefc.summary import build_summary
 from pefc.pack.zipper import ZipAdder
 from pefc.pack.merkle import build_entries, compute_merkle_root, build_manifest
 from pefc.config.loader import get_config, expand_globs
+from pefc.logging import setup_logging_from_config, get_logger, set_context
 
-# Initialize logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# Initialize logging (will be reconfigured with config)
+logger = get_logger(__name__)
 
 
 class PublicBenchPackBuilder:
@@ -47,7 +47,7 @@ class PublicBenchPackBuilder:
         version: str = "v0.1.0",
     ) -> dict:
         """Build summary.json with aggregated metrics using new API."""
-        logger.info("📊 Building summary.json...")
+        logger.info("Building summary.json", extra={"event": "summary.build.start"})
 
         # Convert string paths to Path objects
         sources = [Path(p) for p in metrics_sources]
@@ -78,7 +78,7 @@ class PublicBenchPackBuilder:
 
     def collect_seeds(self) -> list:
         """Collect deterministic seeds for reproduction."""
-        print("🌱 Collecting seeds...")
+        logger.info("Collecting seeds", extra={"event": "seeds.collect.start"})
 
         seeds = []
 
@@ -148,7 +148,7 @@ class PublicBenchPackBuilder:
 
     def get_sbom(self) -> dict:
         """Get Software Bill of Materials."""
-        print("📦 Getting SBOM...")
+        logger.info("Getting SBOM", extra={"event": "sbom.collect.start"})
 
         sbom_file = Path("out/sbom.json")
         if sbom_file.exists():
@@ -170,7 +170,10 @@ class PublicBenchPackBuilder:
 
     def generate_reproduce_instructions(self) -> str:
         """Generate reproduction instructions."""
-        print("📝 Generating reproduction instructions...")
+        logger.info(
+            "Generating reproduction instructions",
+            extra={"event": "reproduce.generate.start"},
+        )
 
         instructions = """# Discovery Engine 2‑Cat — Reproduction Instructions
 
@@ -271,7 +274,9 @@ This benchmark pack is released under the MIT License.
         version: str = "v0.1.0",
     ) -> bool:
         """Build the complete benchmark pack."""
-        logger.info("📦 Building public benchmark pack...")
+        logger.info(
+            "Building public benchmark pack", extra={"event": "pack.build.start"}
+        )
 
         try:
             # 1) Build payload files list (exclude manifest.json and merkle.txt from Merkle calculation)
@@ -341,30 +346,54 @@ This benchmark pack is released under the MIT License.
 
             # Log final list of files
             logger.info(
-                "zip: files written (%d): %s", len(adder.seen), sorted(adder.seen)
+                "Files written to zip",
+                extra={
+                    "event": "zip.complete",
+                    "kv": {"file_count": len(adder.seen), "files": sorted(adder.seen)},
+                },
             )
-            print(f"✅ Built benchmark pack: {self.pack_path}")
+            logger.info(
+                "Built benchmark pack",
+                extra={
+                    "event": "pack.build.complete",
+                    "kv": {"pack_path": str(self.pack_path)},
+                },
+            )
 
             # Calculate and display pack info
             pack_size = self.pack_path.stat().st_size
-            print(f"📊 Pack size: {pack_size / 1024 / 1024:.2f} MB")
+            logger.info(
+                "Pack info",
+                extra={
+                    "event": "pack.info",
+                    "kv": {
+                        "size_mb": round(pack_size / 1024 / 1024, 2),
+                        "file_count": len(adder.seen),
+                    },
+                },
+            )
 
             # Verify pack integrity
             with zipfile.ZipFile(self.pack_path, "r") as zipf:
                 file_list = zipf.namelist()
-                print(f"📁 Files in pack: {len(file_list)}")
-                for file_name in file_list:
-                    print(f"  - {file_name}")
+                logger.info(
+                    "Pack contents",
+                    extra={"event": "pack.contents", "kv": {"files": file_list}},
+                )
 
             return True
 
         except Exception as e:
-            print(f"❌ Failed to build benchmark pack: {e}")
+            logger.error(
+                "Failed to build benchmark pack",
+                extra={"event": "pack.build.error", "kv": {"error": str(e)}},
+                exc_info=True,
+            )
             return False
 
     def sign_pack(self) -> bool:
         """Sign the benchmark pack for integrity verification."""
-        print("🔐 Signing benchmark pack...")
+        logger.info("Signing benchmark pack", extra={"event": "pack.sign.start"})
 
         try:
             # Generate signature
@@ -377,13 +406,21 @@ This benchmark pack is released under the MIT License.
             with open(signature_file, "w") as f:
                 f.write(signature)
 
-            print(f"✅ Pack signed: {signature_file}")
-            print(f"🔑 Signature: {signature}")
-
+            logger.info(
+                "Pack signed",
+                extra={
+                    "event": "pack.sign.complete",
+                    "kv": {"sig_path": str(signature_file), "signature": signature},
+                },
+            )
             return True
 
         except Exception as e:
-            print(f"❌ Failed to sign pack: {e}")
+            logger.error(
+                "Failed to sign pack",
+                extra={"event": "pack.sign.error", "kv": {"error": str(e)}},
+                exc_info=True,
+            )
             return False
 
 
@@ -431,15 +468,33 @@ def main():
 
     args = parser.parse_args()
 
-    logger.info("🚀 Building Discovery Engine 2‑Cat Public Benchmark Pack...")
-
     # Load configuration
     config_path = Path(args.config) if args.config else None
     config = get_config(config_path)
 
-    logger.info(f"📋 Using config: {config_path or 'default'}")
+    # Setup logging from config
+    setup_logging_from_config(config)
+    logger = get_logger(__name__)
+
+    logger.info(
+        "Building Discovery Engine 2‑Cat Public Benchmark Pack",
+        extra={"event": "pack.init"},
+    )
+
+    # Set context
+    set_context(
+        pack_version=config.pack.version,
+        pack_name=config.pack.pack_name,
+        run_id=f"build_{int(time.time())}",
+    )
+
+    logger.info("Starting pack build", extra={"event": "pack.start"})
+    logger.info(
+        "Using config",
+        extra={"kv": {"config_path": str(config_path) if config_path else "default"}},
+    )
     if hasattr(config, "_base_dir"):
-        logger.info(f"📁 Base directory: {config._base_dir}")
+        logger.info("Base directory", extra={"kv": {"base_dir": str(config._base_dir)}})
 
     # Create builder with config values
     output_dir = Path(args.output or config.pack.out_dir)
@@ -476,23 +531,38 @@ def main():
         args.bounded_metric or config.metrics.bounded_metrics,
         config.pack.version,
     ):
-        logger.error("❌ Failed to build benchmark pack!")
+        logger.error(
+            "Failed to build benchmark pack", extra={"event": "pack.build.failed"}
+        )
         exit(1)
 
     # Sign the pack
     if not builder.sign_pack():
-        logger.error("❌ Failed to sign benchmark pack!")
+        logger.error(
+            "Failed to sign benchmark pack", extra={"event": "pack.sign.failed"}
+        )
         exit(1)
 
-    logger.info("🎉 Public benchmark pack built successfully!")
-    logger.info(f"📦 Pack: {builder.pack_path}")
-    logger.info(f"🔐 Signature: {builder.output_dir / f'{builder.pack_name}.sig'}")
-    logger.info("📋 Contents:")
-    logger.info("  - summary.json: Aggregated metrics")
-    logger.info("  - seeds.json: Deterministic seeds")
-    logger.info("  - merkle.txt: Integrity verification")
-    logger.info("  - sbom.json: Software Bill of Materials")
-    logger.info("  - reproduce.md: Reproduction instructions")
+    logger.info(
+        "Public benchmark pack built successfully", extra={"event": "pack.complete"}
+    )
+    logger.info(
+        "Pack details",
+        extra={
+            "event": "pack.details",
+            "kv": {
+                "pack_path": str(builder.pack_path),
+                "signature_path": str(builder.output_dir / f"{builder.pack_name}.sig"),
+                "contents": [
+                    "summary.json: Aggregated metrics",
+                    "seeds.json: Deterministic seeds",
+                    "merkle.txt: Integrity verification",
+                    "sbom.json: Software Bill of Materials",
+                    "reproduce.md: Reproduction instructions",
+                ],
+            },
+        },
+    )
 
 
 if __name__ == "__main__":
