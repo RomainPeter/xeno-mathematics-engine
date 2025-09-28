@@ -1,0 +1,22 @@
+{
+  "version": "v0.1.0",
+  "config": {
+    "include_aggregates": false,
+    "weight_key": "n_items",
+    "dedup": "first"
+  },
+  "sources": {
+    "counts": {
+      "run": 0,
+      "aggregate": 0
+    },
+    "ignored_aggregates": []
+  },
+  "overall": {
+    "n_runs": 0,
+    "weight_sum": 0.0,
+    "metrics": {}
+  },
+  "by_group": {},
+  "runs": []
+}
