@@ -14,7 +14,7 @@ class SignArtifact(PackStep):
 
     def run(self, ctx: PipelineContext) -> None:
         """Sign the zip artifact."""
-        if not getattr(ctx.cfg.pack.sign, "enabled", False):
+        if not getattr(ctx.cfg.sign, "enabled", False):
             log.info("sign_artifact: signing disabled")
             return
 

@@ -1,0 +1,110 @@
+name: Pack smoke-test
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ "v*" ]
+  pull_request:
+    branches: [ main ]
+concurrency:
+  group: pack-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ "3.10", "3.11", "3.12" ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+          # Optionnel: activer backends rapides si désiré
+          # pip install pandas polars
+
+      - name: Build pack (JSON logs)
+        env:
+          PEFC_ENV: dev
+        run: |
+          pefc --config config/pack.yaml --json-logs pack build --pipeline config/pipelines/bench_pack.yaml --no-strict
+        shell: bash
+
+      - name: Locate zip
+        id: findzip
+        run: |
+          ZIP_PATH="$(ls -1 dist/*.zip | head -n 1)"
+          if [ -z "$ZIP_PATH" ]; then echo "No zip produced"; exit 1; fi
+          echo "zip=$ZIP_PATH" >> "$GITHUB_OUTPUT"
+          echo "Found zip: $ZIP_PATH"
+
+      - name: Assert no duplicate arcnames in zip
+        run: |
+          python - << 'PY'
+import sys, zipfile, json, os
+z = os.environ["ZIP"]
+with zipfile.ZipFile(z, "r") as f:
+    names = f.namelist()
+dups = sorted({n for n in names if names.count(n) > 1})
+if dups:
+    print("Duplicate names detected:", dups)
+    sys.exit(2)
+print("No duplicate names. Count:", len(names))
+PY
+        env:
+          ZIP: ${{ steps.findzip.outputs.zip }}
+
+      - name: Verify manifest/merkle (strict)
+        id: verify
+        run: |
+          pefc pack verify --zip "${{ steps.findzip.outputs.zip }}" --strict | tee verify.json
+          echo "verify_report<<EOF" >> $GITHUB_OUTPUT
+          cat verify.json >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Extract manifest.json
+        run: |
+          pefc pack manifest --zip "${{ steps.findzip.outputs.zip }}" --print > manifest.json
+          jq -r '.merkle_root // .merkleRoot // ""' manifest.json > merkle_root.txt || true
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: pack-${{ github.sha }}-py${{ matrix.python-version }}
+          path: |
+            ${{ steps.findzip.outputs.zip }}
+            manifest.json
+            verify.json
+            merkle_root.txt
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Job summary
+        run: |
+          ZIP="${{ steps.findzip.outputs.zip }}"
+          SIZE=$(stat -c%s "$ZIP" || stat -f%z "$ZIP")
+          FILES=$(zipinfo -1 "$ZIP" | wc -l)
+          echo "## Pack smoke-test" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Python: ${{ matrix.python-version }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Zip: \`$ZIP\`" >> $GITHUB_STEP_SUMMARY
+          echo "- Size: ${SIZE} bytes" >> $GITHUB_STEP_SUMMARY
+          echo "- Files: ${FILES}" >> $GITHUB_STEP_SUMMARY
+          echo "- Merkle root: \`$(cat merkle_root.txt 2>/dev/null || echo 'n/a')\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "<details><summary>Verify report</summary>" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          sed 's/^/    /' verify.json >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "</details>" >> $GITHUB_STEP_SUMMARY
