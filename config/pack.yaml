@@ -22,3 +22,8 @@ metrics:
 merkle:
   style: v1
   chunk_size: 1048576
+
+sign:
+  enabled: false
+  key_ref: null
+  algorithm: cosign

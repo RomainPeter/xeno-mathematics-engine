@@ -22,6 +22,14 @@ class MerkleConfig(BaseModel):
     chunk_size: int = 1048576
 
 
+class SignConfig(BaseModel):
+    """Digital signature configuration."""
+
+    enabled: bool = False
+    key_ref: str | None = None
+    algorithm: str = "cosign"
+
+
 class PackConfig(BaseModel):
     version: str = "v0.1.0"
     pack_name: str = "public-bench-pack"
@@ -36,5 +44,6 @@ class RootConfig(BaseModel):
     metrics: MetricsConfig = Field(default_factory=MetricsConfig)
     merkle: MerkleConfig = Field(default_factory=MerkleConfig)
     logging: LoggingConfig = Field(default_factory=LoggingConfig)
+    sign: SignConfig = Field(default_factory=SignConfig)
 
     model_config = {"extra": "forbid"}

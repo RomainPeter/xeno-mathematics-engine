@@ -5,6 +5,10 @@ from pathlib import Path
 from typing import Optional, Dict, Any
 import logging
 
+from pydantic import ValidationError as PydanticValidationError
+
+from pefc.errors import ConfigError
+
 from .model import RootConfig
 
 logger = logging.getLogger(__name__)
@@ -38,14 +42,22 @@ def load_config(path: Optional[Path] = None) -> RootConfig:
     logger.info(f"Loading config from: {path}")
 
     # Charger YAML
-    with open(path, "r", encoding="utf-8") as f:
-        data = yaml.safe_load(f)
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            data = yaml.safe_load(f) or {}
+    except OSError as exc:
+        raise ConfigError(f"Unable to read config file {path}: {exc}") from exc
+    except yaml.YAMLError as exc:
+        raise ConfigError(f"Invalid YAML in config file {path}: {exc}") from exc
 
     # Appliquer les overrides ENV
     data = _apply_env_overrides(data)
 
     # Valider avec Pydantic
-    config = RootConfig.model_validate(data)
+    try:
+        config = RootConfig.model_validate(data)
+    except PydanticValidationError as exc:
+        raise ConfigError(f"Configuration validation failed: {exc}") from exc
 
     # Stocker le répertoire de base pour la résolution des chemins
     config._base_dir = path.parent
