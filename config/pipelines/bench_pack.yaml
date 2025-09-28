@@ -1,0 +1,25 @@
+name: bench_pack
+description: "Build public benchmark pack with all components"
+
+steps:
+  - type: "CollectSeeds"
+    config:
+      patterns: ["*.json", "seeds/*"]
+  
+  - type: "BuildSummary"
+    config: {}
+  
+  - type: "RenderDocs"
+    config: {}
+  
+  - type: "ComputeMerkle"
+    config: {}
+  
+  - type: "PackZip"
+    config:
+      out: "dist/{pack_name}-{version}.zip"
+  
+  - type: "SignArtifact"
+    config:
+      method: "cosign"
+      allow_partial: true

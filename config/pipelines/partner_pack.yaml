@@ -1,0 +1,17 @@
+name: partner_pack
+description: "Build partner pack with minimal components"
+
+steps:
+  - type: "CollectSeeds"
+    config:
+      patterns: ["metrics/*.json"]
+  
+  - type: "BuildSummary"
+    config: {}
+  
+  - type: "ComputeMerkle"
+    config: {}
+  
+  - type: "PackZip"
+    config:
+      out: "dist/{pack_name}-{version}.zip"
