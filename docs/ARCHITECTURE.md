@@ -1,314 +1,302 @@
-# Discovery Engine 2-Cat - Architecture Guide
+# Architecture
 
-## 🏗️ Unified Architecture v0.1
+Discovery Engine 2‑Cat is built on a solid mathematical foundation with clear separation of concerns and well-defined interfaces.
 
-### Core Principles
+## Core Components
 
-The Discovery Engine 2-Cat implements a **2-categorical architecture** for automated discovery with the following key principles:
-
-1. **Non-redundancy**: Structural anti-redundancy through e-graph canonicalization
-2. **Minimal completeness**: Attribute Exploration (AE) with Next-Closure algorithm
-3. **Antifragility**: Incident → Rule transformation with guided replanning
-4. **Auditability**: Append-only signed journal with Merkle hashing
-
-### Architectural Components
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    Discovery Engine 2-Cat                  │
-├─────────────────────────────────────────────────────────────┤
-│  Orchestrator (AE + CEGIS Loops)                           │
-│  ├── AE Next-Closure                                       │
-│  ├── CEGIS Choreography Synthesis                          │
-│  └── Unified State Management                              │
-├─────────────────────────────────────────────────────────────┤
-│  Methods Layer                                              │
-│  ├── E-graph Canonicalization                              │
-│  ├── Prompt Governance (Contract++)                       │
-│  └── Policy Selection (Bandit + DPP)                       │
-├─────────────────────────────────────────────────────────────┤
-│  Core Layer                                                │
-│  ├── Cognitive State (H, E, K, A, J, Σ)                   │
-│  ├── Journal (Merkle)                                      │
-│  └── Domain Adapters                                       │
-├─────────────────────────────────────────────────────────────┤
-│  Verification Layer                                         │
-│  ├── OPA (Rego Policies)                                   │
-│  ├── Static Analysis                                        │
-│  └── Incident Handlers                                     │
-└─────────────────────────────────────────────────────────────┘
-```
-
-## 🧠 Cognitive State (X)
-
-The cognitive state `X = {H, E, K, J, A, Σ}` represents the complete knowledge state:
-
-### Components
-
-- **H (Hypotheses)**: Valid implications discovered through AE
-- **E (Counter-examples)**: Refuted implications with evidence
-- **K (Knowledge)**: Rules and tests derived from incidents
-- **J (Journal)**: Append-only Merkle-hashed audit trail
-- **A (Attributes)**: Domain-specific attributes and properties
-- **Σ (Signature)**: Attestation and verification data
-
-### State Transitions
-
-```
-Initial State → AE Loop → CEGIS Loop → Final State
-     ↓              ↓           ↓           ↓
-   Empty H      Propose    Synthesize   Complete
-   Empty E      Verify     Choreography Knowledge
-   Empty K     Incorporate Validate     Base
-```
-
-## 🔍 Attribute Exploration (AE)
-
-### Next-Closure Algorithm
-
-The AE loop implements the Next-Closure algorithm for minimal completeness:
+### 2‑Category Engine
+The mathematical foundation for compositional reasoning about complex systems.
 
 ```python
-def ae_loop(state: XState, oracle: Oracle, budgets: Dict, thresholds: Dict):
-    while not is_closed(state) and budgets_not_exhausted(budgets):
-        # 1. Propose implications
-        implications = propose_implications(state, k=8)
-        
-        # 2. Canonicalize with e-graph
-        canonical_implications = canonicalize(implications)
-        
-        # 3. Select diverse subset
-        selected = dpp_select(canonical_implications, k=3)
-        
-        # 4. Verify with oracle
-        for impl in selected:
-            result = oracle.verify_implication(impl)
-            
-            if result.valid:
-                incorporate_valid(impl)
-            else:
-                incorporate_counterexample(impl, result.counterexample)
+class TwoCategoryEngine:
+    def __init__(self):
+        self.objects = {}  # Objects in the category
+        self.morphisms = {}  # Morphisms between objects
+        self.composition = {}  # Composition rules
+    
+    def compose(self, f, g):
+        """Compose morphisms f and g."""
+        return self.composition.get((f, g))
+    
+    def identity(self, obj):
+        """Get identity morphism for object."""
+        return self.morphisms.get((obj, obj))
 ```
 
-### Oracle Integration
-
-The oracle provides verification through multiple backends:
-
-- **OPA**: Rego policy evaluation
-- **Static Analysis**: Code analysis tools
-- **Custom Verifiers**: Domain-specific validation
-
-## 🔗 E-graph Canonicalization
-
-### Rules v0.1
-
-The e-graph implements safe canonicalization rules:
+### E‑Graph Canonicalizer
+Ensures non-redundant exploration by maintaining equivalence classes.
 
 ```python
-RULES = [
-    # Idempotence
-    EquivalenceRule("Normalize∘Normalize", "Normalize", "same_K"),
-    EquivalenceRule("Verify∘Verify", "Verify", "same_K"),
-    EquivalenceRule("Meet∘Meet", "Meet", "same_K"),
+class EGraphCanonicalizer:
+    def __init__(self):
+        self.equivalence_classes = {}
+        self.canonical_representatives = {}
     
-    # Guarded Commutation
-    EquivalenceRule("Normalize∘Retrieve", "Retrieve∘Normalize", "pre_post_conditions"),
-    EquivalenceRule("Verify∘Normalize", "Normalize∘Verify", "pre_post_conditions"),
+    def canonicalize(self, data):
+        """Canonicalize data using e-graph rules."""
+        # Apply equivalence rules
+        # Return canonical representative
+        pass
     
-    # Associativity/Commutativity
-    EquivalenceRule("Meet_assoc", "Meet(Meet(a,b),c)", "Meet(a,Meet(b,c))"),
-    EquivalenceRule("Meet_comm", "Meet(a,b)", "Meet(b,a)"),
-    
-    # Absorption
-    EquivalenceRule("Verify_absorb", "Verify∘Verify", "Verify")
-]
+    def add_rule(self, rule):
+        """Add new equivalence rule."""
+        pass
 ```
 
-### Canonicalization Process
+### PCAP/DCA Runtime
+Proof-carrying action with deterministic control architecture.
 
-1. **Equivalence Detection**: Find structurally equivalent expressions
-2. **Witness Generation**: Create equivalence proofs
-3. **Representative Selection**: Choose canonical representatives
-4. **Journal Update**: Record witnesses in Merkle journal
+```python
+class PCAPDCARuntime:
+    def __init__(self):
+        self.proof_cache = {}
+        self.control_plane = {}
+    
+    def execute_action(self, action, proof):
+        """Execute action with proof."""
+        if self.verify_proof(proof):
+            return self.control_plane.execute(action)
+        else:
+            raise ProofVerificationError()
+    
+    def verify_proof(self, proof):
+        """Verify proof using SMT solver."""
+        pass
+```
 
-## 🎭 Prompt Governance
+### Incident Handler
+Transforms incidents into rules and tests using HS-Tree algorithm.
 
-### PromptContract++
+```python
+class IncidentHandler:
+    def __init__(self):
+        self.hstree = HSTreeMinimalTests()
+        self.rule_generator = RuleGenerator()
+    
+    def handle_incident(self, incident):
+        """Handle incident and generate rules."""
+        # Generate minimal tests using HS-Tree
+        tests = self.hstree.generate_minimal_tests(incident)
+        
+        # Generate rules from incident
+        rules = self.rule_generator.generate_rules(incident)
+        
+        # Update knowledge base
+        self.update_knowledge_base(tests, rules)
+        
+        return {"tests": tests, "rules": rules}
+```
 
-Structured prompt templates with validation:
+## Data Flow
 
+```mermaid
+sequenceDiagram
+    participant LLM
+    participant Engine
+    participant Canonicalizer
+    participant Runtime
+    participant Handler
+    participant KB
+    
+    LLM->>Engine: Generate code
+    Engine->>Canonicalizer: Canonicalize
+    Canonicalizer->>Runtime: Execute with proof
+    Runtime->>Handler: Handle incidents
+    Handler->>KB: Update knowledge base
+    KB->>Engine: Feedback loop
+```
+
+## Key Interfaces
+
+### 2‑Category Operations
+- **Normalize**: Canonicalize data structures
+- **Verify**: Verify properties using formal methods
+- **Meet**: Combine multiple results
+- **Retrieve**: Access stored information
+
+### Proof Operations
+- **Generate**: Create proofs for actions
+- **Verify**: Verify proof correctness
+- **Compose**: Combine multiple proofs
+- **Cache**: Store and retrieve proofs
+
+### Incident Operations
+- **Detect**: Identify constraint violations
+- **Classify**: Categorize incident types
+- **Generate**: Create minimal tests
+- **Learn**: Update knowledge base
+
+## Configuration
+
+### Domain Specification
 ```json
 {
-  "goal": "propose_implications",
-  "k": 8,
-  "diversity_keys": ["attributes", "clause_type"],
-  "hard_constraints": ["must respect obligations K"],
-  "output_contract": {
-    "fields": ["premises", "conclusion", "justification", "diversity_key"]
+  "domain": "regtech",
+  "constraints": [
+    {
+      "type": "semver",
+      "condition": "version >= previous_version",
+      "message": "Version downgrade not allowed"
+    }
+  ],
+  "budgets": {
+    "verify_ms": 5000,
+    "normalize_ms": 1000,
+    "meet_ms": 2000
+  },
+  "timeouts": {
+    "operation_timeout": 10000,
+    "global_timeout": 15000
   }
 }
 ```
 
-### Micro-prompts
-
-- **AE Implications**: Generate diverse implications
-- **AE Counter-examples**: Generate refuting examples
-- **CEGIS Choreographies**: Synthesize operation sequences
-
-## 🎯 Policy Selection
-
-### Contextual Bandit (LinUCB)
-
-```python
-class LinUCB:
-    def select(self, candidates: List, context: Dict) -> List:
-        # Upper confidence bound selection
-        scores = []
-        for candidate in candidates:
-            score = self.alpha * np.sqrt(
-                candidate.features.T @ self.A_inv @ candidate.features
-            )
-            scores.append(score)
-        return select_top_k(candidates, scores, k=3)
-    
-    def update(self, candidate, reward: float, cost: float):
-        # Update bandit parameters
-        self.A += candidate.features @ candidate.features.T
-        self.b += reward * candidate.features
-        self.A_inv = np.linalg.inv(self.A)
-```
-
-### DPP Diversity
-
-```python
-def dpp_select(candidates: List, keys: List[str], k: int, lambda_: float) -> List:
-    # Determinantal Point Process for diversity
-    similarity_matrix = compute_similarity(candidates, keys)
-    kernel_matrix = np.exp(-lambda_ * similarity_matrix)
-    
-    # DPP sampling
-    selected = dpp_sample(kernel_matrix, k)
-    return [candidates[i] for i in selected]
-```
-
-## 🔧 Incident Handling
-
-### FailReason Mapping
-
-```python
-INCIDENT_HANDLERS = {
-    "LowNovelty": handle_low_novelty,      # → e-graph forbidden equivalence
-    "LowCoverage": handle_low_coverage,     # → K target + Meet/Generalize priority
-    "ConstraintBreach": handle_constraint,  # → OPA rule + e-graph block
-    "OracleTimeout": handle_timeout,        # → budget increase or quarantine
-    "FlakyOracle": handle_flaky            # → retry or quarantine
+### Policy Configuration
+```json
+{
+  "ids": {
+    "lambda": 0.6
+  },
+  "risk_policy": {
+    "cvar_alpha": 0.9
+  },
+  "diversity": {
+    "threshold": 0.8,
+    "max_retries": 3
+  }
 }
 ```
 
-### Handler Actions
+## Security Model
 
-1. **LowNovelty**: Add forbidden equivalence to e-graph
-2. **LowCoverage**: Add target to K, prioritize Meet/Generalize
-3. **ConstraintBreach**: Add OPA rule, block faulty e-graph path
-4. **OracleTimeout**: Increase budget or quarantine seeds
-5. **FlakyOracle**: Retry with different parameters or quarantine
+### Hermetic Execution
+- **Isolation**: Docker containers with minimal attack surface
+- **Determinism**: Frozen dependencies and deterministic execution
+- **Attestation**: Cryptographic proof of execution integrity
 
-## 📊 Metrics and Monitoring
+### Proof Verification
+- **SMT Solvers**: Z3, CVC4 for formal verification
+- **Proof Assistants**: Coq, Lean for complex proofs
+- **Model Checkers**: SPIN, TLA+ for temporal properties
 
-### Cost Vector V
+### Vulnerability Management
+- **SBOM**: Software Bill of Materials with vulnerability scanning
+- **Dependency Pinning**: Exact version pinning for all dependencies
+- **Security Scanning**: Automated vulnerability detection
 
-The cost vector `V = [time_ms, audit_cost, legal_risk, tech_debt, novelty, coverage]` provides unified measurement:
+## Performance Optimization
 
-- **time_ms**: Execution time in milliseconds
-- **audit_cost**: Verification cost in USD
-- **legal_risk**: Risk score (0-1)
-- **tech_debt**: Technical debt score (0-1)
-- **novelty**: Diversity score (0-1)
-- **coverage**: Coverage gain (0-1)
+### Parallel Processing
+- **Multi-threading**: Parallel verification of independent properties
+- **GPU Acceleration**: CUDA support for SMT solving
+- **Distributed Computing**: Multi-node verification for large problems
 
-### Quantale Structure
+### Caching
+- **Proof Cache**: Store and reuse verification results
+- **Canonical Cache**: Cache canonicalized data structures
+- **Metrics Cache**: Cache performance metrics
 
-The cost vector forms a quantale `(R_+^n, ≤×, ⊗=+, 0)`:
+### Budget Management
+- **Dynamic Budgets**: Adjust budgets based on historical performance
+- **Timeout Management**: Intelligent timeout handling
+- **Resource Monitoring**: Real-time resource usage tracking
 
-- **Ordering**: Pareto dominance `V₁ ≤ V₂` iff `∀i: V₁ᵢ ≤ V₂ᵢ`
-- **Monoidal**: Parallel composition `V₁ ⊗ V₂ = V₁ + V₂`
-- **Zero**: Neutral element `0 = [0, 0, 0, 0, 0, 0]`
+## Monitoring and Observability
 
-## 🔒 Security and Auditability
+### Metrics
+- **Coverage**: Percentage of use cases covered by proofs
+- **Novelty**: Uniqueness of generated solutions
+- **Audit Cost**: Time and effort for compliance verification
+- **Incident Rate**: Frequency of constraint violations
 
-### Merkle Journal
+### Logging
+- **Structured Logging**: JSON logs with correlation IDs
+- **Audit Trail**: Complete trace of all operations
+- **Performance Logs**: Detailed timing and resource usage
 
-The journal `J` provides cryptographic auditability:
+### Alerting
+- **Incident Alerts**: Real-time notification of constraint violations
+- **Performance Alerts**: Resource usage and timeout alerts
+- **Security Alerts**: Vulnerability and security incident alerts
 
-```python
-class Journal:
-    def append(self, entry: Dict) -> str:
-        # Calculate Merkle hash
-        entry_hash = self._calculate_hash(entry)
-        entry["merkle_parent"] = self.merkle_root
-        entry["merkle_curr"] = entry_hash
-        
-        # Update journal
-        self.entries.append(entry)
-        self.merkle_root = entry_hash
-        
-        return entry_hash
-```
-
-### Attestation
-
-- **Cosign**: Cryptographic signatures
-- **SBOM**: Software Bill of Materials
-- **Vulnerability Scanning**: Grype security analysis
-
-## 🚀 Deployment
+## Deployment
 
 ### Docker Deployment
-
 ```dockerfile
 FROM python:3.11-slim
-WORKDIR /app
+
+# Install dependencies
 COPY requirements.txt .
 RUN pip install -r requirements.txt
-COPY . .
-USER discovery
-CMD ["python", "scripts/demo_discovery_engine.py"]
+
+# Copy application
+COPY . /app
+WORKDIR /app
+
+# Run application
+CMD ["python", "scripts/demo_regtech_bench.py"]
 ```
 
-### CI/CD Pipeline
+### Kubernetes Deployment
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discovery-engine-2cat
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: discovery-engine-2cat
+  template:
+    metadata:
+      labels:
+        app: discovery-engine-2cat
+    spec:
+      containers:
+      - name: discovery-engine-2cat
+        image: discovery-engine-2cat:v0.1.0
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DISCOVERY_SEED
+          value: "42"
+```
 
-1. **Build**: Docker image with pinned dependencies
-2. **Test**: Comprehensive test suite
-3. **Security**: SBOM generation and vulnerability scanning
-4. **Attestation**: Cosign signing and verification
-5. **Release**: Automated release with artifacts
+## Testing
 
-## 📈 Performance Characteristics
+### Unit Tests
+- **Core Components**: Test individual components in isolation
+- **Integration Tests**: Test component interactions
+- **Performance Tests**: Benchmark critical paths
 
-### Complexity
+### End-to-End Tests
+- **Determinism Tests**: Verify reproducible results
+- **Compliance Tests**: Verify regulatory compliance
+- **Security Tests**: Verify security properties
 
-- **AE Loop**: O(n²) where n is the number of attributes
-- **E-graph Canonicalization**: O(n²) for equivalence detection
-- **Bandit Selection**: O(d²) where d is the feature dimension
-- **DPP Diversity**: O(k³) where k is the selection size
+### Property-Based Testing
+- **QuickCheck**: Random testing of properties
+- **Hypothesis**: Python property-based testing
+- **Fuzzing**: Automated vulnerability discovery
 
-### Scalability
+## Maintenance
 
-- **Memory**: Linear in journal size
-- **CPU**: Quadratic in attribute count
-- **I/O**: Minimal (oracle calls only)
+### Updates
+- **Dependency Updates**: Automated dependency updates with testing
+- **Security Patches**: Immediate security patch deployment
+- **Feature Updates**: Gradual feature rollout with monitoring
 
-## 🔮 Future Extensions
+### Monitoring
+- **Health Checks**: Automated health monitoring
+- **Performance Monitoring**: Real-time performance tracking
+- **Security Monitoring**: Continuous security assessment
 
-### Planned Features
+### Backup and Recovery
+- **Data Backup**: Regular backup of knowledge base and metrics
+- **Disaster Recovery**: Complete system recovery procedures
+- **Version Control**: Git-based version control for all components
 
-1. **HS-Tree**: Minimize test suites for RegTech
-2. **IDS**: Information-Directed Sampling for expensive queries
-3. **MCTS-lite**: Monte Carlo Tree Search for complex planning
-4. **CVaR**: Conditional Value at Risk for risk profiles
+---
 
-### Research Directions
-
-- **Categorical Semantics**: Formal 2-category theory
-- **Quantum Computing**: Quantum advantage for optimization
-- **Federated Learning**: Distributed discovery across domains
+*Discovery Engine 2‑Cat — Manufacturing proof for generative reasoning in code*

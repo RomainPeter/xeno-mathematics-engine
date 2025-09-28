@@ -15,7 +15,8 @@ from datetime import datetime
 # Add current directory to Python path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from pefc.summary import build_summary
-from pefc.pack.zipper import add_to_zip, dedup_additional_files
+from pefc.pack.zipper import ZipAdder
+from pefc.pack.merkle import build_entries, compute_merkle_root, build_manifest
 
 # Initialize logging
 logging.basicConfig(level=logging.INFO)
@@ -260,83 +261,69 @@ This benchmark pack is released under the MIT License.
         logger.info("📦 Building public benchmark pack...")
 
         try:
-            # Initialize seen set for deduplication
-            seen = set()
+            # 1) Build payload files list (exclude manifest.json and merkle.txt from Merkle calculation)
+            payload_files = []
 
+            # Core files that will be included in Merkle calculation
+            summary = self.build_summary(
+                metrics_sources, include_aggregates, weight_key, dedup
+            )
+            summary_path = self.output_dir / "summary.json"
+            summary_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
+            payload_files.append((summary_path, "summary.json"))
+
+            # Seeds
+            seeds = self.collect_seeds()
+            seeds_path = self.output_dir / "seeds.json"
+            seeds_path.write_text(json.dumps(seeds, indent=2), encoding="utf-8")
+            payload_files.append((seeds_path, "seeds.json"))
+
+            # SBOM
+            sbom = self.get_sbom()
+            sbom_path = self.output_dir / "sbom.json"
+            sbom_path.write_text(json.dumps(sbom, indent=2), encoding="utf-8")
+            payload_files.append((sbom_path, "sbom.json"))
+
+            # Reproduction instructions
+            reproduce_instructions = self.generate_reproduce_instructions()
+            reproduce_path = self.output_dir / "reproduce.md"
+            reproduce_path.write_text(reproduce_instructions, encoding="utf-8")
+            payload_files.append((reproduce_path, "reproduce.md"))
+
+            # Additional files (if they exist)
+            additional_files_raw = [
+                "out/metrics.json",
+                "configs/llm.yaml",
+                "schemas/examples/regtech_domain_spec.overrides.json",
+            ]
+
+            for file_path in additional_files_raw:
+                if Path(file_path).exists():
+                    payload_files.append((Path(file_path), Path(file_path).name))
+
+            # 2) Build Merkle entries and compute root
+            entries = build_entries(payload_files)
+            merkle_root = compute_merkle_root(entries)
+
+            # 3) Build manifest (excluded from Merkle calculation)
+            manifest_obj = build_manifest(entries, merkle_root, "v0.1.0")
+            manifest_json = json.dumps(manifest_obj, ensure_ascii=False, indent=2)
+
+            # 4) Create zip with ZipAdder for deduplication
+            adder = ZipAdder()
             with zipfile.ZipFile(self.pack_path, "w", zipfile.ZIP_DEFLATED) as zipf:
-                # 1) Core files using add_to_zip for deduplication
-                summary = self.build_summary(
-                    metrics_sources, include_aggregates, weight_key, dedup
-                )
-                add_to_zip(
-                    zipf,
-                    "summary.json",
-                    data=json.dumps(summary, indent=2).encode("utf-8"),
-                    seen=seen,
-                )
+                # Write payload files
+                for entry in entries:
+                    adder.add_file(zipf, entry.src_path, entry.arcname)
 
-                # Add seeds
-                seeds = self.collect_seeds()
-                add_to_zip(
-                    zipf,
-                    "seeds.json",
-                    data=json.dumps(seeds, indent=2).encode("utf-8"),
-                    seen=seen,
-                )
-
-                # Add Merkle root (core file - written once)
-                merkle_root = self.get_merkle_root()
-                add_to_zip(
-                    zipf,
-                    "merkle.txt",
-                    data=(merkle_root + "\n").encode("utf-8"),
-                    seen=seen,
-                )
-
-                # Add SBOM
-                sbom = self.get_sbom()
-                add_to_zip(
-                    zipf,
-                    "sbom.json",
-                    data=json.dumps(sbom, indent=2).encode("utf-8"),
-                    seen=seen,
-                )
-
-                # Add reproduction instructions
-                reproduce_instructions = self.generate_reproduce_instructions()
-                add_to_zip(
-                    zipf,
-                    "reproduce.md",
-                    data=reproduce_instructions.encode("utf-8"),
-                    seen=seen,
-                )
-
-                # 2) Additional files - prepare list and deduplicate
-                additional_files_raw = [
-                    "out/metrics.json",
-                    "out/journal/merkle.txt",  # This will be ignored due to collision with core merkle.txt
-                    "out/sbom.json",  # This will be ignored due to collision with core sbom.json
-                    "configs/llm.yaml",
-                    "schemas/examples/regtech_domain_spec.overrides.json",
-                ]
-
-                # Convert to (Path, arcname) tuples
-                additional_files = []
-                for file_path in additional_files_raw:
-                    if Path(file_path).exists():
-                        additional_files.append((Path(file_path), Path(file_path).name))
-
-                # Deduplicate additional files against seen set and internal duplicates
-                additional_files_filtered = dedup_additional_files(
-                    additional_files, seen
-                )
-
-                # Add filtered additional files
-                for src_path, arcname in additional_files_filtered:
-                    add_to_zip(zipf, arcname, src_path=src_path, seen=seen)
+                # Write proof artifacts (excluded from Merkle calculation)
+                adder.add_text(zipf, "manifest.json", manifest_json)
+                adder.add_text(zipf, "merkle.txt", merkle_root + "\n")
 
             # Log final list of files
-            logger.info("zip: files written (%d): %s", len(seen), sorted(seen))
+            logger.info(
+                "zip: files written (%d): %s", len(adder.seen), sorted(adder.seen)
+            )
             print(f"✅ Built benchmark pack: {self.pack_path}")
 
             # Calculate and display pack info

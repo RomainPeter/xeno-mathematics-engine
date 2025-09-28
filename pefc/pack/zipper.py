@@ -59,3 +59,26 @@ def dedup_additional_files(
         local_seen.add(arc)
         out.append((src, arc))
     return out
+
+
+class ZipAdder:
+    def __init__(self):
+        self.seen: Set[str] = set()
+
+    def add_file(self, z: ZipFile, src_path, arcname: str):
+        if arcname in self.seen:
+            raise RuntimeError(f"duplicate arcname: {arcname}")
+        z.write(str(src_path), arcname)
+        self.seen.add(arcname)
+
+    def add_text(self, z: ZipFile, arcname: str, text: str):
+        if arcname in self.seen:
+            raise RuntimeError(f"duplicate arcname: {arcname}")
+        z.writestr(arcname, text)
+        self.seen.add(arcname)
+
+    def add_bytes(self, z: ZipFile, arcname: str, data: bytes):
+        if arcname in self.seen:
+            raise RuntimeError(f"duplicate arcname: {arcname}")
+        z.writestr(arcname, data)
+        self.seen.add(arcname)
