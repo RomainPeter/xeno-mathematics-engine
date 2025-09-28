@@ -7,6 +7,7 @@ from typing import Dict, Any
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
+from methods.hstree.minimal_tests import HSTreeMinimalTests
 
 
 class FailReasonCategory(Enum):
@@ -39,6 +40,7 @@ class IncidentHandler:
         self.incident_history = []
         self.rule_generations = []
         self.handler_mappings = self._initialize_handler_mappings()
+        self.hstree = HSTreeMinimalTests()
 
     def _initialize_handler_mappings(self) -> Dict[str, Dict[str, Any]]:
         """Initialize default handler mappings."""
@@ -232,12 +234,25 @@ class IncidentHandler:
     def _handle_constraint_breach(
         self, incident: Dict[str, Any], state: Dict[str, Any]
     ) -> Dict[str, Any]:
-        """Handle constraint breach incident."""
-        print("🔧 Handling ConstraintBreach: Adding OPA rule and test")
+        """Handle constraint breach incident with HS-Tree minimal test generation."""
+        print("🔧 Handling ConstraintBreach: Adding OPA rule and HS-Tree minimal tests")
 
         # Extract constraint details
         constraint = incident.get("constraint", {})
         violation = incident.get("violation", {})
+
+        # Add constraint violation to HS-Tree
+        self.hstree.add_constraint_violation(
+            {
+                "id": incident.get("id", "unknown"),
+                "constraint_type": constraint.get("type", "unknown"),
+                "context": violation.get("context", {}),
+                "severity": incident.get("severity", "medium"),
+            }
+        )
+
+        # Generate minimal tests using HS-Tree
+        minimal_tests = self.hstree.generate_minimal_tests(incident)
 
         # Generate OPA rule
         opa_rule = {
@@ -248,13 +263,25 @@ class IncidentHandler:
             "timestamp": datetime.now().isoformat(),
         }
 
-        # Generate test
+        # Generate test from HS-Tree
         test = {
             "type": "test",
             "name": f"test_constraint_{constraint.get('id', 'unknown')}",
             "input": violation.get("input", {}),
             "expected_deny": True,
             "source": "incident_handler",
+            "minimal_tests": [
+                {
+                    "id": tc.id,
+                    "description": tc.description,
+                    "input_data": tc.input_data,
+                    "expected_output": tc.expected_output,
+                    "constraints": tc.constraints,
+                    "priority": tc.priority,
+                    "category": tc.category,
+                }
+                for tc in minimal_tests
+            ],
             "timestamp": datetime.now().isoformat(),
         }
 
@@ -266,12 +293,31 @@ class IncidentHandler:
             "timestamp": datetime.now().isoformat(),
         }
 
+        # Add minimal tests to knowledge base
+        for tc in minimal_tests:
+            if "K" not in state:
+                state["K"] = {}
+            state["K"][f"minimal_test_{tc.id}"] = {
+                "type": "minimal_test",
+                "id": tc.id,
+                "description": tc.description,
+                "input_data": tc.input_data,
+                "expected_output": tc.expected_output,
+                "constraints": tc.constraints,
+                "priority": tc.priority,
+                "category": tc.category,
+                "source": "hstree",
+                "timestamp": datetime.now().isoformat(),
+            }
+
         return {
             "action": "add_opa_rule_and_test",
             "opa_rule": opa_rule,
             "test": test,
             "blocked_path": blocked_path,
-            "description": "Added OPA rule, test, and blocked faulty path",
+            "minimal_tests": len(minimal_tests),
+            "hstree_stats": self.hstree.get_stats(),
+            "description": f"Added OPA rule, test, {len(minimal_tests)} minimal tests, and blocked faulty path",
         }
 
     def _handle_oracle_timeout(

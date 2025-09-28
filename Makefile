@@ -487,3 +487,56 @@ calibrate-budgets:
 	@echo "📊 Calibrating budgets and timeouts..."
 	python scripts/calibrate_budgets.py
 	@echo "✅ Budget calibration completed"
+
+# E-graph rules v0.2 targets
+test-egraph-rules-v02:
+	@echo "🔗 Testing e-graph rules v0.2..."
+	python -m pytest tests/test_egraph_rules_v02.py -v
+	@echo "✅ E-graph rules v0.2 tests completed"
+
+# IDS/CVaR integration targets
+test-policy-ids-cvar:
+	@echo "📊 Testing IDS/CVaR policy integration..."
+	python -m pytest tests/test_policy_ids_cvar.py -v
+	@echo "✅ IDS/CVaR policy tests completed"
+
+# HS-Tree integration targets
+test-hstree:
+	@echo "🌳 Testing HS-Tree minimal test generation..."
+	python -m pytest tests/test_hstree.py -v
+	@echo "✅ HS-Tree tests completed"
+
+# Grove Pack targets
+grove-pack:
+	@echo "📋 Generating Grove pack..."
+	python scripts/gen_onepager.py
+	@echo "✅ Grove pack generated"
+
+# Site targets
+site:
+	@echo "🌐 Building site..."
+	mkdocs build
+	@echo "✅ Site built"
+
+site-deploy:
+	@echo "🚀 Deploying site..."
+	mkdocs gh-deploy --force
+	@echo "✅ Site deployed"
+
+# Public benchmark pack targets
+public-bench-pack:
+	@echo "📦 Building public benchmark pack..."
+	python scripts/build_public_bench_pack.py
+	@echo "✅ Public benchmark pack built"
+
+# Complete hardening targets
+hardening-v011: determinism test-egraph-rules-v02 calibrate-budgets test-policy-ids-cvar test-hstree
+	@echo "🎉 Hardening v0.1.1 completed!"
+
+# Complete Grove targets
+grove-complete: grove-pack site public-bench-pack
+	@echo "🎉 Grove pack completed!"
+
+# All new targets
+all-new: hardening-v011 grove-complete
+	@echo "🎉 All new features completed!"

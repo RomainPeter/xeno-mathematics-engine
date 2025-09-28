@@ -1,0 +1,105 @@
+site_name: Discovery Engine 2‑Cat
+site_description: A Proof Engine for Code
+site_url: https://your-org.github.io/discovery-engine-2cat
+repo_url: https://github.com/your-org/discovery-engine-2cat
+repo_name: your-org/discovery-engine-2cat
+
+theme:
+  name: material
+  palette:
+    - scheme: dark
+      primary: deep blue
+      accent: green
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: light
+      primary: deep blue
+      accent: green
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+
+nav:
+  - Home: index.md
+  - Architecture: architecture.md
+  - Benchmarks: benchmarks.md
+  - Proofs: proofs.md
+  - Grove:
+    - One-Pager: grove/one-pager.md
+    - Essays: grove/essays.md
+    - Video Script: grove/video_script_90s.md
+    - FAQ: grove/faq.md
+  - API Reference:
+    - Core: api/core.md
+    - Orchestrator: api/orchestrator.md
+    - Methods: api/methods.md
+  - Contributing: contributing.md
+  - License: license.md
+
+plugins:
+  - search
+  - mkdocs-material
+  - git-revision-date-localized:
+      enable_creation_date: true
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.arithmatex
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/your-org/discovery-engine-2cat
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/your-org
+    - icon: fontawesome/brands/linkedin
+      link: https://linkedin.com/company/your-org
+  version:
+    provider: mike
