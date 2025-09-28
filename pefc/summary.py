@@ -6,6 +6,8 @@ import logging
 
 from pefc.metrics.types import RunRecord
 from pefc.metrics.engine import aggregate as aggregate_backend
+from pefc.events import get_event_bus
+from pefc.events import topics as E
 
 logger = logging.getLogger(__name__)
 
@@ -230,4 +232,14 @@ def build_summary(
         prefer_backend,
         len(runs),
     )
+
+    # Emit metrics summary built event
+    bus = get_event_bus()
+    bus.emit(
+        E.METRICS_SUMMARY_BUILT,
+        out_path=str(out_path),
+        runs=len(runs),
+        version=version,
+    )
+
     return result

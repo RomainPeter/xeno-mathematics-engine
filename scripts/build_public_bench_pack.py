@@ -22,9 +22,20 @@ from pefc.summary import build_summary
 from pefc.pack.merkle import build_entries, compute_merkle_root, build_manifest
 from pefc.pack.zipper import ZipAdder
 from pefc.metrics.build_provider import build_provider
+from pefc.events import get_event_bus
+from pefc.events import topics as E
 
 # Initialize logging (will be reconfigured with config)
 logger = get_logger(__name__)
+
+# Setup event bus with logging subscriber
+bus = get_event_bus()
+try:
+    from pefc.events.subscribers import LoggingSubscriber
+
+    bus.subscribe("*", LoggingSubscriber(logger).handler, priority=-100)
+except Exception:
+    pass
 
 
 class PublicBenchPackBuilder:
@@ -77,6 +88,14 @@ class PublicBenchPackBuilder:
             "seeds_provided": True,
             "merkle_attestation": True,
         }
+
+        # Emit metrics summary built event
+        bus.emit(
+            E.METRICS_SUMMARY_BUILT,
+            out_path=str(summary_path),
+            runs=len(result.get("runs", [])),
+            version=version,
+        )
 
         return result
 
@@ -364,6 +383,14 @@ This benchmark pack is released under the MIT License.
                 },
             )
 
+            # Emit pack built event
+            bus.emit(
+                E.PACK_BUILT,
+                zip=str(self.pack_path),
+                merkle_root=merkle_root,
+                manifest=True,
+            )
+
             # Calculate and display pack info
             pack_size = self.pack_path.stat().st_size
             logger.info(
@@ -417,6 +444,14 @@ This benchmark pack is released under the MIT License.
                     "kv": {"sig_path": str(signature_file), "signature": signature},
                 },
             )
+
+            # Emit sign success event
+            bus.emit(
+                E.SIGN_OK,
+                zip=str(self.pack_path),
+                sig=str(signature_file),
+                provider="sha256",
+            )
             return True
 
         except Exception as e:
@@ -424,6 +459,14 @@ This benchmark pack is released under the MIT License.
                 "Failed to sign pack",
                 extra={"event": "pack.sign.error", "kv": {"error": str(e)}},
                 exc_info=True,
+            )
+
+            # Emit sign failure event
+            bus.emit(
+                E.SIGN_FAIL,
+                zip=str(self.pack_path),
+                error=str(e),
+                provider="sha256",
             )
             return False
 
