@@ -11,6 +11,7 @@ import logging
 import sys
 from pathlib import Path
 from datetime import datetime
+from typing import Optional
 
 # Add current directory to Python path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -38,6 +39,8 @@ class PublicBenchPackBuilder:
         include_aggregates: bool = False,
         weight_key: str = "n_items",
         dedup: str = "first",
+        validate: bool = False,
+        bounded_metrics: Optional[list[str]] = None,
     ) -> dict:
         """Build summary.json with aggregated metrics using new API."""
         logger.info("📊 Building summary.json...")
@@ -54,6 +57,9 @@ class PublicBenchPackBuilder:
             weight_key=weight_key,
             dedup=dedup,
             version="v0.1.0",
+            validate=validate,
+            bounded_metrics=bounded_metrics,
+            schema_path=Path("schema/summary.schema.json"),
         )
 
         # Add legacy fields for backward compatibility
@@ -256,6 +262,8 @@ This benchmark pack is released under the MIT License.
         include_aggregates: bool = False,
         weight_key: str = "n_items",
         dedup: str = "first",
+        validate: bool = False,
+        bounded_metrics: Optional[list[str]] = None,
     ) -> bool:
         """Build the complete benchmark pack."""
         logger.info("📦 Building public benchmark pack...")
@@ -266,7 +274,12 @@ This benchmark pack is released under the MIT License.
 
             # Core files that will be included in Merkle calculation
             summary = self.build_summary(
-                metrics_sources, include_aggregates, weight_key, dedup
+                metrics_sources,
+                include_aggregates,
+                weight_key,
+                dedup,
+                validate,
+                bounded_metrics,
             )
             summary_path = self.output_dir / "summary.json"
             summary_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
@@ -393,6 +406,17 @@ def main():
         default="first",
         help="Stratégie de déduplication",
     )
+    parser.add_argument(
+        "--validate-summary",
+        action="store_true",
+        help="Valide summary.json contre le schéma + cohérence",
+    )
+    parser.add_argument(
+        "--bounded-metric",
+        action="append",
+        default=[],
+        help="Nom de métrique à contraindre dans [0,1]",
+    )
     parser.add_argument("--output", help="Dossier de sortie (défaut: artifacts)")
     parser.add_argument("--pack-name", help="Nom du pack (défaut: bench_pack_v0.1.0)")
 
@@ -419,7 +443,12 @@ def main():
 
     # Build the pack
     if not builder.build_pack(
-        metrics_sources, args.include_aggregates, args.weight_key, args.dedup
+        metrics_sources,
+        args.include_aggregates,
+        args.weight_key,
+        args.dedup,
+        args.validate_summary,
+        args.bounded_metric,
     ):
         logger.error("❌ Failed to build benchmark pack!")
         exit(1)

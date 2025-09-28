@@ -1,6 +1,6 @@
 PY=python3
 
-.PHONY: setup verify demo audit-pack logs release schema-test validate fmt demo-s1 deps-lock build-verifier-pinned audit 2cat-shadow 2cat-active s2-bench 2cat-report
+.PHONY: setup verify demo audit-pack logs release schema-test validate fmt demo-s1 deps-lock build-verifier-pinned audit 2cat-shadow 2cat-active s2-bench 2cat-report validate-summary
 
 setup:
 	$(PY) -m venv .venv && . .venv/bin/activate && pip install -U pip && pip install -r requirements.txt
@@ -540,3 +540,7 @@ grove-complete: grove-pack site public-bench-pack
 # All new targets
 all-new: hardening-v011 grove-complete
 	@echo "🎉 All new features completed!"
+
+# T04: Summary validation
+validate-summary:
+	$(PY) -c "import json,sys; from pefc.metrics.validator import validate_summary_doc; from pathlib import Path; d=json.load(open('dist/summary.json')); validate_summary_doc(d, Path('schema/summary.schema.json'))" && echo "✅ Summary validation passed"
