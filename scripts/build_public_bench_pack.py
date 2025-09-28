@@ -15,6 +15,7 @@ from datetime import datetime
 # Add current directory to Python path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from pefc.summary import build_summary
+from pefc.pack.zipper import add_to_zip, dedup_additional_files
 
 # Initialize logging
 logging.basicConfig(level=logging.INFO)
@@ -259,42 +260,83 @@ This benchmark pack is released under the MIT License.
         logger.info("📦 Building public benchmark pack...")
 
         try:
+            # Initialize seen set for deduplication
+            seen = set()
+
             with zipfile.ZipFile(self.pack_path, "w", zipfile.ZIP_DEFLATED) as zipf:
-                # Add summary.json
+                # 1) Core files using add_to_zip for deduplication
                 summary = self.build_summary(
                     metrics_sources, include_aggregates, weight_key, dedup
                 )
-                zipf.writestr("summary.json", json.dumps(summary, indent=2))
+                add_to_zip(
+                    zipf,
+                    "summary.json",
+                    data=json.dumps(summary, indent=2).encode("utf-8"),
+                    seen=seen,
+                )
 
                 # Add seeds
                 seeds = self.collect_seeds()
-                zipf.writestr("seeds.json", json.dumps(seeds, indent=2))
+                add_to_zip(
+                    zipf,
+                    "seeds.json",
+                    data=json.dumps(seeds, indent=2).encode("utf-8"),
+                    seen=seen,
+                )
 
-                # Add Merkle root
+                # Add Merkle root (core file - written once)
                 merkle_root = self.get_merkle_root()
-                zipf.writestr("merkle.txt", merkle_root)
+                add_to_zip(
+                    zipf,
+                    "merkle.txt",
+                    data=(merkle_root + "\n").encode("utf-8"),
+                    seen=seen,
+                )
 
                 # Add SBOM
                 sbom = self.get_sbom()
-                zipf.writestr("sbom.json", json.dumps(sbom, indent=2))
+                add_to_zip(
+                    zipf,
+                    "sbom.json",
+                    data=json.dumps(sbom, indent=2).encode("utf-8"),
+                    seen=seen,
+                )
 
                 # Add reproduction instructions
                 reproduce_instructions = self.generate_reproduce_instructions()
-                zipf.writestr("reproduce.md", reproduce_instructions)
+                add_to_zip(
+                    zipf,
+                    "reproduce.md",
+                    data=reproduce_instructions.encode("utf-8"),
+                    seen=seen,
+                )
 
-                # Add additional files if they exist
-                additional_files = [
+                # 2) Additional files - prepare list and deduplicate
+                additional_files_raw = [
                     "out/metrics.json",
-                    "out/journal/merkle.txt",
-                    "out/sbom.json",
+                    "out/journal/merkle.txt",  # This will be ignored due to collision with core merkle.txt
+                    "out/sbom.json",  # This will be ignored due to collision with core sbom.json
                     "configs/llm.yaml",
                     "schemas/examples/regtech_domain_spec.overrides.json",
                 ]
 
-                for file_path in additional_files:
+                # Convert to (Path, arcname) tuples
+                additional_files = []
+                for file_path in additional_files_raw:
                     if Path(file_path).exists():
-                        zipf.write(file_path, Path(file_path).name)
+                        additional_files.append((Path(file_path), Path(file_path).name))
 
+                # Deduplicate additional files against seen set and internal duplicates
+                additional_files_filtered = dedup_additional_files(
+                    additional_files, seen
+                )
+
+                # Add filtered additional files
+                for src_path, arcname in additional_files_filtered:
+                    add_to_zip(zipf, arcname, src_path=src_path, seen=seen)
+
+            # Log final list of files
+            logger.info("zip: files written (%d): %s", len(seen), sorted(seen))
             print(f"✅ Built benchmark pack: {self.pack_path}")
 
             # Calculate and display pack info
