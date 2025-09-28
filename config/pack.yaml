@@ -1,0 +1,24 @@
+pack:
+  version: v0.1.1
+  pack_name: public-bench-pack
+  out_dir: dist
+  zip_name: "{pack_name}-{version}.zip"
+  include_manifest: true
+  include_merkle: true
+
+logging:
+  level: INFO
+  json_mode: false
+
+metrics:
+  sources:
+    - bench/metrics/**/*.json
+  include_aggregates: false
+  weight_key: n_items
+  dedup: first
+  bounded_metrics: [coverage_gain, novelty_avg]
+  schema_path: schema/summary.schema.json
+
+merkle:
+  style: v1
+  chunk_size: 1048576

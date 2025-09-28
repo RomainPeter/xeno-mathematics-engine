@@ -18,6 +18,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from pefc.summary import build_summary
 from pefc.pack.zipper import ZipAdder
 from pefc.pack.merkle import build_entries, compute_merkle_root, build_manifest
+from pefc.config.loader import get_config, expand_globs
 
 # Initialize logging
 logging.basicConfig(level=logging.INFO)
@@ -27,10 +28,12 @@ logger = logging.getLogger(__name__)
 class PublicBenchPackBuilder:
     """Builds public benchmark pack with all necessary components."""
 
-    def __init__(self):
-        self.output_dir = Path("artifacts")
+    def __init__(
+        self, output_dir: Optional[Path] = None, pack_name: Optional[str] = None
+    ):
+        self.output_dir = Path(output_dir) if output_dir else Path("artifacts")
         self.output_dir.mkdir(exist_ok=True)
-        self.pack_name = "bench_pack_v0.1.0"
+        self.pack_name = pack_name or "bench_pack_v0.1.0"
         self.pack_path = self.output_dir / f"{self.pack_name}.zip"
 
     def build_summary(
@@ -41,6 +44,7 @@ class PublicBenchPackBuilder:
         dedup: str = "first",
         validate: bool = False,
         bounded_metrics: Optional[list[str]] = None,
+        version: str = "v0.1.0",
     ) -> dict:
         """Build summary.json with aggregated metrics using new API."""
         logger.info("📊 Building summary.json...")
@@ -56,7 +60,7 @@ class PublicBenchPackBuilder:
             include_aggregates=include_aggregates,
             weight_key=weight_key,
             dedup=dedup,
-            version="v0.1.0",
+            version=version,
             validate=validate,
             bounded_metrics=bounded_metrics,
             schema_path=Path("schema/summary.schema.json"),
@@ -264,6 +268,7 @@ This benchmark pack is released under the MIT License.
         dedup: str = "first",
         validate: bool = False,
         bounded_metrics: Optional[list[str]] = None,
+        version: str = "v0.1.0",
     ) -> bool:
         """Build the complete benchmark pack."""
         logger.info("📦 Building public benchmark pack...")
@@ -280,6 +285,7 @@ This benchmark pack is released under the MIT License.
                 dedup,
                 validate,
                 bounded_metrics,
+                version,
             )
             summary_path = self.output_dir / "summary.json"
             summary_path.write_text(json.dumps(summary, indent=2), encoding="utf-8")
@@ -319,7 +325,7 @@ This benchmark pack is released under the MIT License.
             merkle_root = compute_merkle_root(entries)
 
             # 3) Build manifest (excluded from Merkle calculation)
-            manifest_obj = build_manifest(entries, merkle_root, "v0.1.0")
+            manifest_obj = build_manifest(entries, merkle_root, version)
             manifest_json = json.dumps(manifest_obj, ensure_ascii=False, indent=2)
 
             # 4) Create zip with ZipAdder for deduplication
@@ -417,6 +423,9 @@ def main():
         default=[],
         help="Nom de métrique à contraindre dans [0,1]",
     )
+    parser.add_argument(
+        "--config", help="Fichier de configuration YAML (défaut: config/pack.yaml)"
+    )
     parser.add_argument("--output", help="Dossier de sortie (défaut: artifacts)")
     parser.add_argument("--pack-name", help="Nom du pack (défaut: bench_pack_v0.1.0)")
 
@@ -424,31 +433,48 @@ def main():
 
     logger.info("🚀 Building Discovery Engine 2‑Cat Public Benchmark Pack...")
 
-    builder = PublicBenchPackBuilder()
+    # Load configuration
+    config_path = Path(args.config) if args.config else None
+    config = get_config(config_path)
 
-    # Override defaults if provided
-    if args.output:
-        builder.output_dir = Path(args.output)
-        builder.output_dir.mkdir(exist_ok=True)
-    if args.pack_name:
-        builder.pack_name = args.pack_name
-        builder.pack_path = builder.output_dir / f"{builder.pack_name}.zip"
+    logger.info(f"📋 Using config: {config_path or 'default'}")
+    if hasattr(config, "_base_dir"):
+        logger.info(f"📁 Base directory: {config._base_dir}")
 
-    # Default metrics sources if none provided
-    metrics_sources = args.metrics_source or [
-        "out/metrics.json",
-        "artifacts/bench_public/metrics_baseline.json",
-        "artifacts/bench_public/metrics_active.json",
-    ]
+    # Create builder with config values
+    output_dir = Path(args.output or config.pack.out_dir)
+    pack_name = args.pack_name or config.pack.pack_name
 
-    # Build the pack
+    builder = PublicBenchPackBuilder(
+        output_dir=output_dir,
+        pack_name=pack_name,
+    )
+
+    # Determine metrics sources from config or CLI
+    if args.metrics_source:
+        metrics_sources = args.metrics_source
+    else:
+        # Resolve globs from config
+        metrics_sources = [
+            str(p) for p in expand_globs(config.metrics.sources, config._base_dir)
+        ]
+        if not metrics_sources:
+            # Fallback to default sources
+            metrics_sources = [
+                "out/metrics.json",
+                "artifacts/bench_public/metrics_baseline.json",
+                "artifacts/bench_public/metrics_active.json",
+            ]
+
+    # Build the pack with config values
     if not builder.build_pack(
         metrics_sources,
-        args.include_aggregates,
-        args.weight_key,
-        args.dedup,
+        args.include_aggregates or config.metrics.include_aggregates,
+        args.weight_key or config.metrics.weight_key,
+        args.dedup or config.metrics.dedup,
         args.validate_summary,
-        args.bounded_metric,
+        args.bounded_metric or config.metrics.bounded_metrics,
+        config.pack.version,
     ):
         logger.error("❌ Failed to build benchmark pack!")
         exit(1)
