@@ -2,6 +2,8 @@ from __future__ import annotations
 from typing import Dict, Any, List
 from pefc.capabilities.base import CapabilityMetadata, have_tool
 from pefc.incidents.types import CapabilityResult
+from pefc.capabilities.loader import build_capabilities
+from pefc.capabilities.manager import CapabilityManager
 
 
 class OPAHandler:
@@ -40,20 +42,20 @@ class OPAHandler:
     def handle(
         self, incident: Dict[str, Any], ctx: Dict[str, Any] | None = None
     ) -> Dict[str, Any]:
-        input_doc = {"incident": incident, "ctx": ctx or {}}
-        proofs = [
-            {
-                "type": "opa-eval",
-                "policy_dir": self.policy_dir,
-                "query": self.query,
-                "input": input_doc,
-                "expect": {"allow": False},  # e.g. incident should reproduce violation
-            }
-        ]
+        # Use capabilities to generate PCAP
+        caps_cfg = (ctx or {}).get("capabilities_cfg") or {}
+        caps = build_capabilities(caps_cfg)
+        manager = CapabilityManager(caps)
+        pcap = manager.plan_pcap(
+            action="incident.remediation.plan",
+            incident=incident,
+            obligations=incident.get("obligations", []),
+            ctx=ctx,
+        )
         return CapabilityResult(
             handler_id=self.meta.id,
             status="planned",
-            proofs=proofs,
-            messages=["opa plan"],
-            meta={"policy_dir": self.policy_dir},
+            proofs=[],  # Now in PCAP
+            messages=["composed by capabilities"],
+            meta={"caps": pcap.meta, "pcap": pcap.model_dump()},
         ).__dict__
