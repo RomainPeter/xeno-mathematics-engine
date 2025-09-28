@@ -15,11 +15,12 @@ from typing import Optional
 
 # Add current directory to Python path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from pefc.summary import build_summary
-from pefc.pack.zipper import ZipAdder
-from pefc.pack.merkle import build_entries, compute_merkle_root, build_manifest
-from pefc.config.loader import get_config, expand_globs
+from pefc.runner import run_pack_build
 from pefc.logging import setup_logging_from_config, get_logger, set_context
+from pefc.config.loader import get_config
+from pefc.summary import build_summary
+from pefc.pack.merkle import build_entries, compute_merkle_root, build_manifest
+from pefc.pack.zipper import ZipAdder
 
 # Initialize logging (will be reconfigured with config)
 logger = get_logger(__name__)
@@ -427,44 +428,35 @@ This benchmark pack is released under the MIT License.
 def main():
     """Main function."""
     parser = argparse.ArgumentParser(
-        description="Build Discovery Engine 2‑Cat Public Benchmark Pack"
+        description="Build Public Benchmark Pack",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  python scripts/build_public_bench_pack.py
+  python scripts/build_public_bench_pack.py --config config/pack.yaml
+  python scripts/build_public_bench_pack.py --allow-partial
+  python scripts/build_public_bench_pack.py --partial-is-success
+        """,
     )
-    parser.add_argument(
-        "--metrics-source",
-        action="append",
-        default=[],
-        help="Fichier ou dossier JSON de métriques (multi)",
-    )
-    parser.add_argument(
-        "--include-aggregates",
-        action="store_true",
-        help="Inclure les sources agrégées (défaut: ignorées)",
-    )
-    parser.add_argument(
-        "--weight-key", default="n_items", help="Clé de pondération pour les métriques"
-    )
-    parser.add_argument(
-        "--dedup",
-        choices=["first", "last"],
-        default="first",
-        help="Stratégie de déduplication",
-    )
-    parser.add_argument(
-        "--validate-summary",
-        action="store_true",
-        help="Valide summary.json contre le schéma + cohérence",
-    )
-    parser.add_argument(
-        "--bounded-metric",
-        action="append",
-        default=[],
-        help="Nom de métrique à contraindre dans [0,1]",
-    )
+
     parser.add_argument(
         "--config", help="Fichier de configuration YAML (défaut: config/pack.yaml)"
     )
-    parser.add_argument("--output", help="Dossier de sortie (défaut: artifacts)")
-    parser.add_argument("--pack-name", help="Nom du pack (défaut: bench_pack_v0.1.0)")
+    parser.add_argument(
+        "--allow-partial",
+        action="store_true",
+        help="Ne pas échouer si étape optionnelle échoue (status PARTIAL -> code 10)",
+    )
+    parser.add_argument(
+        "--partial-is-success",
+        action="store_true",
+        help="Mappe PARTIAL sur code 0 (succès logique)",
+    )
+    parser.add_argument(
+        "--json-logs",
+        action="store_true",
+        help="Activer les logs JSON",
+    )
 
     args = parser.parse_args()
 
@@ -496,73 +488,44 @@ def main():
     if hasattr(config, "_base_dir"):
         logger.info("Base directory", extra={"kv": {"base_dir": str(config._base_dir)}})
 
-    # Create builder with config values
-    output_dir = Path(args.output or config.pack.out_dir)
-    pack_name = args.pack_name or config.pack.pack_name
-
-    builder = PublicBenchPackBuilder(
-        output_dir=output_dir,
-        pack_name=pack_name,
+    # Run pack build with error handling
+    result = run_pack_build(
+        config_path=str(config_path) if config_path else None,
+        allow_partial=args.allow_partial or args.partial_is_success,
+        partial_is_success=args.partial_is_success,
     )
 
-    # Determine metrics sources from config or CLI
-    if args.metrics_source:
-        metrics_sources = args.metrics_source
-    else:
-        # Resolve globs from config
-        metrics_sources = [
-            str(p) for p in expand_globs(config.metrics.sources, config._base_dir)
-        ]
-        if not metrics_sources:
-            # Fallback to default sources
-            metrics_sources = [
-                "out/metrics.json",
-                "artifacts/bench_public/metrics_baseline.json",
-                "artifacts/bench_public/metrics_active.json",
-            ]
-
-    # Build the pack with config values
-    if not builder.build_pack(
-        metrics_sources,
-        args.include_aggregates or config.metrics.include_aggregates,
-        args.weight_key or config.metrics.weight_key,
-        args.dedup or config.metrics.dedup,
-        args.validate_summary,
-        args.bounded_metric or config.metrics.bounded_metrics,
-        config.pack.version,
-    ):
-        logger.error(
-            "Failed to build benchmark pack", extra={"event": "pack.build.failed"}
-        )
-        exit(1)
-
-    # Sign the pack
-    if not builder.sign_pack():
-        logger.error(
-            "Failed to sign benchmark pack", extra={"event": "pack.sign.failed"}
-        )
-        exit(1)
-
+    # Log final result
     logger.info(
-        "Public benchmark pack built successfully", extra={"event": "pack.complete"}
-    )
-    logger.info(
-        "Pack details",
+        "Pack build completed",
         extra={
-            "event": "pack.details",
+            "event": "pack.complete",
             "kv": {
-                "pack_path": str(builder.pack_path),
-                "signature_path": str(builder.output_dir / f"{builder.pack_name}.sig"),
-                "contents": [
-                    "summary.json: Aggregated metrics",
-                    "seeds.json: Deterministic seeds",
-                    "merkle.txt: Integrity verification",
-                    "sbom.json: Software Bill of Materials",
-                    "reproduce.md: Reproduction instructions",
-                ],
+                "status": result.status,
+                "exit_code": result.exit_code,
+                "artifacts": result.artifacts,
+                "reasons": result.reasons,
+                "errors": result.errors,
             },
         },
     )
+
+    # Print machine-readable result to stdout
+    print(
+        json.dumps(
+            {
+                "status": result.status,
+                "exit_code": result.exit_code,
+                "artifacts": result.artifacts,
+                "reasons": result.reasons,
+                "errors": result.errors,
+            },
+            ensure_ascii=False,
+        )
+    )
+
+    # Exit with appropriate code
+    sys.exit(result.exit_code)
 
 
 if __name__ == "__main__":

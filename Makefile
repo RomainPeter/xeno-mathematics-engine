@@ -550,3 +550,10 @@ export PEFC_CONFIG ?= config/pack.yaml
 
 public-bench-pack-config:
 	$(PY) scripts/build_public_bench_pack.py --config $(PEFC_CONFIG)
+
+public-bench-pack:
+	$(PY) scripts/build_public_bench_pack.py --config $(PEFC_CONFIG) --allow-partial || test $$? -eq 10
+	@echo "Pack build completed (success or partial)"
+
+public-bench-pack-strict:
+	$(PY) scripts/build_public_bench_pack.py --config $(PEFC_CONFIG)
