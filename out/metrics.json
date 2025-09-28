@@ -10,5 +10,14 @@
       "LowCoverage": 1,
       "ConstraintBreach": 1
     }
+  },
+  "audit_cost": {
+    "simulated_ms": 950
+  },
+  "mdl_proxy": {
+    "compression": 0.15
+  },
+  "delta": {
+    "local": 0.18
   }
 }

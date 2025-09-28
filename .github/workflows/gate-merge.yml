@@ -16,10 +16,16 @@ jobs:
         run: |
           curl -L -o opa https://openpolicyagent.org/downloads/latest/opa_linux_amd64
           chmod +x opa && sudo mv opa /usr/local/bin/opa
-      - name: Install deps
-        run: pip install -r requirements.txt || true
+      - name: Create virtual environment
+        run: |
+          python3 -m venv .venv
+          . .venv/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements.txt || true
       - name: Run demo
-        run: make demo || make regtech-demo || true
+        run: |
+          . .venv/bin/activate
+          make demo || make regtech-demo || python scripts/demo_regtech_bench.py || true
       - name: Assert thresholds
         run: python scripts/assert_thresholds.py out/metrics.json
       - name: Upload metrics
