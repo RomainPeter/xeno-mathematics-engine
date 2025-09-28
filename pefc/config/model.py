@@ -2,6 +2,8 @@ from __future__ import annotations
 from typing import List, Literal, Optional
 from pydantic import BaseModel, Field
 
+from pefc.policy.config import PolicyConfig
+
 
 class LoggingConfig(BaseModel):
     level: str = "INFO"
@@ -92,5 +94,6 @@ class RootConfig(BaseModel):
     sign: SignConfig = Field(default_factory=SignConfig)
     docs: DocsConfig = Field(default_factory=DocsConfig)
     sbom: SBOMConfig = Field(default_factory=SBOMConfig)
+    policy: PolicyConfig = Field(default_factory=PolicyConfig)
 
     model_config = {"extra": "forbid"}
