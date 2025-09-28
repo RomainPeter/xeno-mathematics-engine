@@ -1,20 +1,13 @@
 from __future__ import annotations
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Tuple, Optional
 import json
 import logging
 
+from pefc.metrics.types import RunRecord
+from pefc.metrics.engine import aggregate as aggregate_backend
+
 logger = logging.getLogger(__name__)
-
-
-@dataclass
-class RunRecord:
-    run_id: str
-    group: str
-    weight: float
-    metrics: Dict[str, float]
-    source_path: str
 
 
 def _detect_source_type(obj: Dict[str, Any]) -> str:
@@ -116,41 +109,43 @@ def load_runs_from_sources(
     return final_runs, meta
 
 
+# Legacy function kept for backward compatibility
 def aggregate_runs(runs: List[RunRecord]) -> Dict[str, Any]:
-    if not runs:
-        return {
-            "overall": {"n_runs": 0, "weight_sum": 0.0, "metrics": {}},
-            "by_group": {},
-        }
-    # Intersection de clés métriques pour éviter NaN
-    keys = set(runs[0].metrics.keys())
-    for r in runs[1:]:
-        keys &= set(r.metrics.keys())
-    total_w = sum(r.weight for r in runs) or 1.0
-    overall = {
-        "n_runs": len(runs),
-        "weight_sum": total_w,
-        "metrics": {
-            k: sum(r.weight * r.metrics[k] for r in runs) / total_w for k in keys
-        },
-    }
-    by_group: Dict[str, Any] = {}
-    groups: Dict[str, List[RunRecord]] = {}
-    for r in runs:
-        groups.setdefault(r.group, []).append(r)
-    for g, lst in groups.items():
-        w = sum(x.weight for x in lst) or 1.0
-        gkeys = set(lst[0].metrics.keys())
-        for x in lst[1:]:
-            gkeys &= set(x.metrics.keys())
-        by_group[g] = {
-            "n_runs": len(lst),
-            "weight_sum": w,
-            "metrics": {
-                k: sum(x.weight * x.metrics[k] for x in lst) / w for k in gkeys
-            },
-        }
-    return {"overall": overall, "by_group": by_group}
+    """Legacy aggregation function - use pefc.metrics.engine.aggregate instead."""
+    return aggregate_backend(runs, prefer_backend="python")
+
+
+def _validate_bounds(result: Dict[str, Any], bounded_metrics: List[str]) -> None:
+    """Validate that bounded metrics are within [0,1] range."""
+    if not bounded_metrics:
+        return
+
+    def _check(metrics: Dict[str, float], where: str):
+        for k in bounded_metrics:
+            if k in metrics:
+                v = metrics[k]
+                if not (0.0 <= v <= 1.0):
+                    raise ValueError(f"metric {k} out of [0,1] in {where}: {v}")
+
+    _check(result["overall"]["metrics"], "overall")
+    for g, obj in result["by_group"].items():
+        _check(obj["metrics"], f"by_group[{g}]")
+
+
+def _validate_schema_if_any(doc: Dict[str, Any], schema_path: Optional[Path]) -> None:
+    """Validate against JSON schema if available."""
+    if not schema_path:
+        return
+    try:
+        import fastjsonschema
+        import json as _json
+    except Exception:
+        logger.warning("schema validation skipped (fastjsonschema not available)")
+        return
+
+    sch = _json.loads(Path(schema_path).read_text(encoding="utf-8"))
+    validate = fastjsonschema.compile(sch)
+    validate(doc)
 
 
 def build_summary(
@@ -160,23 +155,43 @@ def build_summary(
     weight_key: str = "n_items",
     dedup: str = "first",
     version: str = "0.1.0",
-    validate: bool = False,
+    prefer_backend: str | None = None,
     bounded_metrics: Optional[List[str]] = None,
     schema_path: Optional[Path] = None,
 ) -> Dict[str, Any]:
+    """
+    Build summary with optimized aggregation backends.
+
+    Args:
+        sources: List of source paths for metrics
+        out_path: Output path for summary.json
+        include_aggregates: Whether to include aggregate data
+        weight_key: Key to use for weighting
+        dedup: Deduplication strategy
+        version: Version string
+        prefer_backend: Preferred backend (polars, pandas, python)
+        bounded_metrics: Metrics that should be bounded [0,1]
+        schema_path: Path to JSON schema for validation
+
+    Returns:
+        Summary dictionary
+    """
+    from pefc.errors import ValidationError  # T07
+
     runs, meta = load_runs_from_sources(
         sources,
         include_aggregates=include_aggregates,
         weight_key=weight_key,
         dedup=dedup,
     )
-    aggs = aggregate_runs(runs)
+    aggs = aggregate_backend(runs, prefer_backend)
     result = {
         "version": version,
         "config": {
             "include_aggregates": include_aggregates,
             "weight_key": weight_key,
             "dedup": dedup,
+            "backend": prefer_backend,
         },
         "sources": meta,
         "overall": aggs["overall"],
@@ -192,22 +207,21 @@ def build_summary(
             for r in runs
         ],
     }
+
+    try:
+        _validate_bounds(result, bounded_metrics or [])
+        _validate_schema_if_any(result, schema_path)
+    except Exception as e:
+        raise ValidationError(str(e))
+
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(
         json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"
     )
-
-    if validate:
-        from pefc.metrics.validator import validate_summary_doc
-
-        sp = schema_path or Path("schema/summary.schema.json")
-        validate_summary_doc(result, sp, bounded_metrics)
-        logger.info("summary.json validated successfully")
-
     logger.info(
-        "summary.json written: %s (runs=%d, aggregates_ignored=%d)",
+        "summary.json written: %s (backend=%s, runs=%d)",
         out_path,
+        prefer_backend,
         len(runs),
-        len(meta.get("ignored_aggregates", [])),
     )
     return result

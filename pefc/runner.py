@@ -111,6 +111,11 @@ def run_pack_build(
                 raise MetricsError("No metrics sources resolved from configuration")
 
             summary_path = out_dir / "summary.json"
+            # Determine backend preference
+            prefer_backend = (
+                None if cfg.metrics.backend == "auto" else cfg.metrics.backend
+            )
+
             build_summary(
                 sources=[Path(p) for p in metric_sources],
                 out_path=summary_path,
@@ -118,7 +123,7 @@ def run_pack_build(
                 weight_key=cfg.metrics.weight_key,
                 dedup=cfg.metrics.dedup,
                 version=cfg.pack.version,
-                validate=True,
+                prefer_backend=prefer_backend,
                 bounded_metrics=cfg.metrics.bounded_metrics,
                 schema_path=Path(cfg.metrics.schema_path),
             )
