@@ -347,3 +347,28 @@ regtech-test:
 # Complete Discovery Engine targets
 discovery-full: discovery-test regtech-demo
 	@echo "🎉 Complete Discovery Engine validation!"
+
+# Incident handlers targets
+incident-test:
+	@echo "🔧 Testing incident handlers..."
+	. .venv/bin/activate && $(PY) -m pytest tests/test_incident_handlers.py -v
+	@echo "✅ Incident handlers tests completed"
+
+# CI artifacts targets
+ci-artifacts-test:
+	@echo "🔧 Testing CI artifacts..."
+	. .venv/bin/activate && $(PY) -m pytest tests/test_ci_components.py -v
+	@echo "✅ CI artifacts tests completed"
+
+install-opa:
+	@echo "🔧 Installing OPA..."
+	bash scripts/install_opa.sh
+	@echo "✅ OPA installation completed"
+
+# Complete CI pipeline
+ci-complete: ci-test hermetic-test merkle-test incident-test ci-artifacts-test install-opa
+	@echo "🎉 Complete CI pipeline with all components!"
+
+# Final Discovery Engine validation
+discovery-final: discovery-full incident-test ci-artifacts-test
+	@echo "🎉 Complete Discovery Engine 2-Cat validation with all PRs!"
