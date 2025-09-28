@@ -1,8 +1,16 @@
 from __future__ import annotations
-from typing import List, Literal, Optional
+from typing import Any, Dict, List, Literal, Optional
 from pydantic import BaseModel, Field
 
 from pefc.policy.config import PolicyConfig
+
+
+class CapabilitiesConfig(BaseModel):
+    """Configuration for capabilities registry."""
+
+    allowlist: List[str] = Field(default_factory=list)
+    denylist: List[str] = Field(default_factory=list)
+    registry: List[Dict[str, Any]] = Field(default_factory=list)
 
 
 class LoggingConfig(BaseModel):
@@ -95,5 +103,6 @@ class RootConfig(BaseModel):
     docs: DocsConfig = Field(default_factory=DocsConfig)
     sbom: SBOMConfig = Field(default_factory=SBOMConfig)
     policy: PolicyConfig = Field(default_factory=PolicyConfig)
+    capabilities: CapabilitiesConfig = Field(default_factory=CapabilitiesConfig)
 
     model_config = {"extra": "forbid"}
