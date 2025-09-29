@@ -8,7 +8,7 @@ import uuid
 from pathlib import Path
 
 from pefc.events import EventBusConfig, StructuredEventBus, FileJSONLSink
-from orchestrator.orchestrator import Orchestrator, OrchestratorConfig
+from orchestrator.orchestrator_lite import OrchestratorLite, OrchestratorLiteConfig
 from orchestrator.engines.next_closure_engine import NextClosureEngine
 from orchestrator.engines.cegis_async_engine import AsyncCegisEngine
 from orchestrator.adapters.llm_stub import LLMStub
@@ -22,7 +22,14 @@ def main():
     parser.add_argument("--time-budget", type=float, default=10.0)
     parser.add_argument("--max-iters", type=int, default=3)
     parser.add_argument("--hermetic", action="store_true")
+    parser.add_argument(
+        "--kpi-threshold",
+        type=float,
+        default=0.6,
+        help="Minimum patch_accept_rate expected",
+    )
     parser.add_argument("--audit-dir", type=str, default="./_audit")
+    parser.add_argument("--llm-cache", type=str, default="./_llm_cache")
     args = parser.parse_args()
 
     run_id = f"r-{uuid.uuid4().hex[:8]}"
@@ -36,25 +43,22 @@ def main():
     )
     bus.add_sink(FileJSONLSink(events_path))
 
-    # Engines and stubs
+    # Engines and stubs (respect llm_cache path logically by passing seed/script; cache dir reserved for future use)
     ae = NextClosureEngine()
-    cegis = AsyncCegisEngine(LLMStub(seed=args.seed), VerifierStub())
+    cegis = AsyncCegisEngine(LLMStub(seed=args.seed, delay_ms=0), VerifierStub())
 
-    cfg = OrchestratorConfig(
+    cfg = OrchestratorLiteConfig(
         ae_timeout=args.time_budget,
         cegis_max_iterations=args.max_iters,
         cegis_propose_timeout=args.time_budget,
         cegis_verify_timeout=args.time_budget,
         cegis_refine_timeout=args.time_budget,
-        audit_dir=str(audit_dir),
     )
 
-    orch = Orchestrator(
+    orch = OrchestratorLite(
         config=cfg,
         ae_engine=ae,
         cegis_engine=cegis,
-        llm_adapter=None,
-        verifier=None,
         event_bus=bus,
     )
 
@@ -64,14 +68,27 @@ def main():
     if fca_path.exists():
         domain_spec = json.loads(fca_path.read_text())
 
-    budgets = {"verify_timeout": args.time_budget}
-    thresholds = {}
+    budgets = {"verify_timeout": args.time_budget, "time_budget": args.time_budget}
 
     # Run orchestrator
     import asyncio
 
-    asyncio.run(orch.run(domain_spec, budgets, thresholds))
+    metrics = asyncio.run(orch.run(domain_spec, budgets))
+
+    # Write metrics.json
+    metrics_path = audit_dir / "metrics.json"
+    metrics_path.write_text(json.dumps(metrics, indent=2))
+
+    # Console KPI summary
+    par = metrics.get("cegis", {}).get("patch_accept_rate", 0.0)
+    incidents = metrics.get("global", {}).get("incidents_count", {})
+    print("=== LAB KPI SUMMARY ===")
+    print(f"patch_accept_rate: {par:.3f} (threshold {args.kpi_threshold})")
+    print(f"incidents: {incidents}")
+    if par < args.kpi_threshold:
+        print("[WARN] KPI threshold not met.")
     print(f"Run artifacts in: {audit_dir}")
+    print(f"LLM cache path (reserved): {args.llm_cache}")
 
 
 if __name__ == "__main__":
