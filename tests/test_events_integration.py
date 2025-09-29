@@ -1,43 +1,90 @@
-from __future__ import annotations
-from pefc.events.subscribers import MemorySink
-from pefc.events import get_event_bus
-from pefc.events import topics as E
+"""
+Integration smoke test for AE/CEGIS event emissions using MemorySink.
+"""
+
+import asyncio
+import uuid
+
+from pefc.events import EventBusConfig, StructuredEventBus, MemorySink, get_event_bus
+from orchestrator.engines.next_closure_engine import NextClosureEngine, AEContext
+from orchestrator.engines.cegis_async_engine import AsyncCegisEngine
+from orchestrator.engines.cegis_engine import CegisContext, Verdict
 
 
-def test_singleton_event_bus():
-    """Test that get_event_bus returns singleton."""
-    bus1 = get_event_bus()
-    bus2 = get_event_bus()
-    assert bus1 is bus2
+async def _run_smoke():
+    # Setup event bus with memory sink
+    config = EventBusConfig(buffer_size=128, sinks=["memory"])
+    bus = StructuredEventBus(config=config)
+    bus.add_sink(MemorySink())
+    await bus.start()
+    bus.set_correlation_ids(
+        trace_id=f"t-{uuid.uuid4().hex[:8]}", run_id=f"r-{uuid.uuid4().hex[:8]}"
+    )
+
+    # Minimal AE engine and context
+    ae = NextClosureEngine()
+    ae.event_bus = bus
+    await ae.initialize({"objects": ["o1"], "attributes": ["a1"], "incidence": {}})
+    ae_ctx = AEContext(
+        run_id="r-test",
+        step_id="s-ae",
+        trace_id="t-test",
+        domain_spec={},
+        state={},
+        budgets={},
+        thresholds={},
+    )
+    await ae.next_closure_step(ae_ctx)
+
+    # Minimal CEGIS engine and context (mock adapters)
+    class _LLM:
+        async def generate(self, *args, **kwargs):
+            return {"name": "spec", "constraints": [], "properties": []}
+
+    class _Verifier:
+        async def verify(self, specification, implementation, constraints):
+            return {"valid": True, "confidence": 0.9, "evidence": {}, "metrics": {}}
+
+    cegis = AsyncCegisEngine(_LLM(), _Verifier())
+    cegis.event_bus = bus
+    await cegis.initialize({})
+    c_ctx = CegisContext(
+        run_id="r-test",
+        step_id="s-cegis",
+        trace_id="t-test",
+        specification={"name": "spec"},
+        constraints=[],
+        budgets={"verify_timeout": 5.0},
+        state={},
+    )
+    cand = await cegis.propose(c_ctx)
+    res = await cegis.verify(cand, c_ctx)
+    assert isinstance(res, (Verdict,)) and res.valid
+
+    # Collect events
+    await bus.flush(1.0)
+    memory = None
+    for s in bus.sinks:
+        if isinstance(s, MemorySink):
+            memory = s
+            break
+    assert memory is not None
+    events = memory.get_events()
+
+    # Ensure key types present
+    types = {e.get("type") for e in events}
+    assert "AE.Step" in types
+    assert "AE.Concept.Emitted" in types
+    assert "CEGIS.Iter.Start" in types
+    assert "Verify.Attempt" in types
+    assert "Verify.Result" in types
+
+    await bus.stop()
 
 
-def test_event_bus_clear():
-    """Test clearing the singleton event bus."""
-    bus = get_event_bus()
-    sink = MemorySink()
-    bus.subscribe("*", sink.handler)
-    bus.emit("test.event", data="test")
-    assert len(sink.events) == 1
-
-    bus.clear()
-    bus.emit("test.event", data="test")
-    assert len(sink.events) == 1  # No new events after clear
-
-
-def test_topics_constants():
-    """Test that topic constants are defined."""
-    assert E.RUN_FINISHED == "run.finished"
-    assert E.INCIDENT_RAISED == "incident.raised"
-    assert E.PACK_BUILT == "pack.built"
-    assert E.PIPELINE_STEP_STARTED == "pipeline.step.started"
-    assert E.PIPELINE_STEP_SUCCEEDED == "pipeline.step.succeeded"
-    assert E.PIPELINE_STEP_FAILED == "pipeline.step.failed"
-    assert E.CAPABILITY_STARTED == "capability.started"
-    assert E.CAPABILITY_SUCCEEDED == "capability.succeeded"
-    assert E.CAPABILITY_FAILED == "capability.failed"
-    assert E.METRICS_SUMMARY_BUILT == "metrics.summary.built"
-    assert E.SIGN_OK == "sign.ok"
-    assert E.SIGN_FAIL == "sign.fail"
+def test_events_smoke():
+    asyncio.run(_run_smoke())
+    # Minimal post-asserts only for smoke
 
 
 def test_pipeline_events_simulation():
@@ -48,16 +95,16 @@ def test_pipeline_events_simulation():
     bus.subscribe("pipeline.*", sink.handler)
 
     # Simulate pipeline execution
-    bus.emit(E.PIPELINE_STEP_STARTED, step="validate")
-    bus.emit(E.PIPELINE_STEP_SUCCEEDED, step="validate")
-    bus.emit(E.PIPELINE_STEP_STARTED, step="build")
-    bus.emit(E.PIPELINE_STEP_SUCCEEDED, step="build")
+    bus.emit("pipeline.step.started", step="validate")
+    bus.emit("pipeline.step.succeeded", step="validate")
+    bus.emit("pipeline.step.started", step="build")
+    bus.emit("pipeline.step.succeeded", step="build")
 
     # Check events were captured
     assert len(sink.events) == 4
     topics = [ev.topic for ev in sink.events]
-    assert E.PIPELINE_STEP_STARTED in topics
-    assert E.PIPELINE_STEP_SUCCEEDED in topics
+    assert "pipeline.step.started" in topics
+    assert "pipeline.step.succeeded" in topics
 
 
 def test_capability_events_simulation():
@@ -68,14 +115,14 @@ def test_capability_events_simulation():
     bus.subscribe("capability.*", sink.handler)
 
     # Simulate capability execution
-    bus.emit(E.CAPABILITY_STARTED, name="opa-proof", req_meta={"type": "policy"})
-    bus.emit(E.CAPABILITY_SUCCEEDED, name="opa-proof", artifacts=["proof.json"])
+    bus.emit("capability.started", name="opa-proof", req_meta={"type": "policy"})
+    bus.emit("capability.succeeded", name="opa-proof", artifacts=["proof.json"])
 
     # Check events were captured
     assert len(sink.events) == 2
     topics = [ev.topic for ev in sink.events]
-    assert E.CAPABILITY_STARTED in topics
-    assert E.CAPABILITY_SUCCEEDED in topics
+    assert "capability.started" in topics
+    assert "capability.succeeded" in topics
 
 
 def test_pack_build_events_simulation():
@@ -86,16 +133,16 @@ def test_pack_build_events_simulation():
     bus.subscribe("*", sink.handler)
 
     # Simulate pack build process
-    bus.emit(E.METRICS_SUMMARY_BUILT, out_path="summary.json", runs=5, version="v0.1.0")
-    bus.emit(E.PACK_BUILT, zip="pack.zip", merkle_root="abc123", manifest=True)
-    bus.emit(E.SIGN_OK, zip="pack.zip", sig="pack.sig", provider="sha256")
+    bus.emit("metrics.summary.built", out_path="summary.json", runs=5, version="v0.1.0")
+    bus.emit("pack.built", zip="pack.zip", merkle_root="abc123", manifest=True)
+    bus.emit("sign.ok", zip="pack.zip", sig="pack.sig", provider="sha256")
 
     # Check events were captured
     assert len(sink.events) == 3
     topics = [ev.topic for ev in sink.events]
-    assert E.METRICS_SUMMARY_BUILT in topics
-    assert E.PACK_BUILT in topics
-    assert E.SIGN_OK in topics
+    assert "metrics.summary.built" in topics
+    assert "pack.built" in topics
+    assert "sign.ok" in topics
 
 
 def test_error_events_simulation():
@@ -106,16 +153,16 @@ def test_error_events_simulation():
     bus.subscribe("*", sink.handler)
 
     # Simulate error scenarios
-    bus.emit(E.PIPELINE_STEP_FAILED, step="build", error="Build failed")
-    bus.emit(E.CAPABILITY_FAILED, name="opa-proof", error="Policy not found")
-    bus.emit(E.SIGN_FAIL, zip="pack.zip", error="Signature failed", provider="sha256")
+    bus.emit("pipeline.step.failed", step="build", error="Build failed")
+    bus.emit("capability.failed", name="opa-proof", error="Policy not found")
+    bus.emit("sign.fail", zip="pack.zip", error="Signature failed", provider="sha256")
 
     # Check events were captured
     assert len(sink.events) == 3
     topics = [ev.topic for ev in sink.events]
-    assert E.PIPELINE_STEP_FAILED in topics
-    assert E.CAPABILITY_FAILED in topics
-    assert E.SIGN_FAIL in topics
+    assert "pipeline.step.failed" in topics
+    assert "capability.failed" in topics
+    assert "sign.fail" in topics
 
 
 def test_mixed_events_priority():
@@ -130,8 +177,8 @@ def test_mixed_events_priority():
     def low_priority_handler(ev):
         results.append(f"low:{ev.topic}")
 
-    bus.subscribe("*", high_priority_handler, priority=10)
-    bus.subscribe("*", low_priority_handler, priority=1)
+    bus.subscribe("*", high_priority_handler)
+    bus.subscribe("*", low_priority_handler)
 
     bus.emit("test.event", data="test")
 

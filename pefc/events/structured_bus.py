@@ -10,6 +10,24 @@ from .event_bus import EventBus, EventBusConfig
 from .types import create_event, EventType, EventLevel
 
 
+_TOPIC_TO_EVENT_TYPE = {
+    "Orchestrator.Start": EventType.ORCHESTRATOR_START,
+    "Orchestrator.End": EventType.ORCHESTRATOR_END,
+    "AE.Step": EventType.AE_STEP,
+    "AE.Concept.Emitted": EventType.AE_CONCEPT_EMITTED,
+    "CEGIS.Iter.Start": EventType.CEGIS_ITER_START,
+    "CEGIS.Iter.End": EventType.CEGIS_ITER_END,
+    "CEGIS.Iter.Refine": EventType.CEGIS_ITER_REFINE,
+    "CEGIS.Iter.Converged": EventType.CEGIS_ITER_CONVERGED,
+    "Verify.Attempt": EventType.VERIFY_ATTEMPT,
+    "Verify.Result": EventType.VERIFY_RESULT,
+    "Budget.Overrun": EventType.BUDGET_OVERRUN,
+    "Incident": EventType.INCIDENT,
+    "PCAP.Emitted": EventType.PCAP_EMITTED,
+    "Metrics.Snapshot": EventType.METRICS_SNAPSHOT,
+}
+
+
 class StructuredEventBus(EventBus):
     """Compatibility layer exposing emit_* helpers used by the orchestrator."""
 
@@ -29,11 +47,10 @@ class StructuredEventBus(EventBus):
 
     # Generic emitter compatible with orchestrator's expected API
     def emit(self, topic: str, **payload: Any) -> None:
+        event_type = _TOPIC_TO_EVENT_TYPE.get(topic, EventType.METRICS_SNAPSHOT)
         event = create_event(
-            event_type=(
-                EventType.METRICS_SNAPSHOT if "." not in topic else EventType.AE_STEP
-            ),
-            payload={"topic": topic, **payload},
+            event_type=event_type,
+            payload={**payload},
             trace_id=self._trace_id or "",
             run_id=self._run_id or "",
         )
@@ -48,12 +65,13 @@ class StructuredEventBus(EventBus):
         level: str = "info",
     ) -> None:
         payload = payload or {}
+        etype = (
+            EventType.ORCHESTRATOR_START
+            if event_type == "started"
+            else EventType.ORCHESTRATOR_END
+        )
         event = create_event(
-            event_type=(
-                EventType.ORCHESTRATOR_START
-                if event_type == "started"
-                else EventType.ORCHESTRATOR_END
-            ),
+            event_type=etype,
             payload={**payload, "timings": timings or {}},
             trace_id=self._trace_id or "",
             run_id=self._run_id or "",
