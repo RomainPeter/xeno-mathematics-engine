@@ -56,6 +56,15 @@ class AsyncCegisEngine(CegisEngine):
         if not self.initialized:
             raise RuntimeError("Engine not initialized")
 
+        if hasattr(self, "event_bus") and self.event_bus:
+            self.event_bus.emit(
+                "CEGIS.Iter.Start",
+                run_id=ctx.run_id,
+                trace_id=ctx.trace_id,
+                step_id=ctx.step_id,
+                iteration=self.state.iteration,
+            )
+
         # Generate candidate using LLM
         candidate_spec = await self._generate_candidate_specification(ctx)
         implementation = await self._synthesize_implementation(candidate_spec, ctx)
@@ -83,6 +92,15 @@ class AsyncCegisEngine(CegisEngine):
         if not self.initialized:
             raise RuntimeError("Engine not initialized")
 
+        if hasattr(self, "event_bus") and self.event_bus:
+            self.event_bus.emit(
+                "Verify.Attempt",
+                run_id=ctx.run_id,
+                trace_id=ctx.trace_id,
+                step_id=ctx.step_id,
+                candidate_id=candidate.id,
+            )
+
         # Run verification with timeout
         try:
             verification_result = await asyncio.wait_for(
@@ -91,6 +109,14 @@ class AsyncCegisEngine(CegisEngine):
             )
 
             if verification_result["valid"]:
+                if hasattr(self, "event_bus") and self.event_bus:
+                    self.event_bus.emit(
+                        "Verify.Result",
+                        run_id=ctx.run_id,
+                        trace_id=ctx.trace_id,
+                        step_id=ctx.step_id,
+                        ok=True,
+                    )
                 return Verdict(
                     valid=True,
                     confidence=verification_result["confidence"],
@@ -98,6 +124,14 @@ class AsyncCegisEngine(CegisEngine):
                     metrics=verification_result["metrics"],
                 )
             else:
+                if hasattr(self, "event_bus") and self.event_bus:
+                    self.event_bus.emit(
+                        "Verify.Result",
+                        run_id=ctx.run_id,
+                        trace_id=ctx.trace_id,
+                        step_id=ctx.step_id,
+                        ok=False,
+                    )
                 return Counterexample(
                     id=str(uuid.uuid4()),
                     candidate_id=candidate.id,
@@ -122,6 +156,15 @@ class AsyncCegisEngine(CegisEngine):
         """Refine candidate based on counterexample."""
         if not self.initialized:
             raise RuntimeError("Engine not initialized")
+
+        if hasattr(self, "event_bus") and self.event_bus:
+            self.event_bus.emit(
+                "CEGIS.Iter.Refine",
+                run_id=ctx.run_id,
+                trace_id=ctx.trace_id,
+                step_id=ctx.step_id,
+                reason="counterexample",
+            )
 
         # Generate refined specification
         refined_spec = await self._refine_specification(

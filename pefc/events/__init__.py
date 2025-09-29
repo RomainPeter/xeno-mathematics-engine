@@ -3,7 +3,15 @@ Event bus and structured telemetry for PEFC.
 Provides EventBus, sinks, and event types for structured telemetry.
 """
 
-from .event_bus import EventBus, EventBusConfig
+from .event_bus import (
+    EventBus,
+    EventBusConfig,
+    get_global_event_bus as get_event_bus,
+    set_global_event_bus,
+    publish_event,
+    publish_event_nowait,
+)
+from .structured_bus import StructuredEventBus
 from .sinks import (
     StdoutJSONLSink,
     FileJSONLSink,
@@ -45,6 +53,11 @@ from .pcap import PCAPWriter, PCAPSchema, PCAPManager
 __all__ = [
     "EventBus",
     "EventBusConfig",
+    "StructuredEventBus",
+    "get_event_bus",
+    "set_global_event_bus",
+    "publish_event",
+    "publish_event_nowait",
     "StdoutJSONLSink",
     "FileJSONLSink",
     "MemorySink",

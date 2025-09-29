@@ -53,6 +53,14 @@ class NextClosureEngine(AEEngine):
         start_time = datetime.now()
 
         try:
+            # Emit AE step start
+            if hasattr(self, "event_bus") and self.event_bus:
+                self.event_bus.emit(
+                    "AE.Step",
+                    run_id=ctx.run_id,
+                    trace_id=ctx.trace_id,
+                    step_id=ctx.step_id,
+                )
             # Generate next concept using Next-Closure
             concept = await self._next_closure_step()
 
@@ -77,7 +85,7 @@ class NextClosureEngine(AEEngine):
                 "concept_confidence": concept.confidence,
             }
 
-            return AEResult(
+            result = AEResult(
                 step_id=ctx.step_id,
                 success=True,
                 concepts=[self._concept_to_dict(concept)],
@@ -86,6 +94,17 @@ class NextClosureEngine(AEEngine):
                 metrics=metrics,
                 timings=timings,
             )
+            # Emit AE concept emitted
+            if hasattr(self, "event_bus") and self.event_bus:
+                self.event_bus.emit(
+                    "AE.Concept.Emitted",
+                    run_id=ctx.run_id,
+                    trace_id=ctx.trace_id,
+                    step_id=ctx.step_id,
+                    intent_size=len(concept.intent),
+                    extent_size=len(concept.extent),
+                )
+            return result
 
         except Exception as e:
             return AEResult(
