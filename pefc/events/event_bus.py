@@ -120,6 +120,52 @@ class EventBus:
         except Exception as e:
             self.logger.error(f"Error publishing event: {e}")
 
+    def publish_nowait(self, event: Union[Event, Dict[str, Any]]):
+        """Synchronous variant of publish that never awaits.
+
+        Useful from synchronous code paths (e.g., orchestrator steps) to enqueue
+        events without requiring an event loop context. Mirrors the logic of
+        publish() including backpressure handling and sequence assignment.
+        """
+        try:
+            # Convert to Event if needed
+            if isinstance(event, dict):
+                event = Event.from_dict(event)
+
+            # Set sequence number
+            event.seq = self.seq_counter
+            self.seq_counter += 1
+
+            # Try to put in queue
+            try:
+                self.queue.put_nowait(event)
+                self.stats["published"] += 1
+            except asyncio.QueueFull:
+                # Handle backpressure
+                if self.config.drop_oldest:
+                    # Remove oldest event
+                    try:
+                        self.queue.get_nowait()
+                        self.queue.put_nowait(event)
+                        self.stats["dropped"] += 1
+                        self.stats["published"] += 1
+                        self.logger.warning(
+                            f"Event dropped due to full buffer: {event.type}"
+                        )
+                    except asyncio.QueueEmpty:
+                        # Queue became empty, try again
+                        self.queue.put_nowait(event)
+                        self.stats["published"] += 1
+                else:
+                    # Drop new event
+                    self.stats["dropped"] += 1
+                    self.logger.warning(
+                        f"Event dropped due to full buffer: {event.type}"
+                    )
+
+        except Exception as e:
+            self.logger.error(f"Error publishing event (nowait): {e}")
+
     def subscribe(self, callback: Callable[[Event], None]):
         """Subscribe to events with a callback."""
         self.subscribers.append(callback)
@@ -248,6 +294,12 @@ async def publish_event(event: Union[Event, Dict[str, Any]]):
     """Publish an event to the global event bus."""
     bus = get_global_event_bus()
     await bus.publish(event)
+
+
+def publish_event_nowait(event: Union[Event, Dict[str, Any]]):
+    """Synchronous helper to publish to the global event bus without awaiting."""
+    bus = get_global_event_bus()
+    bus.publish_nowait(event)
 
 
 async def start_global_event_bus(config: Optional[EventBusConfig] = None):

@@ -73,21 +73,27 @@ class FileJSONLSink(EventSink):
         """Close file when sink is destroyed."""
         if self.current_file:
             self.current_file.close()
+            self.current_file = None
 
     def write(self, event_dict: Dict[str, Any]) -> None:
-        """Write event to file."""
+        """Write event to file (append & close to avoid Windows file locks)."""
         try:
-            # Check if we need to rotate
-            if self._should_rotate():
-                self._rotate_file()
+            # Rotate based on on-disk size
+            if self.rotate_mb and self.file_path.exists():
+                try:
+                    if self.file_path.stat().st_size > (self.rotate_mb * 1024 * 1024):
+                        self._rotate_file()
+                except Exception:
+                    pass
 
-            # Open file if needed
-            if self.current_file is None:
-                self._open_file()
-
-            # Write event
             json_line = json.dumps(event_dict, separators=(",", ":"))
-            self.current_file.write(json_line + "\n")
+            if self.gzip_compress:
+                with gzip.open(self.file_path, "at", encoding="utf-8") as f:
+                    f.write(json_line + "\n")
+            else:
+                with open(self.file_path, "a", encoding="utf-8") as f:
+                    f.write(json_line + "\n")
+
             self.written_count += 1
 
         except Exception as e:
@@ -97,15 +103,21 @@ class FileJSONLSink(EventSink):
         """Flush file buffer."""
         if self.current_file:
             self.current_file.flush()
+            # On Windows, ensure buffers are flushed to disk promptly
+            if hasattr(self.current_file, "flush"):
+                try:
+                    self.current_file.flush()
+                except Exception:
+                    pass
 
     def _should_rotate(self) -> bool:
-        """Check if file should be rotated."""
-        if not self.rotate_mb or not self.current_file:
+        """Check if file should be rotated (not used with append strategy)."""
+        if not self.rotate_mb or not self.file_path.exists():
             return False
-
-        # Check file size
-        current_size = self.current_file.tell()
-        return current_size > (self.rotate_mb * 1024 * 1024)
+        try:
+            return self.file_path.stat().st_size > (self.rotate_mb * 1024 * 1024)
+        except Exception:
+            return False
 
     def _rotate_file(self) -> None:
         """Rotate the current file."""
@@ -124,11 +136,8 @@ class FileJSONLSink(EventSink):
             self.rotation_count += 1
 
     def _open_file(self) -> None:
-        """Open the current file for writing."""
-        if self.gzip_compress:
-            self.current_file = gzip.open(self.file_path, "wt", encoding="utf-8")
-        else:
-            self.current_file = open(self.file_path, "w", encoding="utf-8")
+        """No persistent handle needed (kept for API compatibility)."""
+        self.current_file = None
 
     def close(self):
         """Close the file."""
@@ -209,19 +218,20 @@ class RotatingFileSink(EventSink):
         self.base_path.parent.mkdir(parents=True, exist_ok=True)
 
     def write(self, event_dict: Dict[str, Any]) -> None:
-        """Write event to rotating file."""
+        """Write event to rotating file (append & close)."""
         try:
-            # Check if we need to rotate
+            # Check if we need to rotate (based on on-disk size & age)
             if self._should_rotate():
                 self._rotate_file()
 
-            # Open file if needed
-            if self.current_file is None:
-                self._open_file()
-
             # Write event
             json_line = json.dumps(event_dict, separators=(",", ":"))
-            self.current_file.write(json_line + "\n")
+            if self.gzip_compress:
+                with gzip.open(self.base_path, "at", encoding="utf-8") as f:
+                    f.write(json_line + "\n")
+            else:
+                with open(self.base_path, "a", encoding="utf-8") as f:
+                    f.write(json_line + "\n")
             self.written_count += 1
 
         except Exception as e:
@@ -231,16 +241,16 @@ class RotatingFileSink(EventSink):
 
     def flush(self) -> None:
         """Flush file buffer."""
-        if self.current_file:
-            self.current_file.flush()
+        # No persistent handle, nothing to flush beyond OS cache
 
     def _should_rotate(self) -> bool:
         """Check if file should be rotated."""
-        if not self.current_file:
-            return False
-
-        # Check file size
-        current_size = self.current_file.tell()
+        try:
+            current_size = (
+                self.base_path.stat().st_size if self.base_path.exists() else 0
+            )
+        except Exception:
+            current_size = 0
         size_limit = self.max_size_mb * 1024 * 1024
 
         # Check age
@@ -250,9 +260,7 @@ class RotatingFileSink(EventSink):
 
     def _rotate_file(self) -> None:
         """Rotate the current file."""
-        if self.current_file:
-            self.current_file.close()
-            self.current_file = None
+        # No persistent handle to close
 
         # Rename current file if it exists
         if self.base_path.exists():
@@ -266,11 +274,8 @@ class RotatingFileSink(EventSink):
             self.start_time = time.time()
 
     def _open_file(self) -> None:
-        """Open the current file for writing."""
-        if self.gzip_compress:
-            self.current_file = gzip.open(self.base_path, "wt", encoding="utf-8")
-        else:
-            self.current_file = open(self.base_path, "w", encoding="utf-8")
+        """No persistent handle needed (compatibility)."""
+        self.current_file = None
 
     def get_stats(self) -> Dict[str, Any]:
         """Get sink statistics."""

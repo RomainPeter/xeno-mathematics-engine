@@ -25,9 +25,8 @@ class PCAPSchema:
     signer: Optional[str] = None
     signature: Optional[str] = None
 
-    def calculate_hash(self) -> str:
-        """Calculate SHA256 hash of the PCAP."""
-        # Create canonical JSON representation
+    def compute_hash(self) -> str:
+        """Compute SHA256 hash of the PCAP content without mutating state."""
         data = {
             "action": self.action,
             "context_hash": self.context_hash,
@@ -36,12 +35,12 @@ class PCAPSchema:
             "justification": self.justification,
             "created_ts": self.created_ts,
         }
-
-        # Convert to canonical JSON
         json_str = json.dumps(data, sort_keys=True, separators=(",", ":"))
+        return hashlib.sha256(json_str.encode()).hexdigest()
 
-        # Calculate hash
-        self.sha256 = hashlib.sha256(json_str.encode()).hexdigest()
+    def calculate_hash(self) -> str:
+        """Compute and set the SHA256 hash; returns the hash."""
+        self.sha256 = self.compute_hash()
         return self.sha256
 
     def to_dict(self) -> Dict[str, Any]:
@@ -85,13 +84,11 @@ class PCAPSchema:
         return cls.from_dict(data)
 
     def verify_integrity(self) -> bool:
-        """Verify the integrity of the PCAP."""
+        """Verify the integrity of the PCAP without mutating stored hash."""
         if not self.sha256:
             return False
-
-        # Recalculate hash
-        calculated_hash = self.calculate_hash()
-        return calculated_hash == self.sha256
+        expected = self.compute_hash()
+        return expected == self.sha256
 
     def add_obligation(self, obligation: str):
         """Add an obligation to the PCAP."""

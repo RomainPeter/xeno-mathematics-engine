@@ -46,39 +46,36 @@ class AuditManifest:
         self.files.append(file_info)
         self.total_bytes += bytes_count
 
-    def calculate_merkle_root(self) -> str:
-        """Calculate the Merkle root hash."""
+    def _compute_merkle_root(self) -> str:
+        """Compute the Merkle root from current file list without mutating state."""
         if not self.files:
             return ""
 
-        # Sort files by path for deterministic ordering
         sorted_files = sorted(self.files, key=lambda f: f.path)
+        file_hashes: List[str] = [
+            hashlib.sha256(file_info.sha256.encode()).hexdigest()
+            for file_info in sorted_files
+        ]
 
-        # Calculate hash for each file
-        file_hashes = []
-        for file_info in sorted_files:
-            file_hash = hashlib.sha256(file_info.sha256.encode()).hexdigest()
-            file_hashes.append(file_hash)
-
-        # Calculate Merkle root
         if len(file_hashes) == 1:
             return file_hashes[0]
 
-        # Build Merkle tree
         current_level = file_hashes
         while len(current_level) > 1:
-            next_level = []
+            next_level: List[str] = []
             for i in range(0, len(current_level), 2):
                 if i + 1 < len(current_level):
-                    # Combine two hashes
                     combined = current_level[i] + current_level[i + 1]
                     next_level.append(hashlib.sha256(combined.encode()).hexdigest())
                 else:
-                    # Odd number of hashes, use the last one
                     next_level.append(current_level[i])
             current_level = next_level
 
-        self.merkle_root = current_level[0]
+        return current_level[0]
+
+    def calculate_merkle_root(self) -> str:
+        """Calculate and set the Merkle root hash."""
+        self.merkle_root = self._compute_merkle_root()
         return self.merkle_root
 
     def to_dict(self) -> Dict[str, Any]:
@@ -131,8 +128,8 @@ class AuditManifest:
         if not self.files:
             return True
 
-        # Recalculate Merkle root
-        calculated_root = self.calculate_merkle_root()
+        # Recompute Merkle root without mutating stored root
+        calculated_root = self._compute_merkle_root()
         return calculated_root == self.merkle_root
 
     def get_file_info(self, file_path: str) -> Optional[FileInfo]:
@@ -157,7 +154,7 @@ class MerkleTree:
     def __init__(self, data: List[str]):
         self.data = data
         self.tree = self._build_tree()
-        self.root = self.tree[0] if self.tree else ""
+        self.root = self.tree[-1] if self.tree else ""
 
     def _build_tree(self) -> List[str]:
         """Build the Merkle tree."""
@@ -225,13 +222,10 @@ class MerkleTree:
         proof_index = 0
 
         while level_size > 1:
-            # Get sibling hash
-            if current_index % 2 == 0:
-                sibling_hash = proof[proof_index] if proof_index < len(proof) else ""
-            else:
-                sibling_hash = proof[proof_index] if proof_index < len(proof) else ""
+            # Get sibling hash (empty if not provided)
+            sibling_hash = proof[proof_index] if proof_index < len(proof) else ""
 
-            # Combine hashes
+            # Combine hashes respecting left/right position
             if current_index % 2 == 0:
                 combined = current_hash + sibling_hash
             else:
