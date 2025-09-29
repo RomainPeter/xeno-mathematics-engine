@@ -23,6 +23,11 @@ def main():
     parser.add_argument("--max-iters", type=int, default=3)
     parser.add_argument("--hermetic", action="store_true")
     parser.add_argument(
+        "--no-network",
+        action="store_true",
+        help="Fail if outbound network is available",
+    )
+    parser.add_argument(
         "--kpi-threshold",
         type=float,
         default=0.6,
@@ -33,6 +38,12 @@ def main():
     args = parser.parse_args()
 
     run_id = f"r-{uuid.uuid4().hex[:8]}"
+    # Deterministic env knobs
+    import os
+
+    os.environ.setdefault("TZ", "UTC")
+    os.environ.setdefault("PYTHONHASHSEED", str(args.seed))
+    os.environ.setdefault("SOURCE_DATE_EPOCH", "1700000000")
     audit_dir = Path(args.audit_dir) / run_id
     audit_dir.mkdir(parents=True, exist_ok=True)
 
@@ -89,6 +100,18 @@ def main():
         print("[WARN] KPI threshold not met.")
     print(f"Run artifacts in: {audit_dir}")
     print(f"LLM cache path (reserved): {args.llm_cache}")
+
+    # Optional network egress guard: attempt a DNS resolve/ping to detect network; must fail if --no-network
+    if args.no_network:
+        try:
+            import socket
+
+            socket.gethostbyname("example.com")
+            print("[ERROR] Network egress detected while --no-network is set.")
+            raise SystemExit(2)
+        except Exception:
+            # Expected: no network
+            print("[OK] No network egress.")
 
 
 if __name__ == "__main__":

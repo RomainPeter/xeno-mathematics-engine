@@ -384,7 +384,9 @@ libcst==1.8.5 \
     --hash=sha256:f8934763389cd21ce3ed229b63b994b79dac8be7e84a9da144823f46bc1ffc5c \
     --hash=sha256:fd74c543770e6a61dcb8846c9689dfcce2ad686658896f77f3e21b6ce94bcb2e \
     --hash=sha256:ff9c535cfe99f0be79ac3024772b288570751fc69fc472b44fca12d1912d1561
-    # via -r requirements.in
+    # via
+    #   jsonschema
+    #   referencing
 mando==0.7.1 \
     --hash=sha256:18baa999b4b613faefb00eac4efadcf14f510b59b924b66e08289aa1de8c3500 \
     --hash=sha256:26ef1d70928b6057ee3ca12583d73c63e05c49de8972d620c278a7b206581a8a
