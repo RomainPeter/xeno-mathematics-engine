@@ -8,7 +8,6 @@ from pathlib import Path
 import json
 import hashlib
 import subprocess
-import shlex
 import fastjsonschema
 
 
@@ -87,12 +86,13 @@ def verify_zip(
     # Verify signature if provided
     if sig_path and sig_path.exists():
         try:
-            cmd = f"cosign verify-blob --signature {shlex.quote(str(sig_path))}"
+            # Secure subprocess without shell=True
+            cmd = ["cosign", "verify-blob", "--signature", str(sig_path)]
             if key_ref:
-                cmd += f" --key {shlex.quote(key_ref)}"
-            cmd += f" {shlex.quote(str(zip_path))}"
+                cmd.extend(["--key", key_ref])
+            cmd.append(str(zip_path))
 
-            subprocess.run(cmd, shell=True, check=True, capture_output=True)
+            subprocess.run(cmd, check=True, capture_output=True, text=True)
             report["checks"]["signature"] = True
         except Exception as e:
             report["checks"]["signature"] = False

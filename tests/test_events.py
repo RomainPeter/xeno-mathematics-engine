@@ -27,6 +27,7 @@ from pefc.events import (
     create_event,
     create_orchestrator_start_event,
     create_incident_event,
+    replay_journal,
 )
 
 
@@ -102,9 +103,10 @@ class TestEventBus:
     @pytest.mark.asyncio
     async def test_backpressure_handling(self, event_bus):
         """Test backpressure handling with small buffer."""
-        # Use very small buffer
-        event_bus.queue = asyncio.Queue(maxsize=5)
-        await event_bus.start()
+        # Recreate bus with small deque buffer and publish before starting drain
+        small_bus = EventBus(
+            EventBusConfig(buffer_size=5, sinks=["memory"], drop_oldest=True)
+        )
 
         # Publish more events than buffer can hold
         events = []
@@ -115,17 +117,62 @@ class TestEventBus:
             events.append(event)
 
         # Publish all events
-        await asyncio.gather(*[event_bus.publish(event) for event in events])
+        await asyncio.gather(*[small_bus.publish(event) for event in events])
+
+        # Now start the bus to drain what remains
+        await small_bus.start()
 
         # Wait for processing
         await asyncio.sleep(0.5)
 
         # Check stats
-        stats = event_bus.get_stats()
+        stats = small_bus.get_stats()
         assert stats["published"] >= 20
-        assert stats["dropped"] >= 0  # Some events may be dropped
+        assert stats["dropped"] >= 1  # Drop-oldest should trigger
 
-        await event_bus.stop()
+        await small_bus.stop()
+
+    @pytest.mark.asyncio
+    async def test_replay_journal_file(self):
+        """Write events to a JSONL file and replay them with replay_journal."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            events_file = Path(temp_dir) / "events.jsonl"
+            bus = EventBus(
+                EventBusConfig(
+                    buffer_size=32, sinks=["file"], file_path=str(events_file)
+                )
+            )
+
+            await bus.start()
+            e1 = create_orchestrator_start_event(
+                run_id="r", trace_id="t", payload={"x": 1}
+            )
+            e2 = create_incident_event(
+                run_id="r",
+                trace_id="t",
+                step_id="s",
+                code="err",
+                message="m",
+                detail={},
+            )
+            await bus.publish(e1)
+            await bus.publish(e2)
+            await asyncio.sleep(0.2)
+            await bus.flush()
+            await bus.stop()
+
+            assert events_file.exists()
+
+            seen = []
+
+            def cb(ev):
+                seen.append(ev.type)
+
+            n = replay_journal(events_file, cb)
+            assert n >= 2
+            assert "Orchestrator.Start" in seen or "Orchestrator.Start" in [
+                getattr(t, "value", t) for t in seen
+            ]
 
     @pytest.mark.asyncio
     async def test_subscriber_callback(self, event_bus):

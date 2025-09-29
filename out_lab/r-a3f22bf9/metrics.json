@@ -1,0 +1,22 @@
+{
+  "ae": {
+    "concepts_visited": 1,
+    "closure_calls": 0,
+    "avg_step_ms": 0.18100000000000002,
+    "steps": 1
+  },
+  "cegis": {
+    "proposals": 1,
+    "accepts": 1,
+    "patch_accept_rate": 1.0,
+    "ce_found_count": 0,
+    "verify_calls": 1,
+    "verify_total_ms": 0.0,
+    "mean_verify_ms": 0.0,
+    "retries": 0
+  },
+  "global": {
+    "incidents_count": {},
+    "pcap_count": 0
+  }
+}

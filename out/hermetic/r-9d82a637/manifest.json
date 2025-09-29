@@ -1,0 +1,126 @@
+{
+  "version": "1",
+  "run_id": "r-9d82a637",
+  "created_ts": 1759149826,
+  "files": [
+    {
+      "path": "incidents.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime": 1759149826.9502604,
+      "role": "incidents",
+      "created_at": 1759149826,
+      "source_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "logs.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime": 1759149826.9302075,
+      "role": "logs",
+      "created_at": 1759149826,
+      "source_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "provenance.json",
+      "sha256": "8b6a8b9076cd21703b1c3909382fe31b99eb29b4dd9743172d85fe901562ef42",
+      "bytes": 1130,
+      "mtime": 1759149826.9302075,
+      "role": "provenance",
+      "created_at": 1759149826,
+      "source_hash": "8b6a8b9076cd21703b1c3909382fe31b99eb29b4dd9743172d85fe901562ef42"
+    },
+    {
+      "path": "inputs/README-usage.md",
+      "sha256": "2422fdddcf19ff65c720afc257ef3f3c2b54890197c8f973d29affc1e62848de",
+      "bytes": 1339,
+      "mtime": 1700000000.0,
+      "role": "input",
+      "created_at": 1700000000,
+      "source_hash": "2422fdddcf19ff65c720afc257ef3f3c2b54890197c8f973d29affc1e62848de"
+    },
+    {
+      "path": "inputs/README.md",
+      "sha256": "5776fab2ecb0e62492bd007de79f0732808ce4ca735432a89c177c7890f45bca",
+      "bytes": 5448,
+      "mtime": 1700000000.0,
+      "role": "input",
+      "created_at": 1700000000,
+      "source_hash": "5776fab2ecb0e62492bd007de79f0732808ce4ca735432a89c177c7890f45bca"
+    },
+    {
+      "path": "inputs/README_DEMO.md",
+      "sha256": "e1e1faffb4a902a44dd94c2af70ebe1b22239d07ea492c71e08fc31b1c4a8f75",
+      "bytes": 1767,
+      "mtime": 1700000000.0,
+      "role": "input",
+      "created_at": 1700000000,
+      "source_hash": "e1e1faffb4a902a44dd94c2af70ebe1b22239d07ea492c71e08fc31b1c4a8f75"
+    },
+    {
+      "path": "inputs/README_DOMAIN.md",
+      "sha256": "d11a0a861586e9f5f4680d4f7fdab0503a117f031c83a35c6eb30e14a0294728",
+      "bytes": 9559,
+      "mtime": 1700000000.0,
+      "role": "input",
+      "created_at": 1700000000,
+      "source_hash": "d11a0a861586e9f5f4680d4f7fdab0503a117f031c83a35c6eb30e14a0294728"
+    },
+    {
+      "path": "inputs/README_FCA.md",
+      "sha256": "e26785eba7e8933fc5018678f4d9c9888e7a62ac26dcf1b69198c4ae64b9be5b",
+      "bytes": 11537,
+      "mtime": 1700000000.0,
+      "role": "input",
+      "created_at": 1700000000,
+      "source_hash": "e26785eba7e8933fc5018678f4d9c9888e7a62ac26dcf1b69198c4ae64b9be5b"
+    },
+    {
+      "path": "inputs/README_ORCHESTRATOR.md",
+      "sha256": "fd6157e735204707a3877ce2f442af62676b355449503f15cbe99f5400dd21a8",
+      "bytes": 7892,
+      "mtime": 1700000000.0,
+      "role": "input",
+      "created_at": 1700000000,
+      "source_hash": "fd6157e735204707a3877ce2f442af62676b355449503f15cbe99f5400dd21a8"
+    },
+    {
+      "path": "inputs/README_ORCHESTRATOR_V1.md",
+      "sha256": "e02ddb29b051d5b2479540e1962f567e245f3f39ab20382264b486a42053def3",
+      "bytes": 18325,
+      "mtime": 1700000000.0,
+      "role": "input",
+      "created_at": 1700000000,
+      "source_hash": "e02ddb29b051d5b2479540e1962f567e245f3f39ab20382264b486a42053def3"
+    },
+    {
+      "path": "inputs/README_PACK.md",
+      "sha256": "fe24632b16bdcf878f8ad54837b75e1550d2eba2b1572bbca5ea157cc08a22da",
+      "bytes": 2039,
+      "mtime": 1700000000.0,
+      "role": "input",
+      "created_at": 1700000000,
+      "source_hash": "fe24632b16bdcf878f8ad54837b75e1550d2eba2b1572bbca5ea157cc08a22da"
+    },
+    {
+      "path": "inputs/fixtures/fca/context_4x4.json",
+      "sha256": "892866585c0f2f2bdd83d25fa49ab5a522a1c8c36d9447bccfc48e985f0f46fd",
+      "bytes": 261,
+      "mtime": 1700000000.0,
+      "role": "input",
+      "created_at": 1700000000,
+      "source_hash": "892866585c0f2f2bdd83d25fa49ab5a522a1c8c36d9447bccfc48e985f0f46fd"
+    },
+    {
+      "path": "inputs/fixtures/fca/context_5x3.json",
+      "sha256": "9eb7c39e1fe5cd52840b2eb5ab6541459b84f7e7cb0ae9cdd84635731cec57c6",
+      "bytes": 243,
+      "mtime": 1700000000.0,
+      "role": "input",
+      "created_at": 1700000000,
+      "source_hash": "9eb7c39e1fe5cd52840b2eb5ab6541459b84f7e7cb0ae9cdd84635731cec57c6"
+    }
+  ],
+  "merkle_root": "33373ac4be6f6cced93223b60c6790a8f2db3c9bcef61130acb19527b72b22a1",
+  "total_bytes": 59540
+}

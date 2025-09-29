@@ -1,13 +1,16 @@
 """
-Event bus implementation with asyncio.Queue and non-blocking publish.
+Event bus implementation with deque buffer and non-blocking publish.
 Provides EventBus with backpressure handling and structured telemetry.
 """
 
 import asyncio
+from collections import deque
 import logging
 from typing import Dict, Any, List, Optional, Callable, Union
 from dataclasses import dataclass, field
 import time
+import json
+from pathlib import Path
 
 from .types import Event
 from .sinks import EventSink, StdoutJSONLSink, FileJSONLSink, MemorySink
@@ -26,11 +29,15 @@ class EventBusConfig:
 
 
 class EventBus:
-    """Event bus with asyncio.Queue and non-blocking publish."""
+    """Event bus with deque buffer and non-blocking publish."""
 
     def __init__(self, config: Optional[EventBusConfig] = None):
         self.config = config or EventBusConfig()
-        self.queue: asyncio.Queue = asyncio.Queue(maxsize=self.config.buffer_size)
+        # Deque-based in-memory buffer for backpressure-friendly non-blocking enqueue
+        self.buffer: deque = deque(maxlen=self.config.buffer_size)
+        self._buffer_lock: asyncio.Lock = asyncio.Lock()
+        # Wake event to notify the drain loop of new data
+        self._wake_event: asyncio.Event = asyncio.Event()
         self.sinks: List[EventSink] = []
         self.subscribers: List[Callable] = []
         self.drain_task: Optional[asyncio.Task] = None
@@ -82,40 +89,36 @@ class EventBus:
     async def publish(self, event: Union[Event, Dict[str, Any]]):
         """Publish an event non-blocking."""
         try:
-            # Convert to Event if needed
             if isinstance(event, dict):
                 event = Event.from_dict(event)
 
-            # Set sequence number
             event.seq = self.seq_counter
             self.seq_counter += 1
 
-            # Try to put in queue
-            try:
-                self.queue.put_nowait(event)
-                self.stats["published"] += 1
-            except asyncio.QueueFull:
-                # Handle backpressure
-                if self.config.drop_oldest:
-                    # Remove oldest event
-                    try:
-                        self.queue.get_nowait()
-                        self.queue.put_nowait(event)
-                        self.stats["dropped"] += 1
+            async with self._buffer_lock:
+                if len(self.buffer) >= self.config.buffer_size:
+                    if self.config.drop_oldest:
+                        # deque with maxlen would auto-drop; we account explicitly
+                        if len(self.buffer) > 0:
+                            self.buffer.popleft()
+                            self.stats["dropped"] += 1
+                            self.logger.warning(
+                                f"Event dropped due to full buffer: {event.type}"
+                            )
+                        self.buffer.append(event)
                         self.stats["published"] += 1
+                    else:
+                        # do not enqueue
+                        self.stats["dropped"] += 1
                         self.logger.warning(
                             f"Event dropped due to full buffer: {event.type}"
                         )
-                    except asyncio.QueueEmpty:
-                        # Queue became empty, try again
-                        self.queue.put_nowait(event)
-                        self.stats["published"] += 1
                 else:
-                    # Drop new event
-                    self.stats["dropped"] += 1
-                    self.logger.warning(
-                        f"Event dropped due to full buffer: {event.type}"
-                    )
+                    self.buffer.append(event)
+                    self.stats["published"] += 1
+
+            # Signal the drain loop
+            self._wake_event.set()
 
         except Exception as e:
             self.logger.error(f"Error publishing event: {e}")
@@ -128,41 +131,44 @@ class EventBus:
         publish() including backpressure handling and sequence assignment.
         """
         try:
-            # Convert to Event if needed
             if isinstance(event, dict):
                 event = Event.from_dict(event)
 
-            # Set sequence number
             event.seq = self.seq_counter
             self.seq_counter += 1
 
-            # Try to put in queue
-            try:
-                self.queue.put_nowait(event)
-                self.stats["published"] += 1
-            except asyncio.QueueFull:
-                # Handle backpressure
+            # Use try/except around lock acquisition in sync context
+            lock = self._buffer_lock
+            # Best-effort if loop not running; use blocking call via loop if needed
+            if lock.locked():
+                # If locked, we still want to try append later; minimal contention path
+                pass
+            # Acquire lock synchronously via loop
+            loop = asyncio.get_event_loop() if asyncio.get_event_loop_policy() else None
+            if loop and loop.is_running():
+                # Schedule a synchronous critical section by running a no-op awaitable
+                # and then performing append under lock using call_soon_threadsafe-like pattern
+                # Simpler approach: try non-atomic check/append with small race acceptance
+                pass
+            # Fallback: try to append with minimal race (acceptable for nowait semantics)
+            if len(self.buffer) >= self.config.buffer_size:
                 if self.config.drop_oldest:
-                    # Remove oldest event
-                    try:
-                        self.queue.get_nowait()
-                        self.queue.put_nowait(event)
-                        self.stats["dropped"] += 1
-                        self.stats["published"] += 1
-                        self.logger.warning(
-                            f"Event dropped due to full buffer: {event.type}"
-                        )
-                    except asyncio.QueueEmpty:
-                        # Queue became empty, try again
-                        self.queue.put_nowait(event)
-                        self.stats["published"] += 1
+                    if len(self.buffer) > 0:
+                        try:
+                            # Best-effort pop left
+                            self.buffer.popleft()
+                            self.stats["dropped"] += 1
+                        except Exception:
+                            pass
+                    self.buffer.append(event)
+                    self.stats["published"] += 1
                 else:
-                    # Drop new event
                     self.stats["dropped"] += 1
-                    self.logger.warning(
-                        f"Event dropped due to full buffer: {event.type}"
-                    )
+            else:
+                self.buffer.append(event)
+                self.stats["published"] += 1
 
+            self._wake_event.set()
         except Exception as e:
             self.logger.error(f"Error publishing event (nowait): {e}")
 
@@ -176,8 +182,11 @@ class EventBus:
         """Flush all pending events."""
         start_time = time.time()
 
-        # Wait for queue to be empty or timeout
-        while not self.queue.empty() and (time.time() - start_time) < timeout:
+        # Wait for buffer to be empty or timeout
+        while (time.time() - start_time) < timeout:
+            async with self._buffer_lock:
+                if len(self.buffer) == 0:
+                    break
             await asyncio.sleep(0.01)
 
         # Flush all sinks
@@ -191,25 +200,33 @@ class EventBus:
         """Get event bus statistics."""
         return {
             **self.stats,
-            "queue_size": self.queue.qsize(),
+            "queue_size": len(self.buffer),
             "sinks": len(self.sinks),
         }
 
     async def _drain_loop(self):
-        """Main drain loop that processes events from queue."""
+        """Main drain loop that processes events from the deque buffer."""
         while True:
             try:
-                # Get event from queue with timeout
-                event = await asyncio.wait_for(
-                    self.queue.get(), timeout=self.config.drain_interval
-                )
+                # Wait for wake signal or periodic tick
+                try:
+                    await asyncio.wait_for(
+                        self._wake_event.wait(), timeout=self.config.drain_interval
+                    )
+                except asyncio.TimeoutError:
+                    pass
 
-                # Process event
-                await self._process_event(event)
+                # Drain as many events as available
+                while True:
+                    async with self._buffer_lock:
+                        if len(self.buffer) == 0:
+                            # Clear wake when empty
+                            self._wake_event.clear()
+                            break
+                        event = self.buffer.popleft()
 
-            except asyncio.TimeoutError:
-                # No events in queue, continue
-                continue
+                    await self._process_event(event)
+
             except Exception as e:
                 self.logger.error(f"Error in drain loop: {e}")
                 await asyncio.sleep(0.1)
@@ -314,3 +331,28 @@ async def stop_global_event_bus():
     """Stop the global event bus."""
     bus = get_global_event_bus()
     await bus.stop()
+
+
+def replay_journal(path: Union[str, Path], callback: Callable[[Event], None]) -> int:
+    """Replay a JSONL journal file, invoking callback per Event.
+
+    Returns the number of events replayed.
+    """
+    count = 0
+    p = Path(path)
+    if not p.exists():
+        raise FileNotFoundError(str(p))
+    with p.open("r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                data = json.loads(line)
+                ev = Event.from_dict(data)
+                callback(ev)
+                count += 1
+            except Exception:
+                # Skip malformed lines but continue replay
+                continue
+    return count

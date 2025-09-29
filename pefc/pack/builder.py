@@ -12,7 +12,10 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-from pefc.events.manifest import create_audit_manifest
+from pefc.events.manifest import (
+    create_audit_manifest,
+    build_merkle_dataset_from_manifest,
+)
 
 
 @dataclass
@@ -123,12 +126,47 @@ def build_pack(
     for src, dst in pairs:
         _normalize_copy(src, dst, sde)
 
-    # Provenance
+    # Provenance (SLSA-lite / in-toto minimal)
+    lock_path = workspace / "requirements.lock"
+    lock_hash = None
+    if lock_path.exists():
+        import hashlib
+
+        h = hashlib.sha256()
+        h.update(lock_path.read_bytes())
+        lock_hash = h.hexdigest()
+
+    inputs_rel = [str(p[1].relative_to(run_dir)).replace("\\", "/") for p in pairs]
     provenance = {
-        "seed": seed,
-        "source_date_epoch": sde,
-        "workspace": str(workspace),
-        "inputs": [str(p[1].relative_to(run_dir)) for p in pairs],
+        "_format": "in-toto-statement-lite",
+        "subject": {
+            "name": run_id,
+            "merkle_root": None,  # filled after manifest
+        },
+        "predicateType": "slsa-lite@v1",
+        "predicate": {
+            "builder": {
+                "name": "pefc.pack",
+            },
+            "invocation": {
+                "env": {
+                    "SOURCE_DATE_EPOCH": sde,
+                    "PYTHONHASHSEED": os.environ.get("PYTHONHASHSEED"),
+                    "TZ": os.environ.get("TZ"),
+                },
+                "parameters": {
+                    "seed": seed,
+                    "allow_outside_workspace": cfg.allow_outside_workspace,
+                },
+            },
+            "materials": {
+                "requirements_lock": {
+                    "path": str(lock_path) if lock_path.exists() else None,
+                    "sha256": lock_hash,
+                }
+            },
+            "inputs": inputs_rel,
+        },
     }
     (run_dir / "provenance.json").write_text(json.dumps(provenance, indent=2))
 
@@ -141,8 +179,21 @@ def build_pack(
     # Manifest + Merkle (over whole run_dir)
     manifest = create_audit_manifest(run_id=run_id, audit_dir=str(run_dir))
     (run_dir / "manifest.json").write_text(json.dumps(manifest.to_dict(), indent=2))
-    (run_dir / "merkle.json").write_text(
-        json.dumps({"merkle_root": manifest.merkle_root}, indent=2)
-    )
+    # Back-fill provenance subject merkle root
+    prov_obj = json.loads((run_dir / "provenance.json").read_text())
+    prov_obj["subject"]["merkle_root"] = manifest.merkle_root
+    (run_dir / "provenance.json").write_text(json.dumps(prov_obj, indent=2))
+    # Build full merkle dataset (order, leaves, proofs)
+    merkle_ds = build_merkle_dataset_from_manifest(manifest)
+    (run_dir / "merkle.json").write_text(json.dumps(merkle_ds, indent=2))
+
+    # Deterministic placeholder verdict (can be produced by orchestrator in real runs)
+    verdict = {
+        "run_id": run_id,
+        "status": "unknown",
+        "merkle_root": manifest.merkle_root,
+        "inputs_count": len(inputs_rel),
+    }
+    (run_dir / "verdict.json").write_text(json.dumps(verdict, indent=2))
 
     return {"run_dir": str(run_dir), "merkle_root": manifest.merkle_root}

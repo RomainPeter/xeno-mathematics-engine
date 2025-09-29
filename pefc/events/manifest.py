@@ -13,12 +13,19 @@ import time
 
 @dataclass
 class FileInfo:
-    """Information about a file in the audit manifest."""
+    """Information about a file in the audit manifest.
+
+    Extended with role, created_at and source_hash to enrich provenance and
+    enable stronger verification semantics.
+    """
 
     path: str
     sha256: str
     bytes: int
     mtime: Optional[float] = None
+    role: Optional[str] = None
+    created_at: Optional[int] = None
+    source_hash: Optional[str] = None
 
 
 @dataclass
@@ -38,10 +45,20 @@ class AuditManifest:
         sha256: str,
         bytes_count: int,
         mtime: Optional[float] = None,
+        *,
+        role: Optional[str] = None,
+        created_at: Optional[int] = None,
+        source_hash: Optional[str] = None,
     ):
         """Add a file to the manifest."""
         file_info = FileInfo(
-            path=file_path, sha256=sha256, bytes=bytes_count, mtime=mtime
+            path=file_path,
+            sha256=sha256,
+            bytes=bytes_count,
+            mtime=mtime,
+            role=role,
+            created_at=created_at,
+            source_hash=source_hash,
         )
         self.files.append(file_info)
         self.total_bytes += bytes_count
@@ -85,7 +102,15 @@ class AuditManifest:
             "run_id": self.run_id,
             "created_ts": self.created_ts,
             "files": [
-                {"path": f.path, "sha256": f.sha256, "bytes": f.bytes, "mtime": f.mtime}
+                {
+                    "path": f.path,
+                    "sha256": f.sha256,
+                    "bytes": f.bytes,
+                    "mtime": f.mtime,
+                    "role": f.role,
+                    "created_at": f.created_at,
+                    "source_hash": f.source_hash,
+                }
                 for f in self.files
             ],
             "merkle_root": self.merkle_root,
@@ -113,6 +138,9 @@ class AuditManifest:
                 sha256=file_data["sha256"],
                 bytes_count=file_data["bytes"],
                 mtime=file_data.get("mtime"),
+                role=file_data.get("role"),
+                created_at=file_data.get("created_at"),
+                source_hash=file_data.get("source_hash"),
             )
 
         return manifest
@@ -327,11 +355,20 @@ def create_audit_manifest(
 
             # Get relative path from audit_dir
             rel_path = file_path.relative_to(audit_path)
+            rel_str = str(rel_path).replace("\\", "/")
+            # Derive a simple role from path
+            role = _infer_role_from_path(rel_str)
+            created_at = int(file_mtime) if file_mtime else None
+            # When building from normalized inputs, source_hash may equal sha256
+            source_hash = file_hash
             manifest.add_file(
-                file_path=str(rel_path),
+                file_path=rel_str,
                 sha256=file_hash,
                 bytes_count=file_size,
                 mtime=file_mtime,
+                role=role,
+                created_at=created_at,
+                source_hash=source_hash,
             )
         except Exception as e:
             print(f"Error processing file {file_path}: {e}")
@@ -340,3 +377,51 @@ def create_audit_manifest(
     manifest.calculate_merkle_root()
 
     return manifest
+
+
+def _infer_role_from_path(rel_path: str) -> str:
+    """Infer a coarse role label from the relative path under the run directory."""
+    if rel_path == "journal.jsonl":
+        return "journal"
+    if rel_path == "incidents.jsonl":
+        return "incidents"
+    if rel_path == "metrics.json":
+        return "metrics"
+    if rel_path == "manifest.json":
+        return "manifest"
+    if rel_path == "merkle.json":
+        return "merkle"
+    if rel_path == "provenance.json":
+        return "provenance"
+    if rel_path.startswith("pcaps/") or rel_path.startswith("pcap/"):
+        return "pcap"
+    if rel_path.startswith("inputs/"):
+        return "input"
+    if rel_path == "logs.jsonl":
+        return "logs"
+    return "artifact"
+
+
+def build_merkle_dataset_from_manifest(manifest: AuditManifest) -> Dict[str, Any]:
+    """Construct a deterministic Merkle dataset (order, leaves, proofs) from a manifest.
+
+    - Order is sorted by file path
+    - Leaves are sha256 of each file entry's sha256 (hex of hex as string, matching _compute_merkle_root)
+    - Proofs are arrays of sibling hashes for each leaf index
+    """
+    if not manifest.files:
+        return {"order": [], "leaves": [], "root": "", "proofs": []}
+
+    # Important: pass raw sha256 hex strings to MerkleTree which will build leaf hashes
+    sorted_files = sorted(manifest.files, key=lambda f: f.path)
+    data = [f.sha256 for f in sorted_files]
+    mt = MerkleTree(data)
+    # Leaves as used by the tree (i.e., sha256 of each data item)
+    leaves = [hashlib.sha256(x.encode()).hexdigest() for x in data]
+    proofs = [mt.get_proof(i) for i in range(len(data))]
+    return {
+        "order": [f.path for f in sorted_files],
+        "leaves": leaves,
+        "root": mt.get_root(),
+        "proofs": proofs,
+    }

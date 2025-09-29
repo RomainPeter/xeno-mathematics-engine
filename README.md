@@ -1,5 +1,10 @@
 # Discovery Engine 2-Cat
 
+Badges
+- CI Hardening: ![CI Hardening](https://github.com/OWNER/REPO/actions/workflows/ci-harden.yml/badge.svg)
+- Pack Verify: ![Pack Verify](https://github.com/OWNER/REPO/actions/workflows/pack-verify.yml/badge.svg)
+- Orchestrator E2E: ![Orchestrator E2E](https://github.com/OWNER/REPO/actions/workflows/orchestrator-e2e.yml/badge.svg)
+
 ![CI](https://github.com/RomainPeter/discovery-engine-2cat/actions/workflows/ci.yml/badge.svg)
 ![Nightly Bench](https://github.com/RomainPeter/discovery-engine-2cat/actions/workflows/nightly-bench.yml/badge.svg)
 ![Gate Merge](https://github.com/RomainPeter/discovery-engine-2cat/actions/workflows/gate-merge.yml/badge.svg)
@@ -7,6 +12,11 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 Orchestrateur 2-cat, AE/CEGIS, e-graphs, bandit/MCTS, domain adapters, benchmarks.
+
+## Ressources CI & Sécurité
+
+- Politique CI et portes: voir `docs/CI.md`
+- Politique de dérive (baseline Merkle): voir `docs/DRIFT_POLICY.md`
 
 ## Architecture
 

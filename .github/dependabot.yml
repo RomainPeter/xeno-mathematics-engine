@@ -1,0 +1,28 @@
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    allow:
+      - dependency-type: "direct"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "deps(pip)"
+    labels:
+      - "dependencies"
+      - "area:packaging"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "deps(gha)"
+    labels:
+      - "dependencies"
+      - "area:ci"
+
+
+
