@@ -43,19 +43,16 @@ click==8.1.7
     #   typer
 colorama==0.4.6
     # via
-    #   bandit
-    #   click
-    #   mkdocs
     #   mkdocs-material
-    #   pytest
     #   radon
-    #   tqdm
 cryptography==46.0.1
     # via -r requirements.in
 distlib==0.4.0
     # via virtualenv
 distro==1.9.0
     # via openai
+fastjsonschema==2.19.1
+    # via -r requirements.in
 filelock==3.19.1
     # via virtualenv
 flake8==7.3.0
@@ -155,7 +152,7 @@ platformdirs==4.4.0
     #   virtualenv
 pluggy==1.6.0
     # via pytest
-pre-commit==4.0.1
+pre-commit==4.3.0
     # via -r requirements.in
 pycodestyle==2.14.0
     # via flake8
@@ -189,6 +186,7 @@ pytz==2025.2
 pyyaml==6.0.3
     # via
     #   bandit
+    #   libcst
     #   mkdocs
     #   mkdocs-get-deps
     #   pre-commit
@@ -198,7 +196,7 @@ pyyaml-env-tag==1.1
     # via mkdocs
 radon==6.0.1
     # via -r requirements.in
-referencing==0.35.1
+referencing==0.36.2
     # via
     #   -r requirements.in
     #   jsonschema
@@ -214,7 +212,7 @@ rpds-py==0.27.1
     # via
     #   jsonschema
     #   referencing
-ruff==0.13.1
+ruff==0.13.2
     # via -r requirements.in
 shellingham==1.5.4
     # via typer
@@ -238,10 +236,12 @@ typer==0.19.2
     # via -r requirements.in
 typing-extensions==4.15.0
     # via
+    #   anyio
     #   mypy
     #   openai
     #   pydantic
     #   pydantic-core
+    #   referencing
     #   typer
     #   typing-inspection
 typing-inspection==0.4.1
@@ -252,4 +252,3 @@ virtualenv==20.34.0
     # via pre-commit
 watchdog==6.0.0
     # via mkdocs
-fastjsonschema==2.18.0
