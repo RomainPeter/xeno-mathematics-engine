@@ -208,9 +208,7 @@ class TestIncidentHandler:
 
         handler_result = {"action": "test_action", "description": "Test handler result"}
 
-        rule = self.handler._generate_rule_from_incident(
-            incident, fail_reason, handler_result
-        )
+        rule = self.handler._generate_rule_from_incident(incident, fail_reason, handler_result)
 
         assert rule["type"] == "incident_generated_rule"
         assert rule["incident_id"] == "inc1"
@@ -254,9 +252,7 @@ class TestIncidentHandler:
         ]
 
         for action in replan_actions:
-            fail_reason = FailReason(
-                "Test", "Test", FailReasonCategory.RUNTIME, {}, action
-            )
+            fail_reason = FailReason("Test", "Test", FailReasonCategory.RUNTIME, {}, action)
             handler_result = {"action": action}
 
             should_replan = self.handler._should_replan(fail_reason, handler_result)
@@ -269,9 +265,7 @@ class TestIncidentHandler:
         handler_result = {"action": "egraph_add_equiv_forbidden"}
 
         should_replan = self.handler._should_replan(fail_reason, handler_result)
-        assert (
-            not should_replan
-        ), "egraph_add_equiv_forbidden should not trigger replanning"
+        assert not should_replan, "egraph_add_equiv_forbidden should not trigger replanning"
 
     def test_get_incident_stats(self):
         """Test getting incident statistics."""
@@ -347,9 +341,7 @@ class TestIncidentHandlerAcceptanceCriteria:
         print("✅ Incident Handler Acceptance Criteria Met:")
         print(f"   - K updated: {len(updated_state['K'])} rules")
         print(f"   - Replanning required: {result['replanning_required']}")
-        print(
-            f"   - Transformation journaled: {len(handler.incident_history)} incidents"
-        )
+        print(f"   - Transformation journaled: {len(handler.incident_history)} incidents")
 
 
 if __name__ == "__main__":

@@ -256,9 +256,7 @@ def main():
     print(f"📦 Release asset: {zip_path}")
     print(f"🔗 Merkle root: {merkle_root}")
     print(f"📊 Coverage gain: {summary['discovery_engine']['coverage_gain']}")
-    print(
-        f"📈 Improvement vs best: {summary['discovery_engine']['improvement_vs_best']:.1%}"
-    )
+    print(f"📈 Improvement vs best: {summary['discovery_engine']['improvement_vs_best']:.1%}")
     print(f"🔍 Verification: {bench_pack_dir}/verify.sh")
 
     print()

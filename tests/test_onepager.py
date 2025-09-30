@@ -27,9 +27,7 @@ def make_cfg(tmp: Path) -> RootConfig:
         logging=LoggingConfig(),
         metrics=MetricsConfig(sources=[tmp.as_posix()], include_aggregates=False),
         merkle=MerkleConfig(),
-        docs=DocsConfig(
-            onepager=OnePagerConfig(template_path=None, output_file="ONEPAGER.md")
-        ),
+        docs=DocsConfig(onepager=OnePagerConfig(template_path=None, output_file="ONEPAGER.md")),
         sbom=SBOMConfig(path=None),
     )
 
@@ -155,9 +153,7 @@ def test_onepager_invalid_manifest(tmp_path: Path):
     """Test one-pager generation with invalid manifest."""
     # Create invalid manifest (missing required keys)
     invalid_manifest = {"version": "1", "created_at": "2024-01-01T00:00:00Z"}
-    (tmp_path / "manifest.json").write_text(
-        json.dumps(invalid_manifest), encoding="utf-8"
-    )
+    (tmp_path / "manifest.json").write_text(json.dumps(invalid_manifest), encoding="utf-8")
 
     cfg = make_cfg(tmp_path)
     out = build_onepager(cfg, tmp_path)

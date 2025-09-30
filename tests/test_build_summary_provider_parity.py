@@ -49,10 +49,7 @@ def test_provider_vs_sources_parity(tmp_path: Path):
 
     # Results should be equivalent
     assert sources_result["overall"]["n_runs"] == provider_result["overall"]["n_runs"]
-    assert (
-        sources_result["overall"]["weight_sum"]
-        == provider_result["overall"]["weight_sum"]
-    )
+    assert sources_result["overall"]["weight_sum"] == provider_result["overall"]["weight_sum"]
     assert sources_result["overall"]["metrics"] == provider_result["overall"]["metrics"]
     assert sources_result["by_group"] == provider_result["by_group"]
     assert len(sources_result["runs"]) == len(provider_result["runs"])
@@ -96,10 +93,7 @@ def test_provider_vs_sources_with_aggregates(tmp_path: Path):
     assert sources_result["overall"]["n_runs"] == provider_result["overall"]["n_runs"]
     # Note: aggregate counts may differ due to different parsing logic
     # The important thing is that the final results are equivalent
-    assert (
-        sources_result["overall"]["weight_sum"]
-        == provider_result["overall"]["weight_sum"]
-    )
+    assert sources_result["overall"]["weight_sum"] == provider_result["overall"]["weight_sum"]
     assert sources_result["overall"]["metrics"] == provider_result["overall"]["metrics"]
 
 
@@ -139,10 +133,7 @@ def test_provider_vs_sources_dedup_strategies(tmp_path: Path):
 
     # Results should be equivalent
     assert sources_result["overall"]["n_runs"] == provider_result["overall"]["n_runs"]
-    assert (
-        sources_result["overall"]["weight_sum"]
-        == provider_result["overall"]["weight_sum"]
-    )
+    assert sources_result["overall"]["weight_sum"] == provider_result["overall"]["weight_sum"]
     assert sources_result["overall"]["metrics"] == provider_result["overall"]["metrics"]
 
 
@@ -172,9 +163,6 @@ def test_provider_vs_sources_empty_dataset(tmp_path: Path):
 
     # Results should be equivalent
     assert sources_result["overall"]["n_runs"] == provider_result["overall"]["n_runs"]
-    assert (
-        sources_result["overall"]["weight_sum"]
-        == provider_result["overall"]["weight_sum"]
-    )
+    assert sources_result["overall"]["weight_sum"] == provider_result["overall"]["weight_sum"]
     assert sources_result["overall"]["metrics"] == provider_result["overall"]["metrics"]
     assert sources_result["by_group"] == provider_result["by_group"]

@@ -16,9 +16,7 @@ class TestOPAInstallation:
     def test_opa_available(self):
         """Test if OPA is available in the system."""
         try:
-            result = subprocess.run(
-                ["opa", "version"], capture_output=True, text=True, timeout=10
-            )
+            result = subprocess.run(["opa", "version"], capture_output=True, text=True, timeout=10)
             assert result.returncode == 0
             assert "OPA" in result.stdout
             print(f"✅ OPA version: {result.stdout.strip()}")
@@ -42,15 +40,11 @@ deny[msg] {
             # Create test input
             input_data = {"data_class": "sensitive", "has_legal_basis": False}
 
-            with tempfile.NamedTemporaryFile(
-                mode="w", suffix=".rego", delete=False
-            ) as policy_file:
+            with tempfile.NamedTemporaryFile(mode="w", suffix=".rego", delete=False) as policy_file:
                 policy_file.write(policy_content)
                 policy_path = policy_file.name
 
-            with tempfile.NamedTemporaryFile(
-                mode="w", suffix=".json", delete=False
-            ) as input_file:
+            with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as input_file:
                 json.dump(input_data, input_file)
                 input_path = input_file.name
 

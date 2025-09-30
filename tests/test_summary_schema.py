@@ -42,9 +42,7 @@ class TestSummarySchema:
         except fastjsonschema.JsonSchemaValueException as e:
             pytest.fail(f"Summary validation failed: {e}")
 
-    def test_bounded_metrics_constraints(
-        self, sample_metrics_data: List[Dict[str, Any]]
-    ):
+    def test_bounded_metrics_constraints(self, sample_metrics_data: List[Dict[str, Any]]):
         """Test that bounded metrics are constrained to [0,1]."""
         # Add out-of-bounds metrics
         test_data = sample_metrics_data.copy()
@@ -83,10 +81,7 @@ class TestSummarySchema:
         # Manual calculation of weighted average
         total_weight = sum(run["metrics"]["n_items"] for run in test_runs)
         expected_coverage = (
-            sum(
-                run["metrics"]["coverage_gain"] * run["metrics"]["n_items"]
-                for run in test_runs
-            )
+            sum(run["metrics"]["coverage_gain"] * run["metrics"]["n_items"] for run in test_runs)
             / total_weight
         )
 
@@ -128,11 +123,7 @@ class TestSummarySchema:
 
         # Check that averages are within reasonable bounds
         coverage_values = [run["metrics"]["coverage_gain"] for run in test_runs]
-        assert (
-            min(coverage_values)
-            <= summary["overall"]["coverage_gain"]
-            <= max(coverage_values)
-        )
+        assert min(coverage_values) <= summary["overall"]["coverage_gain"] <= max(coverage_values)
 
     def test_schema_required_fields(self, sample_metrics_data: List[Dict[str, Any]]):
         """Test that summary contains all required schema fields."""

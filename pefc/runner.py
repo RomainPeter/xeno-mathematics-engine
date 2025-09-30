@@ -112,9 +112,7 @@ def run_pack_build(
 
             summary_path = out_dir / "summary.json"
             # Determine backend preference
-            prefer_backend = (
-                None if cfg.metrics.backend == "auto" else cfg.metrics.backend
-            )
+            prefer_backend = None if cfg.metrics.backend == "auto" else cfg.metrics.backend
 
             build_summary(
                 sources=[Path(p) for p in metric_sources],
@@ -234,9 +232,7 @@ def run_pack_build(
             status = BuildStatus.PARTIAL
 
         # Compute exit code
-        if status == BuildStatus.SUCCESS or (
-            status == BuildStatus.PARTIAL and partial_is_success
-        ):
+        if status == BuildStatus.SUCCESS or (status == BuildStatus.PARTIAL and partial_is_success):
             final_status = BuildStatus.SUCCESS
             exit_code = SUCCESS_EXIT_CODE
         else:
@@ -256,9 +252,7 @@ def run_pack_build(
         )
 
     except PEFCError as e:
-        log.error(
-            "build: failed", extra={"error": type(e).__name__, "error_message": str(e)}
-        )
+        log.error("build: failed", extra={"error": type(e).__name__, "error_message": str(e)})
         code = _compute_exit_code(BuildStatus.FAILURE, e)
         return BuildResult(
             status=BuildStatus.FAILURE,

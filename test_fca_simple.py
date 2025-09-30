@@ -86,9 +86,7 @@ def test_ae_engine():
                 f"  Étape {step+1}: Extent: {{{', '.join(extent_names)}}}, Intent: {{{', '.join(intent_names)}}}"
             )
         else:
-            print(
-                f"  Étape {step+1}: {result.error if result.error else 'Pas de concept'}"
-            )
+            print(f"  Étape {step+1}: {result.error if result.error else 'Pas de concept'}")
             break
 
     return True

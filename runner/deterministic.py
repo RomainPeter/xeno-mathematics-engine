@@ -126,12 +126,8 @@ class DeterministicRunner:
             return {"total_executions": 0}
 
         total_executions = len(self.execution_history)
-        successful_executions = sum(
-            1 for r in self.execution_history if r.get("all_passed", False)
-        )
-        success_rate = (
-            successful_executions / total_executions if total_executions > 0 else 0
-        )
+        successful_executions = sum(1 for r in self.execution_history if r.get("all_passed", False))
+        success_rate = successful_executions / total_executions if total_executions > 0 else 0
 
         avg_cost = (
             sum(r.get("cost", {}).get("audit_cost", 0) for r in self.execution_history)
@@ -143,9 +139,7 @@ class DeterministicRunner:
             "successful_executions": successful_executions,
             "success_rate": success_rate,
             "average_cost": avg_cost,
-            "last_execution": (
-                self.execution_history[-1] if self.execution_history else None
-            ),
+            "last_execution": (self.execution_history[-1] if self.execution_history else None),
         }
 
     def reset_history(self) -> None:
@@ -287,9 +281,7 @@ class HermeticExecutor:
 
         total_executions = len(self.results)
         successful_executions = sum(1 for r in self.results if r.get("success", False))
-        success_rate = (
-            successful_executions / total_executions if total_executions > 0 else 0
-        )
+        success_rate = successful_executions / total_executions if total_executions > 0 else 0
 
         avg_execution_time = (
             sum(r.get("execution_time_ms", 0) for r in self.results) / total_executions

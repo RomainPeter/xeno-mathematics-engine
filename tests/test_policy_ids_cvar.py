@@ -52,9 +52,7 @@ class TestPolicyIDSVaR:
             overrides_file = f.name
 
         try:
-            selector = Selector(
-                self.bandit, self.diversity, overrides_file=overrides_file
-            )
+            selector = Selector(self.bandit, self.diversity, overrides_file=overrides_file)
 
             assert selector.ids_lambda == 0.8, "Should use override lambda"
             assert selector.cvar_alpha == 0.95, "Should use override alpha"
@@ -114,9 +112,7 @@ class TestPolicyIDSVaR:
 
     def test_config_retrieval(self):
         """Test configuration retrieval."""
-        selector = Selector(
-            self.bandit, self.diversity, ids_lambda=0.7, cvar_alpha=0.85
-        )
+        selector = Selector(self.bandit, self.diversity, ids_lambda=0.7, cvar_alpha=0.85)
         config = selector.get_config()
 
         assert config["ids_lambda"] == 0.7, "Should return correct lambda"
@@ -150,9 +146,7 @@ class TestPolicyIDSVaR:
             overrides_file = f.name
 
         try:
-            selector = Selector(
-                self.bandit, self.diversity, overrides_file=overrides_file
-            )
+            selector = Selector(self.bandit, self.diversity, overrides_file=overrides_file)
 
             assert selector.ids_lambda == 0.5, "Should load lambda from overrides"
             assert selector.cvar_alpha == 0.88, "Should load alpha from overrides"
@@ -162,9 +156,7 @@ class TestPolicyIDSVaR:
 
     def test_missing_override_file(self):
         """Test behavior with missing override file."""
-        selector = Selector(
-            self.bandit, self.diversity, overrides_file="nonexistent.json"
-        )
+        selector = Selector(self.bandit, self.diversity, overrides_file="nonexistent.json")
 
         # Should use defaults
         assert selector.ids_lambda == 0.6, "Should use default lambda"
@@ -177,9 +169,7 @@ class TestPolicyIDSVaR:
             overrides_file = f.name
 
         try:
-            selector = Selector(
-                self.bandit, self.diversity, overrides_file=overrides_file
-            )
+            selector = Selector(self.bandit, self.diversity, overrides_file=overrides_file)
 
             # Should use defaults on error
             assert selector.ids_lambda == 0.6, "Should use default lambda on error"
@@ -200,9 +190,7 @@ class TestPolicyIDSVaR:
             overrides_file = f.name
 
         try:
-            selector = Selector(
-                self.bandit, self.diversity, overrides_file=overrides_file
-            )
+            selector = Selector(self.bandit, self.diversity, overrides_file=overrides_file)
 
             assert selector.ids_lambda == 0.4, "Should use override lambda"
             assert selector.cvar_alpha == 0.9, "Should use default alpha"

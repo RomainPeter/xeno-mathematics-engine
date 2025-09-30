@@ -213,9 +213,7 @@ class XState:
 
         return cex_id
 
-    def _extract_constraints_from_counterexample(
-        self, counterexample: Dict[str, Any]
-    ) -> List[str]:
+    def _extract_constraints_from_counterexample(self, counterexample: Dict[str, Any]) -> List[str]:
         """Extract new constraints from counterexample."""
         constraints = []
 
@@ -246,9 +244,7 @@ class XState:
             "merkle_root": self.J.get_merkle_root(),
         }
 
-        return hashlib.sha256(
-            json.dumps(state_data, sort_keys=True).encode()
-        ).hexdigest()
+        return hashlib.sha256(json.dumps(state_data, sort_keys=True).encode()).hexdigest()
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert state to dictionary."""

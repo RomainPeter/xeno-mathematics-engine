@@ -92,9 +92,7 @@ class TaskManager:
         task_id = str(uuid.uuid4())
 
         # Create asyncio task
-        asyncio_task = asyncio.create_task(
-            self._execute_task(task_id, coro, timeout, **kwargs)
-        )
+        asyncio_task = asyncio.create_task(self._execute_task(task_id, coro, timeout, **kwargs))
 
         # Create task info
         task_info = TaskInfo(
@@ -147,9 +145,7 @@ class TaskManager:
                 execution_time=0.0,
             )
 
-    async def cancel_task(
-        self, task_id: str, reason: str = "manual_cancellation"
-    ) -> bool:
+    async def cancel_task(self, task_id: str, reason: str = "manual_cancellation") -> bool:
         """Cancel a specific task safely."""
         if task_id not in self.tasks:
             return False
@@ -169,9 +165,7 @@ class TaskManager:
 
             # Wait for cancellation with timeout
             try:
-                await asyncio.wait_for(
-                    task_info.asyncio_task, timeout=self._cancellation_timeout
-                )
+                await asyncio.wait_for(task_info.asyncio_task, timeout=self._cancellation_timeout)
             except asyncio.TimeoutError:
                 # Task didn't cancel in time
                 pass
@@ -186,9 +180,7 @@ class TaskManager:
         # Create cancellation result
         execution_time = 0.0
         if task_info.started_at:
-            execution_time = (
-                task_info.completed_at - task_info.started_at
-            ).total_seconds()
+            execution_time = (task_info.completed_at - task_info.started_at).total_seconds()
 
         cancellation_result = TaskResult(
             task_id=task_id,
@@ -216,9 +208,7 @@ class TaskManager:
 
             return cancelled_count
 
-    async def cancel_tasks_by_name(
-        self, name: str, reason: str = "bulk_cancellation"
-    ) -> int:
+    async def cancel_tasks_by_name(self, name: str, reason: str = "bulk_cancellation") -> int:
         """Cancel all tasks with a specific name."""
         cancelled_count = 0
 
@@ -351,9 +341,7 @@ class TaskManager:
     async def get_running_tasks(self) -> List[TaskInfo]:
         """Get all running tasks."""
         return [
-            task_info
-            for task_info in self.tasks.values()
-            if task_info.status == TaskStatus.RUNNING
+            task_info for task_info in self.tasks.values() if task_info.status == TaskStatus.RUNNING
         ]
 
     async def get_completed_tasks(self) -> List[TaskResult]:
@@ -371,9 +359,7 @@ class TaskManager:
     async def get_statistics(self) -> Dict[str, Any]:
         """Get task manager statistics."""
         total_tasks = len(self.tasks)
-        running_tasks = len(
-            [t for t in self.tasks.values() if t.status == TaskStatus.RUNNING]
-        )
+        running_tasks = len([t for t in self.tasks.values() if t.status == TaskStatus.RUNNING])
         completed_tasks = len(self.completed_tasks)
         failed_tasks = len(self.failed_tasks)
         cancelled_tasks = len(self.cancelled_tasks)

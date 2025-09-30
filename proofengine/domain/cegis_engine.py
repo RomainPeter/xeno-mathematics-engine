@@ -192,9 +192,7 @@ class CEGISEngine:
         """Propose initial candidate."""
         if self.config.mode == CEGISMode.STUB_ONLY:
             # Deterministic proposal
-            return self.proposal_engine.propose(
-                code_snippet, violation_type, rule_id, seed
-            )
+            return self.proposal_engine.propose(code_snippet, violation_type, rule_id, seed)
         else:
             # LLM-based proposal
             return await self._llm_propose(code_snippet, violation_type, rule_id, seed)
@@ -301,9 +299,7 @@ class ConcurrentCEGISEngine(CEGISEngine):
 
     def __init__(self, config: Optional[CEGISConfig] = None):
         super().__init__(config)
-        self.task_manager = (
-            asyncio.TaskGroup() if hasattr(asyncio, "TaskGroup") else None
-        )
+        self.task_manager = asyncio.TaskGroup() if hasattr(asyncio, "TaskGroup") else None
 
     async def execute_cegis_concurrent(
         self, code_snippet: CodeSnippet, violation_type: str, rule_id: str, seed: str
@@ -341,9 +337,7 @@ class ConcurrentCEGISEngine(CEGISEngine):
 
                 # Static analysis task
                 static_task = asyncio.create_task(
-                    self._verify_static_analysis(
-                        current_candidate, code_snippet, rule_id
-                    )
+                    self._verify_static_analysis(current_candidate, code_snippet, rule_id)
                 )
                 verification_tasks.append(static_task)
 
@@ -357,9 +351,7 @@ class ConcurrentCEGISEngine(CEGISEngine):
                 verification_results = await asyncio.gather(*verification_tasks)
 
                 # Combine results
-                combined_result = self._combine_verification_results(
-                    verification_results
-                )
+                combined_result = self._combine_verification_results(verification_results)
 
                 # Check convergence
                 if combined_result.is_compliant:
@@ -450,9 +442,7 @@ class ConcurrentCEGISEngine(CEGISEngine):
         # NOTE: context variable used in static analysis verification
 
         # Run static analysis only
-        violations = self.verifier.static_analyzer.analyze(
-            candidate.patch, "generated.py"
-        )
+        violations = self.verifier.static_analyzer.analyze(candidate.patch, "generated.py")
 
         if not violations:
             verdict = Verdict(
@@ -516,9 +506,7 @@ class ConcurrentCEGISEngine(CEGISEngine):
 
         return ComplianceResult(verdict=verdict, counterexamples=[])
 
-    def _combine_verification_results(
-        self, results: List[ComplianceResult]
-    ) -> ComplianceResult:
+    def _combine_verification_results(self, results: List[ComplianceResult]) -> ComplianceResult:
         """Combine multiple verification results."""
         if not results:
             return ComplianceResult(

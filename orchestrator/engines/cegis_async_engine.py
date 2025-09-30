@@ -172,9 +172,7 @@ class AsyncCegisEngine(CegisEngine):
         )
 
         # Synthesize new implementation
-        refined_implementation = await self._synthesize_implementation(
-            refined_spec, ctx
-        )
+        refined_implementation = await self._synthesize_implementation(refined_spec, ctx)
 
         refined_candidate = Candidate(
             id=str(uuid.uuid4()),
@@ -212,9 +210,7 @@ class AsyncCegisEngine(CegisEngine):
         self.domain_spec = None
         self.initialized = False
 
-    async def _generate_candidate_specification(
-        self, ctx: CegisContext
-    ) -> Dict[str, Any]:
+    async def _generate_candidate_specification(self, ctx: CegisContext) -> Dict[str, Any]:
         """Generate candidate specification using LLM."""
         # Prepare prompt for LLM
         prompt = self._build_synthesis_prompt(ctx)
@@ -250,9 +246,7 @@ class AsyncCegisEngine(CegisEngine):
             },
         }
 
-    async def _run_verification(
-        self, candidate: Candidate, ctx: CegisContext
-    ) -> Dict[str, Any]:
+    async def _run_verification(self, candidate: Candidate, ctx: CegisContext) -> Dict[str, Any]:
         """Run verification on candidate."""
         # Use verifier to check candidate
         verification_result = await self.verifier.verify(
@@ -312,9 +306,7 @@ Generate a refined specification that addresses the counterexample.
 Return the result as a JSON object with fields: name, properties, constraints, implementation_hints.
 """
 
-    def _parse_specification_response(
-        self, response: str, ctx: CegisContext
-    ) -> Dict[str, Any]:
+    def _parse_specification_response(self, response: str, ctx: CegisContext) -> Dict[str, Any]:
         """Parse LLM response into specification."""
         # Mock parsing - in real implementation, this would parse JSON
         return {

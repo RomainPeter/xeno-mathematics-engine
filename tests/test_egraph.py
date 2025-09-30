@@ -168,9 +168,7 @@ class TestEGraphCanonicalizer:
             "guards": ["guard1"],
         }
 
-        canonical_hash, canonical_rep = self.canonicalizer.canonicalize_choreography(
-            choreography
-        )
+        canonical_hash, canonical_rep = self.canonicalizer.canonicalize_choreography(choreography)
 
         assert isinstance(canonical_hash, str)
         assert isinstance(canonical_rep, dict)

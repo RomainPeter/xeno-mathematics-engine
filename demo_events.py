@@ -130,9 +130,7 @@ async def demo_file_sink():
                 # Show first event
                 if lines:
                     first_event = json.loads(lines[0])
-                    print(
-                        f"First event: {first_event['type']} - {first_event['payload']}"
-                    )
+                    print(f"First event: {first_event['type']} - {first_event['payload']}")
 
         # Stop event bus
         await event_bus.stop()

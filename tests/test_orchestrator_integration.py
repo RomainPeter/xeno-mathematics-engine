@@ -22,9 +22,7 @@ class MockLLMAdapter:
     def __init__(self):
         self.call_count = 0
 
-    async def generate(
-        self, prompt: str, max_tokens: int = 2048, temperature: float = 0.1
-    ) -> str:
+    async def generate(self, prompt: str, max_tokens: int = 2048, temperature: float = 0.1) -> str:
         """Mock LLM generation."""
         self.call_count += 1
         return f'{{"name": "candidate_{self.call_count}", "properties": ["prop1", "prop2"], "constraints": [], "implementation_hints": ["hint1"]}}'
@@ -156,9 +154,7 @@ class TestOrchestratorIntegration:
         assert orchestrator.state is None
 
     @pytest.mark.asyncio
-    async def test_orchestrator_run_success(
-        self, orchestrator, domain_spec, budgets, thresholds
-    ):
+    async def test_orchestrator_run_success(self, orchestrator, domain_spec, budgets, thresholds):
         """Test successful orchestrator run."""
         # Run orchestrator
         state = await orchestrator.run(domain_spec, budgets, thresholds)
@@ -185,9 +181,7 @@ class TestOrchestratorIntegration:
             assert result.verdict is not None
 
     @pytest.mark.asyncio
-    async def test_orchestrator_run_with_incidents(
-        self, config, domain_spec, budgets, thresholds
-    ):
+    async def test_orchestrator_run_with_incidents(self, config, domain_spec, budgets, thresholds):
         """Test orchestrator run with incidents."""
         # Create orchestrator with failing verifier
         mock_verifier = MockVerifier(should_verify=False)
@@ -216,9 +210,7 @@ class TestOrchestratorIntegration:
             assert incident.severity in ["medium", "high", "critical"]
 
     @pytest.mark.asyncio
-    async def test_orchestrator_timeout_handling(
-        self, temp_dir, domain_spec, budgets, thresholds
-    ):
+    async def test_orchestrator_timeout_handling(self, temp_dir, domain_spec, budgets, thresholds):
         """Test orchestrator timeout handling."""
         # Create config with very short timeouts
         config = OrchestratorConfig(
@@ -328,8 +320,7 @@ class TestOrchestratorIntegration:
 
         # Run orchestrators concurrently
         tasks = [
-            orchestrator.run(domain_spec, budgets, thresholds)
-            for orchestrator in orchestrators
+            orchestrator.run(domain_spec, budgets, thresholds) for orchestrator in orchestrators
         ]
         states = await asyncio.gather(*tasks)
 
@@ -340,9 +331,7 @@ class TestOrchestratorIntegration:
             assert state.trace_id is not None
 
     @pytest.mark.asyncio
-    async def test_orchestrator_cancellation(
-        self, orchestrator, domain_spec, budgets, thresholds
-    ):
+    async def test_orchestrator_cancellation(self, orchestrator, domain_spec, budgets, thresholds):
         """Test orchestrator cancellation."""
         # Create a task that will be cancelled
         task = asyncio.create_task(orchestrator.run(domain_spec, budgets, thresholds))
@@ -375,6 +364,4 @@ class TestOrchestratorIntegration:
             "incidents_count",
         ]
         for metric in expected_metrics:
-            assert metric in state.metrics or any(
-                metric in str(k) for k in state.metrics.keys()
-            )
+            assert metric in state.metrics or any(metric in str(k) for k in state.metrics.keys())

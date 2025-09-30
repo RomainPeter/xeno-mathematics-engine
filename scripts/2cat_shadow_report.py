@@ -55,9 +55,7 @@ class ShadowReportGenerator:
 
         selector = DeterministicSelector()
 
-        self.orchestrator = TwoCategoryOrchestrator(
-            self.strategy_registry, rewriter, selector
-        )
+        self.orchestrator = TwoCategoryOrchestrator(self.strategy_registry, rewriter, selector)
 
     def create_test_contexts(self) -> List[StrategyContext]:
         """Create test contexts for different failreasons."""
@@ -230,9 +228,7 @@ class ShadowReportGenerator:
             applicable_strategies += report.applicable_strategies
 
         # Calculate overall success rate
-        success_rate = (
-            applicable_strategies / total_strategies if total_strategies > 0 else 0.0
-        )
+        success_rate = applicable_strategies / total_strategies if total_strategies > 0 else 0.0
 
         return ShadowReport(
             mode="shadow",
@@ -325,9 +321,7 @@ def main():
         )
         return False
 
-    print(
-        f"\n✅ Shadow report generated successfully with {len(report.proposals)} proposals"
-    )
+    print(f"\n✅ Shadow report generated successfully with {len(report.proposals)} proposals")
     return True
 
 

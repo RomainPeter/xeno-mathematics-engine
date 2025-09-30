@@ -14,9 +14,7 @@ def propose_plan(
     user = PLANNER_USER_TMPL.format(
         goal=goal, x_summary=x_summary, obligations=obligations, history=history_json
     )
-    data, meta = llm.generate_json(
-        PLANNER_SYSTEM, user, seed=42, temperature=0.2, max_tokens=600
-    )
+    data, meta = llm.generate_json(PLANNER_SYSTEM, user, seed=42, temperature=0.2, max_tokens=600)
     plan = data.get("plan", []) if isinstance(data.get("plan", []), list) else []
     return {
         "plan": plan[:5],

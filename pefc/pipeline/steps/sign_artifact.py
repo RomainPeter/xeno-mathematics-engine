@@ -21,9 +21,7 @@ class SignArtifact(PackStep):
         log.info("sign_artifact: signing artifact")
 
         # Find zip file
-        zip_files = [
-            arcname for arcname in ctx.files.keys() if arcname.endswith(".zip")
-        ]
+        zip_files = [arcname for arcname in ctx.files.keys() if arcname.endswith(".zip")]
         if not zip_files:
             raise SignatureError("no zip file found to sign")
 

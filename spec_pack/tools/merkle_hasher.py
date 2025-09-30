@@ -26,10 +26,7 @@ def merkle_root(hex_hashes):
     while len(layer) > 1:
         if len(layer) % 2 == 1:
             layer.append(layer[-1])
-        layer = [
-            hashlib.sha256(layer[i] + layer[i + 1]).digest()
-            for i in range(0, len(layer), 2)
-        ]
+        layer = [hashlib.sha256(layer[i] + layer[i + 1]).digest() for i in range(0, len(layer), 2)]
     return layer[0].hex()
 
 
@@ -37,9 +34,7 @@ def recompute_chain(items):
     prev = None
     hex_hashes = []
     for o in items:
-        core = {
-            k: o[k] for k in o if k not in ["hash", "parent_hash", "merkle_root_day"]
-        }
+        core = {k: o[k] for k in o if k not in ["hash", "parent_hash", "merkle_root_day"]}
         s = json.dumps(core, separators=((",", ":"))).encode()
         h = hashlib.sha256(s + (bytes.fromhex(prev) if prev else b"")).hexdigest()
         o["parent_hash"] = prev

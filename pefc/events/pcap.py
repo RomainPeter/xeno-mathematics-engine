@@ -121,9 +121,7 @@ class PCAPWriter:
         self.pcap_dir.mkdir(parents=True, exist_ok=True)
         self.written_count = 0
 
-    def write_pcap(
-        self, pcap: PCAPSchema, step_id: str, action: Optional[str] = None
-    ) -> str:
+    def write_pcap(self, pcap: PCAPSchema, step_id: str, action: Optional[str] = None) -> str:
         """Write a PCAP to file."""
         try:
             # Generate filename
@@ -211,9 +209,7 @@ class PCAPManager:
 
         return pcap
 
-    def write_pcap(
-        self, pcap: PCAPSchema, step_id: str, action: Optional[str] = None
-    ) -> str:
+    def write_pcap(self, pcap: PCAPSchema, step_id: str, action: Optional[str] = None) -> str:
         """Write a PCAP and emit event."""
         try:
             # Write to file
@@ -297,9 +293,7 @@ def create_pcap_from_cegis_iteration(
         action=f"cegis_iteration_{iteration}",
         context_hash=context_hash,
         obligations=["verify_candidate", "check_compliance", "generate_proofs"],
-        proofs=[
-            {"type": "candidate_proof", "candidate": candidate, "verdict": verdict}
-        ],
+        proofs=[{"type": "candidate_proof", "candidate": candidate, "verdict": verdict}],
         justification={
             "iteration": iteration,
             "timestamp": time.time(),
@@ -311,9 +305,7 @@ def create_pcap_from_cegis_iteration(
     return pcap
 
 
-def create_pcap_from_ae_concept(
-    concept: Dict[str, Any], context_hash: str
-) -> PCAPSchema:
+def create_pcap_from_ae_concept(concept: Dict[str, Any], context_hash: str) -> PCAPSchema:
     """Create a PCAP from an AE concept."""
     pcap = PCAPSchema(
         action="ae_concept_exploration",

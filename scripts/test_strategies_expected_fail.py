@@ -67,15 +67,10 @@ class StrategyExpectedFailTester:
             "can_apply": can_apply,
             "success_probability": success_prob,
             "expected_can_apply": test_data["strategy_application"]["can_apply"],
-            "expected_success_prob": test_data["strategy_application"][
-                "success_probability"
-            ],
+            "expected_success_prob": test_data["strategy_application"]["success_probability"],
             "passed": (
                 can_apply == test_data["strategy_application"]["can_apply"]
-                and abs(
-                    success_prob
-                    - test_data["strategy_application"]["success_probability"]
-                )
+                and abs(success_prob - test_data["strategy_application"]["success_probability"])
                 < 0.1
             ),
         }
@@ -101,9 +96,7 @@ class StrategyExpectedFailTester:
         # Test that the plan should now succeed
         # This is a simplified check - in reality, we'd run the plan
         plan_steps = input_data["plan"]["steps"]
-        has_specialization = any(
-            step.get("operator") == "Specialize" for step in plan_steps
-        )
+        has_specialization = any(step.get("operator") == "Specialize" for step in plan_steps)
 
         return {
             "test_case": test_data["test_case"],

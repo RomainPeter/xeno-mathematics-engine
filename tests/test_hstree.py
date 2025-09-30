@@ -30,10 +30,7 @@ class TestHSTree:
 
         assert len(self.hstree.constraint_violations) == 1
         assert "violation_1" in self.hstree.knowledge_base
-        assert (
-            self.hstree.knowledge_base["violation_1"]["constraint_type"]
-            == "semver_violation"
-        )
+        assert self.hstree.knowledge_base["violation_1"]["constraint_type"] == "semver_violation"
 
     def test_generate_semver_tests(self):
         """Test generation of semver violation tests."""
@@ -133,9 +130,7 @@ class TestHSTree:
             assert hasattr(tc, "id"), "Test case should have id"
             assert hasattr(tc, "description"), "Test case should have description"
             assert hasattr(tc, "input_data"), "Test case should have input_data"
-            assert hasattr(
-                tc, "expected_output"
-            ), "Test case should have expected_output"
+            assert hasattr(tc, "expected_output"), "Test case should have expected_output"
             assert hasattr(tc, "constraints"), "Test case should have constraints"
             assert hasattr(tc, "priority"), "Test case should have priority"
             assert hasattr(tc, "category"), "Test case should have category"
@@ -143,9 +138,7 @@ class TestHSTree:
             assert isinstance(tc.id, str), "ID should be string"
             assert isinstance(tc.description, str), "Description should be string"
             assert isinstance(tc.input_data, dict), "Input data should be dict"
-            assert isinstance(
-                tc.expected_output, dict
-            ), "Expected output should be dict"
+            assert isinstance(tc.expected_output, dict), "Expected output should be dict"
             assert isinstance(tc.constraints, list), "Constraints should be list"
             assert isinstance(tc.priority, int), "Priority should be int"
             assert isinstance(tc.category, str), "Category should be string"
@@ -173,9 +166,7 @@ class TestHSTree:
         assert "generated_at" in test_suite, "Should include generation timestamp"
         assert "total_tests" in test_suite, "Should include total tests count"
         assert "test_cases" in test_suite, "Should include test cases"
-        assert (
-            "constraint_violations" in test_suite
-        ), "Should include constraint violations count"
+        assert "constraint_violations" in test_suite, "Should include constraint violations count"
         assert "knowledge_base_size" in test_suite, "Should include knowledge base size"
 
         assert test_suite["total_tests"] > 0, "Should have generated tests"
@@ -205,9 +196,7 @@ class TestHSTree:
             with open(output_file) as f:
                 exported_data = json.load(f)
 
-            assert (
-                "total_tests" in exported_data
-            ), "Exported data should include total_tests"
+            assert "total_tests" in exported_data, "Exported data should include total_tests"
             assert exported_data["total_tests"] > 0, "Should have exported tests"
 
         finally:
@@ -229,9 +218,7 @@ class TestHSTree:
 
         assert "total_tests" in stats, "Should include total tests"
         assert "categories" in stats, "Should include categories breakdown"
-        assert (
-            "constraint_violations" in stats
-        ), "Should include constraint violations count"
+        assert "constraint_violations" in stats, "Should include constraint violations count"
         assert "knowledge_base_size" in stats, "Should include knowledge base size"
         assert "avg_priority" in stats, "Should include average priority"
 
@@ -252,9 +239,7 @@ class TestHSTree:
 
         assert len(self.hstree.constraint_violations) == 3, "Should have 3 violations"
         assert len(self.hstree.test_cases) > 0, "Should have generated test cases"
-        assert (
-            len(self.hstree.knowledge_base) == 3
-        ), "Should have 3 knowledge base entries"
+        assert len(self.hstree.knowledge_base) == 3, "Should have 3 knowledge base entries"
 
     def test_test_priority_distribution(self):
         """Test that test priorities are distributed correctly."""

@@ -1,0 +1,93 @@
+{
+  "blocks": [
+    {
+      "id": "def1",
+      "kind": "definition",
+      "label": "Homotopy equivalence",
+      "data": {
+        "definition": "Two spaces X and Y are homotopy equivalent if there exist continuous maps f: X → Y and g: Y → X such that g∘f ≃ id_X and f∘g ≃ id_Y"
+      }
+    },
+    {
+      "id": "lemma1",
+      "kind": "lemma",
+      "label": "Contractible spaces",
+      "data": {
+        "statement": "A space is contractible if and only if it is homotopy equivalent to a point"
+      }
+    },
+    {
+      "id": "proof1",
+      "kind": "proof",
+      "label": "Contractible implies homotopy equivalent to point",
+      "data": {
+        "method": "direct_construction",
+        "key_idea": "Use the constant map and the homotopy to construct the equivalence"
+      }
+    },
+    {
+      "id": "theorem1",
+      "kind": "theorem",
+      "label": "Fundamental group of contractible space",
+      "data": {
+        "statement": "If X is contractible, then π₁(X, x₀) is trivial for any basepoint x₀"
+      }
+    },
+    {
+      "id": "proof2",
+      "kind": "proof",
+      "label": "Trivial fundamental group",
+      "data": {
+        "method": "homotopy_invariance",
+        "steps": ["contract_to_point", "apply_homotopy_invariance", "conclude_trivial"]
+      }
+    }
+  ],
+  "edges": [
+    {
+      "src": "def1",
+      "dst": "lemma1",
+      "kind": "uses"
+    },
+    {
+      "src": "lemma1",
+      "dst": "proof1",
+      "kind": "proves"
+    },
+    {
+      "src": "def1",
+      "dst": "theorem1",
+      "kind": "uses"
+    },
+    {
+      "src": "theorem1",
+      "dst": "proof2",
+      "kind": "proves"
+    },
+    {
+      "src": "lemma1",
+      "dst": "theorem1",
+      "kind": "supports"
+    }
+  ],
+  "cuts": [
+    {
+      "id": "definitions",
+      "blocks": ["def1"]
+    },
+    {
+      "id": "main_proof",
+      "blocks": ["lemma1", "proof1", "theorem1", "proof2"]
+    }
+  ],
+  "dag": {
+    "nodes": 5,
+    "edges": 5,
+    "acyclic": true
+  },
+  "meta": {
+    "theorem": "Fundamental group of contractible spaces",
+    "source": "Algebraic Topology Chapter 22",
+    "tags": ["algebraic_topology", "fundamental_group", "contractible", "homotopy"]
+  }
+}

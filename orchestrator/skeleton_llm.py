@@ -107,9 +107,7 @@ class Orchestrator:
             )
 
             action = result["response"]
-            print(
-                f"    Generated action: {action.get('action', {}).get('name', 'unknown')}"
-            )
+            print(f"    Generated action: {action.get('action', {}).get('name', 'unknown')}")
 
             # Mock verification - in real implementation, this would:
             # 1. Apply action to state
@@ -148,9 +146,7 @@ class Orchestrator:
 
             # Update plan with new steps
             if "plan" in new_plan:
-                self.plan["steps"] = [
-                    {"operator": step, "params": {}} for step in new_plan["plan"]
-                ]
+                self.plan["steps"] = [{"operator": step, "params": {}} for step in new_plan["plan"]]
 
             self.metrics["replans_count"] += 1
 
@@ -164,9 +160,7 @@ def main():
     parser = argparse.ArgumentParser(description="Orchestrator with LLM integration")
     parser.add_argument("--plan", required=True, help="Path to plan JSON file")
     parser.add_argument("--state", required=True, help="Path to state JSON file")
-    parser.add_argument(
-        "--llm", choices=["kimi", "mock"], default="kimi", help="LLM to use"
-    )
+    parser.add_argument("--llm", choices=["kimi", "mock"], default="kimi", help="LLM to use")
     parser.add_argument(
         "--verifier", choices=["local", "docker"], default="local", help="Verifier mode"
     )

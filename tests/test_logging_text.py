@@ -21,10 +21,7 @@ def test_text_logging_with_context(capsys):
     logger.info("computing merkle root")
 
     captured = capsys.readouterr()
-    assert (
-        "INFO test — computing merkle root [run_id=R123 step=ComputeMerkle]"
-        in captured.out
-    )
+    assert "INFO test — computing merkle root [run_id=R123 step=ComputeMerkle]" in captured.out
 
 
 def test_text_logging_levels(capsys):

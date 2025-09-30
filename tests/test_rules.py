@@ -43,9 +43,7 @@ class RuleTester:
                 covered_incidents.add(rule["source_incident"])
 
         missing_incidents = set(expected_incidents) - covered_incidents
-        assert (
-            len(missing_incidents) == 0
-        ), f"Missing rules for incidents: {missing_incidents}"
+        assert len(missing_incidents) == 0, f"Missing rules for incidents: {missing_incidents}"
 
         print(f"✅ All {len(expected_incidents)} incidents covered by rules")
 
@@ -62,21 +60,15 @@ class RuleTester:
 
         for rule in self.rules:
             for field in required_fields:
-                assert (
-                    field in rule
-                ), f"Rule {rule.get('id', 'unknown')} missing field: {field}"
+                assert field in rule, f"Rule {rule.get('id', 'unknown')} missing field: {field}"
 
             # Test cases must have required structure
             for test_case in rule["test_cases"]:
-                assert (
-                    "name" in test_case
-                ), f"Test case missing name in rule {rule['id']}"
+                assert "name" in test_case, f"Test case missing name in rule {rule['id']}"
                 assert (
                     "description" in test_case
                 ), f"Test case missing description in rule {rule['id']}"
-                assert (
-                    "expected" in test_case
-                ), f"Test case missing expected in rule {rule['id']}"
+                assert "expected" in test_case, f"Test case missing expected in rule {rule['id']}"
                 assert test_case["expected"] in [
                     "pass",
                     "fail",
@@ -97,9 +89,7 @@ class RuleTester:
                 "static_analysis",
             ], f"Invalid implementation type in rule {rule['id']}"
             assert "file" in impl, f"Rule {rule['id']} missing implementation file"
-            assert (
-                "command" in impl
-            ), f"Rule {rule['id']} missing implementation command"
+            assert "command" in impl, f"Rule {rule['id']} missing implementation command"
 
         print(f"✅ All {len(self.rules)} rules have implementation details")
 
@@ -112,9 +102,7 @@ class RuleTester:
 
         # Check that obligations start with 'k-'
         for obligation in all_obligations:
-            assert obligation.startswith(
-                "k-"
-            ), f"Obligation {obligation} should start with 'k-'"
+            assert obligation.startswith("k-"), f"Obligation {obligation} should start with 'k-'"
 
         print(f"✅ All {len(all_obligations)} obligations are properly formatted")
 

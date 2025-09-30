@@ -42,9 +42,7 @@ class AEEngineStats:
 class RealAEEngine(AEEngine):
     """Real AE Engine with actual FCA algorithms and statistics."""
 
-    def __init__(
-        self, oracle_adapter: Any, bandit_strategy: Any, diversity_strategy: Any
-    ):
+    def __init__(self, oracle_adapter: Any, bandit_strategy: Any, diversity_strategy: Any):
         self.oracle_adapter = oracle_adapter
         self.bandit_strategy = bandit_strategy
         self.diversity_strategy = diversity_strategy
@@ -163,18 +161,16 @@ class RealAEEngine(AEEngine):
         selected_concept = await self.bandit_strategy.select(candidates, ctx)
 
         # Apply diversity strategy
-        diverse_concept = await self.diversity_strategy.select_diverse_items(
-            [selected_concept], 1
-        )[0]
+        diverse_concept = await self.diversity_strategy.select_diverse_items([selected_concept], 1)[
+            0
+        ]
 
         # Generate concept with real FCA
         concept = await self._compute_formal_concept(diverse_concept, ctx)
 
         return concept
 
-    async def _generate_concept_candidates(
-        self, ctx: AEContext
-    ) -> List[Dict[str, Any]]:
+    async def _generate_concept_candidates(self, ctx: AEContext) -> List[Dict[str, Any]]:
         """Generate concept candidates using FCA algorithms."""
         # This would use real FCA algorithms like:
         # - Next-Closure
@@ -239,9 +235,7 @@ class RealAEEngine(AEEngine):
 
         return closure
 
-    async def _can_derive_attribute(
-        self, attr: str, intent: List[str], ctx: AEContext
-    ) -> bool:
+    async def _can_derive_attribute(self, attr: str, intent: List[str], ctx: AEContext) -> bool:
         """Check if attribute can be derived from intent."""
         # Real derivation logic would go here
         # For now, simple mock
@@ -302,9 +296,7 @@ class RealAEEngine(AEEngine):
                     "reason": oracle_result.reason,
                     "metadata": {
                         "generated_at": datetime.now().isoformat(),
-                        "oracle_confidence": oracle_result.attestation.get(
-                            "confidence", 0.0
-                        ),
+                        "oracle_confidence": oracle_result.attestation.get("confidence", 0.0),
                     },
                 }
                 counterexamples.append(counterexample)
@@ -332,9 +324,7 @@ class RealAEEngine(AEEngine):
         self.stats.execution_time += step_time
 
         if self.stats.execution_time > 0:
-            self.stats.concepts_per_second = (
-                self.stats.total_concepts / self.stats.execution_time
-            )
+            self.stats.concepts_per_second = self.stats.total_concepts / self.stats.execution_time
 
         if self.stats.total_concepts > 0:
             self.stats.implications_per_concept = (
@@ -342,9 +332,7 @@ class RealAEEngine(AEEngine):
             )
 
         # Calculate success rate
-        total_attempts = (
-            self.stats.total_implications + self.stats.total_counterexamples
-        )
+        total_attempts = self.stats.total_implications + self.stats.total_counterexamples
         if total_attempts > 0:
             self.stats.success_rate = self.stats.total_implications / total_attempts
 

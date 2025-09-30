@@ -10,9 +10,7 @@ import time
 from .context import FormalContext, Intent, Attribute, Extent
 
 
-def lectic_leq(
-    intent1: Intent, intent2: Intent, attribute_order: List[Attribute]
-) -> bool:
+def lectic_leq(intent1: Intent, intent2: Intent, attribute_order: List[Attribute]) -> bool:
     """
     Check if intent1 is lectically less than or equal to intent2.
 
@@ -30,9 +28,7 @@ def lectic_leq(
         has_attr2 = attr in intent2.attributes
 
         if has_attr1 != has_attr2:
-            return (
-                not has_attr1
-            )  # intent1 <= intent2 if intent1 doesn't have attr but intent2 does
+            return not has_attr1  # intent1 <= intent2 if intent1 doesn't have attr but intent2 does
 
     return True  # intents are equal
 
@@ -79,13 +75,9 @@ class NextClosure:
     Generates concepts in lectic order using the Next-Closure algorithm.
     """
 
-    def __init__(
-        self, context: FormalContext, attribute_order: Optional[List[Attribute]] = None
-    ):
+    def __init__(self, context: FormalContext, attribute_order: Optional[List[Attribute]] = None):
         self.context = context
-        self.attribute_order = attribute_order or sorted(
-            context.attributes, key=lambda a: a.name
-        )
+        self.attribute_order = attribute_order or sorted(context.attributes, key=lambda a: a.name)
         self._visited_concepts: Set[Intent] = set()
         self._concept_count = 0
         self._start_time: Optional[float] = None
@@ -245,9 +237,8 @@ class ConceptLattice:
         for subconcept in subconcepts:
             is_immediate = True
             for other_subconcept in subconcepts:
-                if (
-                    other_subconcept != subconcept
-                    and other_subconcept.extent.is_subset(subconcept.extent)
+                if other_subconcept != subconcept and other_subconcept.extent.is_subset(
+                    subconcept.extent
                 ):
                     is_immediate = False
                     break
@@ -266,9 +257,8 @@ class ConceptLattice:
         for superconcept in superconcepts:
             is_immediate = True
             for other_superconcept in superconcepts:
-                if (
-                    other_superconcept != superconcept
-                    and superconcept.extent.is_subset(other_superconcept.extent)
+                if other_superconcept != superconcept and superconcept.extent.is_subset(
+                    other_superconcept.extent
                 ):
                     is_immediate = False
                     break

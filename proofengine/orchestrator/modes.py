@@ -109,9 +109,7 @@ class TwoCategoryOrchestrator:
                     # Log error but continue
                     print(f"Error creating proposal for {strategy.id}: {e}")
 
-        success_rate = (
-            applicable_strategies / total_strategies if total_strategies > 0 else 0.0
-        )
+        success_rate = applicable_strategies / total_strategies if total_strategies > 0 else 0.0
 
         return ShadowReport(
             mode="shadow",
@@ -133,9 +131,7 @@ class TwoCategoryOrchestrator:
 
         # Check basic gates
         if not self._check_basic_gates(context, max_depth):
-            return ActiveResult(
-                success=False, error="Basic gates failed (budget, depth, cycle)"
-            )
+            return ActiveResult(success=False, error="Basic gates failed (budget, depth, cycle)")
 
         # Get candidate strategies (excluding disabled ones)
         candidates = self.strategy_registry.get_by_failreason(context.failreason)
@@ -163,9 +159,7 @@ class TwoCategoryOrchestrator:
             )
 
         # Find the selected strategy
-        strategy = next(
-            (s for s in candidates if s.id == selection_result.strategy_id), None
-        )
+        strategy = next((s for s in candidates if s.id == selection_result.strategy_id), None)
         if not strategy:
             return ActiveResult(
                 success=False,

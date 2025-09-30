@@ -12,9 +12,7 @@ class CapabilityMetadata:
     version: str = "0.1.0"
     provides: List[str] = field(default_factory=list)  # supported incident types
     prerequisites: List[str] = field(default_factory=list)  # ex: ["bin:opa"]
-    cost_hint_V: Dict[str, float] = field(
-        default_factory=dict
-    )  # ex: {"audit_cost": 0.2}
+    cost_hint_V: Dict[str, float] = field(default_factory=dict)  # ex: {"audit_cost": 0.2}
 
 
 class IncidentHandler(Protocol):
@@ -29,9 +27,7 @@ class IncidentHandler(Protocol):
         """Check if handler can handle incident type."""
         ...
 
-    def score(
-        self, incident: Dict[str, Any], ctx: Dict[str, Any] | None = None
-    ) -> float:
+    def score(self, incident: Dict[str, Any], ctx: Dict[str, Any] | None = None) -> float:
         """Score incident for priority (higher = better)."""
         ...
 
@@ -39,9 +35,7 @@ class IncidentHandler(Protocol):
         """Check prerequisites and return missing ones."""
         ...
 
-    def handle(
-        self, incident: Dict[str, Any], ctx: Dict[str, Any] | None = None
-    ) -> Dict[str, Any]:
+    def handle(self, incident: Dict[str, Any], ctx: Dict[str, Any] | None = None) -> Dict[str, Any]:
         """Handle incident and return result."""
         ...
 

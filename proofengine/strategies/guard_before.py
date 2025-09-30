@@ -53,9 +53,7 @@ class GuardBeforeStrategy(Strategy):
 
         # Analyze current operations
         operations = self._extract_operations(context.plan)
-        guard_requirements = self._identify_guard_requirements(
-            operations, context.failreason
-        )
+        guard_requirements = self._identify_guard_requirements(operations, context.failreason)
 
         if not guard_requirements:
             raise ValueError("No operations found that need security guards")
@@ -190,9 +188,7 @@ class GuardBeforeStrategy(Strategy):
                         "id": step.get("id"),
                         "operator": operator,
                         "params": step.get("params", {}),
-                        "risk_level": self._assess_operation_risk(
-                            operator, step.get("params", {})
-                        ),
+                        "risk_level": self._assess_operation_risk(operator, step.get("params", {})),
                     }
                 )
 
@@ -232,10 +228,7 @@ class GuardBeforeStrategy(Strategy):
         requirements = []
 
         # Network-related guards
-        if any(
-            "Network" in op["operator"] or "External" in op["operator"]
-            for op in operations
-        ):
+        if any("Network" in op["operator"] or "External" in op["operator"] for op in operations):
             requirements.append("network_isolation")
 
         # Secrets-related guards
@@ -245,10 +238,7 @@ class GuardBeforeStrategy(Strategy):
             requirements.append("secrets_detection")
 
         # Data access guards
-        if any(
-            "Database" in op["operator"] or "File" in op["operator"]
-            for op in operations
-        ):
+        if any("Database" in op["operator"] or "File" in op["operator"] for op in operations):
             requirements.append("data_access_control")
 
         # Always add audit logging
@@ -259,9 +249,7 @@ class GuardBeforeStrategy(Strategy):
     def _has_clear_operation_structure(self, plan: Dict[str, Any]) -> bool:
         """Check if plan has clear operation structure."""
         steps = plan.get("steps", [])
-        return len(steps) > 0 and all(
-            step.get("id") and step.get("operator") for step in steps
-        )
+        return len(steps) > 0 and all(step.get("id") and step.get("operator") for step in steps)
 
     def _has_existing_security_infrastructure(self, plan: Dict[str, Any]) -> bool:
         """Check if plan already has security infrastructure."""
@@ -269,7 +257,6 @@ class GuardBeforeStrategy(Strategy):
         security_steps = [
             s
             for s in steps
-            if s.get("operator")
-            in ["SecurityGuard", "NetworkGuard", "SecretsGuard", "AuditGuard"]
+            if s.get("operator") in ["SecurityGuard", "NetworkGuard", "SecretsGuard", "AuditGuard"]
         ]
         return len(security_steps) > 0

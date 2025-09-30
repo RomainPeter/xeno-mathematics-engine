@@ -47,17 +47,12 @@ class MetricsAggregator:
 
         if total_items > 0:
             coverage_gain = (
-                sum(
-                    run.get_metric("coverage_gain", 0.0) * run.weight
-                    for run in self.runs
-                )
+                sum(run.get_metric("coverage_gain", 0.0) * run.weight for run in self.runs)
                 / total_items
             )
 
             novelty_avg = (
-                sum(
-                    run.get_metric("novelty_avg", 0.0) * run.weight for run in self.runs
-                )
+                sum(run.get_metric("novelty_avg", 0.0) * run.weight for run in self.runs)
                 / total_items
             )
 

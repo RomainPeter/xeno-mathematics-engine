@@ -31,9 +31,7 @@ def test_logging_subscriber_error_level(caplog):
         bus.emit("capability.failed", name="test", error="test error")
 
     # Check that error events were logged
-    error_logs = [
-        record for record in caplog.records if record.levelno == logging.ERROR
-    ]
+    error_logs = [record for record in caplog.records if record.levelno == logging.ERROR]
     assert len(error_logs) >= 1  # At least one error event
 
 

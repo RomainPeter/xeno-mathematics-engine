@@ -175,9 +175,7 @@ class OrchestratorV1:
                 "completed",
                 payload={
                     "metrics": self.state.metrics,
-                    "duration": (
-                        self.state.end_time - self.state.start_time
-                    ).total_seconds(),
+                    "duration": (self.state.end_time - self.state.start_time).total_seconds(),
                     "audit_pack": audit_pack,
                     "version": "v1",
                 },
@@ -200,9 +198,7 @@ class OrchestratorV1:
             self.state.incidents.append(incident)
 
             # Persist incident
-            await self.incident_persistence.persist_incident(
-                self.state.run_id, incident
-            )
+            await self.incident_persistence.persist_incident(self.state.run_id, incident)
 
             # Emit FailReason
             if self.config.enable_failreason_emission:
@@ -326,9 +322,7 @@ class OrchestratorV1:
             self.state.incidents.append(incident)
 
             # Persist incident
-            await self.incident_persistence.persist_incident(
-                self.state.run_id, incident
-            )
+            await self.incident_persistence.persist_incident(self.state.run_id, incident)
 
             # Emit FailReason
             if self.config.enable_failreason_emission:
@@ -340,9 +334,7 @@ class OrchestratorV1:
                     )
                 )
 
-            self.event_bus.emit_ae_event(
-                "timeout", payload={"timeout": self.config.ae_timeout}
-            )
+            self.event_bus.emit_ae_event("timeout", payload={"timeout": self.config.ae_timeout})
 
             raise
 
@@ -493,9 +485,7 @@ class OrchestratorV1:
                 self.state.incidents.append(incident)
 
                 # Persist incident
-                await self.incident_persistence.persist_incident(
-                    self.state.run_id, incident
-                )
+                await self.incident_persistence.persist_incident(self.state.run_id, incident)
 
                 # Emit FailReason
                 if self.config.enable_failreason_emission:
@@ -522,9 +512,7 @@ class OrchestratorV1:
             action=action,
             context_hash=str(hash(str(result))),
             obligations=[],
-            justification={
-                "metrics": result.metrics if hasattr(result, "metrics") else {}
-            },
+            justification={"metrics": result.metrics if hasattr(result, "metrics") else {}},
             proofs=[],
             meta={
                 "result_type": type(result).__name__,
@@ -551,15 +539,11 @@ class OrchestratorV1:
 
     async def _handle_budget_warning(self, budget_type, status, operation) -> None:
         """Handle budget warning."""
-        self.event_bus.emit_budget_warning(
-            budget_type.value, status.current, status.limit
-        )
+        self.event_bus.emit_budget_warning(budget_type.value, status.current, status.limit)
 
     async def _handle_budget_overrun(self, budget_type, status, operation) -> None:
         """Handle budget overrun."""
-        self.event_bus.emit_budget_overrun(
-            budget_type.value, status.current, status.limit
-        )
+        self.event_bus.emit_budget_overrun(budget_type.value, status.current, status.limit)
 
         # Create incident
         incident = Incident(

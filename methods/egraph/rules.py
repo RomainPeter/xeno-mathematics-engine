@@ -126,9 +126,7 @@ class EGraphRules:
             ]
         ]
 
-    def apply_rule(
-        self, rule: EquivalenceRule, data: Dict[str, Any]
-    ) -> Optional[Dict[str, Any]]:
+    def apply_rule(self, rule: EquivalenceRule, data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Apply an equivalence rule to data."""
         print(f"🔗 Applying rule: {rule.name}")
 
@@ -146,9 +144,7 @@ class EGraphRules:
         else:
             return None
 
-    def _apply_idempotence(
-        self, rule: EquivalenceRule, data: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _apply_idempotence(self, rule: EquivalenceRule, data: Dict[str, Any]) -> Dict[str, Any]:
         """Apply idempotence rule."""
         # Mock: simplify repeated operations
         if "operations" in data:
@@ -171,9 +167,7 @@ class EGraphRules:
                 return {**data, "operations": ops, "rule_applied": rule.name}
         return data
 
-    def _apply_associativity(
-        self, rule: EquivalenceRule, data: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _apply_associativity(self, rule: EquivalenceRule, data: Dict[str, Any]) -> Dict[str, Any]:
         """Apply associativity rule."""
         # Mock: regroup operations
         if "operations" in data and len(data["operations"]) >= 3:
@@ -184,9 +178,7 @@ class EGraphRules:
                 return {**data, "operations": grouped, "rule_applied": rule.name}
         return data
 
-    def _apply_commutativity(
-        self, rule: EquivalenceRule, data: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _apply_commutativity(self, rule: EquivalenceRule, data: Dict[str, Any]) -> Dict[str, Any]:
         """Apply commutativity rule."""
         # Mock: swap commutative operations
         if "operations" in data and len(data["operations"]) >= 2:
@@ -195,9 +187,7 @@ class EGraphRules:
             return {**data, "operations": ops, "rule_applied": rule.name}
         return data
 
-    def _apply_absorption(
-        self, rule: EquivalenceRule, data: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _apply_absorption(self, rule: EquivalenceRule, data: Dict[str, Any]) -> Dict[str, Any]:
         """Apply absorption rule."""
         # Mock: absorb redundant operations
         if "operations" in data:
@@ -276,9 +266,7 @@ class EGraphRules:
             "equivalence_classes": len(self.equivalence_classes),
             "categories": {
                 "idempotence": len(self.get_rules_by_category("idempotence")),
-                "guarded_commutation": len(
-                    self.get_rules_by_category("guarded_commutation")
-                ),
+                "guarded_commutation": len(self.get_rules_by_category("guarded_commutation")),
                 "associativity": len(self.get_rules_by_category("associativity")),
                 "commutativity": len(self.get_rules_by_category("commutativity")),
                 "absorption": len(self.get_rules_by_category("absorption")),

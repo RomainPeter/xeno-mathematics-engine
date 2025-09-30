@@ -187,9 +187,7 @@ class LLMAdapter:
                             content=data["choices"][0]["message"]["content"],
                             model=data["model"],
                             usage=data.get("usage", {}),
-                            finish_reason=data["choices"][0].get(
-                                "finish_reason", "stop"
-                            ),
+                            finish_reason=data["choices"][0].get("finish_reason", "stop"),
                             response_time=response_time,
                             request_id=request_id,
                             metadata={
@@ -298,8 +296,7 @@ class LLMAdapter:
             self.average_response_time = response_time
         else:
             self.average_response_time = (
-                self.average_response_time * (self.successful_requests - 1)
-                + response_time
+                self.average_response_time * (self.successful_requests - 1) + response_time
             ) / self.successful_requests
 
     async def get_statistics(self) -> Dict[str, Any]:

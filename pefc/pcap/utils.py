@@ -6,9 +6,9 @@ from typing import Any
 
 def canonical_hash(obj: Any) -> str:
     """Generate canonical hash for object."""
-    blob = json.dumps(
-        obj, ensure_ascii=False, sort_keys=True, separators=(",", ":")
-    ).encode("utf-8")
+    blob = json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode(
+        "utf-8"
+    )
     return hashlib.sha256(blob).hexdigest()
 
 

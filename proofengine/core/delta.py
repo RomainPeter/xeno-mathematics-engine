@@ -68,11 +68,7 @@ def compute_delta(
     penalty = min(1.0, 0.1 * violations)
     delta_total = min(
         1.0,
-        weights[0] * dH
-        + weights[1] * dE
-        + weights[2] * dK
-        + weights[3] * dAST
-        + penalty,
+        weights[0] * dH + weights[1] * dE + weights[2] * dK + weights[3] * dAST + penalty,
     )
 
     return DeltaMetrics(

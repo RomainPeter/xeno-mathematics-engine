@@ -108,9 +108,7 @@ def run_active_mode_test(plan_path: str) -> dict:
         "confidence": result.confidence,
         "rationale": result.rationale,
         "error": result.error,
-        "selection_result": (
-            result.selection_result.__dict__ if result.selection_result else None
-        ),
+        "selection_result": (result.selection_result.__dict__ if result.selection_result else None),
     }
 
 

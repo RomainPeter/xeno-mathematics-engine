@@ -33,9 +33,7 @@ def add_to_zip(
     return True
 
 
-def dedup_additional_files(
-    files: list[tuple[Path, str]], seen: Set[str]
-) -> list[tuple[Path, str]]:
+def dedup_additional_files(files: list[tuple[Path, str]], seen: Set[str]) -> list[tuple[Path, str]]:
     """
     files = [(src_path, arcname)]
     Filtre:

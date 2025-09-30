@@ -144,9 +144,7 @@ class MetacognitivePlanner:
             ("verify", "Vérifier les obligations"),
         ]
         actions = []
-        for idx, (slug, description) in enumerate(
-            itertools.islice(itertools.cycle(templates), 3)
-        ):
+        for idx, (slug, description) in enumerate(itertools.islice(itertools.cycle(templates), 3)):
             actions.append(
                 PlannedAction(
                     action_id=f"{slug}-{idx}",

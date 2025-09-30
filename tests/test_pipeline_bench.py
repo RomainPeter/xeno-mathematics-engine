@@ -128,11 +128,7 @@ def test_sign_partial_success(tmp_path: Path):
         cfg=type(
             "Config",
             (),
-            {
-                "pack": type(
-                    "Pack", (), {"sign": type("Sign", (), {"enabled": True})()}
-                )()
-            },
+            {"pack": type("Pack", (), {"sign": type("Sign", (), {"enabled": True})()})()},
         )(),
         work_dir=tmp_path,
         out_dir=tmp_path,

@@ -29,9 +29,7 @@ class Capability(Protocol):
         """Check if capability can handle incident."""
         ...
 
-    def plan(
-        self, incident: Dict[str, Any], ctx: Dict[str, Any] | None = None
-    ) -> List[ProofSpec]:
+    def plan(self, incident: Dict[str, Any], ctx: Dict[str, Any] | None = None) -> List[ProofSpec]:
         """Plan proof generation for incident."""
         ...
 

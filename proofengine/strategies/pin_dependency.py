@@ -68,9 +68,7 @@ class PinDependencyStrategy(Strategy):
                 "operator": "PinDependency",
                 "params": {
                     "package": dep_name,
-                    "version": dep_info.get(
-                        "latest_secure", dep_info.get("current", "latest")
-                    ),
+                    "version": dep_info.get("latest_secure", dep_info.get("current", "latest")),
                     "reason": "Security: Prevent typosquatting and CVE vulnerabilities",
                 },
             }
@@ -82,9 +80,7 @@ class PinDependencyStrategy(Strategy):
                 "operator": "UpdateSBOM",
                 "params": {
                     "package": dep_name,
-                    "version": dep_info.get(
-                        "latest_secure", dep_info.get("current", "latest")
-                    ),
+                    "version": dep_info.get("latest_secure", dep_info.get("current", "latest")),
                     "vulnerabilities": dep_info.get("vulnerabilities", []),
                     "license": dep_info.get("license", "unknown"),
                 },
@@ -205,9 +201,7 @@ class PinDependencyStrategy(Strategy):
 
         return unpinned
 
-    def _find_latest_secure_version(
-        self, package: str, dep_info: Dict[str, Any]
-    ) -> str:
+    def _find_latest_secure_version(self, package: str, dep_info: Dict[str, Any]) -> str:
         """Find latest secure version for package."""
         # Mock implementation - in real scenario, would query package registry
         vulnerabilities = dep_info.get("vulnerabilities", [])
@@ -223,9 +217,7 @@ class PinDependencyStrategy(Strategy):
     def _has_clear_dependency_structure(self, plan: Dict[str, Any]) -> bool:
         """Check if plan has clear dependency structure."""
         steps = plan.get("steps", [])
-        dependency_steps = [
-            s for s in steps if "dependency" in s.get("operator", "").lower()
-        ]
+        dependency_steps = [s for s in steps if "dependency" in s.get("operator", "").lower()]
         return len(dependency_steps) > 0
 
     def _has_existing_security_measures(self, plan: Dict[str, Any]) -> bool:
@@ -234,7 +226,6 @@ class PinDependencyStrategy(Strategy):
         security_steps = [
             s
             for s in steps
-            if s.get("operator")
-            in ["SecurityScan", "VulnerabilityCheck", "LicenseCheck"]
+            if s.get("operator") in ["SecurityScan", "VulnerabilityCheck", "LicenseCheck"]
         ]
         return len(security_steps) > 0

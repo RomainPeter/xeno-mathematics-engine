@@ -155,9 +155,7 @@ class PipelineRunner:
 
             except Exception as e:
                 duration = time.time() - start_time
-                log.error(
-                    "pipeline: step %s failed in %.2fs: %s", step_name, duration, e
-                )
+                log.error("pipeline: step %s failed in %.2fs: %s", step_name, duration, e)
                 ctx.mark_failed(e)
 
                 self._publish_event(
@@ -174,15 +172,11 @@ class PipelineRunner:
         # Final status
         if ctx.status == "partial":
             log.info("pipeline: completed with partial success")
-            self._publish_event(
-                "pipeline.end", {"status": "partial", "errors": ctx.errors}
-            )
+            self._publish_event("pipeline.end", {"status": "partial", "errors": ctx.errors})
             return 20  # Partial success
         elif ctx.status == "failed":
             log.error("pipeline: failed")
-            self._publish_event(
-                "pipeline.end", {"status": "failed", "errors": ctx.errors}
-            )
+            self._publish_event("pipeline.end", {"status": "failed", "errors": ctx.errors})
             return 1
         else:
             log.info("pipeline: completed successfully")

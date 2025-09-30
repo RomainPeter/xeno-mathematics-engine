@@ -13,9 +13,7 @@ from proofengine.core.schemas import PCAP, Attestation
 from proofengine.core.pcap import read_pcap, verify_pcap_chain
 
 
-def verify_pcap_dir(
-    pcap_dir: str = "out/pcap", audit_out: str = "out/audit"
-) -> Dict[str, Any]:
+def verify_pcap_dir(pcap_dir: str = "out/pcap", audit_out: str = "out/audit") -> Dict[str, Any]:
     """
     Vérifie tous les PCAPs dans un répertoire.
 
@@ -63,9 +61,7 @@ def verify_pcap_dir(
         ts=time.time(),
         pcap_count=len(verdicts),
         verdicts=verdicts,
-        digest=hashlib.sha256(
-            json.dumps(verdicts, sort_keys=True).encode()
-        ).hexdigest(),
+        digest=hashlib.sha256(json.dumps(verdicts, sort_keys=True).encode()).hexdigest(),
     )
 
     # Sauvegarder l'attestation

@@ -29,16 +29,12 @@ def main():
 
     # 1) All impacted are contested
     status_map = {s["id"]: s for s in status}
-    impacted = [
-        d["id"] for d in decisions if "provenance" in d.get("question_attrs", [])
-    ]
+    impacted = [d["id"] for d in decisions if "provenance" in d.get("question_attrs", [])]
     # also impacted if any evidence has provenance attribute (conservative)
     # this matches the injection logic in s2_contradiction.py via DEC_STAT
     impacted = sorted(set(impacted + [s["id"] for s in status if s.get("contested")]))
 
-    no_unflagged_impacted = all(
-        status_map.get(i, {}).get("contested") for i in impacted
-    )
+    no_unflagged_impacted = all(status_map.get(i, {}).get("contested") for i in impacted)
 
     # 2) Retro rule exists and references provenance
     retro_ok = os.path.exists(RETRO)
