@@ -29,9 +29,7 @@ def _write_files(tmp: Path, files: dict[str, bytes]) -> list[tuple[Path, str]]:
         max_size=5,
     )
 )
-def test_merkle_idempotence_and_order_invariance(
-    tmp_path: Path, files: dict[str, bytes]
-):
+def test_merkle_idempotence_and_order_invariance(tmp_path: Path, files: dict[str, bytes]):
     from pefc.pack.merkle import build_entries, compute_merkle_root
 
     pairs = _write_files(tmp_path, files)

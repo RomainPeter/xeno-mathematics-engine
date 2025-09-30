@@ -6,12 +6,8 @@ from typing import Dict, Any, List
 class TwoMorphism:
     source: str  # composite plan id π
     target: str  # fallback π'
-    conditions: Dict[
-        str, Any
-    ]  # e.g., {'FailReason':'LowCoverage', 'V.time_ms': {'<': 1000}}
-    preference: Dict[
-        str, Any
-    ]  # e.g., {'pareto': ['coverage','risk'], 'dominance':'weak'}
+    conditions: Dict[str, Any]  # e.g., {'FailReason':'LowCoverage', 'V.time_ms': {'<': 1000}}
+    preference: Dict[str, Any]  # e.g., {'pareto': ['coverage','risk'], 'dominance':'weak'}
     actions: List[
         Dict[str, Any]
     ]  # e.g., [{'add_K': 'min_novelty>=0.3'}, {'replan_hint':'prefer Meet'}]

@@ -22,9 +22,7 @@ class DeterminismTester:
 
     def run_determinism_test(self) -> Dict[str, Any]:
         """Run multiple identical runs and check for determinism"""
-        print(
-            f"🔬 Running determinism test with {self.num_runs} runs (seed: {self.seed})"
-        )
+        print(f"🔬 Running determinism test with {self.num_runs} runs (seed: {self.seed})")
 
         for i in range(self.num_runs):
             print(f"\n🏃 Run {i+1}/{self.num_runs}...")
@@ -225,9 +223,7 @@ class DeterminismTester:
 def main():
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Determinism Test for Discovery Engine 2-Cat"
-    )
+    parser = argparse.ArgumentParser(description="Determinism Test for Discovery Engine 2-Cat")
     parser.add_argument("--runs", type=int, default=3, help="Number of runs")
     parser.add_argument("--seed", default="42", help="Seed for deterministic execution")
 

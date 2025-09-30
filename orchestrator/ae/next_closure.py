@@ -262,11 +262,7 @@ class AEExplorer:
         """Check if exploration has converged."""
         # Simple convergence check
         recent_acceptances = len(
-            [
-                h
-                for h in self.exploration_history[-5:]
-                if h.get("type") == "implication_accepted"
-            ]
+            [h for h in self.exploration_history[-5:] if h.get("type") == "implication_accepted"]
         )
 
         return recent_acceptances < 1  # Stop if no recent acceptances

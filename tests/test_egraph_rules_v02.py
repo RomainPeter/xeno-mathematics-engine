@@ -24,9 +24,7 @@ class TestEGraphRulesV02:
 
     def test_normalize_verify_commute_rule(self):
         """Test Normalize∘Verify ↔ Verify∘Normalize rule."""
-        rule = next(
-            (r for r in self.egraph.rules if r.name == "normalize_verify_commute"), None
-        )
+        rule = next((r for r in self.egraph.rules if r.name == "normalize_verify_commute"), None)
         assert rule is not None, "normalize_verify_commute rule should exist"
         assert "Normalize∘Verify" in rule.pattern
         assert "Verify∘Normalize" in rule.pattern
@@ -34,9 +32,7 @@ class TestEGraphRulesV02:
 
     def test_meet_absorption_local_rule(self):
         """Test Meet absorption with K disjoint rule."""
-        rule = next(
-            (r for r in self.egraph.rules if r.name == "meet_absorption_local"), None
-        )
+        rule = next((r for r in self.egraph.rules if r.name == "meet_absorption_local"), None)
         assert rule is not None, "meet_absorption_local rule should exist"
         assert "Meet(x,Meet(x,y))" in rule.pattern
         assert "K(x) ∩ K(y) = ∅" in rule.guard
@@ -49,9 +45,7 @@ class TestEGraphRulesV02:
         }
 
         # Find the rule
-        rule = next(
-            (r for r in self.egraph.rules if r.name == "normalize_verify_commute"), None
-        )
+        rule = next((r for r in self.egraph.rules if r.name == "normalize_verify_commute"), None)
 
         if rule and self.egraph._is_applicable(rule, test_data):
             result = self.egraph.apply_rule(rule, test_data)
@@ -66,9 +60,7 @@ class TestEGraphRulesV02:
         }
 
         # Find the rule
-        rule = next(
-            (r for r in self.egraph.rules if r.name == "meet_absorption_local"), None
-        )
+        rule = next((r for r in self.egraph.rules if r.name == "meet_absorption_local"), None)
 
         if rule and self.egraph._is_applicable(rule, test_data):
             result = self.egraph.apply_rule(rule, test_data)
@@ -77,9 +69,7 @@ class TestEGraphRulesV02:
     def test_rule_guards_strict(self):
         """Test that v0.2 rules have strict guards."""
         v02_rules = [
-            r
-            for r in self.egraph.rules
-            if r.category in ["v0.2_commutation", "v0.2_absorption"]
+            r for r in self.egraph.rules if r.category in ["v0.2_commutation", "v0.2_absorption"]
         ]
 
         for rule in v02_rules:
@@ -119,17 +109,11 @@ class TestEGraphRulesV02:
         stats = self.egraph.get_stats()
 
         assert "total_rules" in stats, "Stats should include total rules"
-        assert (
-            stats["total_rules"] >= 10
-        ), "Should have at least 10 rules including v0.2"
+        assert stats["total_rules"] >= 10, "Should have at least 10 rules including v0.2"
 
         # Check that v0.2 rules are counted
         v02_count = len(
-            [
-                r
-                for r in self.egraph.rules
-                if r.category in ["v0.2_commutation", "v0.2_absorption"]
-            ]
+            [r for r in self.egraph.rules if r.category in ["v0.2_commutation", "v0.2_absorption"]]
         )
         assert v02_count >= 2, "Should have at least 2 v0.2 rules"
 
@@ -156,12 +140,8 @@ class TestEGraphRulesV02:
         safe_rules = self.egraph.get_safe_rules_v0_1()
         safe_categories = set(rule.category for rule in safe_rules)
 
-        assert (
-            "v0.2_commutation" not in safe_categories
-        ), "v0.2 rules should not be in safe v0.1"
-        assert (
-            "v0.2_absorption" not in safe_categories
-        ), "v0.2 rules should not be in safe v0.1"
+        assert "v0.2_commutation" not in safe_categories, "v0.2 rules should not be in safe v0.1"
+        assert "v0.2_absorption" not in safe_categories, "v0.2 rules should not be in safe v0.1"
 
 
 if __name__ == "__main__":

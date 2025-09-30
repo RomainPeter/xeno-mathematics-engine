@@ -186,9 +186,7 @@ class TestOrchestratorV1:
             return_value=Mock(
                 success=True,
                 concepts=[{"id": "concept1", "extent": ["obj1"], "intent": ["attr1"]}],
-                implications=[
-                    {"id": "impl1", "premise": ["attr1"], "conclusion": ["attr2"]}
-                ],
+                implications=[{"id": "impl1", "premise": ["attr1"], "conclusion": ["attr2"]}],
                 counterexamples=[],
                 metrics={"concepts_count": 1, "implications_count": 1},
                 timings={"total": 0.1},
@@ -255,9 +253,7 @@ class TestOrchestratorV1:
     ):
         """Test Orchestrator v1 timeout handling."""
         # Mock timeout
-        orchestrator_v1.ae_engine.next_closure_step = AsyncMock(
-            side_effect=asyncio.TimeoutError()
-        )
+        orchestrator_v1.ae_engine.next_closure_step = AsyncMock(side_effect=asyncio.TimeoutError())
 
         # Run orchestrator
         state = await orchestrator_v1.run(domain_spec, budgets, thresholds)

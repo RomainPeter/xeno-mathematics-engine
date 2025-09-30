@@ -37,9 +37,7 @@ class AELoop:
             diversity=self.diversity,
         )
 
-    def run(
-        self, budgets: Dict[str, Any], thresholds: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def run(self, budgets: Dict[str, Any], thresholds: Dict[str, Any]) -> Dict[str, Any]:
         """Run AE loop with budgets and thresholds."""
         print("🚀 Starting AE Loop orchestrator...")
 

@@ -107,9 +107,7 @@ def main():
             r_trace = v_trace_bound(d, K=K)
             r_det = v_determinism(d)
             # only check hashes for evidence referenced by this decision
-            r_prov = v_provenance(
-                [o for o in evidence_objs if o["id"] in d["evidence_ids"]]
-            )
+            r_prov = v_provenance([o for o in evidence_objs if o["id"] in d["evidence_ids"]])
             results.append(
                 {
                     "decision": d["id"],

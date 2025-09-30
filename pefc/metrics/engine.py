@@ -8,9 +8,7 @@ from pefc.metrics.backends import choose_backend
 logger = logging.getLogger(__name__)
 
 
-def aggregate(
-    runs: List[RunRecord], prefer_backend: str | None = None
-) -> Dict[str, dict]:
+def aggregate(runs: List[RunRecord], prefer_backend: str | None = None) -> Dict[str, dict]:
     """
     Aggregate runs using the best available backend.
 
@@ -42,9 +40,7 @@ def _common_keys(runs: List[RunRecord]) -> List[str]:
     return sorted(keys)
 
 
-def _reduce_group(
-    records: List[RunRecord], keys: List[str]
-) -> Tuple[float, Dict[str, float]]:
+def _reduce_group(records: List[RunRecord], keys: List[str]) -> Tuple[float, Dict[str, float]]:
     """Calculate weighted aggregation for a group of records."""
     wsum = sum(r.weight for r in records) or 1.0
     aggs = {k: sum(r.weight * r.metrics[k] for r in records) / wsum for k in keys}
@@ -139,9 +135,7 @@ def _aggregate_polars(runs: List[RunRecord]) -> Dict[str, dict]:
 
     df = pl.DataFrame(rows)
     wsum = float(df["weight"].sum())
-    overall_metrics = {
-        k: float((df[k] * df["weight"]).sum() / (wsum or 1.0)) for k in keys
-    }
+    overall_metrics = {k: float((df[k] * df["weight"]).sum() / (wsum or 1.0)) for k in keys}
     overall = {"n_runs": int(df.height), "weight_sum": wsum, "metrics": overall_metrics}
 
     by_group = {}

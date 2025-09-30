@@ -104,9 +104,7 @@ class TestEventBus:
     async def test_backpressure_handling(self, event_bus):
         """Test backpressure handling with small buffer."""
         # Recreate bus with small deque buffer and publish before starting drain
-        small_bus = EventBus(
-            EventBusConfig(buffer_size=5, sinks=["memory"], drop_oldest=True)
-        )
+        small_bus = EventBus(EventBusConfig(buffer_size=5, sinks=["memory"], drop_oldest=True))
 
         # Publish more events than buffer can hold
         events = []
@@ -138,15 +136,11 @@ class TestEventBus:
         with tempfile.TemporaryDirectory() as temp_dir:
             events_file = Path(temp_dir) / "events.jsonl"
             bus = EventBus(
-                EventBusConfig(
-                    buffer_size=32, sinks=["file"], file_path=str(events_file)
-                )
+                EventBusConfig(buffer_size=32, sinks=["file"], file_path=str(events_file))
             )
 
             await bus.start()
-            e1 = create_orchestrator_start_event(
-                run_id="r", trace_id="t", payload={"x": 1}
-            )
+            e1 = create_orchestrator_start_event(run_id="r", trace_id="t", payload={"x": 1})
             e2 = create_incident_event(
                 run_id="r",
                 trace_id="t",

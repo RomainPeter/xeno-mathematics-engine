@@ -25,9 +25,7 @@ async def _run_once(seed: int, audit_dir: Path) -> Path:
     ae = NextClosureEngine()
     cegis = AsyncCegisEngine(
         LLMStub(seed=seed),
-        VerifierStub(
-            [{"valid": True, "confidence": 0.9, "evidence": {}, "metrics": {}}]
-        ),
+        VerifierStub([{"valid": True, "confidence": 0.9, "evidence": {}, "metrics": {}}]),
     )
     cfg = OrchestratorLiteConfig(
         ae_timeout=5.0,

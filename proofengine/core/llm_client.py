@@ -130,9 +130,7 @@ class LLMClient:
         latency_ms = int((time.time() - start_time) * 1000)
 
         if response.status_code != 200:
-            raise Exception(
-                f"API request failed: {response.status_code} - {response.text}"
-            )
+            raise Exception(f"API request failed: {response.status_code} - {response.text}")
 
         data = response.json()
 

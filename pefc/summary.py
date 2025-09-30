@@ -25,17 +25,11 @@ def _extract_run(obj: Dict[str, Any], source_path: str, weight_key: str) -> RunR
     group = str(obj.get("group") or obj.get("mode") or "unknown")
     weight = float(obj.get(weight_key) or obj.get("count") or 1.0)
     if "metrics" in obj and isinstance(obj["metrics"], dict):
-        metrics = {
-            k: float(v)
-            for k, v in obj["metrics"].items()
-            if isinstance(v, (int, float))
-        }
+        metrics = {k: float(v) for k, v in obj["metrics"].items() if isinstance(v, (int, float))}
     else:
         reserved = {"run_id", "id", "group", "mode", "count", "n_items", "agg", "runs"}
         metrics = {
-            k: float(v)
-            for k, v in obj.items()
-            if k not in reserved and isinstance(v, (int, float))
+            k: float(v) for k, v in obj.items() if k not in reserved and isinstance(v, (int, float))
         }
     return RunRecord(
         run_id=run_id,
@@ -223,9 +217,7 @@ def build_summary(
         raise ValidationError(str(e))
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(
-        json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
+    out_path.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
     logger.info(
         "summary.json written: %s (backend=%s, runs=%d)",
         out_path,

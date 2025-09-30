@@ -29,9 +29,7 @@ class BuildSummary(PackStep):
             weight_key=ctx.cfg.metrics.weight_key,
             dedup=ctx.cfg.metrics.dedup,
             version=ctx.cfg.pack.version,
-            prefer_backend=(
-                ctx.cfg.metrics.backend if ctx.cfg.metrics.backend != "auto" else None
-            ),
+            prefer_backend=(ctx.cfg.metrics.backend if ctx.cfg.metrics.backend != "auto" else None),
             bounded_metrics=getattr(ctx.cfg.metrics, "bounded_metrics", []),
             schema_path=(
                 Path(ctx.cfg.metrics.schema_path)
@@ -45,10 +43,6 @@ class BuildSummary(PackStep):
         ctx.add_file("summary.json", summary_path)
 
         # Log results
-        log.info(
-            "build_summary: generated summary with %d runs", result["overall"]["n_runs"]
-        )
+        log.info("build_summary: generated summary with %d runs", result["overall"]["n_runs"])
         if result["overall"]["metrics"]:
-            log.info(
-                "build_summary: metrics: %s", list(result["overall"]["metrics"].keys())
-            )
+            log.info("build_summary: metrics: %s", list(result["overall"]["metrics"].keys()))

@@ -102,17 +102,13 @@ class EventBus:
                         if len(self.buffer) > 0:
                             self.buffer.popleft()
                             self.stats["dropped"] += 1
-                            self.logger.warning(
-                                f"Event dropped due to full buffer: {event.type}"
-                            )
+                            self.logger.warning(f"Event dropped due to full buffer: {event.type}")
                         self.buffer.append(event)
                         self.stats["published"] += 1
                     else:
                         # do not enqueue
                         self.stats["dropped"] += 1
-                        self.logger.warning(
-                            f"Event dropped due to full buffer: {event.type}"
-                        )
+                        self.logger.warning(f"Event dropped due to full buffer: {event.type}")
                 else:
                     self.buffer.append(event)
                     self.stats["published"] += 1
@@ -243,9 +239,7 @@ class EventBus:
                     sink.write(event_dict)
                     self.stats["written"] += 1
                 except Exception as e:
-                    self.logger.error(
-                        f"Error writing to sink {type(sink).__name__}: {e}"
-                    )
+                    self.logger.error(f"Error writing to sink {type(sink).__name__}: {e}")
 
             # Notify subscribers
             for callback in self.subscribers:

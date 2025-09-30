@@ -38,11 +38,7 @@ def run_s1():
             timeout=60,
         )
         ok = p.returncode == 0
-        details = (
-            json.loads(p.stdout)
-            if p.stdout.strip().startswith("{")
-            else {"S1_pass": ok}
-        )
+        details = json.loads(p.stdout) if p.stdout.strip().startswith("{") else {"S1_pass": ok}
         return ok, details
     except Exception:
         return False, {"S1_pass": False}

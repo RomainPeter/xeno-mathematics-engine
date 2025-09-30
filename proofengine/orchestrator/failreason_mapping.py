@@ -96,9 +96,7 @@ class FailReasonMapper:
         return {
             "version": "0.2.0",
             "code": mapped_code,
-            "message": error_data.get(
-                "message", f"{error_type} from {runner_type.value}"
-            ),
+            "message": error_data.get("message", f"{error_type} from {runner_type.value}"),
             "refs": error_data.get("refs", []),
             "data": error_data.get("data", {}),
             "runner": runner_type.value,

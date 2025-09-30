@@ -99,9 +99,7 @@ def test_success_with_valid_signature(tmp_path: Path):
 def test_partial_is_success(tmp_path: Path):
     """Test that partial success can be treated as success."""
     cfg = write_cfg(tmp_path, enable_sign=True, key=None)
-    res = run_pack_build(
-        config_path=str(cfg), allow_partial=True, partial_is_success=True
-    )
+    res = run_pack_build(config_path=str(cfg), allow_partial=True, partial_is_success=True)
     assert res.status == BuildStatus.SUCCESS  # PARTIAL becomes SUCCESS
     assert res.exit_code == 0  # Exit code becomes 0
     assert "zip" in res.artifacts

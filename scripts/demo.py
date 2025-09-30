@@ -36,9 +36,7 @@ def main():
         A=[],
         Sigma={"seed": 123},
     )
-    plan = propose_plan(
-        f"Improve {case_id} under K", "repo: toy", json.dumps(X.K), "[]"
-    )
+    plan = propose_plan(f"Improve {case_id} under K", "repo: toy", json.dumps(X.K), "[]")
     p_plan = PCAP(
         ts=now_iso(),
         operator="plan",

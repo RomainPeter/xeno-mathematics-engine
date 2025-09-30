@@ -48,45 +48,25 @@ Exemples d'utilisation:
         plan_parser = subparsers.add_parser("plan-run", help="Exécuter un plan")
         plan_parser.add_argument("--goal", required=True, help="Objectif à atteindre")
         plan_parser.add_argument("--case", help="Cas de test à utiliser")
-        plan_parser.add_argument(
-            "--seed", type=int, help="Graine pour la reproductibilité"
-        )
-        plan_parser.add_argument(
-            "--budget", type=int, default=30000, help="Budget temps en ms"
-        )
-        plan_parser.add_argument(
-            "--output", default="out/", help="Répertoire de sortie"
-        )
+        plan_parser.add_argument("--seed", type=int, help="Graine pour la reproductibilité")
+        plan_parser.add_argument("--budget", type=int, default=30000, help="Budget temps en ms")
+        plan_parser.add_argument("--output", default="out/", help="Répertoire de sortie")
 
         # Commande verify
         verify_parser = subparsers.add_parser("verify", help="Vérifier un PCAP")
-        verify_parser.add_argument(
-            "--pcap", required=True, help="Fichier PCAP à vérifier"
-        )
+        verify_parser.add_argument("--pcap", required=True, help="Fichier PCAP à vérifier")
         verify_parser.add_argument("--output", help="Fichier de sortie pour le rapport")
 
         # Commande audit-pack
-        audit_parser = subparsers.add_parser(
-            "audit-pack", help="Générer un pack d'audit"
-        )
-        audit_parser.add_argument(
-            "--input", default="out/pcap/", help="Répertoire des PCAPs"
-        )
-        audit_parser.add_argument(
-            "--output", default="out/audit/", help="Répertoire de sortie"
-        )
-        audit_parser.add_argument(
-            "--sign", action="store_true", help="Signer le pack d'audit"
-        )
+        audit_parser = subparsers.add_parser("audit-pack", help="Générer un pack d'audit")
+        audit_parser.add_argument("--input", default="out/pcap/", help="Répertoire des PCAPs")
+        audit_parser.add_argument("--output", default="out/audit/", help="Répertoire de sortie")
+        audit_parser.add_argument("--sign", action="store_true", help="Signer le pack d'audit")
 
         # Commande metrics
         metrics_parser = subparsers.add_parser("metrics", help="Générer des métriques")
-        metrics_parser.add_argument(
-            "--input", default="out/pcap/", help="Répertoire des PCAPs"
-        )
-        metrics_parser.add_argument(
-            "--output", default="out/metrics/", help="Répertoire de sortie"
-        )
+        metrics_parser.add_argument("--input", default="out/pcap/", help="Répertoire des PCAPs")
+        metrics_parser.add_argument("--output", default="out/metrics/", help="Répertoire de sortie")
         metrics_parser.add_argument(
             "--format",
             choices=["json", "markdown"],
@@ -136,9 +116,7 @@ Exemples d'utilisation:
         self.planner = MetacognitivePlanner(config)
 
         # Exécuter le plan
-        result = self.planner.execute_plan(
-            initial_state, args.goal, config.get("budget")
-        )
+        result = self.planner.execute_plan(initial_state, args.goal, config.get("budget"))
 
         # Sauvegarder les résultats
         self._save_plan_results(result, args.output)
@@ -185,9 +163,7 @@ Exemples d'utilisation:
         print(f"📦 Génération du pack d'audit depuis: {args.input}")
 
         # Générer le pack d'audit
-        audit_pack = self.audit_pack_generator.generate_audit_pack(
-            args.input, args.sign
-        )
+        audit_pack = self.audit_pack_generator.generate_audit_pack(args.input, args.sign)
 
         # Sauvegarder le pack
         os.makedirs(args.output, exist_ok=True)

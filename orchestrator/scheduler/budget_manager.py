@@ -139,9 +139,7 @@ class BudgetManager:
 
         return True
 
-    async def check_budget_available(
-        self, budget_type: BudgetType, required_amount: float
-    ) -> bool:
+    async def check_budget_available(self, budget_type: BudgetType, required_amount: float) -> bool:
         """Check if budget is available for required amount."""
         if budget_type not in self.budgets:
             return True  # No budget set
@@ -267,9 +265,7 @@ class BudgetManager:
     async def _apply_backoff(self, budget_type: BudgetType) -> None:
         """Apply exponential backoff."""
         current_delay = self.backoff_delays.get(budget_type, 0.0)
-        new_delay = min(
-            current_delay * self.config.backoff_base, self.config.max_backoff
-        )
+        new_delay = min(current_delay * self.config.backoff_base, self.config.max_backoff)
 
         # Add jitter
         jitter = self.config.jitter_range * (0.5 - time.time() % 1)
@@ -336,9 +332,7 @@ class BudgetManager:
         elif budget_type == BudgetType.API_CALLS:
             suggestions.append("Consider batching API calls")
         elif budget_type == BudgetType.MEMORY:
-            suggestions.append(
-                "Consider reducing memory usage or increasing allocation"
-            )
+            suggestions.append("Consider reducing memory usage or increasing allocation")
 
         return suggestions
 

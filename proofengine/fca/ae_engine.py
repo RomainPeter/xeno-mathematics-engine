@@ -313,9 +313,7 @@ class AEAnalyzer:
             "monotonic_ratio": monotonic_count / len(concepts),
         }
 
-    def generate_report(
-        self, context: FormalContext, concepts: List[Concept]
-    ) -> Dict[str, Any]:
+    def generate_report(self, context: FormalContext, concepts: List[Concept]) -> Dict[str, Any]:
         """Generate a comprehensive analysis report."""
         stats = self.engine.get_statistics()
         concept_dist = self.analyze_concept_distribution(concepts)

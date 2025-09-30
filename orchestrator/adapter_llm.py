@@ -120,9 +120,7 @@ Return valid JSON only."""
             messages, expected_schema=contract["output_schema_uri"]
         )
 
-        content = (
-            response.get("choices", [{}])[0].get("message", {}).get("content", "{}")
-        )
+        content = response.get("choices", [{}])[0].get("message", {}).get("content", "{}")
 
         # Validate response
         if not self._validate_response(content, contract["output_schema_uri"]):
@@ -139,18 +137,14 @@ Return valid JSON only."""
             {"name": "constraints", "type": "array", "value": json.dumps(constraints)},
         ]
 
-        contract = self.contract_builder.build_generalize_contract(
-            task, inputs, constraints
-        )
+        contract = self.contract_builder.build_generalize_contract(task, inputs, constraints)
         messages = self._contract_to_messages(contract)
 
         response, meta = self.llm_adapter.call_llm(
             messages, expected_schema=contract["output_schema_uri"]
         )
 
-        content = (
-            response.get("choices", [{}])[0].get("message", {}).get("content", "{}")
-        )
+        content = response.get("choices", [{}])[0].get("message", {}).get("content", "{}")
 
         # Validate response
         if not self._validate_response(content, contract["output_schema_uri"]):
@@ -167,18 +161,14 @@ Return valid JSON only."""
             {"name": "constraints", "type": "array", "value": json.dumps(constraints)},
         ]
 
-        contract = self.contract_builder.build_refute_contract(
-            task, inputs, constraints
-        )
+        contract = self.contract_builder.build_refute_contract(task, inputs, constraints)
         messages = self._contract_to_messages(contract)
 
         response, meta = self.llm_adapter.call_llm(
             messages, expected_schema=contract["output_schema_uri"]
         )
 
-        content = (
-            response.get("choices", [{}])[0].get("message", {}).get("content", "{}")
-        )
+        content = response.get("choices", [{}])[0].get("message", {}).get("content", "{}")
 
         # Validate response
         if not self._validate_response(content, contract["output_schema_uri"]):

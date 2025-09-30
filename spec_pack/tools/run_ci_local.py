@@ -29,9 +29,7 @@ def main():
         run_command(["python", os.path.join("spec_pack", "tools", "run_s1.py")])
 
         print("[CI local] S2 sandbox…")
-        run_command(
-            ["python", os.path.join("spec_pack", "tools", "s2_contradiction.py")]
-        )
+        run_command(["python", os.path.join("spec_pack", "tools", "s2_contradiction.py")])
         run_command(["python", os.path.join("spec_pack", "tools", "s2_check.py")])
 
     finally:

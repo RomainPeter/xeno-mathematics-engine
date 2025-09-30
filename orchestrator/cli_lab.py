@@ -97,9 +97,7 @@ def main():
         metrics = asyncio.run(asyncio.wait_for(_run_once(), timeout=args.wall_timeout))
     except asyncio.TimeoutError:
         # Fallback de sécurité: produire des métriques minimales et continuer
-        print(
-            "[WARN] Lab run exceeded wall-timeout; emitting minimal metrics and continuing"
-        )
+        print("[WARN] Lab run exceeded wall-timeout; emitting minimal metrics and continuing")
         metrics = {
             "cegis": {"patch_accept_rate": 1.0, "proposals": 0, "accepts": 0},
             "global": {"incidents_count": {}},

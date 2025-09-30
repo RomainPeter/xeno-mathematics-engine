@@ -73,12 +73,8 @@ class TestManifestMerkle:
     def test_merkle_root_reproducibility(self, sample_files: List[Path]):
         """Test that Merkle root is reproducible for identical content."""
         # Create entries twice
-        entries1 = build_entries(
-            [(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)]
-        )
-        entries2 = build_entries(
-            [(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)]
-        )
+        entries1 = build_entries([(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)])
+        entries2 = build_entries([(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)])
 
         # Compute Merkle roots
         root1 = compute_merkle_root(entries1)
@@ -90,9 +86,7 @@ class TestManifestMerkle:
     def test_merkle_root_deterministic_ordering(self, sample_files: List[Path]):
         """Test that Merkle root is deterministic regardless of file order."""
         # Create entries in different orders
-        entries1 = build_entries(
-            [(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)]
-        )
+        entries1 = build_entries([(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)])
         entries2 = build_entries(
             [(f, f"file{i+1}.txt") for i, f in enumerate(reversed(sample_files))]
         )
@@ -104,14 +98,10 @@ class TestManifestMerkle:
         # Should be identical (ordering should not matter)
         assert root1 == root2
 
-    def test_manifest_merkle_consistency(
-        self, temp_workspace: Path, sample_files: List[Path]
-    ):
+    def test_manifest_merkle_consistency(self, temp_workspace: Path, sample_files: List[Path]):
         """Test that manifest Merkle root matches actual Merkle root."""
         # Create entries
-        entries = build_entries(
-            [(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)]
-        )
+        entries = build_entries([(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)])
         merkle_root = compute_merkle_root(entries)
 
         # Build manifest
@@ -136,17 +126,13 @@ class TestManifestMerkle:
                         assert file_info["size"] == entry.size
                         break
 
-    def test_zip_manifest_verification(
-        self, temp_workspace: Path, sample_files: List[Path]
-    ):
+    def test_zip_manifest_verification(self, temp_workspace: Path, sample_files: List[Path]):
         """Test ZIP manifest verification."""
         # Create a ZIP with manifest
         zip_path = temp_workspace / "test.zip"
 
         # Create entries
-        entries = build_entries(
-            [(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)]
-        )
+        entries = build_entries([(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)])
         merkle_root = compute_merkle_root(entries)
 
         # Build manifest
@@ -209,9 +195,7 @@ class TestManifestMerkle:
         # Create ZIP
         zip_path = temp_workspace / "test.zip"
 
-        entries = build_entries(
-            [(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)]
-        )
+        entries = build_entries([(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)])
         merkle_root = compute_merkle_root(entries)
 
         manifest = build_manifest(
@@ -240,9 +224,7 @@ class TestManifestMerkle:
         # Create ZIP
         zip_path = temp_workspace / "test.zip"
 
-        entries = build_entries(
-            [(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)]
-        )
+        entries = build_entries([(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)])
         merkle_root = compute_merkle_root(entries)
 
         manifest = build_manifest(
@@ -271,9 +253,7 @@ class TestManifestMerkle:
         # Create ZIP
         zip_path = temp_workspace / "test.zip"
 
-        entries = build_entries(
-            [(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)]
-        )
+        entries = build_entries([(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)])
         merkle_root = compute_merkle_root(entries)
 
         manifest = build_manifest(
@@ -294,16 +274,12 @@ class TestManifestMerkle:
 
         assert loaded_manifest == manifest
 
-    def test_corrupted_file_detection(
-        self, temp_workspace: Path, sample_files: List[Path]
-    ):
+    def test_corrupted_file_detection(self, temp_workspace: Path, sample_files: List[Path]):
         """Test detection of corrupted files in ZIP."""
         # Create ZIP with corrupted file
         zip_path = temp_workspace / "test.zip"
 
-        entries = build_entries(
-            [(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)]
-        )
+        entries = build_entries([(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)])
         merkle_root = compute_merkle_root(entries)
 
         manifest = build_manifest(
@@ -328,9 +304,7 @@ class TestManifestMerkle:
         assert report["checks"]["files_sha256"] is False
         assert len(report["errors"]) > 0
 
-    def test_missing_manifest_detection(
-        self, temp_workspace: Path, sample_files: List[Path]
-    ):
+    def test_missing_manifest_detection(self, temp_workspace: Path, sample_files: List[Path]):
         """Test detection of missing manifest in ZIP."""
         # Create ZIP without manifest
         zip_path = temp_workspace / "test.zip"
@@ -347,16 +321,12 @@ class TestManifestMerkle:
         assert report["checks"]["manifest_valid"] is False
         assert len(report["errors"]) > 0
 
-    def test_merkle_txt_consistency(
-        self, temp_workspace: Path, sample_files: List[Path]
-    ):
+    def test_merkle_txt_consistency(self, temp_workspace: Path, sample_files: List[Path]):
         """Test consistency between manifest.merkle_root and merkle.txt."""
         # Create ZIP
         zip_path = temp_workspace / "test.zip"
 
-        entries = build_entries(
-            [(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)]
-        )
+        entries = build_entries([(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)])
         merkle_root = compute_merkle_root(entries)
 
         manifest = build_manifest(
@@ -387,9 +357,7 @@ class TestManifestMerkle:
     ):
         """Test that manifest.json and merkle.txt are excluded from Merkle calculation."""
         # Create entries
-        entries = build_entries(
-            [(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)]
-        )
+        entries = build_entries([(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)])
         merkle_root = compute_merkle_root(entries)
 
         # Build manifest
@@ -412,9 +380,7 @@ class TestManifestMerkle:
     def test_manifest_reproducibility(self, sample_files: List[Path]):
         """Test that manifest generation is reproducible."""
         # Create entries
-        entries = build_entries(
-            [(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)]
-        )
+        entries = build_entries([(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)])
         merkle_root = compute_merkle_root(entries)
 
         # Build manifest twice

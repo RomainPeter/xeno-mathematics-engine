@@ -35,9 +35,7 @@ class AttestationGenerator:
         self, subject: Dict[str, Any], costs: Dict[str, float]
     ) -> Dict[str, Any]:
         """Generate attestation for a subject."""
-        attestation_id = (
-            f"att_{len(self.attestations)}_{int(datetime.now().timestamp())}"
-        )
+        attestation_id = f"att_{len(self.attestations)}_{int(datetime.now().timestamp())}"
 
         # Create attestation
         attestation = Attestation(
@@ -82,9 +80,7 @@ class AttestationGenerator:
             "costs": attestation.costs,
         }
 
-        return hashlib.sha256(
-            json.dumps(hash_data, sort_keys=True).encode()
-        ).hexdigest()
+        return hashlib.sha256(json.dumps(hash_data, sort_keys=True).encode()).hexdigest()
 
     def get_attestation(self, attestation_id: str) -> Optional[Attestation]:
         """Get attestation by ID."""
@@ -99,8 +95,6 @@ class AttestationGenerator:
             "total_attestations": len(self.attestations),
             "total_costs": {
                 "time_ms": sum(a.costs.get("time_ms", 0) for a in self.attestations),
-                "audit_cost": sum(
-                    a.costs.get("audit_cost", 0) for a in self.attestations
-                ),
+                "audit_cost": sum(a.costs.get("audit_cost", 0) for a in self.attestations),
             },
         }

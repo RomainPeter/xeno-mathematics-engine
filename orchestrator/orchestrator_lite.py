@@ -64,13 +64,9 @@ class OrchestratorLite:
                 "pcap_count": 0,
             },
         }
-        self._progress_series: list[float] = (
-            []
-        )  # scalar metric to detect no-progress/oscillation
+        self._progress_series: list[float] = []  # scalar metric to detect no-progress/oscillation
 
-    async def run(
-        self, domain_spec: Dict[str, Any], budgets: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    async def run(self, domain_spec: Dict[str, Any], budgets: Dict[str, Any]) -> Dict[str, Any]:
         # Event bus lifecycle
         self.event_bus.set_correlation_ids(self.trace_id, self.run_id)
         try:
@@ -117,9 +113,7 @@ class OrchestratorLite:
             self.cegis_engine.initialize(domain_spec),
         )
 
-    async def _run_ae(
-        self, domain_spec: Dict[str, Any], budgets: Dict[str, Any]
-    ) -> None:
+    async def _run_ae(self, domain_spec: Dict[str, Any], budgets: Dict[str, Any]) -> None:
         ctx = AEContext(
             run_id=self.run_id,
             step_id=f"s-ae-{uuid.uuid4().hex[:8]}",
@@ -139,9 +133,7 @@ class OrchestratorLite:
             self.metrics["ae"]["steps"] += 1
             prev_avg = self.metrics["ae"]["avg_step_ms"]
             n = self.metrics["ae"]["steps"]
-            self.metrics["ae"]["avg_step_ms"] = prev_avg + (
-                elapsed_ms - prev_avg
-            ) / max(n, 1)
+            self.metrics["ae"]["avg_step_ms"] = prev_avg + (elapsed_ms - prev_avg) / max(n, 1)
             concepts_count = 0
             if hasattr(result, "concepts") and isinstance(result.concepts, list):
                 concepts_count = len(result.concepts)
@@ -154,9 +146,7 @@ class OrchestratorLite:
             )
             raise
 
-    async def _run_cegis(
-        self, domain_spec: Dict[str, Any], budgets: Dict[str, Any]
-    ) -> None:
+    async def _run_cegis(self, domain_spec: Dict[str, Any], budgets: Dict[str, Any]) -> None:
         ctx = CegisContext(
             run_id=self.run_id,
             step_id=f"s-cegis-{uuid.uuid4().hex[:8]}",
@@ -200,9 +190,9 @@ class OrchestratorLite:
             # Success
             if isinstance(res, Verdict) and res.valid:
                 self.metrics["cegis"]["accepts"] += 1
-                self.metrics["cegis"]["patch_accept_rate"] = self.metrics["cegis"][
-                    "accepts"
-                ] / max(self.metrics["cegis"]["proposals"], 1)
+                self.metrics["cegis"]["patch_accept_rate"] = self.metrics["cegis"]["accepts"] / max(
+                    self.metrics["cegis"]["proposals"], 1
+                )
                 self._progress_series.append(self.metrics["cegis"]["patch_accept_rate"])
                 # Oscillation detection (success after failure and vice-versa in alternance)
                 status = True
@@ -241,9 +231,7 @@ class OrchestratorLite:
                         detail={"k": no_progress_k, "epsilon": epsilon},
                     )
                     # Update incidents counter
-                    self.metrics["global"]["incidents_count"].setdefault(
-                        "no_progress", 0
-                    )
+                    self.metrics["global"]["incidents_count"].setdefault("no_progress", 0)
                     self.metrics["global"]["incidents_count"]["no_progress"] += 1
                     break
             # Oscillation guard (simple heuristic)
@@ -254,9 +242,7 @@ class OrchestratorLite:
                     message="Oscillation detected in CEGIS convergence",
                     detail={"iterations": iteration + 1},
                 )
-                self.metrics["global"]["incidents_count"].setdefault(
-                    "oscillation_detected", 0
-                )
+                self.metrics["global"]["incidents_count"].setdefault("oscillation_detected", 0)
                 self.metrics["global"]["incidents_count"]["oscillation_detected"] += 1
                 break
         # Max iters reached

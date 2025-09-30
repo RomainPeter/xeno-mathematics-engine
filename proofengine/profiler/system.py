@@ -62,9 +62,7 @@ class SystemProfiler:
         end_time = time.perf_counter()
         duration = end_time - start_time
 
-        entry = ProfileEntry(
-            name=name, start_time=start_time, end_time=end_time, duration=duration
-        )
+        entry = ProfileEntry(name=name, start_time=start_time, end_time=end_time, duration=duration)
 
         self.entries.append(entry)
         return entry
@@ -120,9 +118,7 @@ class SystemProfiler:
                 }
             )
 
-        return sorted(hot_spots, key=lambda x: x["cumulative_time"], reverse=True)[
-            :limit
-        ]
+        return sorted(hot_spots, key=lambda x: x["cumulative_time"], reverse=True)[:limit]
 
     def get_span_summary(self) -> Dict[str, Any]:
         """Get summary of all spans."""
@@ -153,9 +149,7 @@ class SystemProfiler:
                 "total_duration": span_totals[name],
                 "avg_duration": span_totals[name] / span_counts[name],
                 "percentage": (
-                    (span_totals[name] / total_duration * 100)
-                    if total_duration > 0
-                    else 0
+                    (span_totals[name] / total_duration * 100) if total_duration > 0 else 0
                 ),
             }
 

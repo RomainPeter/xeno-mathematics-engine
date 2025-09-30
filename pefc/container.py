@@ -49,9 +49,7 @@ class ServiceContainer:
             for pattern in self.cfg.metrics.sources:
                 expanded_sources.extend(glob.glob(pattern))
 
-            self._metrics_provider = JsonMetricsProvider(
-                paths=[Path(p) for p in expanded_sources]
-            )
+            self._metrics_provider = JsonMetricsProvider(paths=[Path(p) for p in expanded_sources])
         return self._metrics_provider
 
     def get_capability_registry(self):
@@ -69,9 +67,7 @@ class ServiceContainer:
         pipeline_name = name or self.cfg.pipelines.default
         if pipeline_name not in self._pipelines:
             if pipeline_name not in self.cfg.pipelines.defs:
-                raise ValueError(
-                    f"Pipeline '{pipeline_name}' not found in configuration"
-                )
+                raise ValueError(f"Pipeline '{pipeline_name}' not found in configuration")
 
             pipeline_def = self.cfg.pipelines.defs[pipeline_name]
             self._pipelines[pipeline_name] = self._build_pipeline(pipeline_def)

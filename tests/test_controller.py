@@ -234,9 +234,7 @@ class TestWorkspace:
             workspace = Workspace(temp_dir)
 
             with patch("subprocess.run") as mock_run:
-                mock_run.return_value = MagicMock(
-                    returncode=0, stdout="file1.py\nfile2.py\n"
-                )
+                mock_run.return_value = MagicMock(returncode=0, stdout="file1.py\nfile2.py\n")
 
                 changed_files = workspace.get_changed_files()
                 assert "file1.py" in changed_files
@@ -329,16 +327,12 @@ class TestDeterministicController:
 +print("world")
 """
 
-            with patch.object(
-                controller.patch_manager, "validate_patch"
-            ) as mock_validate:
+            with patch.object(controller.patch_manager, "validate_patch") as mock_validate:
                 with patch.object(controller, "_calculate_delta_metrics") as mock_delta:
                     mock_validate.return_value = {"valid": True}
                     mock_delta.return_value = {"delta_total": 0.1}
 
-                    with patch(
-                        "controller.deterministic.evaluate_obligations"
-                    ) as mock_eval:
+                    with patch("controller.deterministic.evaluate_obligations") as mock_eval:
                         mock_eval.return_value = ObligationResults(
                             tests_ok=True,
                             lint_ok=True,
@@ -362,9 +356,7 @@ class TestDeterministicController:
             # Patch invalide
             patch_text = "invalid patch"
 
-            with patch.object(
-                controller.patch_manager, "validate_patch"
-            ) as mock_validate:
+            with patch.object(controller.patch_manager, "validate_patch") as mock_validate:
                 mock_validate.return_value = {
                     "valid": False,
                     "errors": ["Invalid format"],

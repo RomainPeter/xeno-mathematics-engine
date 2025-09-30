@@ -73,9 +73,7 @@ def delta_struct(
 
     ca = _node_counts(before)
     cb = _node_counts(after)
-    cf = _rel_diff(
-        ca["if"] + ca["for"] + ca["while"], cb["if"] + cb["for"] + cb["while"]
-    )
+    cf = _rel_diff(ca["if"] + ca["for"] + ca["while"], cb["if"] + cb["for"] + cb["while"])
     call = _rel_diff(ca["call"], cb["call"])
 
     return min(1.0, w_api * api_jacc + w_cf * cf + w_call * call)

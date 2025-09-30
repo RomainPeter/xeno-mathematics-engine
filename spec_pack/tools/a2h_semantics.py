@@ -56,16 +56,10 @@ def load_list_ids(path: str, key: str = "id") -> List[str]:
         return []
     data = load_yaml_or_json(path)
     if isinstance(data, list):
-        return [
-            str(x.get(key)).strip() for x in data if isinstance(x, dict) and key in x
-        ]
+        return [str(x.get(key)).strip() for x in data if isinstance(x, dict) and key in x]
     # tests/*.yaml style
     if isinstance(data, dict) and "tests" in data and isinstance(data["tests"], list):
-        return [
-            str(t.get(key)).strip()
-            for t in data["tests"]
-            if isinstance(t, dict) and key in t
-        ]
+        return [str(t.get(key)).strip() for t in data["tests"] if isinstance(t, dict) and key in t]
     return []
 
 
@@ -192,9 +186,7 @@ def build_semantics_and_proof(required, present, anf_src, anf_obj, rules_used):
         "anf_hash_sha256": sha256_str(anf_canon),
         "rules_file": "spec_pack/a2h_rules.yaml",
         "required": required,
-        "present": {
-            k: list(v) if isinstance(v, set) else v for k, v in present_sets.items()
-        },
+        "present": {k: list(v) if isinstance(v, set) else v for k, v in present_sets.items()},
         "status": "SAT" if sat_ok else "UNSAT",
         "unsat_core": core,
         "rules_used": rules_used,
@@ -206,12 +198,8 @@ def build_semantics_and_proof(required, present, anf_src, anf_obj, rules_used):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument(
-        "--check", action="store_true", help="vérifie et renvoie code 1 si UNSAT"
-    )
-    ap.add_argument(
-        "--emit", action="store_true", help="écrit le certificat a2h_proof.json"
-    )
+    ap.add_argument("--check", action="store_true", help="vérifie et renvoie code 1 si UNSAT")
+    ap.add_argument("--emit", action="store_true", help="écrit le certificat a2h_proof.json")
     args = ap.parse_args()
 
     anf_path, anf = find_anf()
@@ -233,9 +221,7 @@ def main():
         "operators": [],  # not enforced in v0.3
     }
 
-    sat_ok, proof = build_semantics_and_proof(
-        req, present, anf_path, anf, [r["id"] for r in rules]
-    )
+    sat_ok, proof = build_semantics_and_proof(req, present, anf_path, anf, [r["id"] for r in rules])
 
     if args.emit and not args.check:
         print("A2H semantics proof written to spec_pack/compiled/a2h_proof.json")
@@ -243,9 +229,7 @@ def main():
     if args.check and not sat_ok:
         # Print concise summary for CI
         missing = [lbl.replace("need_", "") for lbl in proof.get("unsat_core", [])]
-        sys.stderr.write(
-            "A2H semantics UNSAT — missing artifacts: " + ", ".join(missing) + "\n"
-        )
+        sys.stderr.write("A2H semantics UNSAT — missing artifacts: " + ", ".join(missing) + "\n")
         sys.exit(1)
 
 

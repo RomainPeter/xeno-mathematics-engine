@@ -66,9 +66,7 @@ class StructuredEventBus(EventBus):
     ) -> None:
         payload = payload or {}
         etype = (
-            EventType.ORCHESTRATOR_START
-            if event_type == "started"
-            else EventType.ORCHESTRATOR_END
+            EventType.ORCHESTRATOR_START if event_type == "started" else EventType.ORCHESTRATOR_END
         )
         event = create_event(
             event_type=etype,
@@ -78,12 +76,8 @@ class StructuredEventBus(EventBus):
         )
         self.publish_nowait(event)
 
-    def emit_incident(
-        self, incident_type: str, severity: str, context: Dict[str, Any]
-    ) -> None:
-        level = (
-            EventLevel.ERROR if severity in ("error", "critical") else EventLevel.WARN
-        )
+    def emit_incident(self, incident_type: str, severity: str, context: Dict[str, Any]) -> None:
+        level = EventLevel.ERROR if severity in ("error", "critical") else EventLevel.WARN
         event = create_event(
             event_type=EventType.INCIDENT,
             payload={

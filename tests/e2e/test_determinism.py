@@ -94,9 +94,7 @@ def test_determinism():
 
     # Check metrics variance
     if len(metrics_list) >= 2:
-        coverage_values = [
-            m.get("coverage", {}).get("coverage_gain", 0) for m in metrics_list
-        ]
+        coverage_values = [m.get("coverage", {}).get("coverage_gain", 0) for m in metrics_list]
         novelty_values = [m.get("novelty", {}).get("avg", 0) for m in metrics_list]
 
         coverage_variance = max(coverage_values) - min(coverage_values)

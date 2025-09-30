@@ -27,9 +27,7 @@ def main():
     v = sub.add_parser("verify")
     v.add_argument("--run-dir", required=True)
     # Optionally verify a single file proof from merkle.json
-    v.add_argument(
-        "--file", required=False, help="Relative path under run dir to verify"
-    )
+    v.add_argument("--file", required=False, help="Relative path under run dir to verify")
 
     args = p.parse_args()
 

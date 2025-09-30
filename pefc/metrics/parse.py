@@ -21,16 +21,10 @@ def extract_run(obj: Dict[str, Any], source_id: str, weight_key: str) -> RunReco
     weight = float(obj.get(weight_key) or obj.get("count") or 1.0)
 
     if "metrics" in obj and isinstance(obj["metrics"], dict):
-        metrics = {
-            k: float(v)
-            for k, v in obj["metrics"].items()
-            if isinstance(v, (int, float))
-        }
+        metrics = {k: float(v) for k, v in obj["metrics"].items() if isinstance(v, (int, float))}
     else:
         metrics = {
-            k: float(v)
-            for k, v in obj.items()
-            if k not in RESERVED and isinstance(v, (int, float))
+            k: float(v) for k, v in obj.items() if k not in RESERVED and isinstance(v, (int, float))
         }
 
     return RunRecord(

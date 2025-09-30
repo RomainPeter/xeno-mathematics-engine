@@ -31,9 +31,7 @@ def test_additional_files_dedup_and_collision(tmp_path: Path):
         # additional propose deux fois foo.txt + bar.txt
         files = [(a, "foo.txt"), (b, "foo.txt"), (b, "bar.txt")]
         filtered = dedup_additional_files(files, seen)
-        assert "bar.txt" in {
-            arc for _, arc in filtered
-        }  # foo.txt retiré, bar.txt gardé
+        assert "bar.txt" in {arc for _, arc in filtered}  # foo.txt retiré, bar.txt gardé
         for src, arc in filtered:
             add_to_zip(z, arc, src_path=src, seen=seen)
     with ZipFile(out, "r") as z:

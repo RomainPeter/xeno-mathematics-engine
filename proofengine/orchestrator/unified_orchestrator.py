@@ -136,22 +136,16 @@ class UnifiedOrchestrator:
         implications = await self._generate_implications()
 
         # Run AE loop
-        ae_results = await self.ae_loop.explore_attributes(
-            self.current_state.X, self.config.budget
-        )
+        ae_results = await self.ae_loop.explore_attributes(self.current_state.X, self.config.budget)
 
         # Update state with new implications
         for impl_id in ae_results["implications_accepted"]:
             if impl_id in self.ae_loop.implications:
-                self.current_state.implications[impl_id] = self.ae_loop.implications[
-                    impl_id
-                ]
+                self.current_state.implications[impl_id] = self.ae_loop.implications[impl_id]
 
         for ce_id in ae_results["counterexamples"]:
             if ce_id in self.ae_loop.counterexamples:
-                self.current_state.counterexamples[ce_id] = (
-                    self.ae_loop.counterexamples[ce_id]
-                )
+                self.current_state.counterexamples[ce_id] = self.ae_loop.counterexamples[ce_id]
 
         return ae_results
 
@@ -170,15 +164,15 @@ class UnifiedOrchestrator:
         # Update state with new choreographies
         for choreo_id in cegis_results["accepted_choreographies"]:
             if choreo_id in self.cegis_loop.choreographies:
-                self.current_state.choreographies[choreo_id] = (
-                    self.cegis_loop.choreographies[choreo_id]
-                )
+                self.current_state.choreographies[choreo_id] = self.cegis_loop.choreographies[
+                    choreo_id
+                ]
 
         for result_id in cegis_results["synthesis_results"]:
             if result_id in self.cegis_loop.synthesis_results:
-                self.current_state.synthesis_results[result_id] = (
-                    self.cegis_loop.synthesis_results[result_id]
-                )
+                self.current_state.synthesis_results[result_id] = self.cegis_loop.synthesis_results[
+                    result_id
+                ]
 
         return cegis_results
 
@@ -270,9 +264,7 @@ class UnifiedOrchestrator:
         # Simplified diversity computation
         return {"implications": 0.7, "choreographies": 0.8, "overall": 0.75}
 
-    async def _pareto_selection(
-        self, diversity_scores: Dict[str, float]
-    ) -> Dict[str, List[str]]:
+    async def _pareto_selection(self, diversity_scores: Dict[str, float]) -> Dict[str, List[str]]:
         """Perform Pareto-optimal selection."""
         # Simplified Pareto selection
         return {
@@ -342,9 +334,7 @@ class UnifiedOrchestrator:
             self.current_state.X["constraints"].append(new_constraint)
 
         # Update e-graph class
-        self.current_state.egraph_class = canonicalize_state(
-            self.current_state.X, self.egraph
-        )
+        self.current_state.egraph_class = canonicalize_state(self.current_state.X, self.egraph)
 
     def _update_exploration_state(
         self,
@@ -359,9 +349,7 @@ class UnifiedOrchestrator:
         self.current_state.X["last_selection_results"] = selection_results
 
         # Update e-graph class
-        self.current_state.egraph_class = canonicalize_state(
-            self.current_state.X, self.egraph
-        )
+        self.current_state.egraph_class = canonicalize_state(self.current_state.X, self.egraph)
 
     async def _check_convergence(self) -> bool:
         """Check if exploration has converged."""
@@ -389,9 +377,7 @@ class UnifiedOrchestrator:
             "total_incidents": len(self.incident_log),
             "egraph_stats": self.egraph.get_stats(),
             "exploration_time": sum(
-                (
-                    datetime.now() - datetime.fromisoformat(h["timestamp"])
-                ).total_seconds()
+                (datetime.now() - datetime.fromisoformat(h["timestamp"])).total_seconds()
                 for h in self.incident_log
             ),
         }

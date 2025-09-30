@@ -235,9 +235,7 @@ class RotatingFileSink(EventSink):
             self.written_count += 1
 
         except Exception as e:
-            print(
-                f"Error writing to rotating file {self.base_path}: {e}", file=sys.stderr
-            )
+            print(f"Error writing to rotating file {self.base_path}: {e}", file=sys.stderr)
 
     def flush(self) -> None:
         """Flush file buffer."""
@@ -246,9 +244,7 @@ class RotatingFileSink(EventSink):
     def _should_rotate(self) -> bool:
         """Check if file should be rotated."""
         try:
-            current_size = (
-                self.base_path.stat().st_size if self.base_path.exists() else 0
-            )
+            current_size = self.base_path.stat().st_size if self.base_path.exists() else 0
         except Exception:
             current_size = 0
         size_limit = self.max_size_mb * 1024 * 1024

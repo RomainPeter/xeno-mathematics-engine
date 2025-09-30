@@ -28,9 +28,7 @@ def validate_email(email: str) -> bool:
     return bool(_EMAIL_REGEX.match(email or ""))
 
 
-_SCRIPT_STYLE_REGEX = re.compile(
-    r"<(script|style)[^>]*>.*?</\1>", re.IGNORECASE | re.DOTALL
-)
+_SCRIPT_STYLE_REGEX = re.compile(r"<(script|style)[^>]*>.*?</\1>", re.IGNORECASE | re.DOTALL)
 
 
 def clean_html(html: str) -> str:

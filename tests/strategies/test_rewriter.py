@@ -235,11 +235,7 @@ class TestPlanRewriter:
 
     def test_apply_params_patch_operation(self):
         """Test params patch operation."""
-        plan = {
-            "steps": [
-                {"id": "step1", "operator": "Meet", "params": {"confidence": 0.8}}
-            ]
-        }
+        plan = {"steps": [{"id": "step1", "operator": "Meet", "params": {"confidence": 0.8}}]}
 
         rewrite_plan = RewritePlan(
             operation=RewriteOperation.PARAMS_PATCH,

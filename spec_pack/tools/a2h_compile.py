@@ -195,8 +195,7 @@ def main():
     # Persister les auto-artefacts
     write_json(
         OBL_FILE,
-        compiled["required"]
-        | {"optional_obligations": compiled["optional"]["obligations"]},
+        compiled["required"] | {"optional_obligations": compiled["optional"]["obligations"]},
     )
     write_json(
         INV_FILE,
