@@ -21,7 +21,7 @@ referencing==0.35.1
 # Pre-commit
 pre-commit==4.0.1
 black==25.9.0
-ruff==0.13.1
+ruff==0.13.2
 
 # Security & SBOM
 cryptography==46.0.1
