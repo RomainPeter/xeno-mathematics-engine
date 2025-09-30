@@ -1,0 +1,18 @@
+{
+  "version": "0.1.0",
+  "entries": [
+    {
+      "id": "j-001",
+      "ts": "2025-09-26T08:00:00Z",
+      "operator": "Meet",
+      "input_refs": ["h-1","e-1","k-1"],
+      "output_refs": ["a-compile-1"],
+      "obligations_checked": ["k-1"],
+      "proofs_attached": ["p-1"],
+      "costs": { "time_ms": 1200, "audit_cost": 0.2, "security_risk": 0.0, "info_loss": 0.0, "tech_debt": 0.0 },
+      "prev_entry_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "entry_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "signature": "locsig:rmn"
+    }
+  ]
+}

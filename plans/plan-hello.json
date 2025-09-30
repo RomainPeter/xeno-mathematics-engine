@@ -1,0 +1,44 @@
+{
+  "version": "0.1.0",
+  "id": "plan-hello",
+  "goal": "Execute 5 S1 tasks with hybrid orchestration",
+  "status": "pending",
+  "steps": [
+    {
+      "id": "s1",
+      "operator": "Meet",
+      "input_refs": ["h-task-001", "k-semver-1"],
+      "expected": "design chosen for task-001"
+    },
+    {
+      "id": "s2", 
+      "operator": "Generalize",
+      "input_refs": ["h-task-001"],
+      "expected": "specification created"
+    },
+    {
+      "id": "s3",
+      "operator": "Verify", 
+      "input_refs": ["pcap-task-001"],
+      "expected": "task-001 verified"
+    },
+    {
+      "id": "s4",
+      "operator": "Meet",
+      "input_refs": ["h-task-002", "k-perf-1"],
+      "expected": "design chosen for task-002"
+    },
+    {
+      "id": "s5",
+      "operator": "Verify",
+      "input_refs": ["pcap-task-002"], 
+      "expected": "task-002 verified"
+    }
+  ],
+  "budgets": {
+    "time_ms": 10000,
+    "audit_cost": 2.0,
+    "max_replans": 3
+  },
+  "created_at": "2025-09-27T11:45:00Z"
+}

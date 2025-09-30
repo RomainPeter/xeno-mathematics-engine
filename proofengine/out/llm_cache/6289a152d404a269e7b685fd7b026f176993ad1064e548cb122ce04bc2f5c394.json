@@ -1,0 +1,30 @@
+{
+  "data": {
+    "patch_unified": "",
+    "rationale": "No obligations (K) specified, so no changes are required to satisfy compliance.",
+    "predicted_obligations_satisfied": [],
+    "risk_score": 0,
+    "notes": "Minimal conservative patch for simple test case; no modifications applied."
+  },
+  "_meta": {
+    "model": "x-ai/grok-4-fast:free",
+    "latency_ms": 3375,
+    "usage": {
+      "completion_tokens": 280,
+      "prompt_tokens": 269,
+      "total_tokens": 549,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 229,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 120
+      }
+    },
+    "prompt_hash": "6289a152d404a269e7b685fd7b026f176993ad1064e548cb122ce04bc2f5c394",
+    "cache_hit": false
+  }
+}

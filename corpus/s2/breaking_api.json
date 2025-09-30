@@ -1,0 +1,45 @@
+{
+  "id": "s2_breaking_api",
+  "title": "Breaking API Change",
+  "description": "API endpoint changed signature, breaking existing clients",
+  "category": "hostile",
+  "expected_fail": true,
+  "constraints": [
+    "Must maintain backward compatibility",
+    "API versioning required",
+    "Deprecation notice mandatory"
+  ],
+  "obligations": [
+    "k-api-versioning",
+    "k-backward-compatibility", 
+    "k-deprecation-notice"
+  ],
+  "hostile_indicators": [
+    "breaking_change",
+    "api_signature_change",
+    "missing_versioning"
+  ],
+  "test_cases": [
+    {
+      "name": "old_client_should_work",
+      "description": "Existing clients must continue to function",
+      "expected": "pass"
+    },
+    {
+      "name": "new_api_versioned",
+      "description": "New API must be properly versioned",
+      "expected": "pass"
+    },
+    {
+      "name": "deprecation_warning",
+      "description": "Old API must show deprecation warning",
+      "expected": "pass"
+    }
+  ],
+  "delta_weights": {
+    "H": 0.3,
+    "E": 0.4,
+    "K": 0.2,
+    "A": 0.1
+  }
+}

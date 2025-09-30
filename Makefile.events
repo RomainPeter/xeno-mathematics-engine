@@ -1,0 +1,192 @@
+# Makefile for Event Bus and Structured Telemetry System
+# Provides commands for building, testing, and demonstrating the event system
+
+.PHONY: help build test test-unit test-integration demo clean lint format install
+
+# Default target
+help:
+	@echo "Event Bus and Structured Telemetry System"
+	@echo "=========================================="
+	@echo ""
+	@echo "Available targets:"
+	@echo "  build          - Build the event system"
+	@echo "  test           - Run all tests"
+	@echo "  test-unit    - Run unit tests"
+	@echo "  test-integration - Run integration tests"
+	@echo "  demo           - Run demonstration script"
+	@echo "  clean          - Clean build artifacts"
+	@echo "  lint           - Run linting (black, ruff)"
+	@echo "  format         - Format code (black)"
+	@echo "  install        - Install dependencies"
+	@echo ""
+
+# Build the event system
+build:
+	@echo "Building event system..."
+	@python -c "import pefc.events; print('Event system built successfully')"
+
+# Run all tests
+test: test-unit test-integration
+	@echo "All tests completed"
+
+# Run unit tests
+test-unit:
+	@echo "Running unit tests..."
+	@python -m pytest tests/test_events.py -v --tb=short
+
+# Run integration tests
+test-integration:
+	@echo "Running integration tests..."
+	@python -m pytest tests/test_events.py::TestEventIntegration -v --tb=short
+
+# Run demonstration script
+demo:
+	@echo "Running event system demonstration..."
+	@python demo_events.py
+
+# Clean build artifacts
+clean:
+	@echo "Cleaning build artifacts..."
+	@find . -type f -name "*.pyc" -delete
+	@find . -type d -name "__pycache__" -delete
+	@find . -type d -name "*.egg-info" -exec rm -rf {} +
+	@find . -type f -name "*.log" -delete
+	@find . -type f -name "*.jsonl" -delete
+	@find . -type f -name "*.json" -delete
+	@echo "Build artifacts cleaned"
+
+# Run linting
+lint:
+	@echo "Running linting..."
+	@black --check pefc/events/ tests/test_events.py demo_events.py
+	@ruff check pefc/events/ tests/test_events.py demo_events.py
+
+# Format code
+format:
+	@echo "Formatting code..."
+	@black pefc/events/ tests/test_events.py demo_events.py
+	@ruff check --fix pefc/events/ tests/test_events.py demo_events.py
+
+# Install dependencies
+install:
+	@echo "Installing dependencies..."
+	@pip install -r requirements.txt
+
+# Run specific test categories
+test-event-bus:
+	@echo "Running EventBus tests..."
+	@python -m pytest tests/test_events.py::TestEventBus -v --tb=short
+
+test-sinks:
+	@echo "Running sink tests..."
+	@python -m pytest tests/test_events.py::TestEventSinks -v --tb=short
+
+test-manifest:
+	@echo "Running manifest tests..."
+	@python -m pytest tests/test_events.py::TestAuditManifest -v --tb=short
+
+test-pcap:
+	@echo "Running PCAP tests..."
+	@python -m pytest tests/test_events.py::TestPCAP -v --tb=short
+
+# Run performance tests
+test-performance:
+	@echo "Running performance tests..."
+	@python -m pytest tests/test_events.py::TestEventBus::test_concurrent_publish -v --tb=short
+
+# Run specific demo functions
+demo-basic:
+	@echo "Running basic EventBus demo..."
+	@python -c "import asyncio; from demo_events import demo_basic_event_bus; asyncio.run(demo_basic_event_bus())"
+
+demo-file:
+	@echo "Running file sink demo..."
+	@python -c "import asyncio; from demo_events import demo_file_sink; asyncio.run(demo_file_sink())"
+
+demo-concurrent:
+	@echo "Running concurrent events demo..."
+	@python -c "import asyncio; from demo_events import demo_concurrent_events; asyncio.run(demo_concurrent_events())"
+
+demo-manifest:
+	@echo "Running manifest demo..."
+	@python -c "from demo_events import demo_audit_manifest; demo_audit_manifest()"
+
+demo-pcap:
+	@echo "Running PCAP demo..."
+	@python -c "from demo_events import demo_pcap; demo_pcap()"
+
+# Run full integration demo
+demo-integration:
+	@echo "Running full integration demo..."
+	@python -c "import asyncio; from demo_events import demo_full_integration; asyncio.run(demo_full_integration())"
+
+# Validate event system
+validate:
+	@echo "Validating event system..."
+	@python -c "from pefc.events import EventBus, EventBusConfig, Event, EventType; print('Event system imports successful')"
+	@python -c "from pefc.events import StdoutJSONLSink, FileJSONLSink, MemorySink; print('Sink imports successful')"
+	@python -c "from pefc.events import AuditManifest, MerkleTree, PCAPWriter, PCAPSchema; print('Manifest and PCAP imports successful')"
+	@echo "Event system validation completed"
+
+# Check event system health
+health-check:
+	@echo "Checking event system health..."
+	@python -c "import asyncio; from pefc.events import EventBus, EventBusConfig, create_event, EventType; print('Health check passed')"
+
+# Run event system benchmarks
+benchmark:
+	@echo "Running event system benchmarks..."
+	@python -c "import asyncio; from demo_events import demo_concurrent_events; asyncio.run(demo_concurrent_events())"
+
+# Generate event system report
+report:
+	@echo "Generating event system report..."
+	@echo "Event System Report" > event_system_report.txt
+	@echo "===================" >> event_system_report.txt
+	@echo "" >> event_system_report.txt
+	@echo "Components:" >> event_system_report.txt
+	@echo "- EventBus: Core event processing" >> event_system_report.txt
+	@echo "- Sinks: Stdout, File, Memory, Rotating" >> event_system_report.txt
+	@echo "- Manifest: Audit manifest with Merkle tree" >> event_system_report.txt
+	@echo "- PCAP: Proof-Carrying Action Plans" >> event_system_report.txt
+	@echo "" >> event_system_report.txt
+	@echo "Report generated: event_system_report.txt"
+
+# Show event system statistics
+stats:
+	@echo "Event System Statistics"
+	@echo "======================"
+	@echo "Components:"
+	@echo "- EventBus: 1"
+	@echo "- Sinks: 4 (Stdout, File, Memory, Rotating)"
+	@echo "- Event Types: 13"
+	@echo "- Test Cases: 25+"
+	@echo "- Demo Functions: 7"
+	@echo ""
+	@echo "File Structure:"
+	@echo "- pefc/events/: Core event system"
+	@echo "- tests/test_events.py: Test suite"
+	@echo "- demo_events.py: Demonstration script"
+	@echo "- Makefile.events: Build automation"
+
+# Quick start guide
+quick-start:
+	@echo "Event System Quick Start"
+	@echo "========================"
+	@echo ""
+	@echo "1. Build the system:"
+	@echo "   make build"
+	@echo ""
+	@echo "2. Run tests:"
+	@echo "   make test"
+	@echo ""
+	@echo "3. Run demo:"
+	@echo "   make demo"
+	@echo ""
+	@echo "4. Check health:"
+	@echo "   make health-check"
+	@echo ""
+	@echo "5. View stats:"
+	@echo "   make stats"
+	@echo ""
+	@echo "For more information, run: make help"

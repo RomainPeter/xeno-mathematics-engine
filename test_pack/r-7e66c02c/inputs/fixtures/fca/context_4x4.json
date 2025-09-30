@@ -1,0 +1,15 @@
+{
+  "objects": ["o1", "o2", "o3", "o4"],
+  "attributes": ["a", "b", "c", "d"],
+  "incidence": {
+    "o1:a": true,
+    "o1:b": true,
+    "o2:b": true,
+    "o2:c": true,
+    "o3:c": true,
+    "o3:d": true,
+    "o4:a": true,
+    "o4:d": true
+  }
+}
+

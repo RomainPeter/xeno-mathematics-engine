@@ -1,0 +1,35 @@
+{
+  "data": {
+    "plan": [
+      "sanitize_inputs",
+      "refactor_complexity",
+      "add_type_hints",
+      "add_docstrings",
+      "write_tests"
+    ],
+    "est_success": 0.85,
+    "est_cost": 15,
+    "notes": "Prioritize security and complexity fixes first for risk reduction in toy repo; remaining steps ensure compliance with other constraints."
+  },
+  "_meta": {
+    "model": "x-ai/grok-4-fast:free",
+    "latency_ms": 7119,
+    "usage": {
+      "completion_tokens": 623,
+      "prompt_tokens": 299,
+      "total_tokens": 922,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 563,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 120
+      }
+    },
+    "prompt_hash": "629fe490626f57fc3615ab84932b9c4b733ed0e55ddc7586c02d914013403de0",
+    "cache_hit": false
+  }
+}

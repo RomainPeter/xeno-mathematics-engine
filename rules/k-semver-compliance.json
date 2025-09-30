@@ -1,0 +1,31 @@
+{
+  "id": "k-semver-compliance",
+  "title": "Semantic Versioning Compliance",
+  "description": "Ensure version bumps follow semantic versioning rules",
+  "category": "compliance",
+  "severity": "medium",
+  "source_incident": "s2_missing_semver",
+  "obligations": ["k-semver-compliance", "k-version-bump-required", "k-breaking-change-major"],
+  "test_cases": [
+    {
+      "name": "semver_compliant",
+      "description": "Version must follow semver rules",
+      "expected": "fail"
+    },
+    {
+      "name": "breaking_major_bump",
+      "description": "Breaking changes require major version bump",
+      "expected": "fail"
+    },
+    {
+      "name": "feature_minor_bump",
+      "description": "New features require minor version bump",
+      "expected": "fail"
+    }
+  ],
+  "implementation": {
+    "type": "pytest",
+    "file": "tests/test_semver.py",
+    "command": "pytest tests/test_semver.py"
+  }
+}

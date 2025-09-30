@@ -1,0 +1,250 @@
+{
+  "version": "0.1.0",
+  "H": [
+    {
+      "id": "h-task-001",
+      "title": "Rename symbol task",
+      "body": "Need to rename function 'old_name' to 'new_name' in utils.py",
+      "status": "open",
+      "evidence_ids": [
+        "e-task-001"
+      ],
+      "created_at": "2025-09-27T11:45:00Z"
+    },
+    {
+      "id": "h-task-002",
+      "title": "Fix off-by-one bug",
+      "body": "Fix off-by-one error in range() loop in algorithms.py",
+      "status": "open",
+      "evidence_ids": [
+        "e-task-002"
+      ],
+      "created_at": "2025-09-27T11:45:00Z"
+    }
+  ],
+  "E": [
+    {
+      "id": "e-task-001",
+      "kind": "code",
+      "uri": "file://utils.py",
+      "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "created_at": "2025-09-27T11:45:00Z"
+    },
+    {
+      "id": "e-task-002",
+      "kind": "code",
+      "uri": "file://algorithms.py",
+      "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "created_at": "2025-09-27T11:45:00Z"
+    }
+  ],
+  "K": [
+    {
+      "id": "k-semver-1",
+      "source": "semver",
+      "rule": "public API change \u2192 minor >= +1",
+      "severity": "high",
+      "tags": [
+        "api",
+        "versioning"
+      ]
+    },
+    {
+      "id": "k-perf-1",
+      "source": "internal",
+      "rule": "performance regression < 5%",
+      "severity": "medium",
+      "tags": [
+        "performance"
+      ]
+    }
+  ],
+  "A": [
+    {
+      "id": "a-7a8eeb7e",
+      "type": "pcap",
+      "ref_ids": [
+        "pcap-fda9b0b5"
+      ],
+      "produced_by_journal_id": "j-ff23b802"
+    },
+    {
+      "id": "a-9d53f4f5",
+      "type": "pcap",
+      "ref_ids": [
+        "pcap-f66b7e37"
+      ],
+      "produced_by_journal_id": "j-1888b6c2"
+    },
+    {
+      "id": "a-01a84955",
+      "type": "pcap",
+      "ref_ids": [
+        "pcap-ac10c720"
+      ],
+      "produced_by_journal_id": "j-8fb6cd67"
+    },
+    {
+      "id": "a-c677cb30",
+      "type": "pcap",
+      "ref_ids": [
+        "pcap-0e01b139"
+      ],
+      "produced_by_journal_id": "j-1afcbbf6"
+    },
+    {
+      "id": "a-1096c47e",
+      "type": "pcap",
+      "ref_ids": [
+        "pcap-95ecbccd"
+      ],
+      "produced_by_journal_id": "j-b0a476d0"
+    }
+  ],
+  "J": {
+    "version": "0.1.0",
+    "entries": [
+      {
+        "id": "j-7affcf8f",
+        "ts": "2025-09-27T09:45:40.318776Z",
+        "operator": "Meet",
+        "input_refs": [
+          "h-task-001",
+          "k-semver-1"
+        ],
+        "output_refs": [
+          "a-7a8eeb7e"
+        ],
+        "obligations_checked": [
+          "k-semver-1"
+        ],
+        "proofs_attached": [
+          "p-c837"
+        ],
+        "costs": {
+          "time_ms": 100,
+          "audit_cost": 0.1,
+          "security_risk": 0.0,
+          "info_loss": 0.0,
+          "tech_debt": 0.0
+        },
+        "prev_entry_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+        "entry_hash": "e38b32aa3384f1dc3dfaa83cb5d94bc1a477df7c628da5a7e1e531768e920eac"
+      },
+      {
+        "id": "j-705699d4",
+        "ts": "2025-09-27T09:45:40.320793Z",
+        "operator": "Generalize",
+        "input_refs": [
+          "h-task-001"
+        ],
+        "output_refs": [
+          "a-9d53f4f5"
+        ],
+        "obligations_checked": [
+          "k-semver-1"
+        ],
+        "proofs_attached": [
+          "p-642b"
+        ],
+        "costs": {
+          "time_ms": 100,
+          "audit_cost": 0.1,
+          "security_risk": 0.0,
+          "info_loss": 0.0,
+          "tech_debt": 0.0
+        },
+        "prev_entry_hash": "e38b32aa3384f1dc3dfaa83cb5d94bc1a477df7c628da5a7e1e531768e920eac",
+        "entry_hash": "e8b5ba1132aea476aae69565306f97bc5010220ef3f872df7fb8e8bfb252a422"
+      },
+      {
+        "id": "j-22cb66d8",
+        "ts": "2025-09-27T09:45:40.321330Z",
+        "operator": "Verify",
+        "input_refs": [
+          "pcap-task-001"
+        ],
+        "output_refs": [
+          "a-01a84955"
+        ],
+        "obligations_checked": [
+          "k-semver-1"
+        ],
+        "proofs_attached": [
+          "p-d6ea"
+        ],
+        "costs": {
+          "time_ms": 100,
+          "audit_cost": 0.1,
+          "security_risk": 0.0,
+          "info_loss": 0.0,
+          "tech_debt": 0.0
+        },
+        "prev_entry_hash": "e8b5ba1132aea476aae69565306f97bc5010220ef3f872df7fb8e8bfb252a422",
+        "entry_hash": "d84ecc7f52329824fc77990c02dfc6c04045567d68568cbc18a76f7cac441ef3"
+      },
+      {
+        "id": "j-0c514da9",
+        "ts": "2025-09-27T09:45:40.322382Z",
+        "operator": "Meet",
+        "input_refs": [
+          "h-task-002",
+          "k-perf-1"
+        ],
+        "output_refs": [
+          "a-c677cb30"
+        ],
+        "obligations_checked": [
+          "k-semver-1"
+        ],
+        "proofs_attached": [
+          "p-93de"
+        ],
+        "costs": {
+          "time_ms": 100,
+          "audit_cost": 0.1,
+          "security_risk": 0.0,
+          "info_loss": 0.0,
+          "tech_debt": 0.0
+        },
+        "prev_entry_hash": "d84ecc7f52329824fc77990c02dfc6c04045567d68568cbc18a76f7cac441ef3",
+        "entry_hash": "2b743171f34a0d277fb441b2da5c2e4c64ff2a28a79ffa6eba5345b4b2f1854e"
+      },
+      {
+        "id": "j-aa89fabc",
+        "ts": "2025-09-27T09:45:40.323014Z",
+        "operator": "Verify",
+        "input_refs": [
+          "pcap-task-002"
+        ],
+        "output_refs": [
+          "a-1096c47e"
+        ],
+        "obligations_checked": [
+          "k-semver-1"
+        ],
+        "proofs_attached": [
+          "p-dcb1"
+        ],
+        "costs": {
+          "time_ms": 100,
+          "audit_cost": 0.1,
+          "security_risk": 0.0,
+          "info_loss": 0.0,
+          "tech_debt": 0.0
+        },
+        "prev_entry_hash": "2b743171f34a0d277fb441b2da5c2e4c64ff2a28a79ffa6eba5345b4b2f1854e",
+        "entry_hash": "9bfbcb857d1f02e87acc3e4a93da25a05d492cfed18d517e57307a32283f22b2"
+      }
+    ]
+  },
+  "Sigma": {
+    "repo": "git@github.com:org/proof-engine.git",
+    "branch": "feature/orchestrator-skeleton",
+    "commit": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "tooling": {
+      "python": "3.11.9",
+      "llm_model": "gpt-4.1"
+    }
+  }
+}

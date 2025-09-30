@@ -1,0 +1,57 @@
+{
+  "ts": 1758899766.816697,
+  "pcap_count": 10,
+  "verdicts": [
+    {
+      "file": "1758891093060_f81ed47f.json",
+      "operator": "plan",
+      "verdict": null
+    },
+    {
+      "file": "1758891110343_dff30d8c.json",
+      "operator": "rollback",
+      "verdict": "fail"
+    },
+    {
+      "file": "1758891115750_d106a6a2.json",
+      "operator": "replan",
+      "verdict": "fail"
+    },
+    {
+      "file": "1758898305630_3dcfb8fc.json",
+      "operator": "plan",
+      "verdict": "pass"
+    },
+    {
+      "file": "1758898305637_88212509.json",
+      "operator": "verify",
+      "verdict": "fail"
+    },
+    {
+      "file": "1758898305638_4d395bde.json",
+      "operator": "verify",
+      "verdict": "pass"
+    },
+    {
+      "file": "1758898305642_7ec644ed.json",
+      "operator": "verify",
+      "verdict": "fail"
+    },
+    {
+      "file": "1758898305646_0bf48a06.json",
+      "operator": "rollback",
+      "verdict": "fail"
+    },
+    {
+      "file": "1758898305647_35821cba.json",
+      "operator": "replan",
+      "verdict": "pass"
+    },
+    {
+      "file": "1758898305756_fb321d3c.json",
+      "operator": "plan",
+      "verdict": "pass"
+    }
+  ],
+  "digest": "f6614e19a63dc011f6d7e30516ed58ca4ec54bb5d77be58651812e18ce93852a"
+}

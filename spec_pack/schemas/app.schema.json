@@ -1,0 +1,16 @@
+{
+"$schema": "https://json-schema.org/draft/2020-12/schema",
+"title": "Action Proof Protocol (APP) Action",
+"type": "object",
+"properties": {
+"type": { "type": "string", "enum": ["Retrieval","Synthesis","Decision","Deploy"] },
+"pre": { "type": "array", "items": { "type": "string" } },
+"post": { "type": "array", "items": { "type": "string" } },
+"verifier": { "type": "string" },
+"evidence_required": { "type": "array", "items": { "type": "string" } },
+"on_fail": { "type": "object", "properties": { "escalate_to": { "type": "array", "items": { "type": "string" } } } },
+"journal_entry": { "type": "boolean" }
+},
+"required": ["type","pre","post","verifier","journal_entry"],
+"additionalProperties": true
+}

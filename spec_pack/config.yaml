@@ -1,0 +1,2 @@
+trace_bound_K: 10
+determinism_trials: 10

@@ -1,0 +1,31 @@
+{
+  "id": "k-deterministic-tests",
+  "title": "Deterministic Test Execution",
+  "description": "Ensure tests are deterministic and not flaky",
+  "category": "quality",
+  "severity": "medium",
+  "source_incident": "s2_flaky_test",
+  "obligations": ["k-deterministic-tests", "k-no-race-conditions", "k-test-isolation"],
+  "test_cases": [
+    {
+      "name": "test_deterministic",
+      "description": "Test should pass consistently",
+      "expected": "fail"
+    },
+    {
+      "name": "no_race_conditions",
+      "description": "No race conditions in test",
+      "expected": "fail"
+    },
+    {
+      "name": "proper_isolation",
+      "description": "Test properly isolated from others",
+      "expected": "fail"
+    }
+  ],
+  "implementation": {
+    "type": "pytest",
+    "file": "tests/test_deterministic.py",
+    "command": "pytest tests/test_deterministic.py --repeat=5"
+  }
+}

@@ -1,0 +1,86 @@
+ambition:
+  id: ANF-001
+  version: "0.1.0"
+  title: "Symbiotic AI — Mémoire probatoire pour IA régulée"
+  mission: "Fournir une mémoire probatoire et un moteur d’évidence auditable, minimisant la redondance et garantissant la traçabilité bornée, pour des systèmes d’IA soumis à régulation."
+  scope:
+    domain: "RegTech"
+    systems_in_scope:
+      - "RAG de conformité"
+      - "Assistants de décision internes"
+      - "Pipelines de déploiement de modèles (MLOps)"
+    out_of_scope:
+      - "Biométrie temps réel"
+      - "Prise de décision autonome à haut risque médical"
+  guarantees:
+    - id: G-1
+      name: minimal_non_redundant_coverage
+      description: "Toute réponse doit être couvertes par un ensemble d’évidence minimal (aucun item redondant)."
+    - id: G-2
+      name: explainability_by_construction
+      description: "Chaque sortie porte sa chaîne de justification (journal de preuve)."
+    - id: G-3
+      name: audit_readiness_24h
+      description: "Reconstruction de 100% des décisions demandées en < 24h, hors réseau."
+    - id: G-4
+      name: traceability_bound_K
+      params: {K: 10}
+      description: "Chaîne de justification de longueur bornée (≤ K liens)."
+    - id: G-5
+      name: monotonic_guarantees
+      description: "L’ajout de contraintes ne détériore pas les garanties existantes."
+  constraints:
+    - id: C-1
+      name: low_risk_appetite
+      value: "low"
+    - id: C-2
+      name: audit_cost_reduction_target
+      value: ">=30%"
+    - id: C-3
+      name: data_governance
+      value: ["PII_protected", "provenance_required"]
+    - id: C-4
+      name: determinism_required
+      value: true
+    - id: C-5
+      name: air_gapped_option
+      value: true
+  non_negotiables:
+    - id: NN-1
+      name: provenance_conservation
+    - id: NN-2
+      name: reversibility_of_mappings
+    - id: NN-3
+      name: no_blackbox_features
+  standards:
+    - id: STD-1
+      name: "EU_AI_Act"
+      notes: "Focus Art. 9, 10, 12, 13, 15"
+    - id: STD-2
+      name: "NIST_AI_RMF_1.0"
+      notes: "Gouvernance, Map, Measure, Manage"
+    - id: STD-3
+      name: "ISO_IEC_42001"
+      notes: "AI Management System"
+  threat_actors:
+    - id: TA-1
+      name: malicious_auditor
+      tactics: ["contradictory_requests", "scope_creep", "gotcha_questions"]
+    - id: TA-2
+      name: data_poisoner
+      tactics: ["schema_conflict", "contradiction_injection", "silent_drift"]
+  environment:
+    - on_prem
+    - air_gapped
+    - limited_internet
+  time_horizons:
+    - id: T0
+      name: MVP_spec_pack
+      target: "Now → 2 weeks"
+    - id: T1
+      name: operational_pilot
+      target: "2–8 weeks"
+provenance:
+  compiled_by: "@gpt_5"
+  compiled_at: "2025-09-16T00:00:00Z"
+  source: "A2C compiler v0.1 (spec)"

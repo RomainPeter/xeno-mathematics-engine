@@ -1,0 +1,35 @@
+#!/usr/bin/env python3
+"""
+Configure branch protection for main branch
+"""
+
+print("🔒 Branch Protection Configuration")
+print("=" * 50)
+print()
+print("Required checks to enable:")
+print("- CI")
+print("- Nightly Bench")
+print("- Gate Merge")
+print()
+print("Required approvals: 1")
+print("Enforce admins: true")
+print()
+print("To configure via GitHub UI:")
+print("1. Go to Settings → Branches")
+print("2. Add rule for 'main' branch")
+print("3. Enable 'Require status checks to pass before merging'")
+print("4. Select: CI, Nightly Bench, Gate Merge")
+print("5. Enable 'Require pull request reviews before merging'")
+print("6. Set required reviewers: 1")
+print("7. Enable 'Restrict pushes that create files'")
+print()
+print("Or use GitHub CLI (if available):")
+print(
+    "gh api repos/RomainPeter/discovery-engine-2cat/branches/main/protection -X PUT \\"
+)
+print("  -f required_status_checks.strict=true \\")
+print('  -F required_status_checks.contexts[]="CI" \\')
+print('  -F required_status_checks.contexts[]="Nightly Bench" \\')
+print('  -F required_status_checks.contexts[]="Gate Merge" \\')
+print("  -F required_pull_request_reviews.required_approving_review_count=1 \\")
+print("  -F enforce_admins=true")

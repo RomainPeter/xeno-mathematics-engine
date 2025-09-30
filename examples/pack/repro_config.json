@@ -1,0 +1,19 @@
+{
+  "inputs": {
+    "files": [
+      "fixtures/fca/context_4x4.json"
+    ],
+    "globs": [
+      "fixtures/cegis/**/*.py"
+    ],
+    "dirs": []
+  },
+  "allow_outside_workspace": false
+}
+
+
+
+
+
+
+

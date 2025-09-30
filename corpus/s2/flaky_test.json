@@ -1,0 +1,45 @@
+{
+  "id": "s2_flaky_test",
+  "title": "Flaky Test Detection",
+  "description": "Test that fails intermittently due to timing issues",
+  "category": "hostile",
+  "expected_fail": true,
+  "constraints": [
+    "Tests must be deterministic",
+    "No race conditions allowed",
+    "Proper test isolation required"
+  ],
+  "obligations": [
+    "k-deterministic-tests",
+    "k-no-race-conditions",
+    "k-test-isolation"
+  ],
+  "hostile_indicators": [
+    "timing_dependent",
+    "race_condition",
+    "non_deterministic"
+  ],
+  "test_cases": [
+    {
+      "name": "test_deterministic",
+      "description": "Test should pass consistently",
+      "expected": "fail"
+    },
+    {
+      "name": "no_race_conditions",
+      "description": "No race conditions in test",
+      "expected": "fail"
+    },
+    {
+      "name": "proper_isolation",
+      "description": "Test properly isolated from others",
+      "expected": "fail"
+    }
+  ],
+  "delta_weights": {
+    "H": 0.2,
+    "E": 0.4,
+    "K": 0.3,
+    "A": 0.1
+  }
+}

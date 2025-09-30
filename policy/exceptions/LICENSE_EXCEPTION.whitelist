@@ -1,0 +1,12 @@
+# License Exception Whitelist
+# Mécanisme d'exception contrôlée pour PR F1
+
+# Format: package_name: license_justification
+# Exemple:
+# agpl-licensed-package: Critical functionality, no MIT alternative available
+# gpl-3.0-package: Required for compliance, dual-licensed with MIT option
+
+# Instructions:
+# 1. Ajouter le package avec sa justification
+# 2. Justification doit expliquer pourquoi l'exception est nécessaire
+# 3. Révision requise pour toute nouvelle exception

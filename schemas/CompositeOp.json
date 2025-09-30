@@ -1,0 +1,85 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CompositeOp v0.1",
+  "description": "Composite operation or choreography schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the composite operation"
+    },
+    "operations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "parameters": {
+            "type": "object"
+          },
+          "preconditions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "postconditions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": ["id", "type", "preconditions", "postconditions"]
+      },
+      "minItems": 1,
+      "description": "List of operations in the composite"
+    },
+    "preconditions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Global preconditions"
+    },
+    "postconditions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Global postconditions"
+    },
+    "guards": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Guard conditions"
+    },
+    "budgets": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number"
+      },
+      "description": "Budget constraints"
+    },
+    "diversity_keys": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Diversity keys for selection"
+    },
+    "rationale": {
+      "type": "string",
+      "description": "Rationale for the composite operation"
+    }
+  },
+  "required": ["id", "operations", "preconditions", "postconditions"]
+}
+

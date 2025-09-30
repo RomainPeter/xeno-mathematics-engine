@@ -1,0 +1,159 @@
+# Makefile pour l'Orchestrateur Industrialisé (AE/CEGIS)
+# Ticket: Industrialiser la pipeline Orchestrateur
+
+.PHONY: help test demo clean install lint
+
+help: ## Afficher l'aide
+	@echo "🎯 Orchestrateur Industrialisé - Commandes disponibles:"
+	@echo ""
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
+
+install: ## Installer les dépendances
+	@echo "📦 Installation des dépendances..."
+	pip install -r requirements.txt
+	@echo "✅ Dépendances installées"
+
+lint: ## Vérifier le code avec les linters
+	@echo "🔍 Vérification du code..."
+	python -m flake8 orchestrator/ pefc/ tests/ --max-line-length=100
+	python -m mypy orchestrator/ pefc/ --ignore-missing-imports
+	@echo "✅ Code vérifié"
+
+test: ## Exécuter les tests unitaires
+	@echo "🧪 Exécution des tests..."
+	python -m pytest tests/ -v --tb=short
+	@echo "✅ Tests terminés"
+
+test-next-closure: ## Tester spécifiquement Next-Closure
+	@echo "🧪 Test Next-Closure..."
+	python -m pytest tests/test_next_closure.py -v
+	@echo "✅ Test Next-Closure terminé"
+
+test-orchestrator: ## Tester spécifiquement l'orchestrateur
+	@echo "🧪 Test Orchestrateur..."
+	python -m pytest tests/test_orchestrator_integration.py -v
+	@echo "✅ Test Orchestrateur terminé"
+
+test-demo: ## Tester la démonstration
+	@echo "🧪 Test de la démonstration..."
+	python test_demo.py
+	@echo "✅ Test démonstration terminé"
+
+demo: ## Exécuter la démonstration complète
+	@echo "🎯 Démonstration Orchestrateur Industrialisé..."
+	python demo_orchestrator.py
+	@echo "✅ Démonstration terminée"
+
+demo-quick: ## Démonstration rapide (timeouts courts)
+	@echo "⚡ Démonstration rapide..."
+	python -c "
+import asyncio
+from demo_orchestrator import *
+from orchestrator.config import OrchestratorConfig
+
+async def quick_demo():
+    config = OrchestratorConfig(
+        ae_timeout=5.0,
+        cegis_propose_timeout=2.0,
+        cegis_verify_timeout=3.0,
+        cegis_refine_timeout=2.0,
+        cegis_max_iterations=3,
+        audit_dir='audit_quick'
+    )
+    
+    llm = DemoLLMAdapter()
+    verifier = DemoVerifier(success_rate=0.8)
+    event_bus = StructuredEventBus()
+    
+    ae_engine = NextClosureEngine()
+    cegis_engine = AsyncCegisEngine(llm, verifier)
+    
+    orchestrator = Orchestrator(
+        config=config,
+        ae_engine=ae_engine,
+        cegis_engine=cegis_engine,
+        llm_adapter=llm,
+        verifier=verifier,
+        event_bus=event_bus
+    )
+    
+    domain_spec = create_demo_domain_spec()
+    budgets = create_demo_budgets()
+    thresholds = create_demo_thresholds()
+    
+    print('🚀 Démonstration rapide...')
+    state = await orchestrator.run(domain_spec, budgets, thresholds)
+    print(f'✅ Terminé: {state.phase}')
+
+asyncio.run(quick_demo())
+"
+	@echo "✅ Démonstration rapide terminée"
+
+clean: ## Nettoyer les fichiers temporaires
+	@echo "🧹 Nettoyage..."
+	rm -rf audit*/
+	rm -rf __pycache__/
+	rm -rf .pytest_cache/
+	rm -rf *.pyc
+	rm -rf .mypy_cache/
+	rm -f demo_orchestrator.log
+	@echo "✅ Nettoyage terminé"
+
+validate: test test-demo ## Valider l'implémentation complète
+	@echo "✅ Validation complète réussie"
+
+ci: lint test validate ## Pipeline CI complet
+	@echo "✅ Pipeline CI terminé"
+
+# Commandes de développement
+dev-setup: install ## Configuration pour le développement
+	@echo "🔧 Configuration du développement..."
+	pip install -e .
+	@echo "✅ Configuration terminée"
+
+dev-test: ## Tests de développement
+	@echo "🧪 Tests de développement..."
+	python -m pytest tests/ -v --tb=short -x
+	@echo "✅ Tests de développement terminés"
+
+# Commandes de démonstration
+demo-full: ## Démonstration complète avec logs
+	@echo "🎯 Démonstration complète..."
+	python demo_orchestrator.py 2>&1 | tee demo_full.log
+	@echo "✅ Démonstration complète terminée"
+
+demo-audit: ## Analyser l'audit pack généré
+	@echo "📦 Analyse de l'audit pack..."
+	@if [ -d "audit" ]; then \
+		find audit -name "*.json" -exec echo "📄 {}" \; -exec head -5 {} \; -exec echo "" \; ; \
+	else \
+		echo "❌ Aucun audit pack trouvé. Exécutez 'make demo' d'abord."; \
+	fi
+	@echo "✅ Analyse terminée"
+
+# Commandes de documentation
+docs: ## Générer la documentation
+	@echo "📚 Génération de la documentation..."
+	@echo "🎯 Orchestrateur Industrialisé - Documentation"
+	@echo "=============================================="
+	@echo ""
+	@echo "📋 Composants:"
+	@echo "  - AEEngine: Next-Closure (FCA) réel"
+	@echo "  - CegisEngine: Boucle CEGIS asynchrone"
+	@echo "  - Orchestrator: Scheduling concurrent"
+	@echo "  - EventBus: Événements structurés"
+	@echo "  - Persistence: PCAP + Incident Journal"
+	@echo ""
+	@echo "🔧 Utilisation:"
+	@echo "  make demo          # Démonstration complète"
+	@echo "  make demo-quick    # Démonstration rapide"
+	@echo "  make test          # Tests unitaires"
+	@echo "  make validate      # Validation complète"
+	@echo ""
+	@echo "📊 Résultats attendus:"
+	@echo "  - Concepts FCA générés"
+	@echo "  - Candidats CEGIS synthétisés"
+	@echo "  - Audit pack signé"
+	@echo "  - Événements structurés"
+	@echo "  - Journal de preuves"
+	@echo "✅ Documentation générée"

@@ -1,0 +1,12 @@
+{
+  "version": "0.1.0",
+  "id": "pcap-001",
+  "action": { "name": "add_function", "params": { "file": "utils/math.py" }, "target": "repo://utils/math.py" },
+  "context_hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "obligations": ["k-semver-1","k-perf-1"],
+  "justification": { "time_ms": 900, "audit_cost": 0.2, "security_risk": 0.0, "info_loss": 0.0, "tech_debt": 0.1 },
+  "proofs": [
+    { "id": "p-1", "type": "unit_test", "runner": "pytest", "args": ["-k","test_add"], "expect": "all pass" },
+    { "id": "p-2", "type": "policy_check", "runner": "opa", "args": ["-d","policies/","input.json"], "expect": "allow" }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+"$schema": "https://json-schema.org/draft/2020-12/schema",
+"title": "Ambition Normal Form (ANF)",
+"type": "object",
+"properties": {
+"ambition": {
+"type": "object",
+"required": ["mission"],
+"properties": {
+"mission": { "type": "string", "minLength": 1 },
+"guarantees": { "type": "array", "items": { "type": "string" } },
+"constraints": { "type": "array", "items": { "type": ["string","object"] } },
+"scope": {
+"type": "object",
+"properties": {
+"domain": { "type": "string" },
+"standards": { "type": "array", "items": { "type": "string" } }
+}
+},
+"exclusions": { "type": "array", "items": { "type": "string" } },
+"threat_actors": { "type": "array", "items": { "type": "string" } },
+"time_horizons": { "type": "array", "items": { "type": ["string","object"] } },
+"non_negotiables": { "type": "array", "items": { "type": "string" } },
+"environment": { "type": "array", "items": { "type": "string" } }
+}
+}
+},
+"required": ["ambition"],
+"additionalProperties": true
+}

@@ -1,0 +1,55 @@
+{
+  "$id": "https://spec.proof.engine/v0.1/journal.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Structured Journal (append-only, chained)",
+  "type": "object",
+  "properties": {
+    "version": { "type": "string", "const": "0.1.0" },
+    "entries": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/Entry" }
+    }
+  },
+  "required": ["version", "entries"],
+  "additionalProperties": false,
+  "$defs": {
+    "ISODateTime": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "Hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "V": {
+      "type": "object",
+      "properties": {
+        "time_ms": { "type": "integer", "minimum": 0 },
+        "audit_cost": { "type": "number", "minimum": 0 },
+        "security_risk": { "type": "number", "minimum": 0 },
+        "info_loss": { "type": "number", "minimum": 0 },
+        "tech_debt": { "type": "number", "minimum": 0 }
+      },
+      "required": ["time_ms", "audit_cost", "security_risk", "info_loss", "tech_debt"],
+      "additionalProperties": false
+    },
+    "Entry": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "ts": { "$ref": "#/$defs/ISODateTime" },
+        "operator": { "type": "string", "enum": ["Meet", "Refute", "Generalize", "Specialize", "Contrast", "Normalize", "Verify"] },
+        "input_refs": { "type": "array", "items": { "type": "string" } },
+        "output_refs": { "type": "array", "items": { "type": "string" } },
+        "obligations_checked": { "type": "array", "items": { "type": "string" } },
+        "proofs_attached": { "type": "array", "items": { "type": "string" } },
+        "costs": { "$ref": "#/$defs/V" },
+        "prev_entry_hash": { "$ref": "#/$defs/Hash" },
+        "entry_hash": { "$ref": "#/$defs/Hash" },
+        "signature": { "type": "string" }
+      },
+      "required": ["id", "ts", "operator", "input_refs", "output_refs", "costs", "prev_entry_hash", "entry_hash"],
+      "additionalProperties": false
+    }
+  }
+}

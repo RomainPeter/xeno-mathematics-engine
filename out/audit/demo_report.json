@@ -1,0 +1,829 @@
+{
+  "timestamp": "2025-09-26T14:38:51.732116",
+  "version": "1.0.0",
+  "demo_cases": 3,
+  "successful_cases": 3,
+  "results": [
+    {
+      "success": true,
+      "case_name": "Validation d'Email",
+      "plan": {
+        "plan": [
+          "research_secure_email_regex",
+          "implement_validation_function",
+          "add_input_sanitization",
+          "include_type_hints_and_docstring"
+        ],
+        "est_success": 0.95,
+        "est_cost": 15,
+        "notes": "Start with secure regex to minimize risks, then build and enhance the function step-by-step for low audit effort.",
+        "llm_meta": {
+          "model": "x-ai/grok-4-fast:free",
+          "latency_ms": 4905,
+          "usage": {
+            "completion_tokens": 420,
+            "prompt_tokens": 277,
+            "total_tokens": 697,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": null,
+              "audio_tokens": null,
+              "reasoning_tokens": 357,
+              "rejected_prediction_tokens": null
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 153
+            }
+          },
+          "prompt_hash": "14de7a5ad81718a10512f5c0b3212b73fa8c4ccf051e049def22be99904ba2af",
+          "cache_hit": false
+        }
+      },
+      "actions": [
+        {
+          "proposal": {
+            "patch_unified": "--- /dev/null\n+++ email_validator.py\n@@ -0,0 +1,32 @@\n+import re\n+\n+def validate_email(email: str) -> bool:\n+    \"\"\"\n+    Validate an email address using regex.\n+    Note: This is a basic validation; full RFC compliance is complex.\n+    \"\"\"\n+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'\n+    return bool(re.match(pattern, email))\n+\n+# Basic tests\n+def test_validate_email():\n+    assert validate_email('test@example.com') == True\n+    assert validate_email('user.name+tag@sub.domain.co.uk') == True\n+    assert validate_email('invalid-email') == False\n+    assert validate_email('no@at.com') == False\n+    assert validate_email('user@com') == False  # missing TLD\n+    assert validate_email('user@.com') == False  # invalid domain\n+    assert validate_email('@example.com') == False  # missing local part\n+    print('All tests passed!')\n+\n+if __name__ == '__main__':\n+    test_validate_email()\n+",
+            "rationale": "No obligations (K) specified. This patch adds a new Python file implementing a basic email validation function using regex, along with simple assertion-based tests, directly fulfilling the task request while keeping changes minimal and reversible (new file).",
+            "predicted_obligations_satisfied": [],
+            "risk_score": 0.1,
+            "notes": "Assumes Python; basic regex avoids over-complexity. Tests are inline for simplicity; no external deps beyond stdlib."
+          },
+          "llm_meta": {
+            "model": "x-ai/grok-4-fast:free",
+            "latency_ms": 8076,
+            "usage": {
+              "completion_tokens": 873,
+              "prompt_tokens": 278,
+              "total_tokens": 1151,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": null,
+                "audio_tokens": null,
+                "reasoning_tokens": 496,
+                "rejected_prediction_tokens": null
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 152
+              }
+            },
+            "prompt_hash": "21068aaffce628cc93dd77be358596a3c67b97ba9a8caad7360cf756308a8107",
+            "cache_hit": false
+          }
+        },
+        {
+          "proposal": {
+            "patch_unified": "--- /dev/null\n+++ main.py\n@@ -0,0 +1,32 @@\n+import re\n+\n+def validate_email(email: str) -> bool:\n+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'\n+    return bool(re.match(pattern, email))\n+\n+if __name__ == \"__main__\":\n+    # Simple tests\n+    assert validate_email(\"test@example.com\") == True\n+    assert validate_email(\"user.name@domain.co.uk\") == True\n+    assert validate_email(\"invalid-email\") == False\n+    assert validate_email(\"@missing.com\") == False\n+    assert validate_email(\"missing@\") == False\n+    print(\"All tests passed!\")\n+",
+            "rationale": "Implements the requested validate_email function using regex for basic email validation and includes simple assertion-based tests. Satisfies the task as K is empty.",
+            "predicted_obligations_satisfied": [],
+            "risk_score": 0.1,
+            "notes": "Assumes Python; adds to new file main.py with minimal, reversible addition. Basic regex; not comprehensive validation."
+          },
+          "llm_meta": {
+            "model": "x-ai/grok-4-fast:free",
+            "latency_ms": 7463,
+            "usage": {
+              "completion_tokens": 813,
+              "prompt_tokens": 278,
+              "total_tokens": 1091,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": null,
+                "audio_tokens": null,
+                "reasoning_tokens": 540,
+                "rejected_prediction_tokens": null
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 151
+              }
+            },
+            "prompt_hash": "4264af8d5b624000d68aaded2d5cb6caf42c236c957c5236d7453a54c2528f7c",
+            "cache_hit": false
+          }
+        },
+        {
+          "proposal": {
+            "patch_unified": "--- /dev/null\n+++ email_validator.py\n@@ -0,0 +1,20 @@\n+import re\n+\n+def validate_email(email):\n+    \"\"\"\n+    Validate an email address using regex.\n+    \"\"\"\n+    if not isinstance(email, str):\n+        return False\n+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'\n+    return bool(re.match(pattern, email))\n+\n+# Simple tests\n+def run_tests():\n+    tests = [\n+        ('test@example.com', True),\n+        ('invalid@', False),\n+        ('user.name@domain.co.uk', True),\n+        ('no@at.sign', False)\n+    ]\n+    all_pass = True\n+    for email, expected in tests:\n+        result = validate_email(email)\n+        if result != expected:\n+            print(f'Failed: {email} -> {result} != {expected}')\n+            all_pass = False\n+    print('All tests passed!' if all_pass else 'Some tests failed.')\n+\n+if __name__ == '__main__':\n+    run_tests()\n",
+            "rationale": "Implements a validate_email function using regex for basic email validation and includes simple tests, directly addressing the task. With empty obligations (K), this satisfies the implementation requirement without violating any constraints.",
+            "predicted_obligations_satisfied": [],
+            "risk_score": 0.1,
+            "notes": "New file created with minimal, reversible addition. Regex is a standard, non-external dependency. Tests are basic and non-breaking."
+          },
+          "llm_meta": {
+            "model": "x-ai/grok-4-fast:free",
+            "latency_ms": 9043,
+            "usage": {
+              "completion_tokens": 1107,
+              "prompt_tokens": 278,
+              "total_tokens": 1385,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": null,
+                "audio_tokens": null,
+                "reasoning_tokens": 734,
+                "rejected_prediction_tokens": null
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 272
+              }
+            },
+            "prompt_hash": "622becc620c246fb57d29b4a4b6167d601b5a7c4af81c913695f3900b01ede0a",
+            "cache_hit": false
+          }
+        }
+      ],
+      "audit_pack": {
+        "audit_pack": {
+          "metadata": {
+            "timestamp": "2025-09-26T14:37:49.807496",
+            "version": "1.0.0",
+            "model": "x-ai/grok-4-fast:free",
+            "total_latency_ms": 24582,
+            "total_tokens": 3627,
+            "cache_hit_rate": 0.0,
+            "plan_steps": 4,
+            "actions_generated": 3,
+            "success_rate": 0.95
+          },
+          "plan": {
+            "plan": [
+              "research_secure_email_regex",
+              "implement_validation_function",
+              "add_input_sanitization",
+              "include_type_hints_and_docstring"
+            ],
+            "est_success": 0.95,
+            "est_cost": 15,
+            "notes": "Start with secure regex to minimize risks, then build and enhance the function step-by-step for low audit effort.",
+            "llm_meta": {
+              "model": "x-ai/grok-4-fast:free",
+              "latency_ms": 4905,
+              "usage": {
+                "completion_tokens": 420,
+                "prompt_tokens": 277,
+                "total_tokens": 697,
+                "completion_tokens_details": {
+                  "accepted_prediction_tokens": null,
+                  "audio_tokens": null,
+                  "reasoning_tokens": 357,
+                  "rejected_prediction_tokens": null
+                },
+                "prompt_tokens_details": {
+                  "audio_tokens": 0,
+                  "cached_tokens": 153
+                }
+              },
+              "prompt_hash": "14de7a5ad81718a10512f5c0b3212b73fa8c4ccf051e049def22be99904ba2af",
+              "cache_hit": false
+            }
+          },
+          "actions": [
+            {
+              "proposal": {
+                "patch_unified": "--- /dev/null\n+++ email_validator.py\n@@ -0,0 +1,32 @@\n+import re\n+\n+def validate_email(email: str) -> bool:\n+    \"\"\"\n+    Validate an email address using regex.\n+    Note: This is a basic validation; full RFC compliance is complex.\n+    \"\"\"\n+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'\n+    return bool(re.match(pattern, email))\n+\n+# Basic tests\n+def test_validate_email():\n+    assert validate_email('test@example.com') == True\n+    assert validate_email('user.name+tag@sub.domain.co.uk') == True\n+    assert validate_email('invalid-email') == False\n+    assert validate_email('no@at.com') == False\n+    assert validate_email('user@com') == False  # missing TLD\n+    assert validate_email('user@.com') == False  # invalid domain\n+    assert validate_email('@example.com') == False  # missing local part\n+    print('All tests passed!')\n+\n+if __name__ == '__main__':\n+    test_validate_email()\n+",
+                "rationale": "No obligations (K) specified. This patch adds a new Python file implementing a basic email validation function using regex, along with simple assertion-based tests, directly fulfilling the task request while keeping changes minimal and reversible (new file).",
+                "predicted_obligations_satisfied": [],
+                "risk_score": 0.1,
+                "notes": "Assumes Python; basic regex avoids over-complexity. Tests are inline for simplicity; no external deps beyond stdlib."
+              },
+              "llm_meta": {
+                "model": "x-ai/grok-4-fast:free",
+                "latency_ms": 8076,
+                "usage": {
+                  "completion_tokens": 873,
+                  "prompt_tokens": 278,
+                  "total_tokens": 1151,
+                  "completion_tokens_details": {
+                    "accepted_prediction_tokens": null,
+                    "audio_tokens": null,
+                    "reasoning_tokens": 496,
+                    "rejected_prediction_tokens": null
+                  },
+                  "prompt_tokens_details": {
+                    "audio_tokens": 0,
+                    "cached_tokens": 152
+                  }
+                },
+                "prompt_hash": "21068aaffce628cc93dd77be358596a3c67b97ba9a8caad7360cf756308a8107",
+                "cache_hit": false
+              }
+            },
+            {
+              "proposal": {
+                "patch_unified": "--- /dev/null\n+++ main.py\n@@ -0,0 +1,32 @@\n+import re\n+\n+def validate_email(email: str) -> bool:\n+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'\n+    return bool(re.match(pattern, email))\n+\n+if __name__ == \"__main__\":\n+    # Simple tests\n+    assert validate_email(\"test@example.com\") == True\n+    assert validate_email(\"user.name@domain.co.uk\") == True\n+    assert validate_email(\"invalid-email\") == False\n+    assert validate_email(\"@missing.com\") == False\n+    assert validate_email(\"missing@\") == False\n+    print(\"All tests passed!\")\n+",
+                "rationale": "Implements the requested validate_email function using regex for basic email validation and includes simple assertion-based tests. Satisfies the task as K is empty.",
+                "predicted_obligations_satisfied": [],
+                "risk_score": 0.1,
+                "notes": "Assumes Python; adds to new file main.py with minimal, reversible addition. Basic regex; not comprehensive validation."
+              },
+              "llm_meta": {
+                "model": "x-ai/grok-4-fast:free",
+                "latency_ms": 7463,
+                "usage": {
+                  "completion_tokens": 813,
+                  "prompt_tokens": 278,
+                  "total_tokens": 1091,
+                  "completion_tokens_details": {
+                    "accepted_prediction_tokens": null,
+                    "audio_tokens": null,
+                    "reasoning_tokens": 540,
+                    "rejected_prediction_tokens": null
+                  },
+                  "prompt_tokens_details": {
+                    "audio_tokens": 0,
+                    "cached_tokens": 151
+                  }
+                },
+                "prompt_hash": "4264af8d5b624000d68aaded2d5cb6caf42c236c957c5236d7453a54c2528f7c",
+                "cache_hit": false
+              }
+            },
+            {
+              "proposal": {
+                "patch_unified": "--- /dev/null\n+++ email_validator.py\n@@ -0,0 +1,20 @@\n+import re\n+\n+def validate_email(email):\n+    \"\"\"\n+    Validate an email address using regex.\n+    \"\"\"\n+    if not isinstance(email, str):\n+        return False\n+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'\n+    return bool(re.match(pattern, email))\n+\n+# Simple tests\n+def run_tests():\n+    tests = [\n+        ('test@example.com', True),\n+        ('invalid@', False),\n+        ('user.name@domain.co.uk', True),\n+        ('no@at.sign', False)\n+    ]\n+    all_pass = True\n+    for email, expected in tests:\n+        result = validate_email(email)\n+        if result != expected:\n+            print(f'Failed: {email} -> {result} != {expected}')\n+            all_pass = False\n+    print('All tests passed!' if all_pass else 'Some tests failed.')\n+\n+if __name__ == '__main__':\n+    run_tests()\n",
+                "rationale": "Implements a validate_email function using regex for basic email validation and includes simple tests, directly addressing the task. With empty obligations (K), this satisfies the implementation requirement without violating any constraints.",
+                "predicted_obligations_satisfied": [],
+                "risk_score": 0.1,
+                "notes": "New file created with minimal, reversible addition. Regex is a standard, non-external dependency. Tests are basic and non-breaking."
+              },
+              "llm_meta": {
+                "model": "x-ai/grok-4-fast:free",
+                "latency_ms": 9043,
+                "usage": {
+                  "completion_tokens": 1107,
+                  "prompt_tokens": 278,
+                  "total_tokens": 1385,
+                  "completion_tokens_details": {
+                    "accepted_prediction_tokens": null,
+                    "audio_tokens": null,
+                    "reasoning_tokens": 734,
+                    "rejected_prediction_tokens": null
+                  },
+                  "prompt_tokens_details": {
+                    "audio_tokens": 0,
+                    "cached_tokens": 272
+                  }
+                },
+                "prompt_hash": "622becc620c246fb57d29b4a4b6167d601b5a7c4af81c913695f3900b01ede0a",
+                "cache_hit": false
+              }
+            }
+          ],
+          "attestation": {
+            "hash": "24ccbf782a617f4090d4514ca18c8017d95b32ef742413dcf171e1d14ed4a73e",
+            "signature": "proofengine-v1-24ccbf782a617f40",
+            "timestamp": "2025-09-26T14:37:49.807496"
+          }
+        }
+      },
+      "error": null
+    },
+    {
+      "success": true,
+      "case_name": "Rate Limiter",
+      "plan": {
+        "plan": [
+          "select_algorithm",
+          "implement_token_bucket",
+          "integrate_api",
+          "add_tests",
+          "document_usage"
+        ],
+        "est_success": 0.85,
+        "est_cost": 15,
+        "notes": "Basic plan for rate limiting from scratch; assumes Python/web context.",
+        "llm_meta": {
+          "model": "x-ai/grok-4-fast:free",
+          "latency_ms": 7038,
+          "usage": {
+            "completion_tokens": 468,
+            "prompt_tokens": 275,
+            "total_tokens": 743,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": null,
+              "audio_tokens": null,
+              "reasoning_tokens": 420,
+              "rejected_prediction_tokens": null
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 120
+            }
+          },
+          "prompt_hash": "22a12e39dfff1193b84cab6dd4ab506b3ab9008d60a6ce4666041a30341fb03c",
+          "cache_hit": false
+        }
+      },
+      "actions": [
+        {
+          "proposal": {
+            "patch_unified": "--- /dev/null\n+++ rate_limiter.py\n@@ -0,0 +1,14 @@\nimport time\nfrom collections import deque\n\n\nclass RateLimiter:\n    def __init__(self, max_requests: int, window_size: float):\n        self.max_requests = max_requests\n        self.window_size = window_size\n        self.requests = deque()\n\n    def is_allowed(self) -> bool:\n        now = time.time()\n        while self.requests and now - self.requests[0] > self.window_size:\n            self.requests.popleft()\n        if len(self.requests) < self.max_requests:\n            self.requests.append(now)\n            return True\n        return False\n",
+            "rationale": "Creates a new RateLimiter class with sliding window logic using a deque for efficient timestamp management, fulfilling the task to implement the class as no obligations (K) are specified.",
+            "predicted_obligations_satisfied": [],
+            "risk_score": 0.1,
+            "notes": "Minimal implementation in Python; assumes seconds for window_size; reversible by removing the file."
+          },
+          "llm_meta": {
+            "model": "x-ai/grok-4-fast:free",
+            "latency_ms": 11166,
+            "usage": {
+              "completion_tokens": 910,
+              "prompt_tokens": 277,
+              "total_tokens": 1187,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": null,
+                "audio_tokens": null,
+                "reasoning_tokens": 686,
+                "rejected_prediction_tokens": null
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 151
+              }
+            },
+            "prompt_hash": "5131d8a8b7f3e8fae35bc76fef06f8a8156e0b2cd69467a8981924597c83eaa5",
+            "cache_hit": false
+          }
+        },
+        {
+          "proposal": {
+            "patch_unified": "--- /dev/null\n+++ rate_limiter.py\n@@ -0,0 +1,18 @@\n+import time\n+\n+class RateLimiter:\n+    \"\"\"\n+    Rate limiter using sliding window algorithm.\n+    Allows max_requests within window_size seconds.\n+    \"\"\"\n+    def __init__(self, max_requests: int, window_size: float):\n+        self.max_requests = max_requests\n+        self.window_size = window_size\n+        self.requests = []  # List of request timestamps\n+\n+    def is_allowed(self) -> bool:\n+        now = time.time()\n+        # Remove requests outside the window\n+        self.requests = [t for t in self.requests if now - t < self.window_size]\n+        if len(self.requests) < self.max_requests:\n+            self.requests.append(now)\n+            return True\n+        return False\n",
+            "rationale": "Creates a new RateLimiter class implementing a sliding window mechanism to enforce rate limits, directly addressing the task with no existing obligations to satisfy.",
+            "predicted_obligations_satisfied": [],
+            "risk_score": 0.1,
+            "notes": "Minimal implementation using a list for timestamps; suitable for moderate loads. Assumes addition as a new file; adjust filename if integrating into existing codebase."
+          },
+          "llm_meta": {
+            "model": "x-ai/grok-4-fast:free",
+            "latency_ms": 9833,
+            "usage": {
+              "completion_tokens": 1031,
+              "prompt_tokens": 277,
+              "total_tokens": 1308,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": null,
+                "audio_tokens": null,
+                "reasoning_tokens": 752,
+                "rejected_prediction_tokens": null
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 151
+              }
+            },
+            "prompt_hash": "18c7ecdaa2278177f97f4ab028d01932409e4d0e139403392dba525bb444e61b",
+            "cache_hit": false
+          }
+        },
+        {
+          "proposal": {
+            "patch_unified": "--- /dev/null\n+++ ratelimiter.py\n@@ -0,0 +1,32 @@\n+from collections import deque\n+from time import time\n+\n+\n+class RateLimiter:\n+    \"\"\"\n+    Rate limiter using sliding window.\n+    Tracks request timestamps in a deque, removing old ones.\n+    \"\"\"\n+\n+    def __init__(self, max_requests: int, window_seconds: int):\n+        \"\"\"\n+        :param max_requests: Max requests allowed in window\n+        :param window_seconds: Time window in seconds\n+        \"\"\"\n+        self.max_requests = max_requests\n+        self.window_seconds = window_seconds\n+        self.requests = deque()\n+\n+    def allow(self) -> bool:\n+        \"\"\"\n+        Check if a new request is allowed.\n+        Returns True if allowed, else False.\n+        Also adds current timestamp if allowed.\n+        \"\"\"\n+        now = time()\n+        # Remove old requests outside window\n+        while self.requests and now - self.requests[0] > self.window_seconds:\n+            self.requests.popleft()\n+\n+        if len(self.requests) < self.max_requests:\n+            self.requests.append(now)\n+            return True\n+        return False\n+",
+            "rationale": "Creates a new RateLimiter class implementing sliding window rate limiting using a deque for efficient timestamp management. Satisfies the task as no obligations (K) exist, providing a minimal, functional implementation.",
+            "predicted_obligations_satisfied": [],
+            "risk_score": 0.1,
+            "notes": "Assumes Python; new file patch from empty. Conservative: no external deps beyond stdlib, reversible by removing file. SEED ignored as deterministic."
+          },
+          "llm_meta": {
+            "model": "x-ai/grok-4-fast:free",
+            "latency_ms": 7683,
+            "usage": {
+              "completion_tokens": 779,
+              "prompt_tokens": 277,
+              "total_tokens": 1056,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": null,
+                "audio_tokens": null,
+                "reasoning_tokens": 400,
+                "rejected_prediction_tokens": null
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 271
+              }
+            },
+            "prompt_hash": "c3c155255d7728716141ef786e45fe399bc44f4b497d9d050c824ce8f7e11f49",
+            "cache_hit": false
+          }
+        }
+      ],
+      "audit_pack": {
+        "audit_pack": {
+          "metadata": {
+            "timestamp": "2025-09-26T14:38:25.554653",
+            "version": "1.0.0",
+            "model": "x-ai/grok-4-fast:free",
+            "total_latency_ms": 28682,
+            "total_tokens": 3551,
+            "cache_hit_rate": 0.0,
+            "plan_steps": 5,
+            "actions_generated": 3,
+            "success_rate": 0.85
+          },
+          "plan": {
+            "plan": [
+              "select_algorithm",
+              "implement_token_bucket",
+              "integrate_api",
+              "add_tests",
+              "document_usage"
+            ],
+            "est_success": 0.85,
+            "est_cost": 15,
+            "notes": "Basic plan for rate limiting from scratch; assumes Python/web context.",
+            "llm_meta": {
+              "model": "x-ai/grok-4-fast:free",
+              "latency_ms": 7038,
+              "usage": {
+                "completion_tokens": 468,
+                "prompt_tokens": 275,
+                "total_tokens": 743,
+                "completion_tokens_details": {
+                  "accepted_prediction_tokens": null,
+                  "audio_tokens": null,
+                  "reasoning_tokens": 420,
+                  "rejected_prediction_tokens": null
+                },
+                "prompt_tokens_details": {
+                  "audio_tokens": 0,
+                  "cached_tokens": 120
+                }
+              },
+              "prompt_hash": "22a12e39dfff1193b84cab6dd4ab506b3ab9008d60a6ce4666041a30341fb03c",
+              "cache_hit": false
+            }
+          },
+          "actions": [
+            {
+              "proposal": {
+                "patch_unified": "--- /dev/null\n+++ rate_limiter.py\n@@ -0,0 +1,14 @@\nimport time\nfrom collections import deque\n\n\nclass RateLimiter:\n    def __init__(self, max_requests: int, window_size: float):\n        self.max_requests = max_requests\n        self.window_size = window_size\n        self.requests = deque()\n\n    def is_allowed(self) -> bool:\n        now = time.time()\n        while self.requests and now - self.requests[0] > self.window_size:\n            self.requests.popleft()\n        if len(self.requests) < self.max_requests:\n            self.requests.append(now)\n            return True\n        return False\n",
+                "rationale": "Creates a new RateLimiter class with sliding window logic using a deque for efficient timestamp management, fulfilling the task to implement the class as no obligations (K) are specified.",
+                "predicted_obligations_satisfied": [],
+                "risk_score": 0.1,
+                "notes": "Minimal implementation in Python; assumes seconds for window_size; reversible by removing the file."
+              },
+              "llm_meta": {
+                "model": "x-ai/grok-4-fast:free",
+                "latency_ms": 11166,
+                "usage": {
+                  "completion_tokens": 910,
+                  "prompt_tokens": 277,
+                  "total_tokens": 1187,
+                  "completion_tokens_details": {
+                    "accepted_prediction_tokens": null,
+                    "audio_tokens": null,
+                    "reasoning_tokens": 686,
+                    "rejected_prediction_tokens": null
+                  },
+                  "prompt_tokens_details": {
+                    "audio_tokens": 0,
+                    "cached_tokens": 151
+                  }
+                },
+                "prompt_hash": "5131d8a8b7f3e8fae35bc76fef06f8a8156e0b2cd69467a8981924597c83eaa5",
+                "cache_hit": false
+              }
+            },
+            {
+              "proposal": {
+                "patch_unified": "--- /dev/null\n+++ rate_limiter.py\n@@ -0,0 +1,18 @@\n+import time\n+\n+class RateLimiter:\n+    \"\"\"\n+    Rate limiter using sliding window algorithm.\n+    Allows max_requests within window_size seconds.\n+    \"\"\"\n+    def __init__(self, max_requests: int, window_size: float):\n+        self.max_requests = max_requests\n+        self.window_size = window_size\n+        self.requests = []  # List of request timestamps\n+\n+    def is_allowed(self) -> bool:\n+        now = time.time()\n+        # Remove requests outside the window\n+        self.requests = [t for t in self.requests if now - t < self.window_size]\n+        if len(self.requests) < self.max_requests:\n+            self.requests.append(now)\n+            return True\n+        return False\n",
+                "rationale": "Creates a new RateLimiter class implementing a sliding window mechanism to enforce rate limits, directly addressing the task with no existing obligations to satisfy.",
+                "predicted_obligations_satisfied": [],
+                "risk_score": 0.1,
+                "notes": "Minimal implementation using a list for timestamps; suitable for moderate loads. Assumes addition as a new file; adjust filename if integrating into existing codebase."
+              },
+              "llm_meta": {
+                "model": "x-ai/grok-4-fast:free",
+                "latency_ms": 9833,
+                "usage": {
+                  "completion_tokens": 1031,
+                  "prompt_tokens": 277,
+                  "total_tokens": 1308,
+                  "completion_tokens_details": {
+                    "accepted_prediction_tokens": null,
+                    "audio_tokens": null,
+                    "reasoning_tokens": 752,
+                    "rejected_prediction_tokens": null
+                  },
+                  "prompt_tokens_details": {
+                    "audio_tokens": 0,
+                    "cached_tokens": 151
+                  }
+                },
+                "prompt_hash": "18c7ecdaa2278177f97f4ab028d01932409e4d0e139403392dba525bb444e61b",
+                "cache_hit": false
+              }
+            },
+            {
+              "proposal": {
+                "patch_unified": "--- /dev/null\n+++ ratelimiter.py\n@@ -0,0 +1,32 @@\n+from collections import deque\n+from time import time\n+\n+\n+class RateLimiter:\n+    \"\"\"\n+    Rate limiter using sliding window.\n+    Tracks request timestamps in a deque, removing old ones.\n+    \"\"\"\n+\n+    def __init__(self, max_requests: int, window_seconds: int):\n+        \"\"\"\n+        :param max_requests: Max requests allowed in window\n+        :param window_seconds: Time window in seconds\n+        \"\"\"\n+        self.max_requests = max_requests\n+        self.window_seconds = window_seconds\n+        self.requests = deque()\n+\n+    def allow(self) -> bool:\n+        \"\"\"\n+        Check if a new request is allowed.\n+        Returns True if allowed, else False.\n+        Also adds current timestamp if allowed.\n+        \"\"\"\n+        now = time()\n+        # Remove old requests outside window\n+        while self.requests and now - self.requests[0] > self.window_seconds:\n+            self.requests.popleft()\n+\n+        if len(self.requests) < self.max_requests:\n+            self.requests.append(now)\n+            return True\n+        return False\n+",
+                "rationale": "Creates a new RateLimiter class implementing sliding window rate limiting using a deque for efficient timestamp management. Satisfies the task as no obligations (K) exist, providing a minimal, functional implementation.",
+                "predicted_obligations_satisfied": [],
+                "risk_score": 0.1,
+                "notes": "Assumes Python; new file patch from empty. Conservative: no external deps beyond stdlib, reversible by removing file. SEED ignored as deterministic."
+              },
+              "llm_meta": {
+                "model": "x-ai/grok-4-fast:free",
+                "latency_ms": 7683,
+                "usage": {
+                  "completion_tokens": 779,
+                  "prompt_tokens": 277,
+                  "total_tokens": 1056,
+                  "completion_tokens_details": {
+                    "accepted_prediction_tokens": null,
+                    "audio_tokens": null,
+                    "reasoning_tokens": 400,
+                    "rejected_prediction_tokens": null
+                  },
+                  "prompt_tokens_details": {
+                    "audio_tokens": 0,
+                    "cached_tokens": 271
+                  }
+                },
+                "prompt_hash": "c3c155255d7728716141ef786e45fe399bc44f4b497d9d050c824ce8f7e11f49",
+                "cache_hit": false
+              }
+            }
+          ],
+          "attestation": {
+            "hash": "5941edd5df133c9dc82d73ea2ecea1a0b6c4037b665512fad2c02d8ec924b403",
+            "signature": "proofengine-v1-5941edd5df133c9d",
+            "timestamp": "2025-09-26T14:38:25.554653"
+          }
+        }
+      },
+      "error": null
+    },
+    {
+      "success": true,
+      "case_name": "Fonction Pure",
+      "plan": {
+        "plan": [
+          "define_function_signature",
+          "implement_pure_logic",
+          "add_type_hints",
+          "document_purity"
+        ],
+        "est_success": 0.95,
+        "est_cost": 15,
+        "notes": "Start with basics to ensure purity from the outset, minimizing later refactoring.",
+        "llm_meta": {
+          "model": "x-ai/grok-4-fast:free",
+          "latency_ms": 5061,
+          "usage": {
+            "completion_tokens": 417,
+            "prompt_tokens": 276,
+            "total_tokens": 693,
+            "completion_tokens_details": {
+              "accepted_prediction_tokens": null,
+              "audio_tokens": null,
+              "reasoning_tokens": 367,
+              "rejected_prediction_tokens": null
+            },
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cached_tokens": 153
+            }
+          },
+          "prompt_hash": "b81a0df07968b0a91d0fcffc78dfeb1df492fc590aedd88d3c96fa1f1ce8250d",
+          "cache_hit": false
+        }
+      },
+      "actions": [
+        {
+          "proposal": {
+            "patch_unified": "--- a/math_utils.py\n+++ b/math_utils.py\n@@ -0,0 +1,6 @@\n+def calcul_mathematique(a, b):\n+    \"\"\"\n+    Fonction simple de calcul mathématique : addition de deux nombres.\n+    \"\"\"\n+    return a + b\n+",
+            "rationale": "Obligations (K) are empty, so this adds a minimal, safe mathematical function (addition) to satisfy the task without overstepping. Patch is reversible and doesn't break existing code.",
+            "predicted_obligations_satisfied": [],
+            "risk_score": 0.1,
+            "notes": "Assumes new Python file; adjust path if needed. Conservative: simple arithmetic only."
+          },
+          "llm_meta": {
+            "model": "x-ai/grok-4-fast:free",
+            "latency_ms": 7217,
+            "usage": {
+              "completion_tokens": 722,
+              "prompt_tokens": 276,
+              "total_tokens": 998,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": null,
+                "audio_tokens": null,
+                "reasoning_tokens": 574,
+                "rejected_prediction_tokens": null
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 120
+              }
+            },
+            "prompt_hash": "125c9aa464c44ace4c29335092bef29c58901a55b97fb538ad8f7e241e28c98b",
+            "cache_hit": false
+          }
+        },
+        {
+          "proposal": {
+            "patch_unified": "--- /dev/null\n+++ math_functions.py\n@@ -0,0 +1,4 @@\n+def calcul_mathematique(a, b):\n+    \"\"\"Fonction de calcul mathématique basique (addition).\"\"\"\n+    return a + b\n+",
+            "rationale": "Implements a basic mathematical calculation function (addition) as the task requires, with empty obligations (K: []), so it satisfies the request without violating any constraints.",
+            "predicted_obligations_satisfied": [],
+            "risk_score": 0.1,
+            "notes": "Minimal reversible addition: adds a simple Python function file. No external dependencies or breaking changes."
+          },
+          "llm_meta": {
+            "model": "x-ai/grok-4-fast:free",
+            "latency_ms": 8450,
+            "usage": {
+              "completion_tokens": 607,
+              "prompt_tokens": 276,
+              "total_tokens": 883,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": null,
+                "audio_tokens": null,
+                "reasoning_tokens": 471,
+                "rejected_prediction_tokens": null
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 151
+              }
+            },
+            "prompt_hash": "085132652d83148d3debc3c8e733fc514cad10b5a5be049b53d36c074143d1d7",
+            "cache_hit": false
+          }
+        },
+        {
+          "proposal": {
+            "patch_unified": "--- /dev/null\n+++ src/math.py\n@@ -0,0 +1,6 @@\n+def mathematical_calculation(x, y):\n+    \"\"\"\n+    Simple mathematical function: computes x + y * 2.\n+    \"\"\"\n+    return x + y * 2\n+",
+            "rationale": "The task requires implementing a mathematical calculation function. With empty obligations (K), this minimal patch adds a simple, reversible function to a new file, satisfying the task without dependencies or risks.",
+            "predicted_obligations_satisfied": [],
+            "risk_score": 0.1,
+            "notes": "Assumes Python; function is basic and does not break any tests (none specified). Changes are minimal and additive."
+          },
+          "llm_meta": {
+            "model": "x-ai/grok-4-fast:free",
+            "latency_ms": 5420,
+            "usage": {
+              "completion_tokens": 655,
+              "prompt_tokens": 276,
+              "total_tokens": 931,
+              "completion_tokens_details": {
+                "accepted_prediction_tokens": null,
+                "audio_tokens": null,
+                "reasoning_tokens": 503,
+                "rejected_prediction_tokens": null
+              },
+              "prompt_tokens_details": {
+                "audio_tokens": 0,
+                "cached_tokens": 156
+              }
+            },
+            "prompt_hash": "a5d0c7be3a1adc641edd3872f95a589a591ddab6de14f07c0401e0c56ed01eef",
+            "cache_hit": false
+          }
+        }
+      ],
+      "audit_pack": {
+        "audit_pack": {
+          "metadata": {
+            "timestamp": "2025-09-26T14:38:51.726544",
+            "version": "1.0.0",
+            "model": "x-ai/grok-4-fast:free",
+            "total_latency_ms": 21087,
+            "total_tokens": 2812,
+            "cache_hit_rate": 0.0,
+            "plan_steps": 4,
+            "actions_generated": 3,
+            "success_rate": 0.95
+          },
+          "plan": {
+            "plan": [
+              "define_function_signature",
+              "implement_pure_logic",
+              "add_type_hints",
+              "document_purity"
+            ],
+            "est_success": 0.95,
+            "est_cost": 15,
+            "notes": "Start with basics to ensure purity from the outset, minimizing later refactoring.",
+            "llm_meta": {
+              "model": "x-ai/grok-4-fast:free",
+              "latency_ms": 5061,
+              "usage": {
+                "completion_tokens": 417,
+                "prompt_tokens": 276,
+                "total_tokens": 693,
+                "completion_tokens_details": {
+                  "accepted_prediction_tokens": null,
+                  "audio_tokens": null,
+                  "reasoning_tokens": 367,
+                  "rejected_prediction_tokens": null
+                },
+                "prompt_tokens_details": {
+                  "audio_tokens": 0,
+                  "cached_tokens": 153
+                }
+              },
+              "prompt_hash": "b81a0df07968b0a91d0fcffc78dfeb1df492fc590aedd88d3c96fa1f1ce8250d",
+              "cache_hit": false
+            }
+          },
+          "actions": [
+            {
+              "proposal": {
+                "patch_unified": "--- a/math_utils.py\n+++ b/math_utils.py\n@@ -0,0 +1,6 @@\n+def calcul_mathematique(a, b):\n+    \"\"\"\n+    Fonction simple de calcul mathématique : addition de deux nombres.\n+    \"\"\"\n+    return a + b\n+",
+                "rationale": "Obligations (K) are empty, so this adds a minimal, safe mathematical function (addition) to satisfy the task without overstepping. Patch is reversible and doesn't break existing code.",
+                "predicted_obligations_satisfied": [],
+                "risk_score": 0.1,
+                "notes": "Assumes new Python file; adjust path if needed. Conservative: simple arithmetic only."
+              },
+              "llm_meta": {
+                "model": "x-ai/grok-4-fast:free",
+                "latency_ms": 7217,
+                "usage": {
+                  "completion_tokens": 722,
+                  "prompt_tokens": 276,
+                  "total_tokens": 998,
+                  "completion_tokens_details": {
+                    "accepted_prediction_tokens": null,
+                    "audio_tokens": null,
+                    "reasoning_tokens": 574,
+                    "rejected_prediction_tokens": null
+                  },
+                  "prompt_tokens_details": {
+                    "audio_tokens": 0,
+                    "cached_tokens": 120
+                  }
+                },
+                "prompt_hash": "125c9aa464c44ace4c29335092bef29c58901a55b97fb538ad8f7e241e28c98b",
+                "cache_hit": false
+              }
+            },
+            {
+              "proposal": {
+                "patch_unified": "--- /dev/null\n+++ math_functions.py\n@@ -0,0 +1,4 @@\n+def calcul_mathematique(a, b):\n+    \"\"\"Fonction de calcul mathématique basique (addition).\"\"\"\n+    return a + b\n+",
+                "rationale": "Implements a basic mathematical calculation function (addition) as the task requires, with empty obligations (K: []), so it satisfies the request without violating any constraints.",
+                "predicted_obligations_satisfied": [],
+                "risk_score": 0.1,
+                "notes": "Minimal reversible addition: adds a simple Python function file. No external dependencies or breaking changes."
+              },
+              "llm_meta": {
+                "model": "x-ai/grok-4-fast:free",
+                "latency_ms": 8450,
+                "usage": {
+                  "completion_tokens": 607,
+                  "prompt_tokens": 276,
+                  "total_tokens": 883,
+                  "completion_tokens_details": {
+                    "accepted_prediction_tokens": null,
+                    "audio_tokens": null,
+                    "reasoning_tokens": 471,
+                    "rejected_prediction_tokens": null
+                  },
+                  "prompt_tokens_details": {
+                    "audio_tokens": 0,
+                    "cached_tokens": 151
+                  }
+                },
+                "prompt_hash": "085132652d83148d3debc3c8e733fc514cad10b5a5be049b53d36c074143d1d7",
+                "cache_hit": false
+              }
+            },
+            {
+              "proposal": {
+                "patch_unified": "--- /dev/null\n+++ src/math.py\n@@ -0,0 +1,6 @@\n+def mathematical_calculation(x, y):\n+    \"\"\"\n+    Simple mathematical function: computes x + y * 2.\n+    \"\"\"\n+    return x + y * 2\n+",
+                "rationale": "The task requires implementing a mathematical calculation function. With empty obligations (K), this minimal patch adds a simple, reversible function to a new file, satisfying the task without dependencies or risks.",
+                "predicted_obligations_satisfied": [],
+                "risk_score": 0.1,
+                "notes": "Assumes Python; function is basic and does not break any tests (none specified). Changes are minimal and additive."
+              },
+              "llm_meta": {
+                "model": "x-ai/grok-4-fast:free",
+                "latency_ms": 5420,
+                "usage": {
+                  "completion_tokens": 655,
+                  "prompt_tokens": 276,
+                  "total_tokens": 931,
+                  "completion_tokens_details": {
+                    "accepted_prediction_tokens": null,
+                    "audio_tokens": null,
+                    "reasoning_tokens": 503,
+                    "rejected_prediction_tokens": null
+                  },
+                  "prompt_tokens_details": {
+                    "audio_tokens": 0,
+                    "cached_tokens": 156
+                  }
+                },
+                "prompt_hash": "a5d0c7be3a1adc641edd3872f95a589a591ddab6de14f07c0401e0c56ed01eef",
+                "cache_hit": false
+              }
+            }
+          ],
+          "attestation": {
+            "hash": "3a6003fd2112b6e754fa2b5c05d686953c35f0e6278bc62890801b198549060a",
+            "signature": "proofengine-v1-3a6003fd2112b6e7",
+            "timestamp": "2025-09-26T14:38:51.726544"
+          }
+        }
+      },
+      "error": null
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+- id: P-1
+  name: "Lattice Engine (FCA)"
+  required_by: ["O-1", "I-1", "I-6"]
+  spec: "Implémenter meet/join, implication closure, extraction de stems, calcul d’ensemble minimal."
+- id: P-2
+  name: "Proof Journal (append-only, merkleized)"
+  required_by: ["O-2", "I-2", "I-7", "O-3", "O-4"]
+  spec: "Entrées typées, hash de contenu, liens parent, merkle root T-quotidienne."
+- id: P-3
+  name: "Provenance & Content Addressing"
+  required_by: ["O-5", "I-2"]
+  spec: "SHA-256 d’artefacts, signatures, horodatage, URI content-addressed."
+- id: P-4
+  name: "Compliance Mapper"
+  required_by: ["O-9", "I-4"]
+  spec: "Tables de correspondance std↔obligations, diffable, réversible localement."
+- id: P-5
+  name: "PCAP Verifier Suite"
+  required_by: ["O-1","O-2","O-3","O-4","O-8","O-12"]
+  spec: "v_minimality, v_trace_bound, v_provenance, v_compliance_link, v_monotonicity, v_blackbox_guard."
+- id: P-6
+  name: "UNSAT Core Extractor"
+  required_by: ["I-1","O-6","O-12"]
+  spec: "Détection de conflits; explication; options de trade-off."
+- id: P-7
+  name: "Homomorphism Test Module"
+  required_by: ["I-8", "PO-8"]
+  spec: "Tentative de mapping vers RAG vectoriel; vérification de conservation d’invariants."

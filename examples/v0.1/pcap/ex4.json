@@ -1,0 +1,19 @@
+{
+  "version": "0.1.0",
+  "id": "pcap-39604317",
+  "action": {
+    "name": "test_action",
+    "params": {},
+    "target": "test_target"
+  },
+  "context_hash": "47b859beedd575c53d5326e6b554785977cf1f6f24cdcd2e2a799a8ce316cfd4",
+  "obligations": [],
+  "justification": {
+    "time_ms": 0,
+    "audit_cost": 0.0,
+    "security_risk": 0.0,
+    "info_loss": 0.0,
+    "tech_debt": 0.0
+  },
+  "proofs": []
+}

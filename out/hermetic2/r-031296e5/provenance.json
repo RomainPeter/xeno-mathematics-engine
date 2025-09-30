@@ -1,0 +1,31 @@
+{
+  "_format": "in-toto-statement-lite",
+  "subject": {
+    "name": "r-031296e5",
+    "merkle_root": "b524a105cfd2934bc236a7d4785c55bb00590c29b75edec8b693606b514f5718"
+  },
+  "predicateType": "slsa-lite@v1",
+  "predicate": {
+    "builder": {
+      "name": "pefc.pack"
+    },
+    "invocation": {
+      "env": {
+        "SOURCE_DATE_EPOCH": 1700000000,
+        "PYTHONHASHSEED": "7",
+        "TZ": "UTC"
+      },
+      "parameters": {
+        "seed": 7,
+        "allow_outside_workspace": false
+      }
+    },
+    "materials": {
+      "requirements_lock": {
+        "path": "C:\\Users\\romai\\Documents\\Gemini CLI Agent\\proof-engine-for-code\\requirements.lock",
+        "sha256": "6f77b55ab7d58a40f98f6c9e7a649b65a3f553d2ffc477f6c71ff309117411bc"
+      }
+    },
+    "inputs": []
+  }
+}

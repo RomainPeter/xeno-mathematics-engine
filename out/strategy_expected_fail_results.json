@@ -1,0 +1,28 @@
+{
+  "red_cases": [
+    {
+      "test_case": "specialize_then_retry_red",
+      "strategy": "specialize_then_retry",
+      "can_apply": true,
+      "success_probability": 0.8,
+      "expected_can_apply": true,
+      "expected_success_prob": 0.8,
+      "passed": true
+    }
+  ],
+  "green_cases": [
+    {
+      "test_case": "specialize_then_retry_green",
+      "has_specialization": true,
+      "expected_success": true,
+      "passed": true
+    }
+  ],
+  "summary": {
+    "red_cases_total": 1,
+    "red_cases_passed": 1,
+    "green_cases_total": 1,
+    "green_cases_passed": 1,
+    "overall_success": 1.0
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "data": {
+    "ok": true,
+    "model": "GPT-4"
+  },
+  "_meta": {
+    "model": "x-ai/grok-4-fast:free",
+    "latency_ms": 3314,
+    "usage": {
+      "completion_tokens": 249,
+      "prompt_tokens": 155,
+      "total_tokens": 404,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 236,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 118
+      }
+    },
+    "prompt_hash": "f88aea792c1147bdcf8efaf1fe025c48c90e2552f1bb4bafc0843042ad96c50e",
+    "cache_hit": false
+  }
+}

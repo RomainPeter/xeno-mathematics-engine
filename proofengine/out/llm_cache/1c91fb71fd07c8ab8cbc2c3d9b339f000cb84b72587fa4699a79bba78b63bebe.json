@@ -1,0 +1,33 @@
+{
+  "data": {
+    "plan": [
+      "enhance_sanitization_logic",
+      "add_type_hints",
+      "verify_constraints"
+    ],
+    "est_success": 0.85,
+    "est_cost": 3.0,
+    "notes": "Focus on strengthening input filtering while preserving existing tests and docstring; review for common vulnerabilities like XSS/SQLi."
+  },
+  "_meta": {
+    "model": "x-ai/grok-4-fast:free",
+    "latency_ms": 8885,
+    "usage": {
+      "completion_tokens": 620,
+      "prompt_tokens": 276,
+      "total_tokens": 896,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 563,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 120
+      }
+    },
+    "prompt_hash": "1c91fb71fd07c8ab8cbc2c3d9b339f000cb84b72587fa4699a79bba78b63bebe",
+    "cache_hit": false
+  }
+}
