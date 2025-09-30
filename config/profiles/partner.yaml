@@ -1,0 +1,32 @@
+# Partner profile for external integrations
+logging:
+  level: "INFO"
+  json_mode: true
+  gha_annotations: false
+
+metrics:
+  sources: ["partner/metrics/**/*.json", "external/**/*.json"]
+  backend: "auto"
+  weight_key: "partner_weight"
+
+capabilities:
+  allowlist: ["hs-tree", "ids-synth"]  # Only specific capabilities for partners
+  denylist: ["opa-rego"]  # Exclude internal policy evaluation
+
+pipelines:
+  defs:
+    partner_pack:
+      name: "Partner Pack"
+      steps:
+        - type: "collect"
+          name: "CollectSeeds"
+        - type: "compute_merkle"
+          name: "ComputeMerkle"
+        - type: "render_docs"
+          name: "OnePager"
+        - type: "pack_zip"
+          name: "Zip"
+        - type: "capability"
+          name: "RunPartnerProofs"
+          params:
+            capabilities: ["hs-tree", "ids-synth"]

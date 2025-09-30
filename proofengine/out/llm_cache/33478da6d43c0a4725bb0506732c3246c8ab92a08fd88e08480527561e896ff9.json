@@ -1,0 +1,32 @@
+{
+  "data": {
+    "patch_unified": "--- main.py\n+++ main.py\n@@ -1,3 +1,4 @@\n def hello(name):\n     return f\"Hello, {name}\"\n+\n+    \"\"\"Greet the user by name.\"\"\"\n",
+    "rationale": "Adds a docstring to the hello function, which is a minimal, reversible change that improves documentation without altering functionality, directly addressing docstring_ok in the toy repo.",
+    "predicted_obligations_satisfied": [
+      "docstring_ok"
+    ],
+    "risk_score": 0.05,
+    "notes": "Assumes basic function in toy repo; conservative addition that shouldn't break tests or types."
+  },
+  "_meta": {
+    "model": "x-ai/grok-4-fast:free",
+    "latency_ms": 5740,
+    "usage": {
+      "completion_tokens": 642,
+      "prompt_tokens": 296,
+      "total_tokens": 938,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 510,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 290
+      }
+    },
+    "prompt_hash": "33478da6d43c0a4725bb0506732c3246c8ab92a08fd88e08480527561e896ff9",
+    "cache_hit": false
+  }
+}

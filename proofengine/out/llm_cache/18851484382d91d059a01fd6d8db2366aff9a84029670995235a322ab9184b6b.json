@@ -1,0 +1,30 @@
+{
+  "data": {
+    "patch_unified": "--- /dev/null\n+++ email_validator.py\n@@ -0,0 +1,7 @@\n+import re\n+\n+def is_valid_email(email: str) -> bool:\n+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'\n+    return bool(re.match(pattern, email))\n+",
+    "rationale": "With empty obligations (K=[]), this patch creates a minimal, safe email validation function using regex in Python, fulfilling the task without introducing risks or dependencies.",
+    "predicted_obligations_satisfied": [],
+    "risk_score": 0.1,
+    "notes": "Assumes Python; basic regex validation; no network use; easily reversible by removing the file."
+  },
+  "_meta": {
+    "model": "x-ai/grok-4-fast:free",
+    "latency_ms": 7793,
+    "usage": {
+      "completion_tokens": 824,
+      "prompt_tokens": 276,
+      "total_tokens": 1100,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 655,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 120
+      }
+    },
+    "prompt_hash": "18851484382d91d059a01fd6d8db2366aff9a84029670995235a322ab9184b6b",
+    "cache_hit": false
+  }
+}

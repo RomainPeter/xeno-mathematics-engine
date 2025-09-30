@@ -1,0 +1,66 @@
+{
+  "$id": "https://spec.proof.engine/v0.1/pcap.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Proof-Carrying Action (PCAP)",
+  "type": "object",
+  "properties": {
+    "version": { "type": "string", "const": "0.1.0" },
+    "id": { "type": "string" },
+    "action": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "params": { "type": "object" },
+        "target": { "type": "string" }
+      },
+      "required": ["name","target"],
+      "additionalProperties": false
+    },
+    "context_hash": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+    "obligations": { "type": "array", "items": { "type": "string" } },
+    "justification": { "$ref": "#/$defs/V" },
+    "proofs": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/Proof" }
+    },
+    "attestation": {
+      "type": "object",
+      "properties": {
+        "verdict": { "type": "string", "enum": ["accepted","rejected"] },
+        "ts": { "type": "string", "format": "date-time" },
+        "signature": { "type": "string" }
+      },
+      "required": ["verdict","ts"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["version","id","action","context_hash","obligations","justification","proofs"],
+  "additionalProperties": false,
+  "$defs": {
+    "V": {
+      "type": "object",
+      "properties": {
+        "time_ms": { "type": "integer", "minimum": 0 },
+        "audit_cost": { "type": "number", "minimum": 0 },
+        "security_risk": { "type": "number", "minimum": 0 },
+        "info_loss": { "type": "number", "minimum": 0 },
+        "tech_debt": { "type": "number", "minimum": 0 }
+      },
+      "required": ["time_ms","audit_cost","security_risk","info_loss","tech_debt"],
+      "additionalProperties": false
+    },
+    "Proof": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "enum": ["unit_test","property_test","policy_check","static_analysis"] },
+        "runner": { "type": "string", "enum": ["pytest","hypothesis","opa","ruff","mypy"] },
+        "args": { "type": "array", "items": { "type": "string" } },
+        "expect": { "type": "string" },
+        "result": { "type": "string", "enum": ["pass","fail"], "nullable": true }
+      },
+      "required": ["id","type","runner","args","expect"],
+      "additionalProperties": false
+    }
+  }
+}

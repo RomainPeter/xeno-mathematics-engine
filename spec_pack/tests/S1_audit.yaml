@@ -1,0 +1,24 @@
+suite: "S1 — Audit bénin"
+tests:
+  - id: H-S1-01
+    name: "Rebuild 10 décisions, minimalité + K=10 + provenance"
+    acceptance:
+      - "minimality_pass == true"
+      - "trace_pass == true"
+      - "provenance_pass == true"
+  - id: H-S1-02
+    name: "Déterminisme opérateurs"
+    acceptance:
+      - "determinism_pass == true"
+  - id: H-S1-03
+    name: "Couverture conformité ≥ 90% (gaps listés)"
+    acceptance:
+      - "compliance_coverage >= 0.90"
+  - id: H-S1-04
+    name: "Journal merklisé, intégrité"
+    acceptance:
+      - "merkle_ok == true"
+  - id: H-S1-05
+    name: "Audit readiness hors réseau (air-gapped option)"
+    acceptance:
+      - "rebuild_offline_hours <= 24"

@@ -1,0 +1,68 @@
+# LLM Configuration for 2-Category Transformations
+# Configuration for OpenRouter API with Kimi K2 model
+
+# Model settings
+model: "kimi/kimi-2"
+temperature: 0.0  # Deterministic for auto-consistency
+max_tokens: 2048
+n: 3  # Auto-consistency voting
+
+# API settings
+api_base_url: "https://openrouter.ai/api/v1"
+timeout_seconds: 30
+max_retries: 3
+
+# Caching settings
+cache_ttl: 3600  # 1 hour cache TTL
+cache_size_limit: 1000  # Max cached responses
+
+# Security settings
+signing_key: "change-this-in-production"
+enable_audit_logging: true
+log_level: "INFO"
+
+# Selection thresholds
+confidence_threshold: 0.6
+delta_v_threshold: 0.1
+max_depth: 2
+max_rewrites_per_failreason: 1
+
+# Budget constraints
+default_budgets:
+  time_ms: 300000  # 5 minutes
+  audit_cost: 1.0
+  max_replans: 2
+
+# Strategy whitelist by FailReason
+strategy_whitelist:
+  contract.ambiguous_spec: ["specialize_then_retry"]
+  coverage.missing_test: ["add_missing_tests"]
+  api.semver_missing: ["require_semver"]
+  api.changelog_missing: ["changelog_or_block"]
+  runner.test_failure: ["decompose_meet"]
+  nondet.flaky_test: ["retry_with_hardening"]
+  policy.dependency_pin_required: ["pin_dependency"]
+  policy.secret: ["guard_before"]
+  policy.egress: ["guard_before"]
+
+# Scoring weights for multi-criteria selection
+scoring_weights:
+  validity: 0.3
+  cost_efficiency: 0.2
+  historical_success: 0.25
+  output_size: 0.1
+  entropy: 0.15
+
+# Rollback settings
+rollback:
+  max_consecutive_failures: 2
+  disable_strategy_on_failure: true
+  re_enable_on_success: true
+
+# Audit settings
+audit:
+  log_selection_decisions: true
+  log_llm_responses: true
+  log_cache_hits: true
+  selection_proofs_dir: "artifacts/audit_pack/selection_proofs"
+  two_cells_file: "artifacts/audit_pack/2cells.jsonl"

@@ -1,0 +1,9 @@
+{
+  "inputs": {
+    "files": [],
+    "globs": [
+      "tmp_inputs/**/*.txt"
+    ],
+    "dirs": []
+  }
+}

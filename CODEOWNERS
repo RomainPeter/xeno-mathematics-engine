@@ -1,0 +1,6 @@
+# Require review for critical paths
+/docs/ @RomainPeter
+/.github/workflows/ @RomainPeter
+/methods/ @RomainPeter
+/orchestrator/ @RomainPeter
+/schemas/ @RomainPeter

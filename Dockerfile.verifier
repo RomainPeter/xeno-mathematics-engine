@@ -1,0 +1,28 @@
+FROM python:3.11-slim@sha256:8f4b7f84859684c5f61e792d5522ad1b3a2a4908
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirements and install Python dependencies
+COPY requirements.lock .
+RUN pip install --no-cache-dir -r requirements.lock
+
+# Copy application code
+COPY . .
+
+# Create non-root user
+RUN useradd -m -u 1000 verifier && chown -R verifier:verifier /app
+USER verifier
+
+# Set environment variables
+ENV PYTHONPATH=/app
+ENV PYTHONHASHSEED=0
+
+# Default command
+CMD ["python", "scripts/verifier.py", "--help"]

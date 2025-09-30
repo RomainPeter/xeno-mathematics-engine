@@ -1,0 +1,35 @@
+{
+  "id": "ANF-001",
+  "version": "0.2",
+  "title": "Symbiotic AI — Mémoire probatoire",
+  "mission": "Fournir une mémoire probatoire auditable (minimalité, traçabilité bornée) pour IA régulée.",
+  "scope": {
+    "domain": "RegTech",
+    "systems_in_scope": ["RAG_conformite","Assistant_decision","MLOps_pipeline"],
+    "out_of_scope": ["Biometrie_temps_reel","Decision_medicale_autonome"]
+  },
+  "guarantees": [
+    {"id":"G-1","name":"minimal_non_redundant_coverage"},
+    {"id":"G-2","name":"explainability_by_construction"},
+    {"id":"G-3","name":"audit_readiness_24h"},
+    {"id":"G-4","name":"traceability_bound_K","params":{"K":10}},
+    {"id":"G-5","name":"monotonic_guarantees"}
+  ],
+  "constraints": [
+    {"id":"C-1","name":"low_risk_appetite","value":"low"},
+    {"id":"C-2","name":"audit_cost_reduction_target","value":">=30%"},
+    {"id":"C-3","name":"data_governance","value":["PII_protected","provenance_required"]},
+    {"id":"C-4","name":"determinism_required","value": true},
+    {"id":"C-5","name":"air_gapped_option","value": true}
+  ],
+  "non_negociables": [
+    {"id":"NN-1","name":"provenance_conservation"},
+    {"id":"NN-2","name":"reversibility_of_mappings"},
+    {"id":"NN-3","name":"no_blackbox_features"}
+  ],
+  "standards": ["EU_AI_Act","NIST_AI_RMF","ISO_IEC_42001"],
+  "threat_actors": [
+    {"id":"TA-1","name":"malicious_auditor"},
+    {"id":"TA-2","name":"data_poisoner"}
+  ]
+}

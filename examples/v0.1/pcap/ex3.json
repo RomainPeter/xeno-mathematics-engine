@@ -1,0 +1,11 @@
+{
+  "version": "0.1.0",
+  "id": "pcap-003",
+  "action": { "name": "add_test", "params": { "file": "tests/test_utils.py" }, "target": "repo://tests/test_utils.py" },
+  "context_hash": "1111111111111111111111111111111111111111111111111111111111111111",
+  "obligations": [],
+  "justification": { "time_ms": 300, "audit_cost": 0.05, "security_risk": 0.0, "info_loss": 0.0, "tech_debt": 0.0 },
+  "proofs": [
+    { "id": "p-9", "type": "unit_test", "runner": "pytest", "args": ["-k","test_utils"], "expect": "all pass" }
+  ]
+}

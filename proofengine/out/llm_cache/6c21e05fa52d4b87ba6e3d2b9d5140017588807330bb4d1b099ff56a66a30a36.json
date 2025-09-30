@@ -1,0 +1,29 @@
+{
+  "data": {
+    "plan": [],
+    "est_success": 1.0,
+    "est_cost": 0,
+    "notes": "All constraints in K are already satisfied (e.g., tests_ok, docstring_ok), so no actions required for the toy repo."
+  },
+  "_meta": {
+    "model": "x-ai/grok-4-fast:free",
+    "latency_ms": 5397,
+    "usage": {
+      "completion_tokens": 422,
+      "prompt_tokens": 304,
+      "total_tokens": 726,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 377,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 153
+      }
+    },
+    "prompt_hash": "6c21e05fa52d4b87ba6e3d2b9d5140017588807330bb4d1b099ff56a66a30a36",
+    "cache_hit": false
+  }
+}

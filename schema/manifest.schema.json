@@ -1,0 +1,117 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Pack Manifest Schema",
+  "description": "Schema for pack manifest.json files",
+  "type": "object",
+  "required": [
+    "format_version",
+    "pack_name",
+    "version",
+    "built_at",
+    "builder",
+    "file_count",
+    "total_size_bytes",
+    "merkle_root",
+    "files"
+  ],
+  "properties": {
+    "format_version": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Manifest format version"
+    },
+    "pack_name": {
+      "type": "string",
+      "description": "Name of the pack"
+    },
+    "version": {
+      "type": "string",
+      "description": "Version of the pack"
+    },
+    "built_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC ISO8601 timestamp when pack was built"
+    },
+    "builder": {
+      "type": "object",
+      "required": ["cli_version", "host"],
+      "properties": {
+        "cli_version": {
+          "type": "string",
+          "description": "Version of the CLI used to build"
+        },
+        "host": {
+          "type": "string",
+          "description": "Hostname of the build machine"
+        }
+      },
+      "additionalProperties": false
+    },
+    "file_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of files in the pack"
+    },
+    "total_size_bytes": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total size of payload files (excluding manifest.json and merkle.txt)"
+    },
+    "merkle_root": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "Hex digest of Merkle root (64 hex chars)"
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "size", "sha256", "leaf"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "POSIX path within the pack"
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "File size in bytes"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "SHA256 hex digest of file content"
+          },
+          "leaf": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Merkle leaf hash"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "signature": {
+      "type": "object",
+      "required": ["present"],
+      "properties": {
+        "present": {
+          "type": "boolean",
+          "description": "Whether signature is present"
+        },
+        "provider": {
+          "type": "string",
+          "enum": ["cosign", "sha256"],
+          "description": "Signature provider"
+        },
+        "signature_path": {
+          "type": "string",
+          "description": "Path to signature file"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

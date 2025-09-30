@@ -1,0 +1,220 @@
+{
+  "exploration_id": "exp_20250928_053716",
+  "initial_state": {
+    "H": [
+      {
+        "id": "h1",
+        "title": "License compliance",
+        "body": "Open source projects need proper licensing",
+        "status": "open",
+        "evidence_ids": [],
+        "created_at": "2025-09-28T05:37:16.680036"
+      }
+    ],
+    "E": [
+      {
+        "id": "e1",
+        "kind": "code",
+        "uri": "src/main.py",
+        "hash": "abc123...",
+        "provenance": "git commit",
+        "created_at": "2025-09-28T05:37:16.680096"
+      }
+    ],
+    "K": [
+      {
+        "id": "k1",
+        "source": "eu_ai_act",
+        "rule": "transparency_required",
+        "severity": "high",
+        "tags": [
+          "compliance"
+        ]
+      }
+    ],
+    "A": [
+      {
+        "id": "a1",
+        "type": "code_change",
+        "ref_ids": [
+          "e1"
+        ],
+        "produced_by_journal_id": "j1"
+      }
+    ],
+    "J": {
+      "version": "0.1.0",
+      "entries": []
+    },
+    "Sigma": {
+      "repo": "proof-engine",
+      "branch": "main",
+      "commit": "abc123...",
+      "tooling": {
+        "python": "3.9",
+        "llm_model": "gpt-4"
+      }
+    },
+    "last_ae_results": {
+      "implications_accepted": [],
+      "implications_rejected": [],
+      "counterexamples": [
+        "ce_8",
+        "ce_9"
+      ],
+      "closure_stats": {
+        "total_implications": 0,
+        "total_counterexamples": 10,
+        "closure_size": 0,
+        "avg_implication_confidence": 0
+      },
+      "exploration_time": 0.434206
+    },
+    "last_cegis_results": {
+      "accepted_choreographies": [],
+      "rejected_choreographies": [],
+      "synthesis_results": [],
+      "counterexamples": [],
+      "refinement_steps": 0
+    },
+    "last_selection_results": {
+      "selected_implications": [],
+      "selected_choreographies": [],
+      "diversity_scores": {
+        "implications": 0.7,
+        "choreographies": 0.8,
+        "overall": 0.75
+      }
+    }
+  },
+  "final_state": "ExplorationState(X={'H': [{'id': 'h1', 'title': 'License compliance', 'body': 'Open source projects need proper licensing', 'status': 'open', 'evidence_ids': [], 'created_at': '2025-09-28T05:37:16.680036'}], 'E': [{'id': 'e1', 'kind': 'code', 'uri': 'src/main.py', 'hash': 'abc123...', 'provenance': 'git commit', 'created_at': '2025-09-28T05:37:16.680096'}], 'K': [{'id': 'k1', 'source': 'eu_ai_act', 'rule': 'transparency_required', 'severity': 'high', 'tags': ['compliance']}], 'A': [{'id': 'a1', 'type': 'code_change', 'ref_ids': ['e1'], 'produced_by_journal_id': 'j1'}], 'J': {'version': '0.1.0', 'entries': []}, 'Sigma': {'repo': 'proof-engine', 'branch': 'main', 'commit': 'abc123...', 'tooling': {'python': '3.9', 'llm_model': 'gpt-4'}}, 'last_ae_results': {'implications_accepted': [], 'implications_rejected': [], 'counterexamples': ['ce_8', 'ce_9'], 'closure_stats': {'total_implications': 0, 'total_counterexamples': 10, 'closure_size': 0, 'avg_implication_confidence': 0}, 'exploration_time': 0.434206}, 'last_cegis_results': {'accepted_choreographies': [], 'rejected_choreographies': [], 'synthesis_results': [], 'counterexamples': [], 'refinement_steps': 0}, 'last_selection_results': {'selected_implications': [], 'selected_choreographies': [], 'diversity_scores': {'implications': 0.7, 'choreographies': 0.8, 'overall': 0.75}}}, implications={}, choreographies={}, counterexamples={'ce_0': CounterExample(id='ce_0', context={}, evidence=['missing_operations_or_constraints'], violates_premise=False, violates_conclusion=False, oracle_verdict='Static analysis verification'), 'ce_1': CounterExample(id='ce_1', context={}, evidence=['missing_operations_or_constraints'], violates_premise=False, violates_conclusion=False, oracle_verdict='Static analysis verification'), 'ce_2': CounterExample(id='ce_2', context={}, evidence=['missing_operations_or_constraints'], violates_premise=False, violates_conclusion=False, oracle_verdict='Static analysis verification'), 'ce_3': CounterExample(id='ce_3', context={}, evidence=['missing_operations_or_constraints'], violates_premise=False, violates_conclusion=False, oracle_verdict='Static analysis verification'), 'ce_4': CounterExample(id='ce_4', context={}, evidence=['missing_operations_or_constraints'], violates_premise=False, violates_conclusion=False, oracle_verdict='Static analysis verification'), 'ce_5': CounterExample(id='ce_5', context={}, evidence=['missing_operations_or_constraints'], violates_premise=False, violates_conclusion=False, oracle_verdict='Static analysis verification'), 'ce_6': CounterExample(id='ce_6', context={}, evidence=['missing_operations_or_constraints'], violates_premise=False, violates_conclusion=False, oracle_verdict='Static analysis verification'), 'ce_7': CounterExample(id='ce_7', context={}, evidence=['missing_operations_or_constraints'], violates_premise=False, violates_conclusion=False, oracle_verdict='Static analysis verification'), 'ce_8': CounterExample(id='ce_8', context={}, evidence=['missing_operations_or_constraints'], violates_premise=False, violates_conclusion=False, oracle_verdict='Static analysis verification'), 'ce_9': CounterExample(id='ce_9', context={}, evidence=['missing_operations_or_constraints'], violates_premise=False, violates_conclusion=False, oracle_verdict='Static analysis verification')}, synthesis_results={}, egraph_class='state_2df40c2f2de9b373')",
+  "ae_results": {
+    "iteration_0": {
+      "implications_accepted": [],
+      "implications_rejected": [],
+      "counterexamples": [
+        "ce_0",
+        "ce_1"
+      ],
+      "closure_stats": {
+        "total_implications": 0,
+        "total_counterexamples": 2,
+        "closure_size": 0,
+        "avg_implication_confidence": 0
+      },
+      "exploration_time": 0.43699
+    },
+    "iteration_1": {
+      "implications_accepted": [],
+      "implications_rejected": [],
+      "counterexamples": [
+        "ce_2",
+        "ce_3"
+      ],
+      "closure_stats": {
+        "total_implications": 0,
+        "total_counterexamples": 4,
+        "closure_size": 0,
+        "avg_implication_confidence": 0
+      },
+      "exploration_time": 0.432031
+    },
+    "iteration_2": {
+      "implications_accepted": [],
+      "implications_rejected": [],
+      "counterexamples": [
+        "ce_4",
+        "ce_5"
+      ],
+      "closure_stats": {
+        "total_implications": 0,
+        "total_counterexamples": 6,
+        "closure_size": 0,
+        "avg_implication_confidence": 0
+      },
+      "exploration_time": 0.433281
+    },
+    "iteration_3": {
+      "implications_accepted": [],
+      "implications_rejected": [],
+      "counterexamples": [
+        "ce_6",
+        "ce_7"
+      ],
+      "closure_stats": {
+        "total_implications": 0,
+        "total_counterexamples": 8,
+        "closure_size": 0,
+        "avg_implication_confidence": 0
+      },
+      "exploration_time": 0.428196
+    },
+    "iteration_4": {
+      "implications_accepted": [],
+      "implications_rejected": [],
+      "counterexamples": [
+        "ce_8",
+        "ce_9"
+      ],
+      "closure_stats": {
+        "total_implications": 0,
+        "total_counterexamples": 10,
+        "closure_size": 0,
+        "avg_implication_confidence": 0
+      },
+      "exploration_time": 0.434206
+    }
+  },
+  "cegis_results": {
+    "iteration_0": {
+      "accepted_choreographies": [],
+      "rejected_choreographies": [],
+      "synthesis_results": [],
+      "counterexamples": [],
+      "refinement_steps": 0
+    },
+    "iteration_1": {
+      "accepted_choreographies": [],
+      "rejected_choreographies": [],
+      "synthesis_results": [],
+      "counterexamples": [],
+      "refinement_steps": 0
+    },
+    "iteration_2": {
+      "accepted_choreographies": [],
+      "rejected_choreographies": [],
+      "synthesis_results": [],
+      "counterexamples": [],
+      "refinement_steps": 0
+    },
+    "iteration_3": {
+      "accepted_choreographies": [],
+      "rejected_choreographies": [],
+      "synthesis_results": [],
+      "counterexamples": [],
+      "refinement_steps": 0
+    },
+    "iteration_4": {
+      "accepted_choreographies": [],
+      "rejected_choreographies": [],
+      "synthesis_results": [],
+      "counterexamples": [],
+      "refinement_steps": 0
+    }
+  },
+  "incidents": [],
+  "performance_metrics": {
+    "total_implications": 0,
+    "total_choreographies": 0,
+    "total_counterexamples": 10,
+    "total_incidents": 0,
+    "egraph_stats": {
+      "total_nodes": 6,
+      "total_classes": 6,
+      "avg_class_size": 1.0,
+      "rules_applied": 5
+    },
+    "exploration_time": 0
+  },
+  "artifacts": []
+}

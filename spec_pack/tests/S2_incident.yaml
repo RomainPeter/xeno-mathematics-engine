@@ -1,0 +1,12 @@
+suite: "S2 — Incident"
+tests:
+  - id: H-S2-01
+    name: "Contradiction → rétro-règle + contested + S1 reste PASS"
+    acceptance:
+      - "retro_rule_logged == true"
+      - "contested_list_present == true"
+      - "s1_still_pass == true"
+  - id: H-S2-02
+    name: "Perte partielle du journal → reconstitution via merkle proofs"
+    acceptance:
+      - "journal_recoverable == true"

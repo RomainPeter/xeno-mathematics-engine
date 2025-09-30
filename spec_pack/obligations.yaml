@@ -1,0 +1,78 @@
+- id: O-1
+  text: "Minimalité de l’évidence (aucun item redondant)"
+  metric: "|E| minimal"
+  tests: ["H-S1-01"]
+  source: ["G-1"]
+  verifiers: ["v_minimality"]
+
+- id: O-2
+  text: "Journal de preuve complet, append-only, horodaté"
+  metric: "trace_steps <= K"
+  tests: ["H-S1-01","H-S1-04"]
+  source: ["G-2"]
+  verifiers: ["v_trace_bound","v_provenance"]
+
+- id: O-3
+  text: "Audit readiness 24h (reconstruction hors réseau)"
+  metric: "T_rebuild <= 24h"
+  tests: ["H-S1-05"]
+  source: ["G-3"]
+  verifiers: ["v_trace_bound","v_provenance"]
+
+- id: O-4
+  text: "Borne de traçabilité K"
+  metric: "K = 10"
+  tests: ["H-S1-01"]
+  source: ["G-4"]
+  verifiers: ["v_trace_bound"]
+
+- id: O-5
+  text: "Provenance requise pour toute pièce d’évidence"
+  metric: "provenance_complete = true"
+  tests: ["H-S1-01"]
+  source: ["C-3"]
+  verifiers: ["v_provenance"]
+
+- id: O-6
+  text: "Déterminisme des opérateurs de requête"
+  metric: "variance_outputs = 0"
+  tests: ["H-S1-02"]
+  source: ["C-4"]
+  verifiers: ["v_determinism"]
+
+- id: O-7
+  text: "Option air-gapped disponible pour MVP"
+  metric: "air_gapped_option = true"
+  tests: ["H-S1-05"]
+  source: ["C-5"]
+
+- id: O-8
+  text: "Deny-with-proof pour hors-scope / demandes contradictoires"
+  metric: "deny_with_proof_enabled = true"
+  tests: ["H-S3-03"]
+  source: ["TA-1"]
+
+- id: O-9
+  text: "Cartographie conformité maintenue, couverture >= 90% avec gaps"
+  metric: "coverage >= 90%"
+  tests: ["H-S1-03"]
+  source: ["standards: EU_AI_Act, NIST_AI_RMF, ISO_IEC_42001"]
+
+- id: O-10
+  text: "Rétro-implication sur contradiction + quarantaine des décisions impactées"
+  metric: "retro_rule_added = true; contested_marked = true"
+  tests: ["H-S2-01","H-S2-02"]
+  source: ["TA-2"]
+  verifiers: ["v_provenance"]
+
+- id: O-11
+  text: "Réduction du coût d’audit"
+  metric: "audit_cost_reduction >= 30%"
+  tests: ["H-S1-03"]
+  source: ["C-2"]
+
+- id: O-12
+  text: "Interdiction des fonctionnalités boîte noire"
+  metric: "blackbox_features = 0"
+  tests: ["H-S3-04"]
+  source: ["NN-3"]

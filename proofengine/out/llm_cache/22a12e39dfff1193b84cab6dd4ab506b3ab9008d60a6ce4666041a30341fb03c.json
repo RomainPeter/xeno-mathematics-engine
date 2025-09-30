@@ -1,0 +1,35 @@
+{
+  "data": {
+    "plan": [
+      "select_algorithm",
+      "implement_token_bucket",
+      "integrate_api",
+      "add_tests",
+      "document_usage"
+    ],
+    "est_success": 0.85,
+    "est_cost": 15,
+    "notes": "Basic plan for rate limiting from scratch; assumes Python/web context."
+  },
+  "_meta": {
+    "model": "x-ai/grok-4-fast:free",
+    "latency_ms": 7038,
+    "usage": {
+      "completion_tokens": 468,
+      "prompt_tokens": 275,
+      "total_tokens": 743,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 420,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 120
+      }
+    },
+    "prompt_hash": "22a12e39dfff1193b84cab6dd4ab506b3ab9008d60a6ce4666041a30341fb03c",
+    "cache_hit": false
+  }
+}

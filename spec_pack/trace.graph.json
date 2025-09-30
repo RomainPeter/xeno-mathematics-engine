@@ -1,0 +1,154 @@
+{
+  "nodes": [
+    {
+      "id": "DEC-0001",
+      "type": "decision"
+    },
+    {
+      "id": "EVID-0001",
+      "type": "evidence"
+    },
+    {
+      "id": "DEC-0002",
+      "type": "decision"
+    },
+    {
+      "id": "EVID-0002",
+      "type": "evidence"
+    },
+    {
+      "id": "DEC-0003",
+      "type": "decision"
+    },
+    {
+      "id": "EVID-0007",
+      "type": "evidence"
+    },
+    {
+      "id": "DEC-0004",
+      "type": "decision"
+    },
+    {
+      "id": "EVID-0004",
+      "type": "evidence"
+    },
+    {
+      "id": "DEC-0005",
+      "type": "decision"
+    },
+    {
+      "id": "EVID-0005",
+      "type": "evidence"
+    },
+    {
+      "id": "DEC-0006",
+      "type": "decision"
+    },
+    {
+      "id": "EVID-0009",
+      "type": "evidence"
+    },
+    {
+      "id": "DEC-0007",
+      "type": "decision"
+    },
+    {
+      "id": "EVID-0010",
+      "type": "evidence"
+    },
+    {
+      "id": "DEC-0008",
+      "type": "decision"
+    },
+    {
+      "id": "EVID-0012",
+      "type": "evidence"
+    },
+    {
+      "id": "DEC-0009",
+      "type": "decision"
+    },
+    {
+      "id": "EVID-0001",
+      "type": "evidence"
+    },
+    {
+      "id": "EVID-0006",
+      "type": "evidence"
+    },
+    {
+      "id": "DEC-0010",
+      "type": "decision"
+    },
+    {
+      "id": "EVID-0008",
+      "type": "evidence"
+    },
+    {
+      "id": "EVID-0009",
+      "type": "evidence"
+    }
+  ],
+  "edges": [
+    {
+      "from": "EVID-0001",
+      "to": "DEC-0001",
+      "rel": "supports"
+    },
+    {
+      "from": "EVID-0002",
+      "to": "DEC-0002",
+      "rel": "supports"
+    },
+    {
+      "from": "EVID-0007",
+      "to": "DEC-0003",
+      "rel": "supports"
+    },
+    {
+      "from": "EVID-0004",
+      "to": "DEC-0004",
+      "rel": "supports"
+    },
+    {
+      "from": "EVID-0005",
+      "to": "DEC-0005",
+      "rel": "supports"
+    },
+    {
+      "from": "EVID-0009",
+      "to": "DEC-0006",
+      "rel": "supports"
+    },
+    {
+      "from": "EVID-0010",
+      "to": "DEC-0007",
+      "rel": "supports"
+    },
+    {
+      "from": "EVID-0012",
+      "to": "DEC-0008",
+      "rel": "supports"
+    },
+    {
+      "from": "EVID-0001",
+      "to": "DEC-0009",
+      "rel": "supports"
+    },
+    {
+      "from": "EVID-0006",
+      "to": "DEC-0009",
+      "rel": "supports"
+    },
+    {
+      "from": "EVID-0008",
+      "to": "DEC-0010",
+      "rel": "supports"
+    },
+    {
+      "from": "EVID-0009",
+      "to": "DEC-0010",
+      "rel": "supports"
+    }
+  ]
+}

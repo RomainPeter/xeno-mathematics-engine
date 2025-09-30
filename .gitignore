@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+# OS/IDE
+.DS_Store
+.vscode/
+# Project
+artifacts/
+*.zip
+*.sha256
+spec_pack/compiled/
+spec_pack/samples/*.tmp
+
+# LLM cache and logs
+proofengine/out/llm_cache/
+proofengine/out/llm_logs/

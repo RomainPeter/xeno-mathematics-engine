@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "title": "Proof-Carrying Action Plan (PCAP)",
+  "description": "Schema for PCAP serialization and validation",
+  "required": ["action", "context_hash", "obligations", "justification", "proofs"],
+  "properties": {
+    "action": {
+      "type": "string",
+      "description": "Action to be performed"
+    },
+    "context_hash": {
+      "type": "string",
+      "description": "Canonical hash of incident and obligations context"
+    },
+    "obligations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of obligations to fulfill"
+    },
+    "justification": {
+      "type": "object",
+      "description": "V vector of costs and justifications",
+      "properties": {
+        "time": {
+          "type": "number",
+          "description": "Time cost"
+        },
+        "audit_cost": {
+          "type": "number",
+          "description": "Audit cost"
+        },
+        "security_risk": {
+          "type": "number",
+          "description": "Security risk level"
+        },
+        "tech_debt": {
+          "type": "number",
+          "description": "Technical debt impact"
+        },
+        "extra": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          },
+          "description": "Additional cost metrics"
+        }
+      }
+    },
+    "proofs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Type of proof specification"
+          },
+          "args": {
+            "type": "object",
+            "description": "Arguments for proof generation"
+          },
+          "expect": {
+            "type": "object",
+            "description": "Expected results from proof"
+          }
+        }
+      },
+      "description": "List of proof specifications"
+    },
+    "meta": {
+      "type": "object",
+      "description": "Additional metadata"
+    }
+  }
+}

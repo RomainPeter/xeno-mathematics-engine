@@ -1,0 +1,90 @@
+{
+  "$id": "https://spec.proof.engine/v0.1/x.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Cognitive State X",
+  "type": "object",
+  "properties": {
+    "version": { "type": "string", "const": "0.1.0" },
+    "H": { "type": "array", "items": { "$ref": "#/$defs/Hypothesis" } },
+    "E": { "type": "array", "items": { "$ref": "#/$defs/Evidence" } },
+    "K": { "type": "array", "items": { "$ref": "#/$defs/Constraint" } },
+    "A": { "type": "array", "items": { "$ref": "#/$defs/Artifact" } },
+    "J": { "$ref": "https://spec.proof.engine/v0.1/journal.schema.json" },
+    "Sigma": { "$ref": "#/$defs/SeedEnv" }
+  },
+  "required": ["version","H","E","K","A","J","Sigma"],
+  "additionalProperties": false,
+  "$defs": {
+    "ISODateTime": { "type": "string", "format": "date-time" },
+    "Hash": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+    "Hypothesis": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "body": { "type": "string" },
+        "status": { "type": "string", "enum": ["open","supported","refuted"] },
+        "evidence_ids": { "type": "array", "items": { "type": "string" } },
+        "created_at": { "$ref": "#/$defs/ISODateTime" },
+        "updated_at": { "$ref": "#/$defs/ISODateTime" }
+      },
+      "required": ["id","title","body","status","evidence_ids","created_at"],
+      "additionalProperties": false
+    },
+    "Evidence": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "kind": { "type": "string", "enum": ["doc","code","test","policy","dataset","runlog"] },
+        "uri": { "type": "string" },
+        "hash": { "$ref": "#/$defs/Hash" },
+        "provenance": { "type": "string" },
+        "created_at": { "$ref": "#/$defs/ISODateTime" }
+      },
+      "required": ["id","kind","uri","hash","created_at"],
+      "additionalProperties": false
+    },
+    "Constraint": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "source": { "type": "string", "enum": ["internal","eu_ai_act","nist_rmF","iso_42001","semver","custom"] },
+        "rule": { "type": "string" },
+        "severity": { "type": "string", "enum": ["low","medium","high","critical"] },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["id","source","rule","severity"],
+      "additionalProperties": false
+    },
+    "Artifact": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string", "enum": ["code_change","doc","dataset","model_card","plan","pcap"] },
+        "ref_ids": { "type": "array", "items": { "type": "string" } },
+        "produced_by_journal_id": { "type": "string" },
+        "meta": { "type": "object" }
+      },
+      "required": ["id","type","ref_ids"],
+      "additionalProperties": false
+    },
+    "SeedEnv": {
+      "type": "object",
+      "properties": {
+        "repo": { "type": "string" },
+        "branch": { "type": "string" },
+        "commit": { "$ref": "#/$defs/Hash" },
+        "tooling": {
+          "type": "object",
+          "properties": {
+            "python": { "type": "string" },
+            "llm_model": { "type": "string" }
+          },
+          "additionalProperties": true
+        }
+      },
+      "required": ["repo","branch"],
+      "additionalProperties": false
+    }
+  }
+}

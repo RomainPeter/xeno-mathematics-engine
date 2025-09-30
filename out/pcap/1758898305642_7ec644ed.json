@@ -1,0 +1,47 @@
+{
+  "ts": "2025-09-26T14:51:45Z",
+  "operator": "verify",
+  "case_id": "test_case",
+  "action": null,
+  "pre": {
+    "patch": "patch1"
+  },
+  "post": {
+    "evaluation": {
+      "success": false,
+      "violations": 3
+    }
+  },
+  "pre_hash": null,
+  "post_hash": null,
+  "obligations": [
+    "tests_ok",
+    "lint_ok",
+    "types_ok",
+    "security_ok",
+    "complexity_ok",
+    "docstring_ok"
+  ],
+  "justification": {
+    "time_ms": 0,
+    "retries": 0,
+    "backtracks": 0,
+    "audit_cost": 0.0,
+    "audit_cost_ms": 0,
+    "risk": 0.0,
+    "tech_debt": 0,
+    "llm_time_ms": null,
+    "model": null,
+    "notes": null
+  },
+  "proofs": [],
+  "proof_state_hash": "5915d821647cc9e209a517142ad2ab8deed96ea790e1f75479bdec97f123f3bb",
+  "toolchain": {
+    "controller": "deterministic"
+  },
+  "llm_meta": {
+    "latency_ms": 500
+  },
+  "verdict": "fail",
+  "pcap_hash": null
+}

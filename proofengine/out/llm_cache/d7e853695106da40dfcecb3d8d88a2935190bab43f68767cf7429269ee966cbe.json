@@ -1,0 +1,34 @@
+{
+  "data": {
+    "plan": [
+      "define_test_objectives",
+      "outline_verification_steps",
+      "identify_risk_areas",
+      "select_audit_tools"
+    ],
+    "est_success": 0.9,
+    "est_cost": 1.5,
+    "notes": "Basic initialization plan for empty state to establish verification framework with minimal risk."
+  },
+  "_meta": {
+    "model": "x-ai/grok-4-fast:free",
+    "latency_ms": 7153,
+    "usage": {
+      "completion_tokens": 555,
+      "prompt_tokens": 269,
+      "total_tokens": 824,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 501,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 120
+      }
+    },
+    "prompt_hash": "d7e853695106da40dfcecb3d8d88a2935190bab43f68767cf7429269ee966cbe",
+    "cache_hit": false
+  }
+}

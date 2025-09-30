@@ -1,0 +1,49 @@
+{
+  "ts": "2025-09-26T12:51:33Z",
+  "operator": "plan",
+  "case_id": "demo_case",
+  "pre": {
+    "H": [
+      "goal:demo_case"
+    ],
+    "K": [
+      "tests_ok",
+      "lint_ok",
+      "types_ok",
+      "security_ok",
+      "complexity_ok",
+      "docstring_ok"
+    ]
+  },
+  "post": {
+    "plan": [
+      "sanitize_inputs",
+      "refactor_complexity",
+      "add_type_hints",
+      "add_docstrings",
+      "write_tests"
+    ]
+  },
+  "obligations": [
+    "tests_ok",
+    "lint_ok",
+    "types_ok",
+    "security_ok",
+    "complexity_ok",
+    "docstring_ok"
+  ],
+  "justification": {
+    "time_ms": 7119,
+    "backtracks": 0,
+    "audit_cost_ms": 0,
+    "tech_debt": 0,
+    "llm_time_ms": null,
+    "model": null
+  },
+  "proof_state_hash": "bc9e7b20432a229b0dafafcf547eb08348e0f0545f30c5d75855c1207c233494",
+  "toolchain": {
+    "python": "3.11"
+  },
+  "llm_meta": null,
+  "verdict": null
+}

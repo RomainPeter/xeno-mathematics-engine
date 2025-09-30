@@ -1,0 +1,32 @@
+- id: I-1
+  predicate: "Monotonicité des garanties (ajout de contraintes n’élargit jamais la réponse)"
+  scope: "requêtes/évidence"
+
+- id: I-2
+  predicate: "Conservation de la provenance (jamais perdue, toujours traçable)"
+  scope: "journal/évidence"
+
+- id: I-3
+  predicate: "Déterminisme des opérateurs (mêmes entrées → mêmes sorties)"
+  scope: "requêtes/meet"
+
+- id: I-4
+  predicate: "Réversibilité des mappings (privé↔public) dans des bornes connues"
+  scope: "evidence↔standards"
+
+- id: I-5
+  predicate: "Traçabilité bornée (chemin de justification ≤ K)"
+  scope: "journal"
+  params: {K: 10}
+
+- id: I-6
+  predicate: "Existence d’un opérateur de minimalité (meet + fermeture + hitting-set)"
+  scope: "sélection d’évidence"
+
+- id: I-7
+  predicate: "Journal append-only, merklisé, infalsifiable"
+  scope: "journal"
+
+- id: I-8
+  predicate: "Non-réductibilité conservée (les invariants ne se perdent pas sous homomorphisme vers RAG vectoriel)"
+  scope: "morphologie logique"

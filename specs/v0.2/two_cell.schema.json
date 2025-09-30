@@ -1,0 +1,63 @@
+{
+  "$id": "https://spec.proof.engine/v0.2/two_cell.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Two-Cell Transformation",
+  "type": "object",
+  "properties": {
+    "version": { "type": "string", "const": "0.2.0" },
+    "id": { "type": "string" },
+    "from_op": { "type": "string" },
+    "to_choreo": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "trigger": {
+      "type": "object",
+      "properties": {
+        "failreason": { "type": "string" },
+        "operator": { "type": "string" },
+        "context": { "type": "object" }
+      },
+      "required": ["failreason"],
+      "additionalProperties": false
+    },
+    "pre_invariants": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "post_invariants": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "budgets": {
+      "type": "object",
+      "properties": {
+        "time_ms": { "type": "integer", "minimum": 0 },
+        "audit_cost": { "type": "number", "minimum": 0 },
+        "max_depth": { "type": "integer", "minimum": 1, "maximum": 2 },
+        "max_rewrites_per_fr": { "type": "integer", "minimum": 1, "maximum": 1 }
+      },
+      "required": ["time_ms", "audit_cost", "max_depth", "max_rewrites_per_fr"],
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "properties": {
+        "prompt_hash": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+        "model": { "type": "string" },
+        "n": { "type": "integer", "minimum": 1 },
+        "votes": { "type": "integer", "minimum": 1 },
+        "latency_ms": { "type": "integer", "minimum": 0 }
+      },
+      "required": ["prompt_hash", "model", "n", "votes"],
+      "additionalProperties": false
+    },
+    "decision_signature": { "type": "string" },
+    "prev_hash": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+    "entry_hash": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+    "created_at": { "type": "string", "format": "date-time" }
+  },
+  "required": ["version", "id", "from_op", "to_choreo", "trigger", "budgets", "evidence", "created_at"],
+  "additionalProperties": false
+}

@@ -1,0 +1,47 @@
+  feat/v0.3                              [m 772000c Add 2pager.md with contact info
+  feature/2cat-selector-active           [m 94e9f0a Merge pull request #20 from RomainPeter/feature/2cat-selector-active
+  feature/2cat-v1.0                      [m 3b4c41c Améliorations robustesse et élégance 2-category
+  feature/delta-bench-public             [m 840d024 Merge pull request #23 from RomainPeter/feature/delta-bench-public
+  feature/determinism-bounds             [m 1e56715 feat: Determinism bounds test v0.1.1
+  feature/discovery-engine-merge         [m 95c33a1 feat: Complete Discovery Engine 2-Cat with all PRs - incident handlers + CI artifacts (linted)
+  feature/discovery-engine-unified       [m 95c33a1 feat: Complete Discovery Engine 2-Cat with all PRs - incident handlers + CI artifacts (linted)
+  feature/egraph-rules-v02               [m 8ec792e feat: E-graph rules v0.2 with 2 new safe rules
+  feature/fairness-proofs-2cat           [m db481d4 Merge pull request #24 from RomainPeter/feature/fairness-proofs-2cat
+  feature/llm-adapter-v0.1               [m db0a762 LLM adapter v0.1 - Real Kimi K2 + PromptContract + auto-consistency
+  feature/orchestrator-skeleton          [m 3cb084e Merge branch 'origin/main' into feature/orchestrator-skeleton
+  feature/pefc-T01-summary-multirun      [m 92fcaac Fix GitHub Pages: modern workflow with proper permissions
+  feature/pefc-T02-zip-dedup             [m 20ccaaa T02: Déduplication merkle.txt et garde anti-duplication Zip
+  feature/pefc-T03-merkle-manifest       [m 87c83ef T03: Merkle root déterministe et performant (binaire, ordonné, incrémental)
+  feature/pefc-T04-summary-schema        [m b258ca8 T04: Validation schema summary.json + tests de cohérence
+  feature/pefc-T05-config-unification    [m 31e5a12 T05: Centraliser la configuration (versions, chemins) et unifier l'accès config
+  feature/pefc-T06-logging               [m 61c4992 T06: Standardiser la journalisation (logging + JSON)
+  feature/pefc-T07-errors-partial        [m 8067f25 T07: Gestion contractuelle des erreurs et restitution partielle
+  feature/pefc-T08-metrics-agg           [m 65f9422 T08: Optimiser l'agrégation métrique (Polars/Pandas + fallback typé)
+  feature/pefc-T09-onepager-align        [m 7f91a9a T09: Aligner gen_onepager.py sur config + services partagés
+  feature/pefc-T10-providers             [m 4555826 T10: MetricsProvider injectables
+  feature/pefc-T11-pipeline              [m 77c167a T11: Pipeline PackStep déclaratif
+  feature/pefc-T12-policies-injection    [m 7153287 T12: Policies de sélection injectées (IDSStrategy, RiskScorer)
+  feature/pefc-T13-incident-registry     [m f36f7d6 T13: IncidentCapabilityRegistry (handlers plug-and-play)
+  feature/pefc-T14-proof-capabilities    [m a4d3436 T14: Abstraction de génération de preuves (Capabilities)
+  feature/pefc-T15-eventbus              [m 8138b9d T15: EventBus minimal + hooks
+  feature/pefc-T16-typed-config-injection[m b536319 T16: Configuration typée & injection
+  feature/pefc-T17-cli                   [m 1177157 T17: CLI unifiée (Typer) - pefc pack build|verify|manifest|sign
+  feature/pefc-T18-manifest              [m 3bb9439 T18: Artefacts traçables - manifest JSON dans l'archive
+  feature/pefc-T19-ci-smoke              [m cf87b93 Clean up temporary test files
+* [32mfeature/pefc-T20-pytest                [m 90c9ac9 feat: Orchestrator v1 - Industrial Pipeline with Real Components
+  feature/quick-wins                     [m f7b7201 PR 2: LLM adapter Kimi K2 + auto-consistency + PromptContract
+  feature/s2-vendors-scenarios           [m 78b0b45 Merge pull request #22 from RomainPeter/feature/s2-vendors-scenarios
+  feature/s2pp-complete                  [m 2d0ccd1 fix: CI and Gate Merge workflow issues
+  feature/s2pp-delta-v2                  [m 96d8d2c Fix CI workflows for S2++
+  feature/s2pp-delta-v2-clean            [m 790b209 Complete S2++ suite with all missing cases and improved benchmark
+  feature/s2pp-delta-v2-final            [m e445bdd Fix deprecated actions/upload-artifact@v3
+  feature/s2pp-delta-v2-fixed            [m e445bdd Fix deprecated actions/upload-artifact@v3
+  feature/shock-ladder-s2-delta-calib    [m bc7bfa4 Relax proof-ci-simple workflow to smoke-only
+  feature/supply-chain-hardening         [m 377c90e Supply-chain hardening v0.2.1 — pinned digests, vuln scans, require-hashes, policies, attest verify
+  feature/verifier-docker-hermetic       [m cbc0fb0 PR 3: Verifier Docker hermétique v0.1 — no-net, quotas, attestation cosign, CI linux-only
+  fix/ci-gate-merge-workflows            [m 2d0ccd1 fix: CI and Gate Merge workflow issues
+  fix/github-pages-deployment            [m 0ed4ecd Fix GitHub Pages deployment: complete solution
+  fix/github-pages-final                 [m 97a6790 Fix GitHub Pages workflow: deploy only from main
+  fix/github-pages-v2                    [m 0ed4ecd Fix GitHub Pages deployment: complete solution
+  fix/github-pages-v3                    [m 0ed4ecd Fix GitHub Pages deployment: complete solution
+  main                                   [m 8c64058 Axe 0: Add v0.2.0 release protections

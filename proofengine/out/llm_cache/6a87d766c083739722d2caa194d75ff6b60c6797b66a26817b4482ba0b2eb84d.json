@@ -1,0 +1,35 @@
+{
+  "data": {
+    "plan": [
+      "define_logging_requirements",
+      "implement_basic_logging",
+      "add_input_sanitization",
+      "encrypt_log_storage",
+      "add_access_controls"
+    ],
+    "est_success": 0.85,
+    "est_cost": 15,
+    "notes": "Start with requirements to minimize risks, then build secure features step-by-step; assumes Python or similar environment."
+  },
+  "_meta": {
+    "model": "x-ai/grok-4-fast:free",
+    "latency_ms": 6299,
+    "usage": {
+      "completion_tokens": 496,
+      "prompt_tokens": 284,
+      "total_tokens": 780,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 434,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 120
+      }
+    },
+    "prompt_hash": "6a87d766c083739722d2caa194d75ff6b60c6797b66a26817b4482ba0b2eb84d",
+    "cache_hit": false
+  }
+}

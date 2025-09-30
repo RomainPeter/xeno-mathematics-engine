@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "FailReason v1",
+  "description": "Failure reason taxonomy for Discovery Engine 2-Cat",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "enum": [
+        "LowNovelty",
+        "LowCoverage", 
+        "ConstraintBreach",
+        "OracleTimeout",
+        "Flaky",
+        "InsufficientBudget",
+        "InvalidInput",
+        "PolicyViolation"
+      ],
+      "description": "Failure reason code"
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "critical"],
+      "description": "Severity level"
+    },
+    "context": {
+      "type": "object",
+      "description": "Context information for the failure"
+    },
+    "handler": {
+      "type": "string",
+      "enum": [
+        "egraph_add_equiv_forbidden",
+        "add_target_in_K",
+        "add_opa_rule",
+        "increase_budget",
+        "quarantine_seeds"
+      ],
+      "description": "Recommended handler for the failure"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of the failure"
+    }
+  },
+  "required": ["code", "severity", "timestamp"]
+}
+

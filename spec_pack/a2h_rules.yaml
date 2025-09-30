@@ -1,0 +1,87 @@
+rules:
+  - id: R-G1
+    when:
+      type: guarantee
+      value: minimal_non_redundant_coverage
+    emits:
+      obligations: [O-1]
+      invariants: [I-6]
+      tests: [H-S1-01]
+      operators: [P1]
+  - id: R-G2
+    when:
+      type: guarantee
+      value: explainability_by_construction
+    emits:
+      obligations: [O-2, O-4]
+      invariants: [I-5]
+      tests: [H-S1-01]
+      operators: [P2]
+  - id: R-G3
+    when:
+      type: guarantee
+      value: 24h_audit_readiness
+    emits:
+      obligations: [O-3]
+      tests: [H-S1-05]
+  - id: R-G4
+    when:
+      type: guarantee
+      value: reproducible_decision_chain<=10_steps
+    emits:
+      obligations: [O-4]
+      invariants: [I-5]
+      tests: [H-S1-01]
+  - id: R-C5
+    when:
+      type: constraint
+      value: air_gapped_option
+    emits:
+      obligations: [O-7]
+      tests: [H-S1-05]
+  - id: R-NN1
+    when:
+      type: non_negotiable
+      value: monotonic_guarantees
+    emits:
+      invariants: [I-1]
+  - id: R-NN2
+    when:
+      type: non_negotiable
+      value: provenance_conservation
+    emits:
+      invariants: [I-2]
+  - id: R-TA1
+    when:
+      type: threat_actor
+      value: malicious_auditor
+    emits:
+      obligations: [O-8]
+      tests: [H-S3-03]
+  - id: R-TA2
+    when:
+      type: threat_actor
+      value: data_poisoner
+    emits:
+      obligations: [O-10]
+      tests: [H-S2-01]
+  - id: R-STD
+    when:
+      type: scope_standards
+      value_any_of: [EU_AI_Act, NIST_AI_RMF, ISO_42001]
+    emits:
+      obligations: [O-9]
+      tests: [H-S1-03]
+  - id: R-COST
+    when:
+      type: constraint
+      value: audit_cost_reduction>=30%
+    emits:
+      obligations: [O-11]
+      tests: [H-S1-03]
+  - id: R-EXCL
+    when:
+      type: exclusion
+      value: no_blackbox_features
+    emits:
+      obligations: [O-12]

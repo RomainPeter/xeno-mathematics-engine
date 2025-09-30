@@ -1,0 +1,34 @@
+{
+  "data": {
+    "plan": [
+      "research_secure_email_regex",
+      "implement_validation_function",
+      "add_input_sanitization",
+      "include_type_hints_and_docstring"
+    ],
+    "est_success": 0.95,
+    "est_cost": 15,
+    "notes": "Start with secure regex to minimize risks, then build and enhance the function step-by-step for low audit effort."
+  },
+  "_meta": {
+    "model": "x-ai/grok-4-fast:free",
+    "latency_ms": 4905,
+    "usage": {
+      "completion_tokens": 420,
+      "prompt_tokens": 277,
+      "total_tokens": 697,
+      "completion_tokens_details": {
+        "accepted_prediction_tokens": null,
+        "audio_tokens": null,
+        "reasoning_tokens": 357,
+        "rejected_prediction_tokens": null
+      },
+      "prompt_tokens_details": {
+        "audio_tokens": 0,
+        "cached_tokens": 153
+      }
+    },
+    "prompt_hash": "14de7a5ad81718a10512f5c0b3212b73fa8c4ccf051e049def22be99904ba2af",
+    "cache_hit": false
+  }
+}

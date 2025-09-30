@@ -1,0 +1,210 @@
+# Makefile for Domain CEGIS - Code Compliance
+# Provides commands for testing, demo, and validation
+
+.PHONY: help install test test-domain test-convergence test-modes test-performance demo demo-quick demo-concurrent clean lint format validate
+
+# Default target
+help:
+	@echo "Domain CEGIS - Code Compliance Makefile"
+	@echo "======================================"
+	@echo ""
+	@echo "Available targets:"
+	@echo "  install              - Install dependencies"
+	@echo "  test                 - Run all tests"
+	@echo "  test-domain          - Run domain tests"
+	@echo "  test-convergence     - Run convergence tests"
+	@echo "  test-modes           - Run mode tests"
+	@echo "  test-performance     - Run performance tests"
+	@echo "  demo                 - Run complete demo"
+	@echo "  demo-quick           - Run quick demo"
+	@echo "  demo-concurrent      - Run concurrent demo"
+	@echo "  clean                - Clean up generated files"
+	@echo "  lint                 - Run linting"
+	@echo "  format               - Format code"
+	@echo "  validate             - Full validation"
+
+# Install dependencies
+install:
+	@echo "Installing dependencies for Domain CEGIS..."
+	pip install -r requirements.txt
+	pip install pytest pytest-asyncio asyncio
+	@echo "✅ Dependencies installed"
+
+# Run all tests
+test: test-domain test-convergence test-modes test-performance
+	@echo "✅ All domain tests completed"
+
+# Test domain components
+test-domain:
+	@echo "Running domain tests..."
+	python -m pytest tests/test_domain_convergence.py -v
+	@echo "✅ Domain tests completed"
+
+# Test convergence
+test-convergence:
+	@echo "Testing convergence..."
+	python -m pytest tests/test_domain_convergence.py::TestConvergence -v
+	@echo "✅ Convergence tests completed"
+
+# Test modes
+test-modes:
+	@echo "Testing modes..."
+	python -m pytest tests/test_domain_convergence.py::TestConvergence::test_deterministic_mode -v
+	python -m pytest tests/test_domain_convergence.py::TestConvergence::test_hybrid_mode -v
+	@echo "✅ Mode tests completed"
+
+# Test performance
+test-performance:
+	@echo "Testing performance..."
+	python -m pytest tests/test_domain_convergence.py::TestConvergence::test_convergence_performance -v
+	@echo "✅ Performance tests completed"
+
+# Run complete demo
+demo:
+	@echo "Running complete Domain CEGIS demo..."
+	python demo_domain_cegis.py
+	@echo "✅ Demo completed"
+
+# Run quick demo
+demo-quick:
+	@echo "Running quick Domain CEGIS demo..."
+	python -c "
+import asyncio
+from demo_domain_cegis import test_deprecated_api_convergence, test_naming_convention_convergence
+
+async def quick_demo():
+    print('🚀 Quick Domain CEGIS Demo')
+    print('=' * 40)
+    
+    # Test deprecated API
+    await test_deprecated_api_convergence()
+    
+    # Test naming convention
+    await test_naming_convention_convergence()
+    
+    print('✅ Quick demo completed')
+
+asyncio.run(quick_demo())
+"
+	@echo "✅ Quick demo completed"
+
+# Run concurrent demo
+demo-concurrent:
+	@echo "Running concurrent Domain CEGIS demo..."
+	python -c "
+import asyncio
+from demo_domain_cegis import test_concurrent_execution
+
+async def concurrent_demo():
+    print('🚀 Concurrent Domain CEGIS Demo')
+    print('=' * 40)
+    
+    # Test concurrent execution
+    await test_concurrent_execution()
+    
+    print('✅ Concurrent demo completed')
+
+asyncio.run(concurrent_demo())
+"
+	@echo "✅ Concurrent demo completed"
+
+# Clean up
+clean:
+	@echo "Cleaning up generated files..."
+	rm -rf __pycache__/
+	rm -rf .pytest_cache/
+	rm -rf *.log
+	find . -name "*.pyc" -delete
+	find . -name "*.pyo" -delete
+	find . -name "*.pyd" -delete
+	find . -name ".coverage" -delete
+	@echo "✅ Cleanup completed"
+
+# Run linting
+lint:
+	@echo "Running linting..."
+	black --check proofengine/domain/ tests/test_domain_convergence.py demo_domain_cegis.py
+	ruff check proofengine/domain/ tests/test_domain_convergence.py demo_domain_cegis.py
+	@echo "✅ Linting completed"
+
+# Format code
+format:
+	@echo "Formatting code..."
+	black proofengine/domain/ tests/test_domain_convergence.py demo_domain_cegis.py
+	ruff check --fix proofengine/domain/ tests/test_domain_convergence.py demo_domain_cegis.py
+	@echo "✅ Code formatted"
+
+# Full validation
+validate: install lint test demo
+	@echo "✅ Full domain validation completed"
+
+# Development setup
+dev-setup: install
+	@echo "Setting up development environment..."
+	mkdir -p logs
+	mkdir -p domain_results
+	@echo "✅ Development environment ready"
+
+# Run specific test
+test-specific:
+	@echo "Running specific test: $(TEST)"
+	python -m pytest $(TEST) -v
+
+# Run with coverage
+test-coverage:
+	@echo "Running tests with coverage..."
+	python -m pytest tests/test_domain_convergence.py --cov=proofengine.domain --cov-report=html --cov-report=term
+	@echo "✅ Coverage report generated"
+
+# Benchmark performance
+benchmark:
+	@echo "Running Domain CEGIS benchmark..."
+	python -c "
+import asyncio
+from demo_domain_cegis import test_performance_benchmark
+
+async def benchmark_demo():
+    print('🏁 Domain CEGIS Performance Benchmark')
+    print('=' * 40)
+    
+    # Run performance benchmark
+    await test_performance_benchmark()
+    
+    print('✅ Benchmark completed')
+
+asyncio.run(benchmark_demo())
+"
+	@echo "✅ Benchmark completed"
+
+# Show help
+help-detailed:
+	@echo "Domain CEGIS - Code Compliance - Detailed Help"
+	@echo "============================================="
+	@echo ""
+	@echo "This Makefile provides commands for working with the Domain CEGIS"
+	@echo "code compliance system, including tests, demos, and validation."
+	@echo ""
+	@echo "Key Features:"
+	@echo "  - CEGIS algorithm for code compliance"
+	@echo "  - Concurrent propose and verify"
+	@echo "  - PCAP emission at each iteration"
+	@echo "  - Convergence testing < 5 iterations"
+	@echo "  - Multiple execution modes (stub-only, hybrid)"
+	@echo "  - Performance benchmarking"
+	@echo "  - Toy repository with violations"
+	@echo ""
+	@echo "Usage Examples:"
+	@echo "  make install          # Install all dependencies"
+	@echo "  make test             # Run all tests"
+	@echo "  make demo             # Run complete demonstration"
+	@echo "  make benchmark        # Run performance benchmark"
+	@echo "  make validate         # Full validation pipeline"
+	@echo ""
+	@echo "Test Categories:"
+	@echo "  - Convergence: Tests CEGIS convergence < 5 iterations"
+	@echo "  - Modes: Tests stub-only and hybrid modes"
+	@echo "  - Performance: Tests execution time and efficiency"
+	@echo "  - Concurrent: Tests concurrent execution"
+	@echo "  - PCAP: Tests PCAP emission at each iteration"
+	@echo ""
+	@echo "For more information, see README_DOMAIN.md"
