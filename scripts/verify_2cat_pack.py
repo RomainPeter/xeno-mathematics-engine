@@ -30,8 +30,16 @@ def main() -> int:
         print(f"Missing sha256 file: {sha_path}", file=sys.stderr)
         return 3
 
-    expected = sha_path.read_text().strip().split()[0]
-    # Normalize case to avoid false mismatches
+    # Read SHA file robustly (handle non-UTF8, extra text); extract first hex digest
+    import re
+
+    raw = sha_path.read_bytes()
+    text = raw.decode("utf-8", errors="ignore")
+    m = re.search(r"\b([a-fA-F0-9]{64})\b", text)
+    if not m:
+        print("No SHA256 digest found in sha file", file=sys.stderr)
+        return 4
+    expected = m.group(1)
     expected_norm = expected.lower()
     actual = sha256_file(zip_path)
     actual_norm = actual.lower()
