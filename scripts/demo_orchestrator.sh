@@ -11,6 +11,9 @@ KPI_THRESHOLD="${KPI_THRESHOLD:-0.6}"
 # Timeout mur global (ex: 8m). GNU timeout sur runners Linux.
 DEMO_TIMEOUT="${DEMO_TIMEOUT:-8m}"
 
+# Assure que les modules du repo sont importables
+export PYTHONPATH="${PYTHONPATH:-}:$(pwd)"
+
 echo "[demo] Running lab orchestrator (timeout: ${DEMO_TIMEOUT})..."
 timeout "${DEMO_TIMEOUT}" python -u -m orchestrator.cli_lab \
   --lab \
