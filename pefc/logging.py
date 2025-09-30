@@ -126,9 +126,7 @@ class JSONFormatter(logging.Formatter):
             entry["err"] = {
                 "type": record.exc_info[0].__name__ if record.exc_info[0] else None,
                 "message": str(record.exc_info[1]) if record.exc_info[1] else None,
-                "stack": (
-                    self.formatException(record.exc_info) if record.exc_info else None
-                ),
+                "stack": (self.formatException(record.exc_info) if record.exc_info else None),
             }
 
         return json.dumps(entry, ensure_ascii=False)

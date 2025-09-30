@@ -10,9 +10,7 @@ from .strategy_api import Checker, Strategy, StrategyContext
 class BasicChecker(Checker):
     """Basic implementation of the Checker interface."""
 
-    def check_cycle_detection(
-        self, plan: Dict[str, Any], history: List[Dict[str, Any]]
-    ) -> bool:
+    def check_cycle_detection(self, plan: Dict[str, Any], history: List[Dict[str, Any]]) -> bool:
         """Check for cycles in the plan."""
         # Simple cycle detection based on step IDs
         step_ids = [step.get("id") for step in plan.get("steps", [])]
@@ -76,9 +74,7 @@ class BasicChecker(Checker):
 
         return new_steps <= original_steps + max_increase
 
-    def check_expected_outcomes(
-        self, strategy: Strategy, context: StrategyContext
-    ) -> bool:
+    def check_expected_outcomes(self, strategy: Strategy, context: StrategyContext) -> bool:
         """Check if expected outcomes are plausible."""
         if not strategy.expected_outcomes:
             return True
@@ -105,9 +101,7 @@ class BasicChecker(Checker):
 
         return True
 
-    def _has_blocking_mechanism(
-        self, strategy: Strategy, context: StrategyContext
-    ) -> bool:
+    def _has_blocking_mechanism(self, strategy: Strategy, context: StrategyContext) -> bool:
         """Check if strategy has blocking mechanisms."""
         # Strategies that can block typically have "block" or "require" in their logic
         return (
@@ -124,9 +118,7 @@ class BasicChecker(Checker):
             or context.failreason.startswith("coverage.")
         )
 
-    def _targets_policy_compliance(
-        self, strategy: Strategy, context: StrategyContext
-    ) -> bool:
+    def _targets_policy_compliance(self, strategy: Strategy, context: StrategyContext) -> bool:
         """Check if strategy targets policy compliance."""
         return (
             "policy" in strategy.id.lower()

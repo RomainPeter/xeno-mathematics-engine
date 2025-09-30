@@ -88,16 +88,8 @@ class TestLLMClient:
     def test_select_best_response(self):
         """Test best response selection"""
         responses = [
-            {
-                "choices": [
-                    {"message": {"content": '{"plan": ["good"], "success": 0.9}'}}
-                ]
-            },
-            {
-                "choices": [
-                    {"message": {"content": '{"plan": ["bad"], "success": 0.1}'}}
-                ]
-            },
+            {"choices": [{"message": {"content": '{"plan": ["good"], "success": 0.9}'}}]},
+            {"choices": [{"message": {"content": '{"plan": ["bad"], "success": 0.1}'}}]},
             {"choices": [{"message": {"content": "invalid json"}}]},
         ]
 

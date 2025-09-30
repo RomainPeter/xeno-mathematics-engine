@@ -31,9 +31,7 @@ class MetricsConfig(BaseModel):
     dedup: str = "first"
     backend: str = "auto"
     reduce_policy: str = "intersect"
-    bounded_metrics: List[str] = Field(
-        default_factory=lambda: ["coverage_gain", "novelty_avg"]
-    )
+    bounded_metrics: List[str] = Field(default_factory=lambda: ["coverage_gain", "novelty_avg"])
     schema_path: Optional[str] = "schema/summary.schema.json"
 
 

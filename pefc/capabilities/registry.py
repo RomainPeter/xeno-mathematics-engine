@@ -105,9 +105,7 @@ class IncidentCapabilityRegistry:
         candidates: List[IncidentHandler] = [
             h for h in self._handlers.values() if h.can_handle(itype)
         ]
-        candidates = [
-            h for h in candidates if not h.check_prerequisites()
-        ]  # keep only ready
+        candidates = [h for h in candidates if not h.check_prerequisites()]  # keep only ready
         if not candidates:
             return None
         scored = [(h.score(incident), h) for h in candidates]

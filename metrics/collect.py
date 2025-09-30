@@ -97,9 +97,7 @@ class MetricsCollector:
             "verdicts": verdicts,
         }
 
-    def _calculate_performance_metrics(
-        self, pcaps: List[Dict[str, Any]]
-    ) -> Dict[str, Any]:
+    def _calculate_performance_metrics(self, pcaps: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Calcule les métriques de performance."""
         if not pcaps:
             return {}
@@ -117,17 +115,13 @@ class MetricsCollector:
 
         # Calculer les statistiques
         total_execution_time = sum(execution_times)
-        avg_execution_time = (
-            total_execution_time / len(execution_times) if execution_times else 0
-        )
+        avg_execution_time = total_execution_time / len(execution_times) if execution_times else 0
 
         total_llm_time = sum(llm_times)
         avg_llm_time = total_llm_time / len(llm_times) if llm_times else 0
 
         # Analyser les retries et backtracks
-        total_retries = sum(
-            pcap.get("justification", {}).get("backtracks", 0) for pcap in pcaps
-        )
+        total_retries = sum(pcap.get("justification", {}).get("backtracks", 0) for pcap in pcaps)
         total_audit_cost = sum(
             pcap.get("justification", {}).get("audit_cost_ms", 0) for pcap in pcaps
         )
@@ -165,9 +159,7 @@ class MetricsCollector:
 
         # Calculer le taux de conformité
         compliance_rate = (
-            1.0 - (obligation_violations / total_obligations)
-            if total_obligations > 0
-            else 0
+            1.0 - (obligation_violations / total_obligations) if total_obligations > 0 else 0
         )
 
         # Analyser les types d'obligations
@@ -239,9 +231,7 @@ class MetricsCollector:
         if perf:
             exec_analysis = perf.get("execution_analysis", {})
             report.append("MÉTRIQUES DE PERFORMANCE:")
-            report.append(
-                f"  Temps total: {exec_analysis.get('total_execution_time_ms', 0)}ms"
-            )
+            report.append(f"  Temps total: {exec_analysis.get('total_execution_time_ms', 0)}ms")
             report.append(
                 f"  Temps moyen: {exec_analysis.get('average_execution_time_ms', 0):.2f}ms"
             )
@@ -255,9 +245,7 @@ class MetricsCollector:
             report.append(
                 f"  Taux de conformité: {obligation_analysis.get('compliance_rate', 0):.2%}"
             )
-            report.append(
-                f"  Total obligations: {obligation_analysis.get('total_obligations', 0)}"
-            )
+            report.append(f"  Total obligations: {obligation_analysis.get('total_obligations', 0)}")
             report.append("")
 
         # Métriques de delta
@@ -265,9 +253,7 @@ class MetricsCollector:
         if delta:
             delta_analysis = delta.get("delta_analysis", {})
             report.append("MÉTRIQUES DE DELTA:")
-            report.append(
-                f"  Delta moyen: {delta_analysis.get('average_delta', 0):.3f}"
-            )
+            report.append(f"  Delta moyen: {delta_analysis.get('average_delta', 0):.3f}")
             report.append(f"  Delta max: {delta_analysis.get('max_delta', 0):.3f}")
             report.append("")
 

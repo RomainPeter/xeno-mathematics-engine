@@ -26,9 +26,7 @@ class DemoLLMAdapter:
     def __init__(self):
         self.call_count = 0
 
-    async def generate(
-        self, prompt: str, max_tokens: int = 2048, temperature: float = 0.1
-    ) -> str:
+    async def generate(self, prompt: str, max_tokens: int = 2048, temperature: float = 0.1) -> str:
         """Generate synthesis candidate."""
         self.call_count += 1
 
@@ -343,9 +341,7 @@ async def run_demo():
                 print(f"  📦 {zip_file.name}: {zip_size} bytes")
 
             # Verify audit pack
-            verification = await orchestrator.audit_pack_builder.verify_audit_pack(
-                state.run_id
-            )
+            verification = await orchestrator.audit_pack_builder.verify_audit_pack(state.run_id)
             if verification["valid"]:
                 print("  ✅ Audit pack valide")
                 print(f"  🔐 SHA256: {verification['sha256'][:16]}...")
@@ -364,9 +360,7 @@ async def run_demo():
                 print(f"   Confiance: {state.cegis_results[-1].verdict.confidence}")
             else:
                 print("⚠️  PARTIEL: AE réussi, CEGIS partiel")
-                print(
-                    f"   Concepts: {sum(len(r.concepts) for r in state.ae_results if r.success)}"
-                )
+                print(f"   Concepts: {sum(len(r.concepts) for r in state.ae_results if r.success)}")
                 print(f"   Incidents: {len(state.incidents)}")
         else:
             print("❌ ÉCHEC: Pipeline interrompue")

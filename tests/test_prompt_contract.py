@@ -289,9 +289,7 @@ class TestPromptContractAcceptanceCriteria:
         history = manager.get_prompt_history()
 
         # Find our contract in history
-        contract_in_history = any(
-            entry["contract_id"] == contract.id for entry in history
-        )
+        contract_in_history = any(entry["contract_id"] == contract.id for entry in history)
         assert contract_in_history
 
         print("✅ PromptContract++ Acceptance Criteria Met:")

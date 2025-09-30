@@ -19,9 +19,7 @@ class PackZip(PackStep):
         log.info("pack_zip: creating zip archive")
 
         # Determine output path
-        out_path = self.config.get(
-            "out", f"{ctx.cfg.pack.pack_name}-{ctx.cfg.pack.version}.zip"
-        )
+        out_path = self.config.get("out", f"{ctx.cfg.pack.pack_name}-{ctx.cfg.pack.version}.zip")
         if not Path(out_path).is_absolute():
             out_path = ctx.out_dir / out_path
 
@@ -79,9 +77,7 @@ class PackZip(PackStep):
             log.info("pack_zip: added T18 manifest.json and merkle.txt to zip")
 
         # Log final file list
-        log.info(
-            "pack_zip: created %s with %d files: %s", out_path, len(seen), sorted(seen)
-        )
+        log.info("pack_zip: created %s with %d files: %s", out_path, len(seen), sorted(seen))
 
         # Add zip to context
         ctx.add_file(out_path.name, out_path)

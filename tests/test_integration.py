@@ -102,9 +102,7 @@ class TestIntegration:
                 risk=0.1,
                 tech_debt=0,
             ),
-            proofs=[
-                Proof(kind="unit", name="test_proof", passed=True, logs="Test passed")
-            ],
+            proofs=[Proof(kind="unit", name="test_proof", passed=True, logs="Test passed")],
             verdict="pass",
             toolchain={"seed": 42},
             pcap_hash="test_pcap_hash",

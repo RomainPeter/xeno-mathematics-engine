@@ -26,9 +26,7 @@ app.add_typer(pack, name="pack")
 @app.callback()
 def main_cb(
     ctx: typer.Context,
-    config: Optional[Path] = typer.Option(
-        None, "--config", help="Chemin config/pack.yaml"
-    ),
+    config: Optional[Path] = typer.Option(None, "--config", help="Chemin config/pack.yaml"),
     json_logs: Optional[bool] = typer.Option(
         None, "--json-logs/--no-json-logs", help="Force JSON logs"
     ),
@@ -37,9 +35,7 @@ def main_cb(
     """PEFC CLI - Unified CLI for pack operations."""
     cfg = load_config(path=str(config) if config else "config/pack.yaml")
     init_logging(
-        json_mode=bool(
-            json_logs if json_logs is not None else getattr(cfg.logging, "json", False)
-        )
+        json_mode=bool(json_logs if json_logs is not None else getattr(cfg.logging, "json", False))
     )
     import logging
 
@@ -55,15 +51,9 @@ def main_cb(
 @pack.command("build")
 def pack_build(
     ctx: typer.Context,
-    pipeline: Optional[Path] = typer.Option(
-        None, "--pipeline", help="Descriptor YAML du pipeline"
-    ),
-    strict: bool = typer.Option(
-        False, "--strict/--no-strict", help="Échoue si signature rate"
-    ),
-    out_dir: Optional[Path] = typer.Option(
-        None, "--out-dir", help="Override cfg.pack.out_dir"
-    ),
+    pipeline: Optional[Path] = typer.Option(None, "--pipeline", help="Descriptor YAML du pipeline"),
+    strict: bool = typer.Option(False, "--strict/--no-strict", help="Échoue si signature rate"),
+    out_dir: Optional[Path] = typer.Option(None, "--out-dir", help="Override cfg.pack.out_dir"),
 ):
     """Build a pack using the specified pipeline."""
     cfg = ctx.obj["cfg"]
@@ -79,12 +69,8 @@ def pack_build(
 @pack.command("verify")
 def pack_verify(
     zip_path: Path = typer.Option(..., "--zip", exists=True, readable=True),
-    sig_path: Optional[Path] = typer.Option(
-        None, "--sig", help="Chemin signature .sig"
-    ),
-    key_ref: Optional[str] = typer.Option(
-        None, "--key", help="Clé/KeyRef pour cosign verify-blob"
-    ),
+    sig_path: Optional[Path] = typer.Option(None, "--sig", help="Chemin signature .sig"),
+    key_ref: Optional[str] = typer.Option(None, "--key", help="Clé/KeyRef pour cosign verify-blob"),
     strict: bool = typer.Option(
         True, "--strict/--no-strict", help="Échoue si merkle/manifest incompatibles"
     ),
@@ -104,9 +90,7 @@ def pack_manifest(
     """Extract or print manifest from a pack artifact."""
     manifest = print_manifest(zip_path)
     if out:
-        Path(out).write_text(
-            json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8"
-        )
+        Path(out).write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
     if print_ or not out:
         typer.echo(json.dumps(manifest, ensure_ascii=False, indent=2))
     raise typer.Exit(0)

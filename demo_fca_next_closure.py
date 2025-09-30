@@ -159,9 +159,7 @@ def test_closure_idempotence(context: FormalContext, concepts: List[Concept]):
 
         if closed_once != closed_twice:
             violations += 1
-            print(
-                f"  ❌ Idempotence violation: {intent} -> {closed_once} -> {closed_twice}"
-            )
+            print(f"  ❌ Idempotence violation: {intent} -> {closed_once} -> {closed_twice}")
 
     if violations == 0:
         print("  ✅ Closure is idempotent")

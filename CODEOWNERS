@@ -1,3 +1,5 @@
+* @RomainPeter
+
 # Require review for critical paths
 /docs/ @RomainPeter
 /.github/workflows/ @RomainPeter

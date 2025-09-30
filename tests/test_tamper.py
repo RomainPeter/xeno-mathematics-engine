@@ -63,9 +63,7 @@ def test_pcap_tamper_after_attestation():
 
         # Should be rejected due to context_hash mismatch
         assert result["verdict"] == "rejected"
-        assert "tamper" in result.get("errors", []) or "context" in result.get(
-            "errors", []
-        )
+        assert "tamper" in result.get("errors", []) or "context" in result.get("errors", [])
 
     finally:
         os.unlink(pcap_path)
@@ -109,9 +107,7 @@ def test_missing_obligation_failure():
 
         # Should fail with missing_obligation
         assert result["verdict"] == "rejected"
-        assert any(
-            "missing_obligation" in str(error) for error in result.get("errors", [])
-        )
+        assert any("missing_obligation" in str(error) for error in result.get("errors", []))
 
     finally:
         os.unlink(pcap_path)
@@ -146,9 +142,7 @@ def test_budget_exceeded_failure():
 
         # Should fail with budget_exceeded
         assert result["verdict"] == "rejected"
-        assert any(
-            "budget_exceeded" in str(error) for error in result.get("errors", [])
-        )
+        assert any("budget_exceeded" in str(error) for error in result.get("errors", []))
 
     finally:
         os.unlink(pcap_path)

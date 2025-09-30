@@ -138,9 +138,7 @@ class NextClosureEngine(AEEngine):
                 # Mock incidence: some objects have some attributes
                 incidence[(obj, attr)] = hash(f"{obj}_{attr}") % 3 == 0
 
-        return FormalContext(
-            objects=objects, attributes=attributes, incidence=incidence
-        )
+        return FormalContext(objects=objects, attributes=attributes, incidence=incidence)
 
     async def _next_closure_step(self) -> FormalConcept:
         """Execute one step of Next-Closure algorithm."""
@@ -157,22 +155,12 @@ class NextClosureEngine(AEEngine):
             extent, intent = await self._next_closure(self.concepts[-1])
 
         # Calculate support and confidence
-        support = (
-            len(extent) / len(self.context.objects) if self.context.objects else 0.0
-        )
-        confidence = (
-            len(intent) / len(self.context.attributes)
-            if self.context.attributes
-            else 0.0
-        )
+        support = len(extent) / len(self.context.objects) if self.context.objects else 0.0
+        confidence = len(intent) / len(self.context.attributes) if self.context.attributes else 0.0
 
-        return FormalConcept(
-            extent=extent, intent=intent, support=support, confidence=confidence
-        )
+        return FormalConcept(extent=extent, intent=intent, support=support, confidence=confidence)
 
-    async def _next_closure(
-        self, previous_concept: FormalConcept
-    ) -> Tuple[Set[str], Set[str]]:
+    async def _next_closure(self, previous_concept: FormalConcept) -> Tuple[Set[str], Set[str]]:
         """Compute next concept in lectic order."""
         if not self.context:
             raise RuntimeError("Context not initialized")
@@ -221,9 +209,7 @@ class NextClosureEngine(AEEngine):
 
         return intent
 
-    async def _generate_implications(
-        self, concept: FormalConcept
-    ) -> List[Dict[str, Any]]:
+    async def _generate_implications(self, concept: FormalConcept) -> List[Dict[str, Any]]:
         """Generate implications from concept."""
         implications = []
 

@@ -37,9 +37,7 @@ class RequireLicenseAllowlistStrategy(Strategy):
         # Check for AGPL violations
         dependencies = context.get("dependencies", [])
         for dep in dependencies:
-            if dep.get("license") == "AGPL" and "AGPL" not in context.get(
-                "license_allowlist", []
-            ):
+            if dep.get("license") == "AGPL" and "AGPL" not in context.get("license_allowlist", []):
                 evidence.append(
                     Evidence(
                         type="AGPL_VIOLATION",

@@ -28,9 +28,7 @@ class TestLinUCB:
 
     def test_select_action(self, bandit):
         """Test action selection."""
-        context = BanditContext(
-            features=[1.0, 2.0, 3.0, 4.0, 5.0], metadata={"test": "context"}
-        )
+        context = BanditContext(features=[1.0, 2.0, 3.0, 4.0, 5.0], metadata={"test": "context"})
 
         candidates = [
             {"id": "candidate1", "features": [1.0, 2.0, 3.0, 4.0, 5.0]},
@@ -91,9 +89,7 @@ class TestThompsonSampling:
 
     def test_select_action(self, bandit):
         """Test action selection."""
-        context = BanditContext(
-            features=[1.0, 2.0, 3.0, 4.0, 5.0], metadata={"test": "context"}
-        )
+        context = BanditContext(features=[1.0, 2.0, 3.0, 4.0, 5.0], metadata={"test": "context"})
 
         candidates = [
             {"id": "candidate1", "features": [1.0, 2.0, 3.0, 4.0, 5.0]},
@@ -161,9 +157,7 @@ class TestDPPSelector:
 
     def test_select_with_diversity_key(self, selector, test_items):
         """Test selection with diversity key filter."""
-        selection = selector.select_diverse_items(
-            test_items, k=2, diversity_key="key_0"
-        )
+        selection = selector.select_diverse_items(test_items, k=2, diversity_key="key_0")
 
         assert len(selection.selected_items) <= 2
         assert selection.diversity_score > 0
@@ -227,9 +221,7 @@ class TestSubmodularSelector:
 
     def test_select_with_diversity_key(self, selector, test_items):
         """Test selection with diversity key filter."""
-        selection = selector.select_diverse_items(
-            test_items, k=2, diversity_key="key_0"
-        )
+        selection = selector.select_diverse_items(test_items, k=2, diversity_key="key_0")
 
         assert len(selection.selected_items) <= 2
         assert selection.diversity_score > 0
@@ -371,9 +363,7 @@ if __name__ == "__main__":
     print("Testing Submodular Selector...")
     try:
         selector = SubmodularSelector(alpha=1.0, beta=0.5)
-        print(
-            f"✅ Submodular Selector initialized: alpha={selector.alpha}, beta={selector.beta}"
-        )
+        print(f"✅ Submodular Selector initialized: alpha={selector.alpha}, beta={selector.beta}")
 
         # Create test items
         items = []

@@ -77,11 +77,7 @@ def load_config(
 
     # Apply environment profile if specified
     active_env = get_active_env(env)
-    if (
-        active_env
-        and "profiles" in config_data
-        and active_env in config_data["profiles"]
-    ):
+    if active_env and "profiles" in config_data and active_env in config_data["profiles"]:
         profile_data = config_data["profiles"][active_env]
         config_data = deep_merge(config_data, profile_data)
 

@@ -76,9 +76,7 @@ async def test_ae_loop():
     domain_spec = {
         "domain": "RegTech",
         "closure": "exact",
-        "oracle_endpoints": [
-            {"name": "mock_opa", "type": "OPA", "endpoint": "mock://opa"}
-        ],
+        "oracle_endpoints": [{"name": "mock_opa", "type": "OPA", "endpoint": "mock://opa"}],
     }
 
     egraph = EGraph()
@@ -116,9 +114,7 @@ async def test_cegis_loop():
     # Mock domain spec
     domain_spec = {
         "domain": "RegTech",
-        "oracle_endpoints": [
-            {"name": "mock_opa", "type": "OPA", "endpoint": "mock://opa"}
-        ],
+        "oracle_endpoints": [{"name": "mock_opa", "type": "OPA", "endpoint": "mock://opa"}],
     }
 
     egraph = EGraph()

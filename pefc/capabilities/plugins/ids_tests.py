@@ -23,9 +23,7 @@ class IDSTestSynthesizer:
     def can_handle(self, incident: Dict[str, Any]) -> bool:
         return incident.get("type") in ("robustness.fuzz", "regression.suspect")
 
-    def plan(
-        self, incident: Dict[str, Any], ctx: Dict[str, Any] | None = None
-    ) -> List[ProofSpec]:
+    def plan(self, incident: Dict[str, Any], ctx: Dict[str, Any] | None = None) -> List[ProofSpec]:
         target = (incident.get("context") or {}).get("target", "unknown")
         return [
             ProofSpec(

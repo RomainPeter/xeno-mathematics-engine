@@ -10,9 +10,7 @@ from pathlib import Path
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument(
-        "--artifacts", required=True, help="Path to produced artifacts directory"
-    )
+    ap.add_argument("--artifacts", required=True, help="Path to produced artifacts directory")
     ap.add_argument("--baseline", required=True, help="Path to baseline merkle JSON")
     args = ap.parse_args()
 
@@ -20,9 +18,7 @@ def main():
     baseline_path = Path(args.baseline)
 
     if not baseline_path.exists():
-        print(
-            f"[WARN] No baseline file at {baseline_path}. Treating as initial baseline."
-        )
+        print(f"[WARN] No baseline file at {baseline_path}. Treating as initial baseline.")
         sys.exit(0)
 
     m_path = artifacts / "manifest.json"
@@ -50,9 +46,7 @@ def main():
         if os.environ.get("DRIFT_ACCEPTED", "").lower() in {"1", "true", "yes"}:
             print("[OK] Drift accepted via DRIFT_ACCEPTED env.")
             sys.exit(0)
-        print(
-            f"[ERROR] Drift detected. produced={produced_root} baseline={baseline_root}"
-        )
+        print(f"[ERROR] Drift detected. produced={produced_root} baseline={baseline_root}")
         sys.exit(3)
 
     print("[OK] No drift detected.")

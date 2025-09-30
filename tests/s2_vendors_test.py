@@ -137,9 +137,7 @@ class TestS2Vendors:
         assert after_data["api_tests_present"]
 
         # Check typosquat-cve after
-        typosquat_after = Path(
-            "corpus/s2/vendors/typosquat-cve/requirements.lock.fixed"
-        )
+        typosquat_after = Path("corpus/s2/vendors/typosquat-cve/requirements.lock.fixed")
         assert typosquat_after.exists()
 
         # Check secret-egress after

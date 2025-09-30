@@ -64,12 +64,12 @@ class Proof:
     metadata: Dict[str, Any] = field(default_factory=dict)
 
     def __str__(self) -> str:
-        return (
-            f"Proof({self.rule_id}, {self.status.value}, confidence={self.confidence})"
-        )
+        return f"Proof({self.rule_id}, {self.status.value}, confidence={self.confidence})"
 
     def __repr__(self) -> str:
-        return f"Proof(rule='{self.rule_id}', status={self.status.value}, evidence='{self.evidence}')"
+        return (
+            f"Proof(rule='{self.rule_id}', status={self.status.value}, evidence='{self.evidence}')"
+        )
 
 
 @dataclass
@@ -195,7 +195,9 @@ class Counterexample:
         return f"Counterexample({self.file_path}:{self.line_number}, rule={self.rule})"
 
     def __repr__(self) -> str:
-        return f"Counterexample(file='{self.file_path}', line={self.line_number}, rule='{self.rule}')"
+        return (
+            f"Counterexample(file='{self.file_path}', line={self.line_number}, rule='{self.rule}')"
+        )
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary."""
@@ -318,8 +320,7 @@ class ComplianceResult:
         """Create from dictionary."""
         verdict = Verdict.from_dict(data["verdict"])
         counterexamples = [
-            Counterexample.from_dict(ce_data)
-            for ce_data in data.get("counterexamples", [])
+            Counterexample.from_dict(ce_data) for ce_data in data.get("counterexamples", [])
         ]
         return cls(
             verdict=verdict,

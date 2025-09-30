@@ -8,9 +8,7 @@ log = logging.getLogger(__name__)
 CANDIDATES = ["sbom.json", "bom.json", "sbom.spdx.json", "sbom.cdx.json"]
 
 
-def find_sbom(
-    out_dir: Path, explicit_path: str | None
-) -> tuple[dict | None, str | None]:
+def find_sbom(out_dir: Path, explicit_path: str | None) -> tuple[dict | None, str | None]:
     """
     Find and load SBOM file.
 

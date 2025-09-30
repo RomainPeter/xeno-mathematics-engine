@@ -103,9 +103,7 @@ class TestCLIPack:
         # Check result
         assert result.exit_code == SUCCESS_EXIT_CODE
 
-    def test_pack_build_with_json_logs(
-        self, cli_runner: CliRunner, temp_workspace: Path
-    ):
+    def test_pack_build_with_json_logs(self, cli_runner: CliRunner, temp_workspace: Path):
         """Test pack build with JSON logs."""
         # Create minimal test setup
         metrics_file = temp_workspace / "metrics.json"
@@ -245,9 +243,7 @@ class TestCLIPack:
             zf.writestr("merkle.txt", merkle_root + "\n")
 
         # Run verify command
-        result = cli_runner.invoke(
-            app, ["pack", "verify", "--zip", str(zip_path), "--strict"]
-        )
+        result = cli_runner.invoke(app, ["pack", "verify", "--zip", str(zip_path), "--strict"])
 
         # Check result
         assert result.exit_code == SUCCESS_EXIT_CODE
@@ -274,9 +270,7 @@ class TestCLIPack:
             zf.writestr("merkle.txt", "dummy_merkle_root\n")
 
         # Run verify command
-        result = cli_runner.invoke(
-            app, ["pack", "verify", "--zip", str(zip_path), "--strict"]
-        )
+        result = cli_runner.invoke(app, ["pack", "verify", "--zip", str(zip_path), "--strict"])
 
         # Check result (should fail)
         assert result.exit_code != SUCCESS_EXIT_CODE
@@ -301,9 +295,7 @@ class TestCLIPack:
             zf.writestr("merkle.txt", "dummy_merkle_root\n")
 
         # Run verify command in non-strict mode
-        result = cli_runner.invoke(
-            app, ["pack", "verify", "--zip", str(zip_path), "--no-strict"]
-        )
+        result = cli_runner.invoke(app, ["pack", "verify", "--zip", str(zip_path), "--no-strict"])
 
         # Check result (should succeed in non-strict mode)
         assert result.exit_code == SUCCESS_EXIT_CODE
@@ -336,9 +328,7 @@ class TestCLIPack:
             zf.writestr("merkle.txt", merkle_root + "\n")
 
         # Run manifest command
-        result = cli_runner.invoke(
-            app, ["pack", "manifest", "--zip", str(zip_path), "--print"]
-        )
+        result = cli_runner.invoke(app, ["pack", "manifest", "--zip", str(zip_path), "--print"])
 
         # Check result
         assert result.exit_code == SUCCESS_EXIT_CODE
@@ -349,9 +339,7 @@ class TestCLIPack:
         assert output["pack_name"] == "test-pack"
         assert output["version"] == "v0.1.0"
 
-    def test_pack_manifest_save_to_file(
-        self, cli_runner: CliRunner, temp_workspace: Path
-    ):
+    def test_pack_manifest_save_to_file(self, cli_runner: CliRunner, temp_workspace: Path):
         """Test pack manifest save to file command."""
         # Create a valid ZIP with manifest
         zip_path = temp_workspace / "test.zip"
@@ -396,9 +384,7 @@ class TestCLIPack:
         assert output["format_version"] == "1.0"
         assert output["pack_name"] == "test-pack"
 
-    def test_pack_sign_cosign(
-        self, cli_runner: CliRunner, temp_workspace: Path, mock_cosign
-    ):
+    def test_pack_sign_cosign(self, cli_runner: CliRunner, temp_workspace: Path, mock_cosign):
         """Test pack sign with cosign."""
         # Create test file
         test_file = temp_workspace / "test.txt"
@@ -428,9 +414,7 @@ class TestCLIPack:
             # TODO: Fix the mock to properly test cosign signing
             assert result.exit_code != 0  # Currently failing, but should succeed
 
-    def test_pack_sign_unknown_provider(
-        self, cli_runner: CliRunner, temp_workspace: Path
-    ):
+    def test_pack_sign_unknown_provider(self, cli_runner: CliRunner, temp_workspace: Path):
         """Test pack sign with unknown provider."""
         # Create test file
         test_file = temp_workspace / "test.txt"
@@ -444,9 +428,7 @@ class TestCLIPack:
         # Check result (should fail with exit code 2)
         assert result.exit_code == 2
 
-    def test_pack_sign_cosign_failure(
-        self, cli_runner: CliRunner, temp_workspace: Path
-    ):
+    def test_pack_sign_cosign_failure(self, cli_runner: CliRunner, temp_workspace: Path):
         """Test pack sign with cosign failure."""
         # Create test file
         test_file = temp_workspace / "test.txt"
@@ -569,9 +551,7 @@ class TestCLIPack:
         # Check result
         assert result.exit_code == SUCCESS_EXIT_CODE
 
-    def test_pack_build_partial_success(
-        self, cli_runner: CliRunner, temp_workspace: Path
-    ):
+    def test_pack_build_partial_success(self, cli_runner: CliRunner, temp_workspace: Path):
         """Test pack build with partial success (signature failure but allowed)."""
         # This test would require mocking signature failure
         # For now, we'll test the basic functionality

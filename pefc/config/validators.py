@@ -13,13 +13,8 @@ def validate_paths(cfg: RootConfig) -> List[str]:
         errors.append(f"Schema path does not exist: {cfg.metrics.schema_path}")
 
     # Check template path if provided
-    if (
-        cfg.docs.onepager.template_path
-        and not Path(cfg.docs.onepager.template_path).exists()
-    ):
-        errors.append(
-            f"Template path does not exist: {cfg.docs.onepager.template_path}"
-        )
+    if cfg.docs.onepager.template_path and not Path(cfg.docs.onepager.template_path).exists():
+        errors.append(f"Template path does not exist: {cfg.docs.onepager.template_path}")
 
     # Warn about missing SBOM path
     if cfg.sbom.path and not Path(cfg.sbom.path).exists():
@@ -45,9 +40,7 @@ def validate_pipelines(cfg: RootConfig) -> List[str]:
     for pipeline_name, pipeline_def in cfg.pipelines.defs.items():
         for step in pipeline_def.steps:
             if step.type not in known_types:
-                errors.append(
-                    f"Unknown step type '{step.type}' in pipeline '{pipeline_name}'"
-                )
+                errors.append(f"Unknown step type '{step.type}' in pipeline '{pipeline_name}'")
 
             # Validate capability steps
             if step.type == "capability":
@@ -86,16 +79,12 @@ def validate_capabilities(cfg: RootConfig) -> List[str]:
     if cfg.capabilities.allowlist and cfg.capabilities.denylist:
         overlap = set(cfg.capabilities.allowlist) & set(cfg.capabilities.denylist)
         if overlap:
-            errors.append(
-                f"Capabilities cannot be in both allowlist and denylist: {overlap}"
-            )
+            errors.append(f"Capabilities cannot be in both allowlist and denylist: {overlap}")
 
     # Validate module imports (basic check)
     for item in cfg.capabilities.registry:
         if not item.module or ":" not in item.module:
-            errors.append(
-                f"Invalid module specification for capability '{item.id}': {item.module}"
-            )
+            errors.append(f"Invalid module specification for capability '{item.id}': {item.module}")
 
     return errors
 

@@ -196,8 +196,6 @@ pyyaml==6.0.3
     #   pyyaml-env-tag
 pyyaml-env-tag==1.1
     # via mkdocs
-pyyaml-ft==8.0.0
-    # via libcst
 radon==6.0.1
     # via -r requirements.in
 referencing==0.35.1
@@ -254,3 +252,4 @@ virtualenv==20.34.0
     # via pre-commit
 watchdog==6.0.0
     # via mkdocs
+fastjsonschema==2.18.0

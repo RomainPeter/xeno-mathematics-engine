@@ -142,9 +142,7 @@ class TestClosure:
         test_intents = [
             Intent(set()),  # Empty intent
             Intent({context_4x4.attributes[0]}),  # Single attribute
-            Intent(
-                {context_4x4.attributes[0], context_4x4.attributes[1]}
-            ),  # Two attributes
+            Intent({context_4x4.attributes[0], context_4x4.attributes[1]}),  # Two attributes
         ]
 
         for intent in test_intents:
@@ -258,9 +256,7 @@ class TestNextClosure:
         elapsed_time = time.time() - start_time
 
         # Should complete in less than 100ms
-        assert (
-            elapsed_time < 0.1
-        ), f"Performance test failed: {elapsed_time:.3f}s > 100ms"
+        assert elapsed_time < 0.1, f"Performance test failed: {elapsed_time:.3f}s > 100ms"
 
         # Should generate some concepts
         assert len(concepts) > 0, "No concepts generated"
@@ -374,9 +370,7 @@ class TestConceptLattice:
         for concept in concepts:
             subconcepts = lattice.get_subconcepts(concept)
             for subconcept in subconcepts:
-                assert subconcept.extent.is_subset(
-                    concept.extent
-                ), "Subconcept relation violated"
+                assert subconcept.extent.is_subset(concept.extent), "Subconcept relation violated"
 
     def test_superconcept_relations(self, context_4x4):
         """Test superconcept relations."""
@@ -474,9 +468,7 @@ class TestPerformance:
         elapsed_time = time.time() - start_time
 
         # Should complete in less than 100ms
-        assert (
-            elapsed_time < 0.1
-        ), f"Performance test failed: {elapsed_time:.3f}s > 100ms"
+        assert elapsed_time < 0.1, f"Performance test failed: {elapsed_time:.3f}s > 100ms"
         assert len(concepts) > 0, "No concepts generated"
 
     def test_performance_fruits(self, context_fruits):

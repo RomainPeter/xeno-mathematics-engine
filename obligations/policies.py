@@ -34,9 +34,7 @@ class PolicyEngine:
             "pure_function": self._check_pure_function,
         }
 
-    def check_obligations(
-        self, context: Dict[str, Any]
-    ) -> Tuple[List[Proof], VJustification]:
+    def check_obligations(self, context: Dict[str, Any]) -> Tuple[List[Proof], VJustification]:
         """
         Vérifie toutes les obligations applicables.
         Retourne les preuves et le coût total.
@@ -269,9 +267,7 @@ class PolicyEngine:
 
         try:
             code_content = context.get("code_content", "")
-            forbidden_imports = obligation.get(
-                "forbidden_imports", ["eval", "exec", "compile"]
-            )
+            forbidden_imports = obligation.get("forbidden_imports", ["eval", "exec", "compile"])
 
             # Analyser le code avec AST
             tree = ast.parse(code_content)
@@ -287,11 +283,7 @@ class PolicyEngine:
                         violations.append(f"Import interdit: {node.module}")
 
             passed = len(violations) == 0
-            logs = (
-                f"Violations trouvées: {violations}"
-                if violations
-                else "Aucune violation"
-            )
+            logs = f"Violations trouvées: {violations}" if violations else "Aucune violation"
 
             return (
                 Proof(
@@ -397,9 +389,7 @@ class PolicyEngine:
             missing_docstrings = []
 
             for node in ast.walk(tree):
-                if isinstance(
-                    node, (ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef)
-                ):
+                if isinstance(node, (ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef)):
                     if not ast.get_docstring(node):
                         missing_docstrings.append(node.name)
 
@@ -462,9 +452,7 @@ class PolicyEngine:
 
             for node in ast.walk(tree):
                 if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                    if not node.returns and not all(
-                        arg.annotation for arg in node.args.args
-                    ):
+                    if not node.returns and not all(arg.annotation for arg in node.args.args):
                         missing_hints.append(node.name)
 
             passed = len(missing_hints) == 0
@@ -528,9 +516,7 @@ class PolicyEngine:
                 if isinstance(node, ast.Call):
                     if isinstance(node.func, ast.Name):
                         if node.func.id in ["print", "input", "open", "file"]:
-                            side_effects.append(
-                                f"Appel avec effet de bord: {node.func.id}"
-                            )
+                            side_effects.append(f"Appel avec effet de bord: {node.func.id}")
                 elif isinstance(node, ast.Assign):
                     # Vérifier les assignations à des variables globales
                     for target in node.targets:
@@ -538,11 +524,7 @@ class PolicyEngine:
                             side_effects.append(f"Assignation: {target.id}")
 
             passed = len(side_effects) == 0
-            logs = (
-                f"Effets de bord détectés: {side_effects}"
-                if side_effects
-                else "Fonction pure"
-            )
+            logs = f"Effets de bord détectés: {side_effects}" if side_effects else "Fonction pure"
 
             return (
                 Proof(

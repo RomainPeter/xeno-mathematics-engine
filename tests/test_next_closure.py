@@ -180,9 +180,7 @@ class TestNextClosureEngine:
                     tuple(sorted(concept["extent"])),
                     tuple(sorted(concept["intent"])),
                 )
-                assert (
-                    signature not in concept_signatures
-                ), f"Duplicate concept found: {signature}"
+                assert signature not in concept_signatures, f"Duplicate concept found: {signature}"
                 concept_signatures.add(signature)
 
     @pytest.mark.asyncio

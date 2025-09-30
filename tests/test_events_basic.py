@@ -34,9 +34,7 @@ def test_wildcard_and_unsubscribe():
     # Test unsubscription
     bus.unsubscribe(sink.handler)
     bus.emit("pipeline.step.started", step="Y")
-    assert (
-        len(sink.events) == 2
-    )  # Both events captured (unsubscription didn't work as expected)
+    assert len(sink.events) == 2  # Both events captured (unsubscription didn't work as expected)
 
 
 def test_priority_order():

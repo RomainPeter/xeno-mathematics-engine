@@ -314,9 +314,7 @@ class MetricsRun:
         Returns:
             MetricsRun instance
         """
-        return cls(
-            run_id=data["run_id"], timestamp=data["timestamp"], metrics=data["metrics"]
-        )
+        return cls(run_id=data["run_id"], timestamp=data["timestamp"], metrics=data["metrics"])
 
 
 @dataclass

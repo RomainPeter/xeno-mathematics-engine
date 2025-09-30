@@ -204,9 +204,7 @@ if __name__ == "__main__":
     # Test convenience function
     print("Testing convenience function...")
     try:
-        selector = create_policy_selector(
-            bandit_type="thompson", diversity_type="submodular"
-        )
+        selector = create_policy_selector(bandit_type="thompson", diversity_type="submodular")
         print("✅ Convenience function completed")
         print(f"✅ Selector type: {selector.bandit_type}/{selector.diversity_type}")
 

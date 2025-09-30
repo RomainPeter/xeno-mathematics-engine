@@ -194,9 +194,7 @@ class TestManifestValidation:
 
         # Test CLI verify
         runner = CliRunner()
-        result = runner.invoke(
-            app, ["pack", "verify", "--zip", str(zip_path), "--strict"]
-        )
+        result = runner.invoke(app, ["pack", "verify", "--zip", str(zip_path), "--strict"])
 
         assert result.exit_code == 0
         output = json.loads(result.stdout)
@@ -227,9 +225,7 @@ class TestManifestValidation:
 
         # Test CLI manifest
         runner = CliRunner()
-        result = runner.invoke(
-            app, ["pack", "manifest", "--zip", str(zip_path), "--print"]
-        )
+        result = runner.invoke(app, ["pack", "manifest", "--zip", str(zip_path), "--print"])
 
         assert result.exit_code == 0
         output = json.loads(result.stdout)

@@ -19,9 +19,7 @@ from pefc.pipeline.steps.pack_zip import PackZip
 class TestPipelinePackZip:
     """Test pipeline pack ZIP creation and content validation."""
 
-    def test_pack_zip_step_creation(
-        self, temp_workspace: Path, sample_files: List[Path]
-    ):
+    def test_pack_zip_step_creation(self, temp_workspace: Path, sample_files: List[Path]):
         """Test that PackZip step creates a valid ZIP file."""
         # Create context
         context = PipelineContext(
@@ -62,9 +60,7 @@ class TestPipelinePackZip:
             for i in range(len(sample_files)):
                 assert f"file{i+1}.txt" in names
 
-    def test_zip_content_validation(
-        self, temp_workspace: Path, sample_files: List[Path]
-    ):
+    def test_zip_content_validation(self, temp_workspace: Path, sample_files: List[Path]):
         """Test that ZIP contains correct content."""
         context = PipelineContext(
             cfg=Mock(),
@@ -108,9 +104,7 @@ class TestPipelinePackZip:
                 file_data = zf.read(f"file{i+1}.txt")
                 assert file_data == file_path.read_bytes()
 
-    def test_no_duplicate_arcnames(
-        self, temp_workspace: Path, sample_files: List[Path]
-    ):
+    def test_no_duplicate_arcnames(self, temp_workspace: Path, sample_files: List[Path]):
         """Test that duplicate arcnames are prevented."""
         context = PipelineContext(
             cfg=Mock(),
@@ -156,9 +150,7 @@ class TestPipelinePackZip:
             # Check that events were published
             assert mock_event_bus.publish.called
 
-    def test_manifest_merkle_consistency(
-        self, temp_workspace: Path, sample_files: List[Path]
-    ):
+    def test_manifest_merkle_consistency(self, temp_workspace: Path, sample_files: List[Path]):
         """Test that manifest and merkle are consistent."""
         context = PipelineContext(
             cfg=Mock(),
@@ -371,9 +363,7 @@ class TestPipelinePackZip:
                     # Should be able to read without errors
                     f.read()
 
-    def test_manifest_schema_compliance(
-        self, temp_workspace: Path, sample_files: List[Path]
-    ):
+    def test_manifest_schema_compliance(self, temp_workspace: Path, sample_files: List[Path]):
         """Test that generated manifest complies with schema."""
         context = PipelineContext(
             cfg=Mock(),
@@ -426,9 +416,7 @@ class TestPipelinePackZip:
                 for field in file_required_fields:
                     assert field in file_info, f"Missing file field: {field}"
 
-    def test_merkle_root_reproducibility(
-        self, temp_workspace: Path, sample_files: List[Path]
-    ):
+    def test_merkle_root_reproducibility(self, temp_workspace: Path, sample_files: List[Path]):
         """Test that Merkle root is reproducible for identical content."""
         # Create two identical contexts
         context1 = PipelineContext(

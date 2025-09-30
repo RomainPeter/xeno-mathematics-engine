@@ -28,9 +28,7 @@ class DiversityStrategy:
         self.feature_matrix: List[List[float]] = []
         self.diversity_history: List[Dict[str, Any]] = []
 
-    def select_diverse_items(
-        self, items: List[Dict[str, Any]], k: int
-    ) -> List[DiversityItem]:
+    def select_diverse_items(self, items: List[Dict[str, Any]], k: int) -> List[DiversityItem]:
         """Select k diverse items from the list."""
         if not items:
             return []
@@ -100,9 +98,7 @@ class DiversityStrategy:
 
         return similarity_matrix
 
-    def _calculate_similarity(
-        self, item1: DiversityItem, item2: DiversityItem
-    ) -> float:
+    def _calculate_similarity(self, item1: DiversityItem, item2: DiversityItem) -> float:
         """Calculate similarity between two items."""
         if not item1.features or not item2.features:
             return 0.0
@@ -143,18 +139,14 @@ class DiversityStrategy:
 
         # Calculate the sum of similarities to other items
         similarities = matrix[item_idx, :]
-        total_similarity = (
-            np.sum(similarities) - similarities[item_idx]
-        )  # Exclude self-similarity
+        total_similarity = np.sum(similarities) - similarities[item_idx]  # Exclude self-similarity
 
         # DPP score is inversely related to total similarity
         dpp_score = 1.0 / (1.0 + total_similarity)
 
         return dpp_score
 
-    def calculate_diversity_metrics(
-        self, items: List[DiversityItem]
-    ) -> Dict[str, float]:
+    def calculate_diversity_metrics(self, items: List[DiversityItem]) -> Dict[str, float]:
         """Calculate diversity metrics for a set of items."""
         if len(items) < 2:
             return {"diversity": 0.0, "coverage": 0.0, "balance": 0.0}

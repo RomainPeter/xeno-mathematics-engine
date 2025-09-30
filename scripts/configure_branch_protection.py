@@ -24,9 +24,7 @@ print("6. Set required reviewers: 1")
 print("7. Enable 'Restrict pushes that create files'")
 print()
 print("Or use GitHub CLI (if available):")
-print(
-    "gh api repos/RomainPeter/discovery-engine-2cat/branches/main/protection -X PUT \\"
-)
+print("gh api repos/RomainPeter/discovery-engine-2cat/branches/main/protection -X PUT \\")
 print("  -f required_status_checks.strict=true \\")
 print('  -F required_status_checks.contexts[]="CI" \\')
 print('  -F required_status_checks.contexts[]="Nightly Bench" \\')

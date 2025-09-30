@@ -131,13 +131,9 @@ class AsyncScheduler:
             config = {
                 "task": task,
                 "timeout": (
-                    timeouts[i]
-                    if timeouts and i < len(timeouts)
-                    else self.config.default_timeout
+                    timeouts[i] if timeouts and i < len(timeouts) else self.config.default_timeout
                 ),
-                "name": (
-                    task_names[i] if task_names and i < len(task_names) else f"task_{i}"
-                ),
+                "name": (task_names[i] if task_names and i < len(task_names) else f"task_{i}"),
                 "kwargs": kwargs,
             }
             task_configs.append(config)
@@ -183,9 +179,7 @@ class AsyncScheduler:
             task_id = str(uuid.uuid4())
             task_ids.append(task_id)
 
-            asyncio_task = asyncio.create_task(
-                self._execute_single_task(task_id, config)
-            )
+            asyncio_task = asyncio.create_task(self._execute_single_task(task_id, config))
             asyncio_tasks.append(asyncio_task)
 
             # Track active task
@@ -227,9 +221,7 @@ class AsyncScheduler:
             for task_id in task_ids:
                 self.active_tasks.pop(task_id, None)
 
-    async def _execute_single_task(
-        self, task_id: str, config: Dict[str, Any]
-    ) -> TaskResult:
+    async def _execute_single_task(self, task_id: str, config: Dict[str, Any]) -> TaskResult:
         """Execute a single task with timeout and retry logic."""
         task = config["task"]
         timeout = config["timeout"]
@@ -307,9 +299,7 @@ class AsyncScheduler:
                     delay = self.config.retry_delay * (
                         self.config.retry_backoff_base ** (retry_count - 1)
                     )
-                    jitter = self.config.retry_jitter * (
-                        0.5 - asyncio.get_event_loop().time() % 1
-                    )
+                    jitter = self.config.retry_jitter * (0.5 - asyncio.get_event_loop().time() % 1)
                     await asyncio.sleep(delay + jitter)
                 else:
                     # Max retries exceeded
@@ -382,9 +372,7 @@ class AsyncScheduler:
 
         # Update average execution time
         self.stats.total_execution_time += execution_time
-        self.stats.average_execution_time = (
-            self.stats.total_execution_time / self.stats.total_tasks
-        )
+        self.stats.average_execution_time = self.stats.total_execution_time / self.stats.total_tasks
 
     async def get_status(self) -> Dict[str, Any]:
         """Get scheduler status."""

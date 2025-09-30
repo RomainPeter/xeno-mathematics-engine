@@ -96,13 +96,9 @@ class Oracle:
                 return OracleResult(valid=False, reason="OPA policy violation")
 
         except Exception as e:
-            return OracleResult(
-                valid=False, reason=f"OPA verification failed: {str(e)}"
-            )
+            return OracleResult(valid=False, reason=f"OPA verification failed: {str(e)}")
 
-    async def _verify_with_static_analysis(
-        self, implication: Dict[str, Any]
-    ) -> OracleResult:
+    async def _verify_with_static_analysis(self, implication: Dict[str, Any]) -> OracleResult:
         """Verify implication using static analysis."""
         try:
             # Stub implementation for static analysis
@@ -129,9 +125,7 @@ class Oracle:
         except Exception as e:
             return OracleResult(valid=False, reason=f"Static analysis failed: {str(e)}")
 
-    async def _generate_counterexample(
-        self, implication: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    async def _generate_counterexample(self, implication: Dict[str, Any]) -> Dict[str, Any]:
         """Generate counterexample for failed implication."""
         premises = implication.get("premises", [])
         conclusions = implication.get("conclusions", [])
@@ -146,9 +140,7 @@ class Oracle:
                 "Inadequate data protection measures",
             ],
             "violates_premise": any("sensitive" in str(p).lower() for p in premises),
-            "violates_conclusion": any(
-                "legal_basis" in str(c).lower() for c in conclusions
-            ),
+            "violates_conclusion": any("legal_basis" in str(c).lower() for c in conclusions),
             "explanation": "Sensitive data found without proper legal basis",
             "timestamp": "2024-01-01T00:00:00Z",
         }
@@ -165,9 +157,7 @@ class Oracle:
 
         return None
 
-    async def _run_opa_eval(
-        self, policy_file: Path, query: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    async def _run_opa_eval(self, policy_file: Path, query: Dict[str, Any]) -> Dict[str, Any]:
         """Run OPA evaluation (stub implementation)."""
         # In practice, this would run: opa eval --data policy_file --input query
         # For now, return a mock result
@@ -239,9 +229,7 @@ class MockOracle(Oracle):
                 reason="Mock verification failed",
             )
 
-    def set_verification_result(
-        self, implication: Dict[str, Any], result: OracleResult
-    ):
+    def set_verification_result(self, implication: Dict[str, Any], result: OracleResult):
         """Set verification result for specific implication."""
         impl_key = str(hash(str(implication)))
         self.verification_results[impl_key] = result

@@ -59,9 +59,7 @@ def test_cache_read_mode(tmp_path: Path):
             },
         },
     ]
-    cache_path.write_text(
-        "\n".join(json.dumps(rec) for rec in cache_data), encoding="utf-8"
-    )
+    cache_path.write_text("\n".join(json.dumps(rec) for rec in cache_data), encoding="utf-8")
 
     # Create cache in read mode
     cache = HistoricalMetricsCache(inner=None, path=cache_path, mode="read")

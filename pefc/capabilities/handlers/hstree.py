@@ -25,9 +25,7 @@ class HSTreeHandler:
     def can_handle(self, incident_type: str) -> bool:
         return incident_type in self._meta.provides
 
-    def score(
-        self, incident: Dict[str, Any], ctx: Dict[str, Any] | None = None
-    ) -> float:
+    def score(self, incident: Dict[str, Any], ctx: Dict[str, Any] | None = None) -> float:
         sev = {
             "info": 0.1,
             "low": 0.2,
@@ -40,9 +38,7 @@ class HSTreeHandler:
     def check_prerequisites(self) -> List[str]:
         return []  # stub: all available
 
-    def handle(
-        self, incident: Dict[str, Any], ctx: Dict[str, Any] | None = None
-    ) -> Dict[str, Any]:
+    def handle(self, incident: Dict[str, Any], ctx: Dict[str, Any] | None = None) -> Dict[str, Any]:
         # Use capabilities to generate PCAP
         caps_cfg = (ctx or {}).get("capabilities_cfg") or {}
         caps = build_capabilities(caps_cfg)

@@ -37,9 +37,7 @@ class Workspace:
 
     def _apply_with_patch(self, patch_text: str) -> bool:
         try:
-            with tempfile.NamedTemporaryFile(
-                mode="w", suffix=".patch", delete=False
-            ) as handle:
+            with tempfile.NamedTemporaryFile(mode="w", suffix=".patch", delete=False) as handle:
                 handle.write(patch_text)
                 temp_patch = handle.name
             subprocess.run(
@@ -117,9 +115,7 @@ class PatchManager:
             return result
 
         python_targets = [
-            line.split()[-1]
-            for line in lines
-            if line.startswith("+++") and line.endswith(".py")
+            line.split()[-1] for line in lines if line.startswith("+++") and line.endswith(".py")
         ]
         if python_targets:
             result["warnings"].append(f"Python files affected: {python_targets}")
@@ -146,12 +142,8 @@ class PatchManager:
 
     def get_patch_info(self, patch_text: str) -> Dict[str, Any]:
         lines = patch_text.splitlines()
-        added = sum(
-            1 for line in lines if line.startswith("+") and not line.startswith("+++")
-        )
-        removed = sum(
-            1 for line in lines if line.startswith("-") and not line.startswith("---")
-        )
+        added = sum(1 for line in lines if line.startswith("+") and not line.startswith("+++"))
+        removed = sum(1 for line in lines if line.startswith("-") and not line.startswith("---"))
         files = set()
         for line in lines:
             if line.startswith(("---", "+++")):

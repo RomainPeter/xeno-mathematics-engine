@@ -108,9 +108,7 @@ def test_opa_validation():
 
     # Check if OPA is available
     try:
-        result = subprocess.run(
-            ["opa", "version"], capture_output=True, text=True, timeout=5
-        )
+        result = subprocess.run(["opa", "version"], capture_output=True, text=True, timeout=5)
         if result.returncode == 0:
             print("✅ OPA is available")
             print(f"   Version: {result.stdout.strip()}")
@@ -132,9 +130,7 @@ def generate_test_report(results):
             "hs_tree_working": len(results.get("hitting_sets", [])) > 0,
             "incident_handler_working": results.get("incident_result") is not None,
             "opa_available": results.get("opa_available", False),
-            "k_updated": results.get("incident_result", {})
-            .get("updated_state", {})
-            .get("K", {}),
+            "k_updated": results.get("incident_result", {}).get("updated_state", {}).get("K", {}),
             "replanning_triggered": results.get("incident_result", {}).get(
                 "replanning_required", False
             ),
@@ -178,9 +174,7 @@ def main():
     print()
     print("🎯 Fire-drill Summary:")
     print(f"✅ HS-Tree working: {report['results']['hs_tree_working']}")
-    print(
-        f"✅ Incident handler working: {report['results']['incident_handler_working']}"
-    )
+    print(f"✅ Incident handler working: {report['results']['incident_handler_working']}")
     print(f"✅ OPA available: {report['results']['opa_available']}")
     print(f"✅ K updated: {len(report['results']['k_updated'])} rules")
     print(f"✅ Replanning triggered: {report['results']['replanning_triggered']}")

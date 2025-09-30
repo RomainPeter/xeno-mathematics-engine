@@ -29,9 +29,7 @@ class AddMissingTestsStrategy(Strategy):
         return context.failreason in [
             "coverage.missing_tests",
             "coverage.insufficient_line_coverage",
-        ] and "Verify" in [
-            step.get("operator") for step in context.plan.get("steps", [])
-        ]
+        ] and "Verify" in [step.get("operator") for step in context.plan.get("steps", [])]
 
     def create_rewrite_plan(self, context: StrategyContext) -> RewritePlan:
         """Create rewrite plan to add test step before Verify."""

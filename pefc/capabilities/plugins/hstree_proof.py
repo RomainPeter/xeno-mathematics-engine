@@ -23,9 +23,7 @@ class HSTreeProofGenerator:
     def can_handle(self, incident: Dict[str, Any]) -> bool:
         return incident.get("type") in ("traceability.gap", "security.policy.violation")
 
-    def plan(
-        self, incident: Dict[str, Any], ctx: Dict[str, Any] | None = None
-    ) -> List[ProofSpec]:
+    def plan(self, incident: Dict[str, Any], ctx: Dict[str, Any] | None = None) -> List[ProofSpec]:
         refs = incident.get("evidence_refs", [])
         steps = [
             {"op": "build_tree", "inputs": {"evidence_refs": refs}},
