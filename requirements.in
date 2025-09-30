@@ -20,7 +20,7 @@ referencing==0.36.2
 fastjsonschema==2.19.1
 
 # Pre-commit
-pre-commit==4.0.1
+pre-commit==4.3.0
 black==25.9.0
 ruff==0.13.1
 
