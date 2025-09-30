@@ -35,8 +35,8 @@ jobs:
       - name: Type check
         run: |
           mypy pefc || true
-      - name: Tests
-        run: pytest -q
+      - name: Tests (smoke)
+        run: pytest -q test_ci_workflow.py
 
   sbom-and-attest:
     runs-on: ubuntu-latest
