@@ -18,7 +18,8 @@ timeout "${DEMO_TIMEOUT}" python -u -m orchestrator.cli_lab \
   --time-budget "${TIME_BUDGET}" \
   --max-iters "${MAX_ITERS}" \
   --hermetic \
-  --audit-dir "${AUDIT_DIR}"
+  --audit-dir "${AUDIT_DIR}" \
+  --wall-timeout 90
 
 status=$?
 if [ $status -ne 0 ]; then
