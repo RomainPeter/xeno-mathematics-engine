@@ -1,0 +1,57 @@
+{
+  "blocks": [
+    {
+      "id": "lemma1",
+      "kind": "lemma",
+      "label": "Yoneda Lemma",
+      "data": {
+        "statement": "For any functor F: C^op → Set, there is a natural isomorphism Hom(Hom(-, c), F) ≅ F(c)"
+      }
+    },
+    {
+      "id": "proof1",
+      "kind": "proof",
+      "label": "Natural transformation construction",
+      "data": {
+        "method": "natural_transformation",
+        "steps": ["define_phi", "check_naturality", "verify_bijection"]
+      }
+    },
+    {
+      "id": "corollary1",
+      "kind": "corollary",
+      "label": "Representable functors",
+      "data": {
+        "consequence": "F is representable iff F ≅ Hom(-, c) for some c"
+      }
+    }
+  ],
+  "edges": [
+    {
+      "src": "lemma1",
+      "dst": "proof1",
+      "kind": "proves"
+    },
+    {
+      "src": "proof1",
+      "dst": "corollary1",
+      "kind": "implies"
+    }
+  ],
+  "cuts": [
+    {
+      "id": "main_cut",
+      "blocks": ["lemma1", "proof1", "corollary1"]
+    }
+  ],
+  "dag": {
+    "nodes": 3,
+    "edges": 2,
+    "acyclic": true
+  },
+  "meta": {
+    "theorem": "Yoneda Lemma",
+    "source": "Category Theory",
+    "tags": ["category_theory", "yoneda", "representable"]
+  }
+}
