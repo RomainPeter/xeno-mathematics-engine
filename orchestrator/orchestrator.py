@@ -98,6 +98,13 @@ class Orchestrator:
         # Set correlation IDs for structured events
         self.event_bus.set_correlation_ids(self.state.trace_id, self.state.run_id)
 
+        # Start event bus drain loop to write events to sinks
+        try:
+            await self.event_bus.start()
+        except Exception:
+            # Non-fatal: continue without background drain
+            pass
+
         # Emit start event
         self.event_bus.emit_orchestrator_event(
             "started",
@@ -170,6 +177,12 @@ class Orchestrator:
         finally:
             # Cleanup engines
             await self._cleanup_engines()
+
+            # Stop event bus (best-effort flush)
+            try:
+                await self.event_bus.stop()
+            except Exception:
+                pass
 
         return self.state
 

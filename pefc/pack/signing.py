@@ -4,11 +4,18 @@ Pack signing utilities with cosign and other providers.
 """
 from __future__ import annotations
 from pathlib import Path
+import os
 import subprocess
 from typing import Optional
 
 
-def sign_with_cosign(artifact: Path, key_ref: Optional[str] = None) -> Path:
+def sign_with_cosign(
+    artifact: Path,
+    key_ref: Optional[str] = None,
+    *,
+    cosign_path: Optional[str] = None,
+    dry_run: bool = False,
+) -> Path:
     """
     Sign an artifact using cosign.
 
@@ -26,7 +33,8 @@ def sign_with_cosign(artifact: Path, key_ref: Optional[str] = None) -> Path:
     sig_path = artifact_path.with_suffix(artifact_path.suffix + ".sig")
 
     # Build cosign command
-    cmd = ["cosign", "sign-blob"]
+    cosign_bin = cosign_path or os.environ.get("PEFC_COSIGN_PATH") or "cosign"
+    cmd = [cosign_bin, "sign-blob"]
 
     if key_ref:
         cmd.extend(["--key", key_ref])
@@ -34,6 +42,17 @@ def sign_with_cosign(artifact: Path, key_ref: Optional[str] = None) -> Path:
     cmd.append(str(artifact_path))
 
     # Execute cosign command
+    if dry_run:
+        # Simulate a signature deterministically based on file content hash
+        import hashlib
+
+        h = hashlib.sha256()
+        with open(artifact_path, "rb") as f:
+            for chunk in iter(lambda: f.read(4096), b""):
+                h.update(chunk)
+        sig_path.write_text(h.hexdigest())
+        return sig_path
+
     result = subprocess.run(cmd, capture_output=True, text=True, check=True)
 
     # Write signature to file

@@ -1,0 +1,8 @@
+{
+  "seed": 42,
+  "source_date_epoch": 1700000000,
+  "workspace": "C:\\Users\\romai\\Documents\\Gemini CLI Agent\\proof-engine-for-code",
+  "inputs": [
+    "inputs\\tmp_inputs\\b\\b.txt"
+  ]
+}

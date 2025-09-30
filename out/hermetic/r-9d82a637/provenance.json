@@ -1,0 +1,42 @@
+{
+  "_format": "in-toto-statement-lite",
+  "subject": {
+    "name": "r-9d82a637",
+    "merkle_root": "33373ac4be6f6cced93223b60c6790a8f2db3c9bcef61130acb19527b72b22a1"
+  },
+  "predicateType": "slsa-lite@v1",
+  "predicate": {
+    "builder": {
+      "name": "pefc.pack"
+    },
+    "invocation": {
+      "env": {
+        "SOURCE_DATE_EPOCH": 1700000000,
+        "PYTHONHASHSEED": "1337",
+        "TZ": "UTC"
+      },
+      "parameters": {
+        "seed": 1337,
+        "allow_outside_workspace": false
+      }
+    },
+    "materials": {
+      "requirements_lock": {
+        "path": "C:\\Users\\romai\\Documents\\Gemini CLI Agent\\proof-engine-for-code\\requirements.lock",
+        "sha256": "6f77b55ab7d58a40f98f6c9e7a649b65a3f553d2ffc477f6c71ff309117411bc"
+      }
+    },
+    "inputs": [
+      "inputs/fixtures/fca/context_4x4.json",
+      "inputs/fixtures/fca/context_5x3.json",
+      "inputs/README-usage.md",
+      "inputs/README.md",
+      "inputs/README_DEMO.md",
+      "inputs/README_DOMAIN.md",
+      "inputs/README_FCA.md",
+      "inputs/README_ORCHESTRATOR.md",
+      "inputs/README_ORCHESTRATOR_V1.md",
+      "inputs/README_PACK.md"
+    ]
+  }
+}

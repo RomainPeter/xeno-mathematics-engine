@@ -1,0 +1,15 @@
+{
+  "inputs": {
+    "files": [],
+    "globs": ["fixtures/**/*.json", "README*.md"],
+    "dirs": []
+  },
+  "allow_outside_workspace": false
+}
+
+
+
+
+
+
+

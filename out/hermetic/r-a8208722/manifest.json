@@ -1,0 +1,45 @@
+{
+  "version": "1",
+  "run_id": "r-a8208722",
+  "created_ts": 1759141907,
+  "files": [
+    {
+      "path": "incidents.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime": 1759141907.2703085,
+      "role": "incidents",
+      "created_at": 1759141907,
+      "source_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "logs.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mtime": 1759141907.2662811,
+      "role": "logs",
+      "created_at": 1759141907,
+      "source_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "provenance.json",
+      "sha256": "30e920a9d6edb81c1e1ad59bae5b418eea9a8c8a0485da4eb86f5b3ec992388d",
+      "bytes": 199,
+      "mtime": 1759141907.2662811,
+      "role": "provenance",
+      "created_at": 1759141907,
+      "source_hash": "30e920a9d6edb81c1e1ad59bae5b418eea9a8c8a0485da4eb86f5b3ec992388d"
+    },
+    {
+      "path": "inputs/tmp_inputs/b/b.txt",
+      "sha256": "a5406fc126c2bf45b47433c7b2676cce32321fd95d9c67a7dff067249abdb712",
+      "bytes": 6,
+      "mtime": 1700000000.0,
+      "role": "input",
+      "created_at": 1700000000,
+      "source_hash": "a5406fc126c2bf45b47433c7b2676cce32321fd95d9c67a7dff067249abdb712"
+    }
+  ],
+  "merkle_root": "7ce5c56421d7db81763625c5e27cfdb207ea5f1279a823196a657fc54a3d3a21",
+  "total_bytes": 205
+}

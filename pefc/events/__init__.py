@@ -1,14 +1,97 @@
-# Events package for EventBus
-from __future__ import annotations
-from typing import Optional
-from .bus import EventBus
+"""
+Event bus and structured telemetry for PEFC.
+Provides EventBus, sinks, and event types for structured telemetry.
+"""
 
-_BUS: Optional[EventBus] = None
+from .event_bus import (
+    EventBus,
+    EventBusConfig,
+    get_global_event_bus as get_event_bus,
+    set_global_event_bus,
+    publish_event,
+    publish_event_nowait,
+)
+from .structured_bus import StructuredEventBus
+from .sinks import (
+    StdoutJSONLSink,
+    FileJSONLSink,
+    MemorySink,
+    EventSink,
+    RotatingFileSink,
+)
+from .types import (
+    EventType,
+    EventLevel,
+    Event,
+    OrchestratorEvent,
+    AEEvent,
+    CEGISEvent,
+    VerifyEvent,
+    BudgetEvent,
+    IncidentEvent,
+    PCAPEvent,
+    MetricsEvent,
+    create_event,
+    create_orchestrator_start_event,
+    create_orchestrator_end_event,
+    create_ae_step_event,
+    create_ae_concept_emitted_event,
+    create_cegis_iter_start_event,
+    create_cegis_iter_end_event,
+    create_cegis_iter_refine_event,
+    create_cegis_iter_converged_event,
+    create_verify_attempt_event,
+    create_verify_result_event,
+    create_budget_overrun_event,
+    create_incident_event,
+    create_pcap_emitted_event,
+    create_metrics_snapshot_event,
+)
+from .manifest import AuditManifest, MerkleTree
+from .pcap import PCAPWriter, PCAPSchema, PCAPManager
 
-
-def get_event_bus() -> EventBus:
-    """Get singleton event bus instance."""
-    global _BUS
-    if _BUS is None:
-        _BUS = EventBus()
-    return _BUS
+__all__ = [
+    "EventBus",
+    "EventBusConfig",
+    "StructuredEventBus",
+    "get_event_bus",
+    "set_global_event_bus",
+    "publish_event",
+    "publish_event_nowait",
+    "StdoutJSONLSink",
+    "FileJSONLSink",
+    "MemorySink",
+    "EventSink",
+    "RotatingFileSink",
+    "EventType",
+    "EventLevel",
+    "Event",
+    "OrchestratorEvent",
+    "AEEvent",
+    "CEGISEvent",
+    "VerifyEvent",
+    "BudgetEvent",
+    "IncidentEvent",
+    "PCAPEvent",
+    "MetricsEvent",
+    "create_event",
+    "create_orchestrator_start_event",
+    "create_orchestrator_end_event",
+    "create_ae_step_event",
+    "create_ae_concept_emitted_event",
+    "create_cegis_iter_start_event",
+    "create_cegis_iter_end_event",
+    "create_cegis_iter_refine_event",
+    "create_cegis_iter_converged_event",
+    "create_verify_attempt_event",
+    "create_verify_result_event",
+    "create_budget_overrun_event",
+    "create_incident_event",
+    "create_pcap_emitted_event",
+    "create_metrics_snapshot_event",
+    "AuditManifest",
+    "MerkleTree",
+    "PCAPWriter",
+    "PCAPSchema",
+    "PCAPManager",
+]
