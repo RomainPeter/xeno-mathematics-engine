@@ -38,6 +38,7 @@ dependencies = [
 
 [project.scripts]
 pefc = "pefc.cli:app"
+bfk = "cli.bfk:app"
 
 [project.optional-dependencies]
 dev = [
