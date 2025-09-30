@@ -17,6 +17,7 @@ radon==6.0.1
 # Schema validation
 jsonschema==4.25.1
 referencing==0.35.1
+fastjsonschema==2.19.1
 
 # Pre-commit
 pre-commit==4.0.1
