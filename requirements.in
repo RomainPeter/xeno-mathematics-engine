@@ -19,7 +19,7 @@ jsonschema==4.25.1
 referencing==0.35.1
 
 # Pre-commit
-pre-commit==4.0.1
+pre-commit==4.3.0
 black==25.9.0
 ruff==0.13.2
 

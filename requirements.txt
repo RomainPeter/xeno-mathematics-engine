@@ -154,7 +154,7 @@ platformdirs==4.4.0
     #   virtualenv
 pluggy==1.6.0
     # via pytest
-pre-commit==4.0.1
+pre-commit==4.3.0
     # via -r requirements.in
 pycodestyle==2.14.0
     # via flake8
