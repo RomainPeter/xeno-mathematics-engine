@@ -1,4 +1,4 @@
-# Discovery Engine 2-Cat
+# xeno-mathematics-engine
 
 Badges
 - CI Hardening: ![CI Hardening](https://github.com/OWNER/REPO/actions/workflows/ci-harden.yml/badge.svg)
@@ -11,7 +11,14 @@ Badges
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-Orchestrateur 2-cat, AE/CEGIS, e-graphs, bandit/MCTS, domain adapters, benchmarks.
+Building a telescope to produce and observe alien Mathematics. Xeno-mathematics as an AI enhancement to our mathematical understanding.
+
+## Quickstart
+
+- Dev shell (Nix): `nix develop`
+- Pré-commit: `pre-commit install`
+- Lancer CLI minimale: `bfk version`
+- Vérifier vendor 2cat offline: `bfk verify-vendor`
 
 ## Ressources CI & Sécurité
 

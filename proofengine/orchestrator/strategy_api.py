@@ -82,9 +82,7 @@ class Checker(ABC):
     """Abstract base class for checking strategy application validity."""
 
     @abstractmethod
-    def check_cycle_detection(
-        self, plan: Dict[str, Any], history: List[Dict[str, Any]]
-    ) -> bool:
+    def check_cycle_detection(self, plan: Dict[str, Any], history: List[Dict[str, Any]]) -> bool:
         """Check for cycles in the plan."""
         pass
 
@@ -104,9 +102,7 @@ class Checker(ABC):
         pass
 
     @abstractmethod
-    def check_expected_outcomes(
-        self, strategy: Strategy, context: StrategyContext
-    ) -> bool:
+    def check_expected_outcomes(self, strategy: Strategy, context: StrategyContext) -> bool:
         """Check if expected outcomes are plausible."""
         pass
 

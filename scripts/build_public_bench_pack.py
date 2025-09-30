@@ -41,9 +41,7 @@ except Exception:
 class PublicBenchPackBuilder:
     """Builds public benchmark pack with all necessary components."""
 
-    def __init__(
-        self, output_dir: Optional[Path] = None, pack_name: Optional[str] = None
-    ):
+    def __init__(self, output_dir: Optional[Path] = None, pack_name: Optional[str] = None):
         self.output_dir = Path(output_dir) if output_dir else Path("artifacts")
         self.output_dir.mkdir(exist_ok=True)
         self.pack_name = pack_name or "bench_pack_v0.1.0"
@@ -297,9 +295,7 @@ This benchmark pack is released under the MIT License.
         version: str = "v0.1.0",
     ) -> bool:
         """Build the complete benchmark pack."""
-        logger.info(
-            "Building public benchmark pack", extra={"event": "pack.build.start"}
-        )
+        logger.info("Building public benchmark pack", extra={"event": "pack.build.start"})
 
         try:
             # 1) Build payload files list (exclude manifest.json and merkle.txt from Merkle calculation)
@@ -485,9 +481,7 @@ Examples:
         """,
     )
 
-    parser.add_argument(
-        "--config", help="Fichier de configuration YAML (défaut: config/pack.yaml)"
-    )
+    parser.add_argument("--config", help="Fichier de configuration YAML (défaut: config/pack.yaml)")
     parser.add_argument(
         "--allow-partial",
         action="store_true",

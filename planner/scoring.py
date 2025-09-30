@@ -18,9 +18,7 @@ class UtilityCalculator:
         self.delta_calculator = DeltaCalculator()
         self.history: List[Dict[str, Any]] = []
 
-    def estimate_psuccess(
-        self, action: ActionVariant, context: Dict[str, Any]
-    ) -> float:
+    def estimate_psuccess(self, action: ActionVariant, context: Dict[str, Any]) -> float:
         """
         Estime la probabilité de succès d'une action.
         Basé sur l'historique et les caractéristiques de l'action.
@@ -39,10 +37,7 @@ class UtilityCalculator:
 
         # Probabilité finale
         final_probability = (
-            base_probability
-            * historical_adjustment
-            * context_adjustment
-            * cost_adjustment
+            base_probability * historical_adjustment * context_adjustment * cost_adjustment
         )
 
         return max(0.0, min(1.0, final_probability))
@@ -60,23 +55,17 @@ class UtilityCalculator:
 
         # Coût final
         final_cost = VJustification(
-            time_ms=int(
-                base_cost.time_ms * historical_multiplier * complexity_multiplier
-            ),
+            time_ms=int(base_cost.time_ms * historical_multiplier * complexity_multiplier),
             retries=base_cost.retries,
             backtracks=base_cost.backtracks,
-            audit_cost=base_cost.audit_cost
-            * historical_multiplier
-            * complexity_multiplier,
+            audit_cost=base_cost.audit_cost * historical_multiplier * complexity_multiplier,
             risk=min(1.0, base_cost.risk * historical_multiplier),
             tech_debt=base_cost.tech_debt,
         )
 
         return final_cost
 
-    def calculate_utility(
-        self, action: ActionVariant, context: Dict[str, Any]
-    ) -> float:
+    def calculate_utility(self, action: ActionVariant, context: Dict[str, Any]) -> float:
         """Calcule l'utilité d'une action."""
         # Probabilité de succès
         p_success = self.estimate_psuccess(action, context)
@@ -114,9 +103,7 @@ class UtilityCalculator:
         else:
             return 0.8  # Pénalité pour les actions peu fiables
 
-    def _get_context_adjustment(
-        self, action: ActionVariant, context: Dict[str, Any]
-    ) -> float:
+    def _get_context_adjustment(self, action: ActionVariant, context: Dict[str, Any]) -> float:
         """Ajuste la probabilité basée sur le contexte."""
         adjustment = 1.0
 
@@ -154,9 +141,9 @@ class UtilityCalculator:
         if not action_records:
             return 1.0
 
-        avg_cost = sum(
-            r.get("cost", {}).get("audit_cost", 0) for r in action_records
-        ) / len(action_records)
+        avg_cost = sum(r.get("cost", {}).get("audit_cost", 0) for r in action_records) / len(
+            action_records
+        )
 
         # Multiplicateur basé sur la variance des coûts
         if avg_cost > 1.5:
@@ -175,9 +162,7 @@ class UtilityCalculator:
         else:
             return 1.0
 
-    def _calculate_reward(
-        self, action: ActionVariant, context: Dict[str, Any]
-    ) -> float:
+    def _calculate_reward(self, action: ActionVariant, context: Dict[str, Any]) -> float:
         """Calcule la récompense d'une action."""
         base_reward = 1.0
 
@@ -243,9 +228,7 @@ class UtilityCalculator:
         return {
             "insights": insights,
             "total_actions": len(self.history),
-            "success_rate": (
-                len(successful_actions) / len(self.history) if self.history else 0
-            ),
+            "success_rate": (len(successful_actions) / len(self.history) if self.history else 0),
         }
 
     def _get_timestamp(self) -> str:

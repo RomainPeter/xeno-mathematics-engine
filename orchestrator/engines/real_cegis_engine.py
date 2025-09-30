@@ -79,9 +79,7 @@ class RealCegisEngine(CegisEngine):
         self.iteration_count += 1
 
         # Use synthesis strategy to generate candidate
-        candidate_spec = await self.synthesis_strategy.generate_candidate_specification(
-            ctx
-        )
+        candidate_spec = await self.synthesis_strategy.generate_candidate_specification(ctx)
 
         # Use LLM adapter for code generation
         implementation = await self.llm_adapter.generate_implementation(
@@ -197,9 +195,7 @@ class RealCegisEngine(CegisEngine):
             self.stats = SynthesisStats(
                 total_candidates=len(self.candidates),
                 total_verifications=len(self.verdicts) + len(self.counterexamples),
-                total_refinements=len(
-                    [c for c in self.candidates if "refined" in c.id]
-                ),
+                total_refinements=len([c for c in self.candidates if "refined" in c.id]),
                 success_rate=0.0,
                 average_verification_time=0.0,
                 average_refinement_time=0.0,
@@ -208,15 +204,11 @@ class RealCegisEngine(CegisEngine):
 
         # Calculate success rate
         if self.stats.total_verifications > 0:
-            self.stats.success_rate = (
-                len(self.verdicts) / self.stats.total_verifications
-            )
+            self.stats.success_rate = len(self.verdicts) / self.stats.total_verifications
 
         # Calculate convergence rate
         if self.stats.total_candidates > 0:
-            self.stats.convergence_rate = (
-                len(self.verdicts) / self.stats.total_candidates
-            )
+            self.stats.convergence_rate = len(self.verdicts) / self.stats.total_candidates
 
         return self.stats
 

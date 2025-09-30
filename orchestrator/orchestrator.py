@@ -138,9 +138,7 @@ class Orchestrator:
                 "completed",
                 payload={
                     "metrics": self.state.metrics,
-                    "duration": (
-                        self.state.end_time - self.state.start_time
-                    ).total_seconds(),
+                    "duration": (self.state.end_time - self.state.start_time).total_seconds(),
                     "audit_pack": audit_pack,
                 },
             )
@@ -162,9 +160,7 @@ class Orchestrator:
             self.state.incidents.append(incident)
 
             # Persist incident
-            await self.incident_persistence.persist_incident(
-                self.state.run_id, incident
-            )
+            await self.incident_persistence.persist_incident(self.state.run_id, incident)
 
             self.event_bus.emit_incident(
                 "orchestrator_failure",
@@ -314,10 +310,7 @@ class Orchestrator:
                     timeout=self.config.cegis_verify_timeout,
                 )
 
-                if (
-                    isinstance(verification_result, Verdict)
-                    and verification_result.valid
-                ):
+                if isinstance(verification_result, Verdict) and verification_result.valid:
                     # Success - create result
                     result = CegisResult(
                         step_id=str(uuid.uuid4()),

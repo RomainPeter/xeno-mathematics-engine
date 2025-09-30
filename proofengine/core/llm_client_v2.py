@@ -21,38 +21,24 @@ load_dotenv()
 @dataclass
 class LLMConfig:
     model: str = field(
-        default_factory=lambda: os.getenv(
-            "OPENROUTER_MODEL", "moonshotai/kimi-k2:free"
-        ).strip()
+        default_factory=lambda: os.getenv("OPENROUTER_MODEL", "moonshotai/kimi-k2:free").strip()
     )
     base_url: str = field(
         default_factory=lambda: os.getenv(
             "OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1"
         ).strip()
     )
-    api_key: str = field(
-        default_factory=lambda: os.getenv("OPENROUTER_API_KEY", "").strip()
-    )
+    api_key: str = field(default_factory=lambda: os.getenv("OPENROUTER_API_KEY", "").strip())
     cache_dir: str = field(
-        default_factory=lambda: os.getenv(
-            "LLM_CACHE_DIR", "proofengine/out/llm_cache"
-        ).strip()
+        default_factory=lambda: os.getenv("LLM_CACHE_DIR", "proofengine/out/llm_cache").strip()
     )
     logs_dir: str = field(
-        default_factory=lambda: os.getenv(
-            "LLM_LOGS_DIR", "proofengine/out/llm_logs"
-        ).strip()
+        default_factory=lambda: os.getenv("LLM_LOGS_DIR", "proofengine/out/llm_logs").strip()
     )
-    n_consistency: int = field(
-        default_factory=lambda: int(os.getenv("LLM_N_CONSISTENCY", "3"))
-    )
-    temperature: float = field(
-        default_factory=lambda: float(os.getenv("LLM_TEMPERATURE", "0.0"))
-    )
+    n_consistency: int = field(default_factory=lambda: int(os.getenv("LLM_N_CONSISTENCY", "3")))
+    temperature: float = field(default_factory=lambda: float(os.getenv("LLM_TEMPERATURE", "0.0")))
     top_p: float = field(default_factory=lambda: float(os.getenv("LLM_TOP_P", "1.0")))
-    max_tokens: int = field(
-        default_factory=lambda: int(os.getenv("LLM_MAX_TOKENS", "800"))
-    )
+    max_tokens: int = field(default_factory=lambda: int(os.getenv("LLM_MAX_TOKENS", "800")))
 
 
 class LLMClient:
@@ -131,9 +117,7 @@ class LLMClient:
         """Sign log entry with HMAC"""
         log_secret = os.getenv("LLM_LOG_SECRET", "default-secret-change-me")
         message = f"{prompt_hash}||{response_hash}"
-        return hmac.new(
-            log_secret.encode(), message.encode(), hashlib.sha256
-        ).hexdigest()
+        return hmac.new(log_secret.encode(), message.encode(), hashlib.sha256).hexdigest()
 
     def _redact_prompt(self, prompt: str) -> str:
         """Redact sensitive information from prompt"""
@@ -148,19 +132,13 @@ class LLMClient:
         stop=stop_after_attempt(5),
         wait=wait_exponential(multiplier=0.5, min=0.5, max=4.0),
     )
-    def _call_api(
-        self, messages: List[Dict[str, str]], params: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _call_api(self, messages: List[Dict[str, str]], params: Dict[str, Any]) -> Dict[str, Any]:
         """Make API call with retry logic"""
         if not self.client:
             # Mock response for testing
             return {
                 "choices": [
-                    {
-                        "message": {
-                            "content": '{"plan": ["mock_step"], "est_success": 0.8}'
-                        }
-                    }
+                    {"message": {"content": '{"plan": ["mock_step"], "est_success": 0.8}'}}
                 ],
                 "usage": {
                     "total_tokens": 100,
@@ -181,8 +159,7 @@ class LLMClient:
 
         return {
             "choices": [
-                {"message": {"content": choice.message.content}}
-                for choice in response.choices
+                {"message": {"content": choice.message.content}} for choice in response.choices
             ],
             "usage": response.usage.model_dump() if response.usage else {},
         }
@@ -277,9 +254,7 @@ class LLMClient:
         resp_hash = hashlib.sha256(resp_str.encode()).hexdigest()
 
         usage = best_response.get("usage", {})
-        self._log_request(
-            prompt_hash, resp_hash, self._redact_prompt(prompt_str), usage
-        )
+        self._log_request(prompt_hash, resp_hash, self._redact_prompt(prompt_str), usage)
 
         return best_response, {
             "cache_hit": False,
@@ -295,9 +270,7 @@ class LLMClient:
 
         start_time = time.time()
         try:
-            response = self._call_api(
-                [{"role": "user", "content": "ping"}], {"max_tokens": 10}
-            )
+            response = self._call_api([{"role": "user", "content": "ping"}], {"max_tokens": 10})
             latency_ms = int((time.time() - start_time) * 1000)
 
             return {

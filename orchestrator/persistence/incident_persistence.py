@@ -89,16 +89,12 @@ class IncidentPersistence:
 
         return sorted(incidents, key=lambda x: x["timestamp"])
 
-    async def load_incidents_by_severity(
-        self, run_id: str, severity: str
-    ) -> List[Dict[str, Any]]:
+    async def load_incidents_by_severity(self, run_id: str, severity: str) -> List[Dict[str, Any]]:
         """Load incidents by severity level."""
         all_incidents = await self.load_incidents(run_id)
         return [inc for inc in all_incidents if inc["severity"] == severity]
 
-    async def load_incidents_by_type(
-        self, run_id: str, incident_type: str
-    ) -> List[Dict[str, Any]]:
+    async def load_incidents_by_type(self, run_id: str, incident_type: str) -> List[Dict[str, Any]]:
         """Load incidents by type."""
         all_incidents = await self.load_incidents(run_id)
         return [inc for inc in all_incidents if inc["type"] == incident_type]

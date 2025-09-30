@@ -35,8 +35,6 @@ class RiskScorer(Protocol):
 class IDSStrategy(Protocol):
     """Protocol for IDS (Information-Directed Sampling) strategies."""
 
-    def select(
-        self, arms: Sequence[ArmStats], context: Mapping[str, Any] | None = None
-    ) -> str:
+    def select(self, arms: Sequence[ArmStats], context: Mapping[str, Any] | None = None) -> str:
         """Select an arm based on the strategy."""
         ...

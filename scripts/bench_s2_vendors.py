@@ -164,20 +164,14 @@ class S2VendorsBenchmark:
         print(f"  Avg Time: {metrics['active_mode']['avg_time_ms']:.1f}ms")
 
         print("\nImprovement:")
-        print(
-            f"  Success Rate Delta: {metrics['improvement']['success_rate_delta']:+.1f} pts"
-        )
-        print(
-            f"  Time Overhead: {metrics['improvement']['time_overhead_percent']:+.1f}%"
-        )
+        print(f"  Success Rate Delta: {metrics['improvement']['success_rate_delta']:+.1f} pts")
+        print(f"  Time Overhead: {metrics['improvement']['time_overhead_percent']:+.1f}%")
 
         print("\nCriteria:")
         print(
             f"  Success Rate Improvement ≥ +10 pts: {'✓' if metrics['criteria']['success_rate_improvement_ok'] else '✗'}"
         )
-        print(
-            f"  Time Overhead ≤ +15%: {'✓' if metrics['criteria']['time_overhead_ok'] else '✗'}"
-        )
+        print(f"  Time Overhead ≤ +15%: {'✓' if metrics['criteria']['time_overhead_ok'] else '✗'}")
         print(f"  Overall Pass: {'✓' if metrics['criteria']['overall_pass'] else '✗'}")
 
         print("\n" + "=" * 60)

@@ -65,9 +65,7 @@ class StrategySelector:
         """Select best strategy using LLM with auto-consistency."""
 
         # Filter strategies by whitelist
-        applicable_strategies = self._filter_by_whitelist(
-            available_strategies, context.failreason
-        )
+        applicable_strategies = self._filter_by_whitelist(available_strategies, context.failreason)
 
         if not applicable_strategies:
             return self._fallback_selection(context, available_strategies)
@@ -90,9 +88,7 @@ class StrategySelector:
             selection = self._parse_llm_response(response.content)
 
             # Apply multi-criteria scoring
-            scored_selection = self._apply_scoring(
-                selection, context, applicable_strategies
-            )
+            scored_selection = self._apply_scoring(selection, context, applicable_strategies)
 
             return scored_selection
 
@@ -100,16 +96,12 @@ class StrategySelector:
             self.logger.error(f"LLM selection failed: {e}")
             return self._fallback_selection(context, applicable_strategies)
 
-    def _filter_by_whitelist(
-        self, strategies: List[Strategy], failreason: str
-    ) -> List[Strategy]:
+    def _filter_by_whitelist(self, strategies: List[Strategy], failreason: str) -> List[Strategy]:
         """Filter strategies by FailReason whitelist."""
         allowed_ids = self.strategy_whitelist.get(failreason, [])
         return [s for s in strategies if s.id in allowed_ids]
 
-    def _create_selection_prompt(
-        self, context: StrategyContext, strategies: List[Strategy]
-    ) -> str:
+    def _create_selection_prompt(self, context: StrategyContext, strategies: List[Strategy]) -> str:
         """Create prompt for LLM strategy selection."""
 
         strategies_info = []
@@ -121,12 +113,8 @@ class StrategySelector:
                     "expected_outcomes": getattr(strategy, "expected_outcomes", []),
                     "guards": {
                         "max_depth": getattr(strategy.guards, "max_depth", 2),
-                        "max_rewrites_per_fr": getattr(
-                            strategy.guards, "max_rewrites_per_fr", 1
-                        ),
-                        "stop_if_plan_grows": getattr(
-                            strategy.guards, "stop_if_plan_grows", False
-                        ),
+                        "max_rewrites_per_fr": getattr(strategy.guards, "max_rewrites_per_fr", 1),
+                        "stop_if_plan_grows": getattr(strategy.guards, "stop_if_plan_grows", False),
                         "max_plan_size_increase": getattr(
                             strategy.guards, "max_plan_size_increase", 2
                         ),
@@ -216,17 +204,14 @@ Be deterministic and explainable. Focus on practical applicability.
         # Find the actual strategy object
         strategy = next((s for s in strategies if s.id == strategy_id), None)
         if not strategy:
-            raise ValueError(
-                f"Selected strategy {strategy_id} not found in available strategies"
-            )
+            raise ValueError(f"Selected strategy {strategy_id} not found in available strategies")
 
         # Calculate scores
         scores = self._calculate_scores(selected, strategy, context)
 
         # Weighted final score
         final_score = sum(
-            scores.get(criteria, 0) * weight
-            for criteria, weight in self.scoring_weights.items()
+            scores.get(criteria, 0) * weight for criteria, weight in self.scoring_weights.items()
         )
 
         return SelectionResult(
@@ -254,9 +239,7 @@ Be deterministic and explainable. Focus on practical applicability.
         scores = {}
 
         # Validity score (JSON structure compliance)
-        scores["validity"] = (
-            1.0 if selected.get("id") and selected.get("score") else 0.0
-        )
+        scores["validity"] = 1.0 if selected.get("id") and selected.get("score") else 0.0
 
         # Cost efficiency (predicted cost vs expected gain)
         expected_gain = selected.get("expected_gain", 0.5)
@@ -278,9 +261,7 @@ Be deterministic and explainable. Focus on practical applicability.
 
         return scores
 
-    def _estimate_strategy_cost(
-        self, strategy: Strategy, context: StrategyContext
-    ) -> float:
+    def _estimate_strategy_cost(self, strategy: Strategy, context: StrategyContext) -> float:
         """Estimate cost of applying strategy."""
         # Simple heuristic based on strategy complexity
         base_cost = 1.0
@@ -289,10 +270,7 @@ Be deterministic and explainable. Focus on practical applicability.
         if hasattr(strategy.guards, "max_depth"):
             base_cost += strategy.guards.max_depth * 0.1
 
-        if (
-            hasattr(strategy.guards, "stop_if_plan_grows")
-            and strategy.guards.stop_if_plan_grows
-        ):
+        if hasattr(strategy.guards, "stop_if_plan_grows") and strategy.guards.stop_if_plan_grows:
             base_cost += 0.2
 
         return base_cost

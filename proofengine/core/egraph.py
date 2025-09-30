@@ -107,9 +107,7 @@ class EGraph:
         else:
             # Create new equivalence class
             node.canonical_id = node.id
-            self.classes[node.id] = EClass(
-                canonical_id=node.id, members={node.id}, properties={}
-            )
+            self.classes[node.id] = EClass(canonical_id=node.id, members={node.id}, properties={})
 
         return node.canonical_id
 
@@ -135,9 +133,8 @@ class EGraph:
                 if rule.guard(node, context):
                     # Look for equivalent nodes
                     for existing_id, existing_node in self.nodes.items():
-                        if (
-                            existing_node.operator == node.operator
-                            and self._nodes_equivalent(node, existing_node, rule)
+                        if existing_node.operator == node.operator and self._nodes_equivalent(
+                            node, existing_node, rule
                         ):
                             return existing_node.canonical_id
         return None

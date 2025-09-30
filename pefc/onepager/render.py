@@ -55,9 +55,7 @@ def _fmt_metrics(summary: Optional[dict], reason: Optional[str]) -> str:
     lines = []
 
     if o:
-        lines.append(
-            f"- Overall: n_runs={o.get('n_runs', 0)}, weight_sum={o.get('weight_sum', 0)}"
-        )
+        lines.append(f"- Overall: n_runs={o.get('n_runs', 0)}, weight_sum={o.get('weight_sum', 0)}")
         if "metrics" in o and isinstance(o["metrics"], dict):
             for k, v in o["metrics"].items():
                 lines.append(f"  - {k}: {v:.6f}")
@@ -82,9 +80,7 @@ def _fmt_sbom(sbom: Optional[dict], reason: Optional[str]) -> str:
 
 def render_markdown(data: OnePagerData, template_text: Optional[str] = None) -> str:
     """Render one-pager markdown from data and template."""
-    merkle_line = (
-        data.merkle_root if data.merkle_root else f"Unavailable: {data.merkle_reason}"
-    )
+    merkle_line = data.merkle_root if data.merkle_root else f"Unavailable: {data.merkle_reason}"
     metrics_block = _fmt_metrics(data.summary, data.summary_reason)
     sbom_block = _fmt_sbom(data.sbom, data.sbom_reason)
     templ = template_text or DEFAULT_TEMPLATE

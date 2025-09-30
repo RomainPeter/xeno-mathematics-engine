@@ -35,9 +35,7 @@ class HSTreeMinimalTests:
         self.constraint_violations.append(violation)
 
         # Extract key information
-        violation_id = violation.get(
-            "id", f"violation_{len(self.constraint_violations)}"
-        )
+        violation_id = violation.get("id", f"violation_{len(self.constraint_violations)}")
         constraint_type = violation.get("constraint_type", "unknown")
         context = violation.get("context", {})
 
@@ -49,18 +47,14 @@ class HSTreeMinimalTests:
             "severity": violation.get("severity", "medium"),
         }
 
-    def generate_minimal_tests(
-        self, constraint_breach: Dict[str, Any]
-    ) -> List[TestCase]:
+    def generate_minimal_tests(self, constraint_breach: Dict[str, Any]) -> List[TestCase]:
         """Generate minimal test cases for a constraint breach."""
         print(
             f"🔍 Generating minimal tests for constraint breach: {constraint_breach.get('id', 'unknown')}"
         )
 
         # Extract breach information
-        breach_id = constraint_breach.get(
-            "id", f"breach_{len(self.constraint_violations)}"
-        )
+        breach_id = constraint_breach.get("id", f"breach_{len(self.constraint_violations)}")
         constraint_type = constraint_breach.get("constraint_type", "unknown")
         context = constraint_breach.get("context", {})
 
@@ -84,9 +78,7 @@ class HSTreeMinimalTests:
         print(f"✅ Generated {len(test_cases)} minimal test cases")
         return test_cases
 
-    def _generate_semver_tests(
-        self, breach_id: str, context: Dict[str, Any]
-    ) -> List[TestCase]:
+    def _generate_semver_tests(self, breach_id: str, context: Dict[str, Any]) -> List[TestCase]:
         """Generate minimal tests for semver violations."""
         tests = []
 
@@ -125,9 +117,7 @@ class HSTreeMinimalTests:
 
         return tests
 
-    def _generate_license_tests(
-        self, breach_id: str, context: Dict[str, Any]
-    ) -> List[TestCase]:
+    def _generate_license_tests(self, breach_id: str, context: Dict[str, Any]) -> List[TestCase]:
         """Generate minimal tests for license violations."""
         tests = []
 
@@ -150,9 +140,7 @@ class HSTreeMinimalTests:
 
         return tests
 
-    def _generate_security_tests(
-        self, breach_id: str, context: Dict[str, Any]
-    ) -> List[TestCase]:
+    def _generate_security_tests(self, breach_id: str, context: Dict[str, Any]) -> List[TestCase]:
         """Generate minimal tests for security violations."""
         tests = []
 
@@ -174,9 +162,7 @@ class HSTreeMinimalTests:
 
         return tests
 
-    def _generate_pii_tests(
-        self, breach_id: str, context: Dict[str, Any]
-    ) -> List[TestCase]:
+    def _generate_pii_tests(self, breach_id: str, context: Dict[str, Any]) -> List[TestCase]:
         """Generate minimal tests for PII violations."""
         tests = []
 
@@ -198,9 +184,7 @@ class HSTreeMinimalTests:
 
         return tests
 
-    def _generate_generic_tests(
-        self, breach_id: str, context: Dict[str, Any]
-    ) -> List[TestCase]:
+    def _generate_generic_tests(self, breach_id: str, context: Dict[str, Any]) -> List[TestCase]:
         """Generate generic minimal tests."""
         tests = []
 

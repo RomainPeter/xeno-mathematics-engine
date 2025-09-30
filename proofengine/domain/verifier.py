@@ -106,9 +106,7 @@ class StaticAnalyzer:
 
         return violations
 
-    def _check_naming_conventions(
-        self, code: str, file_path: str
-    ) -> List[Counterexample]:
+    def _check_naming_conventions(self, code: str, file_path: str) -> List[Counterexample]:
         """Check naming conventions."""
         violations = []
 
@@ -352,9 +350,7 @@ class TestRunner:
             "total_tests": total_tests,
             "successful_tests": successful_tests,
             "success_rate": success_rate,
-            "average_execution_time": sum(
-                r["execution_time"] for r in self.test_results
-            )
+            "average_execution_time": sum(r["execution_time"] for r in self.test_results)
             / total_tests,
         }
 
@@ -375,14 +371,10 @@ class ComplianceVerifier:
 
         try:
             # Static analysis
-            violations = self.static_analyzer.analyze(
-                context.candidate.patch, context.file_path
-            )
+            violations = self.static_analyzer.analyze(context.candidate.patch, context.file_path)
 
             # Generate and run unit test
-            test_code = self.test_generator.generate_test(
-                context.candidate, context.rule_id
-            )
+            test_code = self.test_generator.generate_test(context.candidate, context.rule_id)
 
             test_result = self.test_runner.run_test(test_code)
 
@@ -414,9 +406,7 @@ class ComplianceVerifier:
                             rule_id=context.rule_id,
                             status=ComplianceStatus.VIOLATION,
                             evidence=(
-                                "Static analysis failed"
-                                if violations
-                                else "Unit test failed"
+                                "Static analysis failed" if violations else "Unit test failed"
                             ),
                             confidence=0.8,
                         )

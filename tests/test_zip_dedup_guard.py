@@ -177,9 +177,7 @@ class TestZipDedupGuard:
         # Create pipeline context with path separator duplicates
         ctx = PipelineContext()
         ctx.add_file("path/file.txt", file1)
-        ctx.add_file(
-            "path\\file.txt", file2
-        )  # Different path separator, should be allowed
+        ctx.add_file("path\\file.txt", file2)  # Different path separator, should be allowed
 
         # Create PackZip step
         step = PackZip({"out": str(temp_workspace / "test.zip")})
@@ -494,9 +492,7 @@ class TestZipDedupGuard:
         step = PackZip({"out": str(temp_workspace / "test.zip")})
 
         # Run step - should raise error
-        with pytest.raises(
-            PackBuildError, match=f"duplicate arcname: {very_long_name}"
-        ):
+        with pytest.raises(PackBuildError, match=f"duplicate arcname: {very_long_name}"):
             step.run(ctx)
 
     def test_pack_zip_with_duplicates_very_long_paths(self, temp_workspace: Path):
@@ -518,7 +514,5 @@ class TestZipDedupGuard:
         step = PackZip({"out": str(temp_workspace / "test.zip")})
 
         # Run step - should raise error
-        with pytest.raises(
-            PackBuildError, match=f"duplicate arcname: {very_long_path}"
-        ):
+        with pytest.raises(PackBuildError, match=f"duplicate arcname: {very_long_path}"):
             step.run(ctx)

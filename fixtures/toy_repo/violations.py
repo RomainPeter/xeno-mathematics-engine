@@ -17,9 +17,7 @@ def old_function():
 def legacy_method():
     """This method uses legacy APIs."""
     # Violation: deprecated API
-    api_call = (
-        "deprecated_api_call()"  # This would be deprecated_api_call() in real code
-    )
+    api_call = "deprecated_api_call()"  # This would be deprecated_api_call() in real code
     return api_call
 
 

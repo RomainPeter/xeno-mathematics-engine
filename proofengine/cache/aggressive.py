@@ -69,9 +69,7 @@ class AggressiveCache:
             self._stats["misses"] += 1
             return None
 
-    def set(
-        self, prefix: str, data: Any, value: Any, ttl: Optional[float] = None
-    ) -> None:
+    def set(self, prefix: str, data: Any, value: Any, ttl: Optional[float] = None) -> None:
         """Set value in cache."""
         key = self._make_key(prefix, data)
         ttl = ttl or self.default_ttl
@@ -81,9 +79,7 @@ class AggressiveCache:
             if len(self._cache) >= self.max_size:
                 self._evict_lru()
 
-            self._cache[key] = CacheEntry(
-                value=value, timestamp=time.time(), ttl_seconds=ttl
-            )
+            self._cache[key] = CacheEntry(value=value, timestamp=time.time(), ttl_seconds=ttl)
 
     def _evict_lru(self) -> None:
         """Evict least recently used entry."""
@@ -104,11 +100,7 @@ class AggressiveCache:
         """Get cache statistics."""
         with self._lock:
             total_requests = self._stats["hits"] + self._stats["misses"]
-            hit_rate = (
-                (self._stats["hits"] / total_requests * 100)
-                if total_requests > 0
-                else 0
-            )
+            hit_rate = (self._stats["hits"] / total_requests * 100) if total_requests > 0 else 0
 
             return {
                 "size": len(self._cache),
@@ -133,9 +125,7 @@ class CacheManager:
         self.llm_cache = AggressiveCache(max_size=1000, default_ttl=3600.0)  # 1 hour
         self.metrics_cache = AggressiveCache(max_size=100, default_ttl=600.0)  # 10 min
 
-    def get_opa_result(
-        self, policy: str, input_data: Dict[str, Any]
-    ) -> Optional[Dict[str, Any]]:
+    def get_opa_result(self, policy: str, input_data: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Get OPA result from cache."""
         return self.opa_cache.get("opa", {"policy": policy, "input": input_data})
 
@@ -149,9 +139,7 @@ class CacheManager:
         """Get SBOM result from cache."""
         return self.sbom_cache.get("sbom", {"package": package, "version": version})
 
-    def set_sbom_result(
-        self, package: str, version: str, result: Dict[str, Any]
-    ) -> None:
+    def set_sbom_result(self, package: str, version: str, result: Dict[str, Any]) -> None:
         """Set SBOM result in cache."""
         self.sbom_cache.set("sbom", {"package": package, "version": version}, result)
 
@@ -159,17 +147,13 @@ class CacheManager:
         self, prompt: str, model: str, temperature: float
     ) -> Optional[Dict[str, Any]]:
         """Get LLM result from cache."""
-        return self.llm_cache.get(
-            "llm", {"prompt": prompt, "model": model, "temp": temperature}
-        )
+        return self.llm_cache.get("llm", {"prompt": prompt, "model": model, "temp": temperature})
 
     def set_llm_result(
         self, prompt: str, model: str, temperature: float, result: Dict[str, Any]
     ) -> None:
         """Set LLM result in cache."""
-        self.llm_cache.set(
-            "llm", {"prompt": prompt, "model": model, "temp": temperature}, result
-        )
+        self.llm_cache.set("llm", {"prompt": prompt, "model": model, "temp": temperature}, result)
 
     def get_metrics(self, case_id: str, mode: str) -> Optional[Dict[str, Any]]:
         """Get metrics from cache."""

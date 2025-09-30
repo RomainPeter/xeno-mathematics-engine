@@ -107,9 +107,7 @@ class BenchAPIClient:
 class HistoricalMetricsCache:
     """Cache for historical metrics data."""
 
-    def __init__(
-        self, inner: MetricsProvider | None, path: Path, mode: str = "rw"
-    ) -> None:
+    def __init__(self, inner: MetricsProvider | None, path: Path, mode: str = "rw") -> None:
         self.inner = inner
         self.path = path
         self.mode = mode
@@ -127,10 +125,7 @@ class HistoricalMetricsCache:
             with self.path.open("w", encoding="utf-8") as f:
                 for source_id, obj in self.inner.iter_docs():
                     f.write(
-                        json.dumps(
-                            {"source_id": source_id, "obj": obj}, ensure_ascii=False
-                        )
-                        + "\n"
+                        json.dumps({"source_id": source_id, "obj": obj}, ensure_ascii=False) + "\n"
                     )
                     yield source_id, obj
             return

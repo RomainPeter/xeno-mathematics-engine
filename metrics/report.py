@@ -69,27 +69,19 @@ class ReportGenerator:
             exec_analysis = perf.get("execution_analysis", {})
             md.append("### Temps d'Exécution")
             md.append("")
-            md.append(
-                f"- **Temps total:** {exec_analysis.get('total_execution_time_ms', 0)}ms"
-            )
+            md.append(f"- **Temps total:** {exec_analysis.get('total_execution_time_ms', 0)}ms")
             md.append(
                 f"- **Temps moyen:** {exec_analysis.get('average_execution_time_ms', 0):.2f}ms"
             )
-            md.append(
-                f"- **Temps LLM total:** {exec_analysis.get('total_llm_time_ms', 0)}ms"
-            )
-            md.append(
-                f"- **Temps LLM moyen:** {exec_analysis.get('average_llm_time_ms', 0):.2f}ms"
-            )
+            md.append(f"- **Temps LLM total:** {exec_analysis.get('total_llm_time_ms', 0)}ms")
+            md.append(f"- **Temps LLM moyen:** {exec_analysis.get('average_llm_time_ms', 0):.2f}ms")
             md.append("")
 
             efficiency = perf.get("efficiency_metrics", {})
             md.append("### Métriques d'Efficacité")
             md.append("")
             md.append(f"- **Total retries:** {efficiency.get('total_retries', 0)}")
-            md.append(
-                f"- **Coût d'audit total:** {efficiency.get('total_audit_cost_ms', 0)}ms"
-            )
+            md.append(f"- **Coût d'audit total:** {efficiency.get('total_audit_cost_ms', 0)}ms")
             md.append(
                 f"- **Retries moyens par PCAP:** {efficiency.get('average_retries_per_pcap', 0):.2f}"
             )
@@ -104,9 +96,7 @@ class ReportGenerator:
             obligation_analysis = quality.get("obligation_analysis", {})
             md.append("### Analyse des Obligations")
             md.append("")
-            md.append(
-                f"- **Total obligations:** {obligation_analysis.get('total_obligations', 0)}"
-            )
+            md.append(f"- **Total obligations:** {obligation_analysis.get('total_obligations', 0)}")
             md.append(
                 f"- **Violations d'obligations:** {obligation_analysis.get('obligation_violations', 0)}"
             )
@@ -132,9 +122,7 @@ class ReportGenerator:
             delta_analysis = delta.get("delta_analysis", {})
             md.append("### Analyse de l'Écart")
             md.append("")
-            md.append(
-                f"- **Delta moyen:** {delta_analysis.get('average_delta', 0):.3f}"
-            )
+            md.append(f"- **Delta moyen:** {delta_analysis.get('average_delta', 0):.3f}")
             md.append(f"- **Delta maximum:** {delta_analysis.get('max_delta', 0):.3f}")
             md.append(f"- **Delta minimum:** {delta_analysis.get('min_delta', 0):.3f}")
             md.append(f"- **Nombre de deltas:** {delta_analysis.get('delta_count', 0)}")
@@ -152,19 +140,13 @@ class ReportGenerator:
         elif success_rate > 0.8:
             md.append("- ✅ **Taux de succès élevé:** Le système fonctionne bien")
 
-        avg_time = perf.get("execution_analysis", {}).get(
-            "average_execution_time_ms", 0
-        )
+        avg_time = perf.get("execution_analysis", {}).get("average_execution_time_ms", 0)
         if avg_time > 10000:
             md.append("- ⚠️ **Temps d'exécution élevé:** Optimiser les performances")
 
-        compliance_rate = quality.get("obligation_analysis", {}).get(
-            "compliance_rate", 0
-        )
+        compliance_rate = quality.get("obligation_analysis", {}).get("compliance_rate", 0)
         if compliance_rate < 0.7:
-            md.append(
-                "- ⚠️ **Conformité faible:** Améliorer la satisfaction des obligations"
-            )
+            md.append("- ⚠️ **Conformité faible:** Améliorer la satisfaction des obligations")
 
         md.append("")
         md.append("---")
@@ -215,9 +197,7 @@ class ReportGenerator:
 
         return filepath
 
-    def generate_comparison_report(
-        self, metrics1: Dict[str, Any], metrics2: Dict[str, Any]
-    ) -> str:
+    def generate_comparison_report(self, metrics1: Dict[str, Any], metrics2: Dict[str, Any]) -> str:
         """
         Génère un rapport de comparaison entre deux ensembles de métriques.
 
@@ -272,9 +252,7 @@ class ReportGenerator:
 
             llm1 = exec1.get("average_llm_time_ms", 0)
             llm2 = exec2.get("average_llm_time_ms", 0)
-            md.append(
-                f"**Temps LLM moyen:** {llm1:.2f}ms → {llm2:.2f}ms ({llm2 - llm1:+.2f}ms)"
-            )
+            md.append(f"**Temps LLM moyen:** {llm1:.2f}ms → {llm2:.2f}ms ({llm2 - llm1:+.2f}ms)")
 
             md.append("")
 
@@ -283,18 +261,14 @@ class ReportGenerator:
         md.append("")
 
         if success2 > success1:
-            md.append(
-                "- ✅ **Amélioration du taux de succès:** Continuer dans cette direction"
-            )
+            md.append("- ✅ **Amélioration du taux de succès:** Continuer dans cette direction")
         elif success2 < success1:
             md.append("- ⚠️ **Dégradation du taux de succès:** Analyser les causes")
 
         if time2 < time1:
             md.append("- ✅ **Amélioration des performances:** Optimisations efficaces")
         elif time2 > time1:
-            md.append(
-                "- ⚠️ **Dégradation des performances:** Identifier les goulots d'étranglement"
-            )
+            md.append("- ⚠️ **Dégradation des performances:** Identifier les goulots d'étranglement")
 
         md.append("")
         md.append("---")

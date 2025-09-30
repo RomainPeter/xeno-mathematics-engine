@@ -48,9 +48,7 @@ class PromptContractManager:
         contract_id = f"contract_{len(self.contracts) + 1}_{int(time.time())}"
 
         # Generate prompt content
-        prompt_content = self._generate_prompt_content(
-            goal, k, diversity_keys, hard_constraints
-        )
+        prompt_content = self._generate_prompt_content(goal, k, diversity_keys, hard_constraints)
 
         # Calculate prompt hash
         prompt_hash = self._calculate_prompt_hash(prompt_content)
@@ -113,9 +111,7 @@ Please provide structured output with the following fields:
         }
         return seed
 
-    def validate_output(
-        self, contract_id: str, output: Dict[str, Any]
-    ) -> Tuple[bool, List[str]]:
+    def validate_output(self, contract_id: str, output: Dict[str, Any]) -> Tuple[bool, List[str]]:
         """Validate output against contract."""
         if contract_id not in self.contracts:
             return False, ["Contract not found"]
@@ -150,9 +146,7 @@ Please provide structured output with the following fields:
             "valid": is_valid,
             "errors": errors,
             "timestamp": datetime.now().isoformat(),
-            "output_hash": self._calculate_prompt_hash(
-                json.dumps(output, sort_keys=True)
-            ),
+            "output_hash": self._calculate_prompt_hash(json.dumps(output, sort_keys=True)),
         }
 
         return is_valid, errors
@@ -185,9 +179,7 @@ Please provide structured output with the following fields:
             "total_validations": total_validations,
             "valid_count": valid_count,
             "invalid_count": total_validations - valid_count,
-            "validation_rate": (
-                valid_count / total_validations if total_validations > 0 else 0
-            ),
+            "validation_rate": (valid_count / total_validations if total_validations > 0 else 0),
             "seed_registry_size": len(self.seed_registry),
         }
 

@@ -161,9 +161,7 @@ def create_audit_pack(pcap_files, out_dir):
         "ts": datetime.utcnow().isoformat() + "Z",
         "pcap_count": len(pcap_files),
         "attestations": attestations,
-        "digest": hashlib.sha256(
-            json.dumps(attestations, sort_keys=True).encode()
-        ).hexdigest(),
+        "digest": hashlib.sha256(json.dumps(attestations, sort_keys=True).encode()).hexdigest(),
     }
 
     attestation_file = audit_pack_dir / "attestation.json"
@@ -183,8 +181,7 @@ def create_audit_pack(pcap_files, out_dir):
         "ts": datetime.utcnow().isoformat() + "Z",
         "image_digest": os.getenv("DOCKER_IMAGE_DIGEST", "unknown"),
         "pcap_hashes": [
-            hashlib.sha256(pcap_file.read_bytes()).hexdigest()
-            for pcap_file in pcap_files
+            hashlib.sha256(pcap_file.read_bytes()).hexdigest() for pcap_file in pcap_files
         ],
         "audit_pack_hash": hashlib.sha256(audit_pack_zip.read_bytes()).hexdigest(),
     }
@@ -206,9 +203,7 @@ def sign_audit_pack(audit_pack_zip, cosign_key=None):
         # Create fallback signature
         signature_file = audit_pack_zip.with_suffix(".sig")
         with open(signature_file, "w") as f:
-            f.write(
-                f"fallback:{hashlib.sha256(audit_pack_zip.read_bytes()).hexdigest()}"
-            )
+            f.write(f"fallback:{hashlib.sha256(audit_pack_zip.read_bytes()).hexdigest()}")
         return signature_file
 
     try:
@@ -241,9 +236,7 @@ def main():
     parser.add_argument(
         "--runner", choices=["local", "docker"], default="local", help="Runner mode"
     )
-    parser.add_argument(
-        "--out", help="Output directory", default="artifacts/verifier_out"
-    )
+    parser.add_argument("--out", help="Output directory", default="artifacts/verifier_out")
     parser.add_argument("--timeout", type=int, default=300, help="Timeout in seconds")
     parser.add_argument("--sign", action="store_true", help="Sign audit pack")
     parser.add_argument("--cosign-key", help="Cosign private key file")
@@ -276,9 +269,7 @@ def main():
 
     else:
         print("🏠 Using local runner...")
-        audit_pack_zip, attestation_file, provenance_file = create_audit_pack(
-            pcap_files, out_dir
-        )
+        audit_pack_zip, attestation_file, provenance_file = create_audit_pack(pcap_files, out_dir)
 
         print(f"✅ Audit pack created: {audit_pack_zip}")
         print(f"✅ Attestation: {attestation_file}")

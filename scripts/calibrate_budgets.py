@@ -41,9 +41,7 @@ class BudgetCalibrator:
 
         return all_metrics
 
-    def extract_timing_metrics(
-        self, metrics: List[Dict[str, Any]]
-    ) -> Dict[str, List[float]]:
+    def extract_timing_metrics(self, metrics: List[Dict[str, Any]]) -> Dict[str, List[float]]:
         """Extract timing metrics from historical data."""
         timing_data = {
             "verify_ms": [],
@@ -83,9 +81,7 @@ class BudgetCalibrator:
 
         return timing_data
 
-    def calculate_p95_budgets(
-        self, timing_data: Dict[str, List[float]]
-    ) -> Dict[str, float]:
+    def calculate_p95_budgets(self, timing_data: Dict[str, List[float]]) -> Dict[str, float]:
         """Calculate p95 budgets for each operation."""
         budgets = {}
 
@@ -95,9 +91,7 @@ class BudgetCalibrator:
                 sorted_times = sorted(times)
                 p95_index = int(0.95 * len(sorted_times))
                 p95_value = (
-                    sorted_times[p95_index]
-                    if p95_index < len(sorted_times)
-                    else sorted_times[-1]
+                    sorted_times[p95_index] if p95_index < len(sorted_times) else sorted_times[-1]
                 )
 
                 # Add 20% safety margin

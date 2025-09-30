@@ -72,9 +72,7 @@ class IncidentHandler:
             },
         }
 
-    def handle_incident(
-        self, incident: Dict[str, Any], state: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def handle_incident(self, incident: Dict[str, Any], state: Dict[str, Any]) -> Dict[str, Any]:
         """Handle an incident and generate appropriate rules."""
         print(f"🔧 Handling incident: {incident.get('type', 'unknown')}")
 
@@ -203,9 +201,7 @@ class IncidentHandler:
         self, incident: Dict[str, Any], state: Dict[str, Any]
     ) -> Dict[str, Any]:
         """Handle low coverage incident."""
-        print(
-            "🔧 Handling LowCoverage: Adding target to K and prioritizing Meet/Generalize"
-        )
+        print("🔧 Handling LowCoverage: Adding target to K and prioritizing Meet/Generalize")
 
         # Add target to K
         target = {
@@ -353,9 +349,7 @@ class IncidentHandler:
             "description": f"Increased timeout to {new_timeout}ms and quarantined seeds",
         }
 
-    def _handle_flaky(
-        self, incident: Dict[str, Any], state: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _handle_flaky(self, incident: Dict[str, Any], state: Dict[str, Any]) -> Dict[str, Any]:
         """Handle flaky behavior incident."""
         print("🔧 Handling Flaky: Quarantining seeds and increasing robustness")
 
@@ -383,9 +377,7 @@ class IncidentHandler:
             "description": "Quarantined flaky seeds and increased robustness",
         }
 
-    def _handle_generic(
-        self, incident: Dict[str, Any], state: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def _handle_generic(self, incident: Dict[str, Any], state: Dict[str, Any]) -> Dict[str, Any]:
         """Handle generic incident."""
         print("🔧 Handling Generic incident")
 
@@ -448,15 +440,11 @@ class IncidentHandler:
             # Add coverage targets
             if "coverage_targets" not in updated_state:
                 updated_state["coverage_targets"] = []
-            updated_state["coverage_targets"].append(
-                rule["details"]["handler_result"]["target"]
-            )
+            updated_state["coverage_targets"].append(rule["details"]["handler_result"]["target"])
 
         return updated_state
 
-    def _should_replan(
-        self, fail_reason: FailReason, handler_result: Dict[str, Any]
-    ) -> bool:
+    def _should_replan(self, fail_reason: FailReason, handler_result: Dict[str, Any]) -> bool:
         """Determine if replanning is required."""
         # Replan for significant changes
         replan_triggers = [

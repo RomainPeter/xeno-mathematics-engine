@@ -96,9 +96,7 @@ class BanditStrategy:
             return float("inf")  # New action, high exploration value
 
         # Calculate average reward
-        avg_reward = (
-            np.mean(self.arm_rewards[action_id]) if self.arm_rewards[action_id] else 0
-        )
+        avg_reward = np.mean(self.arm_rewards[action_id]) if self.arm_rewards[action_id] else 0
 
         # Calculate confidence interval
         n = self.arm_counts[action_id]

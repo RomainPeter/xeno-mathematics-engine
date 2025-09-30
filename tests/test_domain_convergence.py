@@ -74,23 +74,17 @@ class TestConvergence:
         )
 
         # Check convergence
-        assert (
-            result.iterations <= 5
-        ), f"Convergence took {result.iterations} iterations > 5"
+        assert result.iterations <= 5, f"Convergence took {result.iterations} iterations > 5"
         assert result.success, "CEGIS should converge successfully"
         assert result.final_candidate is not None, "Final candidate should be generated"
         assert result.is_converged, "Result should be converged"
 
         # Check PCAP emissions
         assert len(result.pcap_emissions) > 0, "PCAP should be emitted"
-        assert (
-            result.pcap_emissions[-1]["status"] == "converged"
-        ), "Final PCAP should be converged"
+        assert result.pcap_emissions[-1]["status"] == "converged", "Final PCAP should be converged"
 
     @pytest.mark.asyncio
-    async def test_naming_convention_convergence(
-        self, cegis_engine, toy_repo_violations
-    ):
+    async def test_naming_convention_convergence(self, cegis_engine, toy_repo_violations):
         """Test convergence for naming convention violations."""
         code_snippet = toy_repo_violations["naming_convention"]
 
@@ -102,18 +96,14 @@ class TestConvergence:
         )
 
         # Check convergence
-        assert (
-            result.iterations <= 5
-        ), f"Convergence took {result.iterations} iterations > 5"
+        assert result.iterations <= 5, f"Convergence took {result.iterations} iterations > 5"
         assert result.success, "CEGIS should converge successfully"
         assert result.final_candidate is not None, "Final candidate should be generated"
         assert result.is_converged, "Result should be converged"
 
         # Check PCAP emissions
         assert len(result.pcap_emissions) > 0, "PCAP should be emitted"
-        assert (
-            result.pcap_emissions[-1]["status"] == "converged"
-        ), "Final PCAP should be converged"
+        assert result.pcap_emissions[-1]["status"] == "converged", "Final PCAP should be converged"
 
     @pytest.mark.asyncio
     async def test_security_convergence(self, cegis_engine, toy_repo_violations):
@@ -128,18 +118,14 @@ class TestConvergence:
         )
 
         # Check convergence
-        assert (
-            result.iterations <= 5
-        ), f"Convergence took {result.iterations} iterations > 5"
+        assert result.iterations <= 5, f"Convergence took {result.iterations} iterations > 5"
         assert result.success, "CEGIS should converge successfully"
         assert result.final_candidate is not None, "Final candidate should be generated"
         assert result.is_converged, "Result should be converged"
 
         # Check PCAP emissions
         assert len(result.pcap_emissions) > 0, "PCAP should be emitted"
-        assert (
-            result.pcap_emissions[-1]["status"] == "converged"
-        ), "Final PCAP should be converged"
+        assert result.pcap_emissions[-1]["status"] == "converged", "Final PCAP should be converged"
 
     @pytest.mark.asyncio
     async def test_code_style_convergence(self, cegis_engine, toy_repo_violations):
@@ -154,18 +140,14 @@ class TestConvergence:
         )
 
         # Check convergence
-        assert (
-            result.iterations <= 5
-        ), f"Convergence took {result.iterations} iterations > 5"
+        assert result.iterations <= 5, f"Convergence took {result.iterations} iterations > 5"
         assert result.success, "CEGIS should converge successfully"
         assert result.final_candidate is not None, "Final candidate should be generated"
         assert result.is_converged, "Result should be converged"
 
         # Check PCAP emissions
         assert len(result.pcap_emissions) > 0, "PCAP should be emitted"
-        assert (
-            result.pcap_emissions[-1]["status"] == "converged"
-        ), "Final PCAP should be converged"
+        assert result.pcap_emissions[-1]["status"] == "converged", "Final PCAP should be converged"
 
     @pytest.mark.asyncio
     async def test_mixed_violations_convergence(self, cegis_engine):
@@ -189,18 +171,14 @@ class TestConvergence:
         )
 
         # Check convergence
-        assert (
-            result.iterations <= 5
-        ), f"Convergence took {result.iterations} iterations > 5"
+        assert result.iterations <= 5, f"Convergence took {result.iterations} iterations > 5"
         assert result.success, "CEGIS should converge successfully"
         assert result.final_candidate is not None, "Final candidate should be generated"
         assert result.is_converged, "Result should be converged"
 
         # Check PCAP emissions
         assert len(result.pcap_emissions) > 0, "PCAP should be emitted"
-        assert (
-            result.pcap_emissions[-1]["status"] == "converged"
-        ), "Final PCAP should be converged"
+        assert result.pcap_emissions[-1]["status"] == "converged", "Final PCAP should be converged"
 
     @pytest.mark.asyncio
     async def test_convergence_performance(self, cegis_engine, toy_repo_violations):
@@ -223,9 +201,7 @@ class TestConvergence:
         ), f"Convergence time {result.convergence_time:.2f}s > 10s"
 
         # Check convergence
-        assert (
-            result.iterations <= 5
-        ), f"Convergence took {result.iterations} iterations > 5"
+        assert result.iterations <= 5, f"Convergence took {result.iterations} iterations > 5"
         assert result.success, "CEGIS should converge successfully"
 
     @pytest.mark.asyncio
@@ -251,9 +227,7 @@ class TestConvergence:
         )
 
         # Check that max iterations was reached
-        assert (
-            result.iterations == 2
-        ), f"Should reach max iterations, got {result.iterations}"
+        assert result.iterations == 2, f"Should reach max iterations, got {result.iterations}"
         assert not result.success, "Should not converge within max iterations"
         assert result.metadata["convergence_reason"] == "max_iterations_reached"
 
@@ -277,13 +251,9 @@ class TestConvergence:
 
         # Check all results
         for i, result in enumerate(results):
-            assert (
-                result.iterations <= 5
-            ), f"Task {i} took {result.iterations} iterations > 5"
+            assert result.iterations <= 5, f"Task {i} took {result.iterations} iterations > 5"
             assert result.success, f"Task {i} should converge successfully"
-            assert (
-                result.final_candidate is not None
-            ), f"Task {i} should have final candidate"
+            assert result.final_candidate is not None, f"Task {i} should have final candidate"
             assert result.is_converged, f"Task {i} should be converged"
 
     @pytest.mark.asyncio
@@ -335,15 +305,9 @@ class TestConvergence:
         assert "total_iterations" in stats, "Statistics should have total_iterations"
         assert "total_time" in stats, "Statistics should have total_time"
         assert "average_time" in stats, "Statistics should have average_time"
-        assert (
-            "proposal_statistics" in stats
-        ), "Statistics should have proposal_statistics"
-        assert (
-            "verification_statistics" in stats
-        ), "Statistics should have verification_statistics"
-        assert (
-            "refinement_statistics" in stats
-        ), "Statistics should have refinement_statistics"
+        assert "proposal_statistics" in stats, "Statistics should have proposal_statistics"
+        assert "verification_statistics" in stats, "Statistics should have verification_statistics"
+        assert "refinement_statistics" in stats, "Statistics should have refinement_statistics"
 
         # Check values
         assert stats["total_iterations"] > 0, "Should have executed iterations"
@@ -384,9 +348,7 @@ class TestConvergence:
 
         # Check that engine was reset
         stats = cegis_engine.get_execution_statistics()
-        assert (
-            stats["total_iterations"] == result2.iterations
-        ), "Statistics should be reset"
+        assert stats["total_iterations"] == result2.iterations, "Statistics should be reset"
 
     @pytest.mark.asyncio
     async def test_deterministic_mode(self, toy_repo_violations):
@@ -435,6 +397,4 @@ class TestConvergence:
         # Check hybrid mode behavior
         assert result.success, "Hybrid mode should succeed"
         assert result.iterations <= 5, "Hybrid mode should converge within 5 iterations"
-        assert (
-            result.final_candidate is not None
-        ), "Hybrid mode should generate final candidate"
+        assert result.final_candidate is not None, "Hybrid mode should generate final candidate"

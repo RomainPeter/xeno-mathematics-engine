@@ -85,9 +85,7 @@ def main():
     for d in dec:
         # Impacted if question or any evidence touches the conflicting attribute
         qattrs = set(d.get("question_attrs", []))
-        eattrs = set().union(
-            *(ev_index.get(eid, set()) for eid in d.get("evidence_ids", []))
-        )
+        eattrs = set().union(*(ev_index.get(eid, set()) for eid in d.get("evidence_ids", [])))
         impacted = (CONFLICT_ATTR in qattrs) or (CONFLICT_ATTR in eattrs)
         contested.append(
             {
@@ -170,9 +168,7 @@ retro_rules:
 
     # 5) Recompute merkle chain on the journal
     if os.path.exists(MERKLE):
-        subprocess.run(
-            [sys.executable, MERKLE, "--in", JOURNAL, "--out", JOURNAL], check=True
-        )
+        subprocess.run([sys.executable, MERKLE, "--in", JOURNAL, "--out", JOURNAL], check=True)
     else:
         print("WARN: merkle_hasher.py not found; journal not rehashed", file=sys.stderr)
 

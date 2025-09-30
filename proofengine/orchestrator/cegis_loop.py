@@ -106,9 +106,7 @@ class CEGISLoop:
                 break
 
             # Synthesize the choreography
-            synthesis_result = await self._synthesize_single(
-                selected_choreo, context, budget
-            )
+            synthesis_result = await self._synthesize_single(selected_choreo, context, budget)
 
             if synthesis_result.success:
                 # Accept the choreography
@@ -178,15 +176,11 @@ class CEGISLoop:
                 )
 
             # Execute choreography in hermetic environment
-            execution_result = await self._execute_choreography(
-                choreography, context, budget
-            )
+            execution_result = await self._execute_choreography(choreography, context, budget)
 
             if execution_result["success"]:
                 # Verify postconditions
-                post_verified = await self._verify_postconditions(
-                    choreography, execution_result
-                )
+                post_verified = await self._verify_postconditions(choreography, execution_result)
 
                 if post_verified:
                     return SynthesisResult(
@@ -275,21 +269,15 @@ class CEGISLoop:
                 if name == "opa":
                     verdict = await self._check_opa_choreography(choreography, verifier)
                 elif name == "static":
-                    verdict = await self._check_static_choreography(
-                        choreography, verifier
-                    )
+                    verdict = await self._check_static_choreography(choreography, verifier)
                 elif name == "property":
-                    verdict = await self._check_property_choreography(
-                        choreography, verifier
-                    )
+                    verdict = await self._check_property_choreography(choreography, verifier)
                 else:
                     continue
 
                 if not verdict.get("accepted", False):
                     execution_result["success"] = False
-                    execution_result["counterexample"] = verdict.get(
-                        "counterexample", {}
-                    )
+                    execution_result["counterexample"] = verdict.get("counterexample", {})
                     break
 
             except Exception as e:
@@ -396,9 +384,7 @@ class CEGISLoop:
         """Refine synthesis space based on counterexample."""
         # Remove choreographies that would fail for the same reason
         self.synthesis_space = [
-            c
-            for c in self.synthesis_space
-            if not self._would_fail_same_way(c, counterexample)
+            c for c in self.synthesis_space if not self._would_fail_same_way(c, counterexample)
         ]
 
         # Add refinement to history

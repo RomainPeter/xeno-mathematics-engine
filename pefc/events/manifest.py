@@ -70,8 +70,7 @@ class AuditManifest:
 
         sorted_files = sorted(self.files, key=lambda f: f.path)
         file_hashes: List[str] = [
-            hashlib.sha256(file_info.sha256.encode()).hexdigest()
-            for file_info in sorted_files
+            hashlib.sha256(file_info.sha256.encode()).hexdigest() for file_info in sorted_files
         ]
 
         if len(file_hashes) == 1:
@@ -190,9 +189,7 @@ class MerkleTree:
             return []
 
         # Start with leaf hashes
-        current_level = [
-            hashlib.sha256(item.encode()).hexdigest() for item in self.data
-        ]
+        current_level = [hashlib.sha256(item.encode()).hexdigest() for item in self.data]
         tree = current_level.copy()
 
         # Build tree bottom-up

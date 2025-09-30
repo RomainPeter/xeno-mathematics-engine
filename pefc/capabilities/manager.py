@@ -22,9 +22,7 @@ class CapabilityManager:
         """Plan a Proof-Carrying Action Plan for incident."""
         obligations = obligations or []
         ctx_hash = canonical_hash({"incident": incident, "obligations": obligations})
-        selected: List[Capability] = [
-            c for c in self.capabilities if c.can_handle(incident)
-        ]
+        selected: List[Capability] = [c for c in self.capabilities if c.can_handle(incident)]
         proofs: List[ProofSpec] = []
         vparts: List[Dict[str, float]] = []
         for c in selected:

@@ -48,9 +48,7 @@ class ConstraintSpecializer:
 
         return constraints
 
-    def _specialize_deprecated_api_constraint(
-        self, ce: Counterexample
-    ) -> Dict[str, Any]:
+    def _specialize_deprecated_api_constraint(self, ce: Counterexample) -> Dict[str, Any]:
         """Specialize deprecated API constraint."""
         snippet = ce.snippet.content
 
@@ -142,9 +140,7 @@ class PatchEditor:
             "code_style": self._edit_style_patch,
         }
 
-    def edit_patch(
-        self, candidate: Candidate, counterexamples: List[Counterexample]
-    ) -> Candidate:
+    def edit_patch(self, candidate: Candidate, counterexamples: List[Counterexample]) -> Candidate:
         """Edit patch based on counterexamples."""
         if not counterexamples:
             return candidate
@@ -164,9 +160,9 @@ class PatchEditor:
 
         for rule, ces in rule_groups.items():
             if rule in self.edit_strategies:
-                edited_patch, edited_spec, edited_rationale = self.edit_strategies[
-                    rule
-                ](edited_patch, edited_spec, edited_rationale, ces)
+                edited_patch, edited_spec, edited_rationale = self.edit_strategies[rule](
+                    edited_patch, edited_spec, edited_rationale, ces
+                )
 
         # Create new candidate with edited content
         return Candidate(
@@ -221,9 +217,7 @@ class PatchEditor:
             edited_patch = edited_patch.lower()
 
         edited_spec = f"{spec} (Refined: Applied snake_case naming)"
-        edited_rationale = (
-            f"{rationale} (Refined based on {len(ces)} naming violations)"
-        )
+        edited_rationale = f"{rationale} (Refined based on {len(ces)} naming violations)"
 
         return edited_patch, edited_spec, edited_rationale
 
@@ -245,9 +239,7 @@ class PatchEditor:
             if "os.system" in snippet:
                 edited_patch = edited_patch.replace("os.system(", "subprocess.run(")
             if "random.random" in snippet:
-                edited_patch = edited_patch.replace(
-                    "random.random()", "secrets.randbelow(1000)"
-                )
+                edited_patch = edited_patch.replace("random.random()", "secrets.randbelow(1000)")
 
         edited_spec = f"{spec} (Refined: Applied security fixes)"
         edited_rationale = f"{rationale} (Refined based on {len(ces)} security issues)"
@@ -367,28 +359,20 @@ class AdaptiveRefiner:
         # Update pattern statistics
         for pattern in patterns:
             if context.iteration < 3:  # Assume success for early iterations
-                self.success_patterns[pattern] = (
-                    self.success_patterns.get(pattern, 0) + 1
-                )
+                self.success_patterns[pattern] = self.success_patterns.get(pattern, 0) + 1
             else:
-                self.failure_patterns[pattern] = (
-                    self.failure_patterns.get(pattern, 0) + 1
-                )
+                self.failure_patterns[pattern] = self.failure_patterns.get(pattern, 0) + 1
 
         # Use refinement engine
         refined_candidate = self.refinement_engine.refine(context)
 
         # Apply adaptive strategies
         if context.iteration > 2:
-            refined_candidate = self._apply_adaptive_strategies(
-                refined_candidate, context
-            )
+            refined_candidate = self._apply_adaptive_strategies(refined_candidate, context)
 
         return refined_candidate
 
-    def _analyze_counterexample_patterns(
-        self, counterexamples: List[Counterexample]
-    ) -> List[str]:
+    def _analyze_counterexample_patterns(self, counterexamples: List[Counterexample]) -> List[str]:
         """Analyze patterns in counterexamples."""
         patterns = []
 
@@ -425,9 +409,7 @@ class AdaptiveRefiner:
 
         return candidate
 
-    def _apply_alternative_strategy(
-        self, candidate: Candidate, pattern: str
-    ) -> Candidate:
+    def _apply_alternative_strategy(self, candidate: Candidate, pattern: str) -> Candidate:
         """Apply alternative strategy for known failure patterns."""
         if pattern == "deprecated_foo":
             # Try different replacement

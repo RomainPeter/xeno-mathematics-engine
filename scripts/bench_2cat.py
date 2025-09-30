@@ -164,12 +164,8 @@ class S2PPBenchmark:
 
         # Calculate metrics for each mode
         for mode, mode_results in by_mode.items():
-            success_rate = sum(1 for r in mode_results if r["success"]) / len(
-                mode_results
-            )
-            avg_execution_time = sum(r["execution_time"] for r in mode_results) / len(
-                mode_results
-            )
+            success_rate = sum(1 for r in mode_results if r["success"]) / len(mode_results)
+            avg_execution_time = sum(r["execution_time"] for r in mode_results) / len(mode_results)
             avg_replans = sum(r["replans"] for r in mode_results) / len(mode_results)
             avg_cycles = sum(r["cycles"] for r in mode_results) / len(mode_results)
 
@@ -183,12 +179,9 @@ class S2PPBenchmark:
 
         # Calculate delta metrics
         if "baseline" in metrics and "active" in metrics:
-            delta_success = (
-                metrics["active"]["success_rate"] - metrics["baseline"]["success_rate"]
-            )
+            delta_success = metrics["active"]["success_rate"] - metrics["baseline"]["success_rate"]
             overhead = (
-                metrics["active"]["avg_execution_time"]
-                - metrics["baseline"]["avg_execution_time"]
+                metrics["active"]["avg_execution_time"] - metrics["baseline"]["avg_execution_time"]
             ) / metrics["baseline"]["avg_execution_time"]
 
             metrics["delta"] = {
@@ -416,9 +409,7 @@ class S2PPBenchmark:
 def main():
     parser = argparse.ArgumentParser(description="S2++ benchmark runner")
     parser.add_argument("--suite", required=True, help="Suite JSON file")
-    parser.add_argument(
-        "--modes", default="baseline,active", help="Modes to run (comma-separated)"
-    )
+    parser.add_argument("--modes", default="baseline,active", help="Modes to run (comma-separated)")
     parser.add_argument("--runs", type=int, default=3, help="Number of runs per case")
     parser.add_argument("--out", help="Output directory")
 

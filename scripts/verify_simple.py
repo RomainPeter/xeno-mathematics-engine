@@ -26,11 +26,7 @@ def main():
             missing_files.append(file_path)
 
     if missing_files:
-        print(
-            json.dumps(
-                {"ok": False, "reason": "missing_files", "missing": missing_files}
-            )
-        )
+        print(json.dumps({"ok": False, "reason": "missing_files", "missing": missing_files}))
         return False
 
     # Check if we can import required modules

@@ -82,17 +82,13 @@ class InjectableSelector:
             )
 
             # Reorder based on IDS selection
-            chosen_idx = next(
-                (i for i, c in enumerate(diverse) if c.get("id") == chosen_id), 0
-            )
+            chosen_idx = next((i for i, c in enumerate(diverse) if c.get("id") == chosen_id), 0)
             if chosen_idx > 0:
                 diverse[0], diverse[chosen_idx] = diverse[chosen_idx], diverse[0]
 
         return diverse
 
-    def update(
-        self, cand_id: str, reward_samples: List[float], cost_samples: List[float]
-    ):
+    def update(self, cand_id: str, reward_samples: List[float], cost_samples: List[float]):
         """Update bandit with risk-adjusted utility."""
         # Calculate risk-adjusted utility
         utility_samples = [r - c for r, c in zip(reward_samples, cost_samples)]
