@@ -198,7 +198,7 @@ pyyaml-env-tag==1.1
     # via mkdocs
 radon==6.0.1
     # via -r requirements.in
-referencing==0.35.1
+referencing==0.36.2
     # via
     #   -r requirements.in
     #   jsonschema
@@ -251,6 +251,7 @@ typing-extensions==4.15.0
     #   openai
     #   pydantic
     #   pydantic-core
+    #   referencing
     #   typer
     #   typing-inspection
     #   virtualenv
