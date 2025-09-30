@@ -75,4 +75,4 @@ jobs:
       - uses: actions/checkout@v4
       - name: Verify 2cat vendor pack offline
         run: |
-          python scripts/verify_2cat_pack.py --zip vendor/2cat/pack.zip --sha256 vendor/2cat/pack.sha256
+          python scripts/verify_2cat_pack.py --zip artifacts/spec_pack_v0.2-pre.zip --sha256 artifacts/spec_pack_v0.2-pre.sha256
