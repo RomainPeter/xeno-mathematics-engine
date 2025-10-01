@@ -5,6 +5,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Set up Git credentials for private fetches
+        run: |
+          git config --global url."https://${{ secrets.GITHUB_TOKEN }}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
       - uses: cachix/install-nix-action@v27
       - run: nix develop -c pre-commit run -a
   pytest:
