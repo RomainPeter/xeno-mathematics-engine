@@ -197,6 +197,13 @@ print(debug_info.validation_errors)
 ```
 
 ## References
+## Version, Kinds, and Normalization
+
+- meta.version = 1
+- Block kinds (enum): axiom, lemma, theorem, object, morphism, functor, rule, concept
+- Canonical normalization: blocks sorted by (kind,id); edges by (src,dst,kind); cuts by id and block ids.
+- JSON Schema: generate with `xme psp schema --out docs/psp.schema.json`
+
 
 - [PSP Specification](psp-spec.md) - Detailed technical specification
 - [Proof Examples](proof-examples.md) - Example proof structures

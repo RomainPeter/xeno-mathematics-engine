@@ -3,7 +3,7 @@ import uuid
 from datetime import datetime, timezone
 import typer
 from rich import print
-from xme.psp.schema import load_psp
+from xme.psp.schema import PSP, load_psp, save_psp
 from xme.pcap.store import PCAPStore, PCAPEntry
 from pathlib import Path
 import subprocess
@@ -29,6 +29,40 @@ def psp_validate(path: str):
     print(f"Nodes: {psp.dag.nodes}, Edges: {psp.dag.edges}, Acyclic: {psp.dag.acyclic}")
     if psp.meta.theorem:
         print(f"Theorem: {psp.meta.theorem}")
+
+
+@psp_app.command("schema")
+def psp_schema(out: Optional[str] = typer.Option(None, "--out", help="Path to write JSON Schema")):
+    schema = PSP.model_json_schema(PSP)
+    payload = orjson.dumps(schema, option=orjson.OPT_SORT_KEYS)
+    if out:
+        Path(out).write_bytes(payload)
+        print(f"[green]PSP JSON Schema written to {out}[/green]")
+    else:
+        import sys as _sys
+        _sys.stdout.buffer.write(payload)
+
+
+@psp_app.command("normalize")
+def psp_normalize(path: str, out: Optional[str] = typer.Option(None, "--out")):
+    p = load_psp(path)
+    p.normalize()
+    if out:
+        save_psp(p, out)
+        print(f"[green]Normalized PSP written to {out}[/green]")
+    else:
+        typer.echo(p.canonical_json())
+
+
+@psp_app.command("topo")
+def psp_topo(path: str, as_json: bool = typer.Option(False, "--json/--no-json")):
+    p = load_psp(path)
+    order = p.topo_sort()
+    if as_json:
+        typer.echo(orjson.dumps(order).decode())
+    else:
+        for n in order:
+            typer.echo(n)
 
 
 @pcap_app.command("log")

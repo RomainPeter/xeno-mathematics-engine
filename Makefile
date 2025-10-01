@@ -651,3 +651,9 @@ docker:
 # Vendor package verification
 verify-2cat:
 	bash scripts/verify_2cat_pack.sh
+
+# PSP helpers
+psp-schema:
+	@xme psp schema --out docs/psp.schema.json
+psp-normalize:
+	@xme psp normalize examples/psp/mock_yoneda.json --out /tmp/psp_norm.json
