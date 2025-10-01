@@ -41,7 +41,7 @@ def test_example():
             with patch("controller.obligations.run_command") as mock_run:
                 mock_run.return_value = (0, "test passed", "")
                 result = check_tests(temp_dir)
-                assert result == True
+                assert result is True
 
     def test_check_tests_failure(self):
         """Test de vérification des tests échouée."""
@@ -49,7 +49,7 @@ def test_example():
             with patch("controller.obligations.run_command") as mock_run:
                 mock_run.return_value = (1, "", "test failed")
                 result = check_tests(temp_dir)
-                assert result == False
+                assert result is False
 
     def test_check_flake8_success(self):
         """Test de vérification flake8 réussie."""
@@ -57,7 +57,7 @@ def test_example():
             with patch("controller.obligations.run_command") as mock_run:
                 mock_run.return_value = (0, "", "")
                 result = check_flake8(temp_dir)
-                assert result == True
+                assert result is True
 
     def test_check_flake8_failure(self):
         """Test de vérification flake8 échouée."""
@@ -65,7 +65,7 @@ def test_example():
             with patch("controller.obligations.run_command") as mock_run:
                 mock_run.return_value = (1, "", "E501 line too long")
                 result = check_flake8(temp_dir)
-                assert result == False
+                assert result is False
 
     def test_check_mypy_success(self):
         """Test de vérification mypy réussie."""
@@ -73,7 +73,7 @@ def test_example():
             with patch("controller.obligations.run_command") as mock_run:
                 mock_run.return_value = (0, "", "")
                 result = check_mypy(temp_dir)
-                assert result == True
+                assert result is True
 
     def test_check_mypy_failure(self):
         """Test de vérification mypy échouée."""
@@ -81,7 +81,7 @@ def test_example():
             with patch("controller.obligations.run_command") as mock_run:
                 mock_run.return_value = (1, "", "error: Incompatible types")
                 result = check_mypy(temp_dir)
-                assert result == False
+                assert result is False
 
     def test_check_bandit_success(self):
         """Test de vérification bandit réussie."""
@@ -89,7 +89,7 @@ def test_example():
             with patch("controller.obligations.run_command") as mock_run:
                 mock_run.return_value = (0, "", "")
                 result = check_bandit(temp_dir)
-                assert result == True
+                assert result is True
 
     def test_check_bandit_failure(self):
         """Test de vérification bandit échouée."""
@@ -97,7 +97,7 @@ def test_example():
             with patch("controller.obligations.run_command") as mock_run:
                 mock_run.return_value = (1, "", "B101: Use of assert detected")
                 result = check_bandit(temp_dir)
-                assert result == False
+                assert result is False
 
     def test_check_complexity_success(self):
         """Test de vérification de complexité réussie."""
@@ -105,7 +105,7 @@ def test_example():
             with patch("controller.obligations.run_command") as mock_run:
                 mock_run.return_value = (0, '{"file.py": [{"complexity": 5}]}', "")
                 result = check_complexity(temp_dir, max_cc=10)
-                assert result == True
+                assert result is True
 
     def test_check_complexity_failure(self):
         """Test de vérification de complexité échouée."""
@@ -113,7 +113,7 @@ def test_example():
             with patch("controller.obligations.run_command") as mock_run:
                 mock_run.return_value = (0, '{"file.py": [{"complexity": 15}]}', "")
                 result = check_complexity(temp_dir, max_cc=10)
-                assert result == False
+                assert result is False
 
     def test_check_docstrings_success(self):
         """Test de vérification des docstrings réussie."""
@@ -124,7 +124,7 @@ def test_example():
                 f.write('"""Module docstring."""\n\ndef function():\n    pass\n')
 
             result = check_docstrings(temp_dir)
-            assert result == True
+            assert result is True
 
     def test_check_docstrings_failure(self):
         """Test de vérification des docstrings échouée."""
@@ -135,7 +135,7 @@ def test_example():
                 f.write("def function():\n    pass\n")
 
             result = check_docstrings(temp_dir)
-            assert result == False
+            assert result is False
 
     def test_evaluate_obligations(self):
         """Test d'évaluation complète des obligations."""
@@ -147,12 +147,12 @@ def test_example():
                 result = evaluate_obligations(temp_dir)
 
                 assert isinstance(result, ObligationResults)
-                assert result.tests_ok == True
-                assert result.lint_ok == True
-                assert result.types_ok == True
-                assert result.security_ok == True
-                assert result.complexity_ok == True
-                assert result.docstring_ok == True
+                assert result.tests_ok is True
+                assert result.lint_ok is True
+                assert result.types_ok is True
+                assert result.security_ok is True
+                assert result.complexity_ok is True
+                assert result.docstring_ok is True
 
     def test_get_violation_summary(self):
         """Test du résumé des violations."""
@@ -171,7 +171,7 @@ def test_example():
         assert "lint_ok" in summary["violations"]
         assert "security_ok" in summary["violations"]
         assert "docstring_ok" in summary["violations"]
-        assert summary["all_passed"] == False
+        assert summary["all_passed"] is False
         assert summary["success_rate"] == 0.5
 
 
@@ -213,7 +213,7 @@ class TestWorkspace:
             with patch("subprocess.run") as mock_run:
                 mock_run.return_value = MagicMock(returncode=0)
                 result = workspace.apply_unified_diff(patch_text)
-                assert result == True
+                assert result is True
 
     def test_apply_unified_diff_failure(self):
         """Test d'application d'un patch unifié échouée."""
@@ -226,7 +226,7 @@ class TestWorkspace:
             with patch("subprocess.run") as mock_run:
                 mock_run.side_effect = Exception("Patch failed")
                 result = workspace.apply_unified_diff(patch_text)
-                assert result == False
+                assert result is False
 
     def test_get_changed_files(self):
         """Test de récupération des fichiers modifiés."""
@@ -269,7 +269,7 @@ class TestPatchManager:
 """
 
         result = manager.validate_patch(patch_text)
-        assert result["valid"] == True
+                assert result["valid"] is True
         assert len(result["errors"]) == 0
 
     def test_validate_patch_invalid(self):
@@ -279,7 +279,7 @@ class TestPatchManager:
         patch_text = "not a patch"
 
         result = manager.validate_patch(patch_text)
-        assert result["valid"] == False
+                assert result["valid"] is False
         assert len(result["errors"]) > 0
 
     def test_get_patch_info(self):
@@ -344,7 +344,7 @@ class TestDeterministicController:
 
                         result = controller.evaluate_patch(patch_text)
 
-                        assert result["success"] == True
+                        assert result["success"] is True
                         assert "obligation_results" in result
                         assert "delta_metrics" in result
 
@@ -364,7 +364,7 @@ class TestDeterministicController:
 
                 result = controller.evaluate_patch(patch_text)
 
-                assert result["success"] == False
+                assert result["success"] is False
                 assert "error" in result
 
     def test_batch_evaluate(self):
@@ -384,9 +384,9 @@ class TestDeterministicController:
                 results = controller.batch_evaluate(patches)
 
                 assert len(results) == 3
-                assert results[0]["success"] == True
-                assert results[1]["success"] == False
-                assert results[2]["success"] == True
+                assert results[0]["success"] is True
+                assert results[1]["success"] is False
+                assert results[2]["success"] is True
 
     def test_get_best_patch(self):
         """Test de sélection du meilleur patch."""
@@ -405,7 +405,7 @@ class TestDeterministicController:
                 best_index, best_result = controller.get_best_patch(patches)
 
                 assert best_index == 1  # Le patch avec 0 violations
-                assert best_result["success"] == True
+                assert best_result["success"] is True
                 assert best_result["violations"] == 0
 
     def test_get_evaluation_stats(self):
