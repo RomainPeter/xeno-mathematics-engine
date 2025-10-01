@@ -50,7 +50,6 @@ jobs:
           FORCE_VERIFY_2CAT: "0"
         run: nix develop -c bash -lc 'bash scripts/verify_2cat_pack.sh'
   attest:
-    if: ${{ secrets.COSIGN_KEY != '' }}
     runs-on: ubuntu-latest
     needs: [docker-build, sbom]
     steps:
