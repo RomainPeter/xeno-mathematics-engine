@@ -607,3 +607,62 @@ test-logging:
 
 test-dedup:
 	python -m pytest tests/test_zip_dedup_*.py -v
+
+# New XME targets
+.PHONY: dev lint test build sbom docker verify-2cat help
+
+# Default target
+help:
+	@echo "Available targets:"
+	@echo "  dev         - Enter development environment"
+	@echo "  lint        - Run pre-commit hooks"
+	@echo "  test        - Run pytest tests"
+	@echo "  build       - Build the CLI using Nix"
+	@echo "  sbom        - Generate Software Bill of Materials"
+	@echo "  docker      - Build Docker image"
+	@echo "  verify-2cat - Verify 2cat vendor package"
+	@echo "  help        - Show this help message"
+
+# Development environment
+dev:
+	nix develop
+
+# Code quality
+lint:
+	pre-commit run -a
+
+# Testing
+test:
+	pytest -q
+
+# Build CLI
+build:
+	nix build .#xme
+
+# Generate SBOM
+sbom:
+	mkdir -p sbom
+	syft dir:. -o spdx-json > sbom/sbom.spdx.json
+
+# Docker operations
+docker:
+	docker build -t xme/dev:latest .
+
+# Vendor package verification
+verify-2cat:
+	bash scripts/verify_2cat_pack.sh
+
+# PSP helpers
+psp-schema:
+	@xme psp schema --out docs/psp.schema.json
+psp-normalize:
+	@xme psp normalize examples/psp/mock_yoneda.json --out /tmp/psp_norm.json
+
+# PCAP demo target
+pcap:
+	@RUN_PATH=$$(xme pcap new-run --out artifacts/pcap | awk '{print $$3}' | cut -d= -f2); \
+	xme pcap log --run $$RUN_PATH --action "demo:start"; \
+	xme pcap log --run $$RUN_PATH --action "demo:end"; \
+	echo "RUN=$$RUN_PATH"; \
+	xme pcap verify --run $$RUN_PATH; \
+	xme pcap merkle --run $$RUN_PATH

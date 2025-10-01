@@ -145,9 +145,7 @@ class AELoop:
 
         return results
 
-    async def _generate_seed_implications(
-        self, context: Dict[str, Any]
-    ) -> List[Implication]:
+    async def _generate_seed_implications(self, context: Dict[str, Any]) -> List[Implication]:
         """Generate initial implications using LLM."""
         # This would use the LLM micro-prompt for implications
         # For now, return mock implications
@@ -185,13 +183,9 @@ class AELoop:
                 if name == "opa":
                     verdict = await self._check_opa_implication(implication, verifier)
                 elif name == "static":
-                    verdict = await self._check_static_implication(
-                        implication, verifier
-                    )
+                    verdict = await self._check_static_implication(implication, verifier)
                 elif name == "property":
-                    verdict = await self._check_property_implication(
-                        implication, verifier
-                    )
+                    verdict = await self._check_property_implication(implication, verifier)
                 else:
                     continue
 
@@ -220,15 +214,11 @@ class AELoop:
                 "context": first_rejection.get("context", {}),
                 "evidence": first_rejection.get("evidence", []),
                 "violates_premise": first_rejection.get("violates_premise", False),
-                "violates_conclusion": first_rejection.get(
-                    "violates_conclusion", False
-                ),
+                "violates_conclusion": first_rejection.get("violates_conclusion", False),
                 "reason": first_rejection.get("reason", "Verification failed"),
             }
 
-    async def _check_opa_implication(
-        self, implication: Implication, opa_client
-    ) -> Dict[str, Any]:
+    async def _check_opa_implication(self, implication: Implication, opa_client) -> Dict[str, Any]:
         """Check implication using OPA."""
         # Convert implication to OPA query
         query = {
@@ -336,8 +326,7 @@ class AELoop:
             "total_counterexamples": len(self.counterexamples),
             "closure_size": len(self.closure_cache),
             "avg_implication_confidence": (
-                sum(impl.confidence for impl in self.implications.values())
-                / len(self.implications)
+                sum(impl.confidence for impl in self.implications.values()) / len(self.implications)
                 if self.implications
                 else 0
             ),

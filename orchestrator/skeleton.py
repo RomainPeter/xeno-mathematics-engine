@@ -43,9 +43,7 @@ class Orchestrator:
             self.state = json.load(f)
 
         print(f"Loaded plan: {self.plan['id']} - {self.plan['goal']}")
-        print(
-            f"Loaded state: {len(self.state['H'])} hypotheses, {len(self.state['E'])} evidence"
-        )
+        print(f"Loaded state: {len(self.state['H'])} hypotheses, {len(self.state['E'])} evidence")
 
     def execute_step(self, step):
         """Execute a single step"""
@@ -75,11 +73,7 @@ class Orchestrator:
 
         # Mock action based on operator
         action_name = self.get_action_name(step["operator"])
-        target = (
-            step.get("input_refs", ["unknown"])[0]
-            if step.get("input_refs")
-            else "unknown"
-        )
+        target = step.get("input_refs", ["unknown"])[0] if step.get("input_refs") else "unknown"
 
         pcap = {
             "version": "0.1.0",
@@ -184,9 +178,7 @@ class Orchestrator:
             # Create temporary PCAP file
             import tempfile
 
-            with tempfile.NamedTemporaryFile(
-                mode="w", suffix=".json", delete=False
-            ) as f:
+            with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
                 json.dump(pcap, f)
                 temp_pcap = Path(f.name)
 
@@ -201,9 +193,7 @@ class Orchestrator:
                     print("✅ Docker verification passed")
                     return "accepted"
                 else:
-                    print(
-                        f"❌ Docker verification failed (exit code: {result['exit_code']})"
-                    )
+                    print(f"❌ Docker verification failed (exit code: {result['exit_code']})")
                     return "rejected"
 
             finally:
@@ -236,9 +226,7 @@ class Orchestrator:
             "proofs_attached": [p["id"] for p in pcap["proofs"]],
             "costs": pcap["justification"],
             "prev_entry_hash": self.get_last_journal_hash(),
-            "entry_hash": hashlib.sha256(
-                f"{step['id']}:{datetime.utcnow()}".encode()
-            ).hexdigest(),
+            "entry_hash": hashlib.sha256(f"{step['id']}:{datetime.utcnow()}".encode()).hexdigest(),
         }
 
         self.state["J"]["entries"].append(journal_entry)

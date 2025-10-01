@@ -41,8 +41,7 @@ class TestStrategySelector:
         assert self.selector.llm_client == self.mock_llm_client
         assert "contract.ambiguous_spec" in self.selector.strategy_whitelist
         assert (
-            "specialize_then_retry"
-            in self.selector.strategy_whitelist["contract.ambiguous_spec"]
+            "specialize_then_retry" in self.selector.strategy_whitelist["contract.ambiguous_spec"]
         )
 
     def test_filter_by_whitelist(self):
@@ -52,9 +51,7 @@ class TestStrategySelector:
         strategies = [self.mock_strategy]
 
         # Test with matching failreason
-        filtered = self.selector._filter_by_whitelist(
-            strategies, "contract.ambiguous_spec"
-        )
+        filtered = self.selector._filter_by_whitelist(strategies, "contract.ambiguous_spec")
         assert len(filtered) == 1
 
         # Test with non-matching failreason
@@ -138,9 +135,7 @@ class TestStrategySelector:
         """Test individual scoring criteria calculation."""
         selected = {"id": "test_strategy", "score": 0.8, "expected_gain": 0.7}
 
-        scores = self.selector._calculate_scores(
-            selected, self.mock_strategy, self.context
-        )
+        scores = self.selector._calculate_scores(selected, self.mock_strategy, self.context)
 
         assert "validity" in scores
         assert "cost_efficiency" in scores

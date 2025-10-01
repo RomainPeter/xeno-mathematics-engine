@@ -138,9 +138,7 @@ class ExecutionMetrics:
         )
 
 
-def compare_metrics_fairness(
-    baseline: ExecutionMetrics, active: ExecutionMetrics
-) -> bool:
+def compare_metrics_fairness(baseline: ExecutionMetrics, active: ExecutionMetrics) -> bool:
     """Compare metrics for fairness - WorkUnits must be identical."""
     return baseline.work_units == active.work_units
 

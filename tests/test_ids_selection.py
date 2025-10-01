@@ -11,9 +11,7 @@ def test_ucb1_selection():
     arms = [
         ArmStats(arm_id="arm1", pulls=10, reward_sum=5.0, reward_sq_sum=3.0),
         ArmStats(arm_id="arm2", pulls=5, reward_sum=3.0, reward_sq_sum=2.0),
-        ArmStats(
-            arm_id="arm3", pulls=1, reward_sum=0.0, reward_sq_sum=0.0
-        ),  # Never pulled
+        ArmStats(arm_id="arm3", pulls=1, reward_sum=0.0, reward_sq_sum=0.0),  # Never pulled
     ]
 
     # UCB1 should prefer unexplored arms

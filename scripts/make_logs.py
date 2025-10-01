@@ -26,12 +26,8 @@ def load_json(fp):
 
 def git_commit():
     try:
-        h = subprocess.check_output(
-            ["git", "rev-parse", "--short", "HEAD"], text=True
-        ).strip()
-        tag = subprocess.check_output(
-            ["git", "describe", "--tags", "--always"], text=True
-        ).strip()
+        h = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"], text=True).strip()
+        tag = subprocess.check_output(["git", "describe", "--tags", "--always"], text=True).strip()
         return h, tag
     except Exception:
         return None, None
@@ -57,9 +53,7 @@ def main():
     att = load_json(AUDIT_DIR / "attestation.json")
     if not att:
         digest = hashlib.sha256(
-            json.dumps(
-                [e.get("operator") for e in pcap_entries], sort_keys=True
-            ).encode()
+            json.dumps([e.get("operator") for e in pcap_entries], sort_keys=True).encode()
         ).hexdigest()
         att = {
             "ts": datetime.datetime.utcnow().isoformat() + "Z",
@@ -71,17 +65,13 @@ def main():
     # Collect high-level info
     commit, tag = git_commit()
     cache_stats = compute_cache_stats()
-    os_info = (
-        f"{platform.system()} {platform.release()} | Python {platform.python_version()}"
-    )
+    os_info = f"{platform.system()} {platform.release()} | Python {platform.python_version()}"
     model_id = os.getenv("OPENROUTER_MODEL", "unknown-model")
 
     # Simple metrics if present
     summary = load_json(SUMMARY_JSON) or {}
     replan_count = sum(1 for e in pcap_entries if e.get("operator") == "replan")
-    incidents = [
-        e for e in pcap_entries if e.get("operator") in ("incident", "rollback")
-    ]
+    incidents = [e for e in pcap_entries if e.get("operator") in ("incident", "rollback")]
     verifies = [e for e in pcap_entries if e.get("operator") == "verify"]
     passes = sum(1 for e in verifies if e.get("verdict") == "pass")
     fails = sum(1 for e in verifies if e.get("verdict") == "fail")
@@ -147,9 +137,7 @@ def main():
     if att.get("verdicts"):
         lines.append("- verdicts:")
         for v in att["verdicts"][:10]:
-            lines.append(
-                f"  - {v.get('file')}: {v.get('operator')} [{v.get('verdict')}]"
-            )
+            lines.append(f"  - {v.get('file')}: {v.get('operator')} [{v.get('verdict')}]")
     lines.append("")
 
     # Fit & next bar (comment ready to copy in email)

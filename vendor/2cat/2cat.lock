@@ -1,0 +1,23 @@
+# 2cat Vendor Package Lock File
+# This file contains metadata for the 2cat vendor package
+# Format: key: value
+
+# Package metadata
+name: 2cat
+version: 1.0.0
+description: 2cat vendor package for xeno-mathematics-engine
+
+# Security verification
+sha256: 0000000000000000000000000000000000000000000000000000000000000000
+pubkey: RWR+WQZ2jNToFXbeOaKihS2kSy5uz10Hi+HOA3Rq2rRF8u6n7wi3ws
+
+# Build information
+build_date: 2024-01-01T00:00:00Z
+build_system: placeholder
+build_commit: placeholder
+
+# Dependencies (if any)
+dependencies: []
+
+# Notes
+notes: This is a placeholder lock file. Replace with actual values when the real package is available.

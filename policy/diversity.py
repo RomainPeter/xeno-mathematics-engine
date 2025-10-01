@@ -69,9 +69,7 @@ class DPPSelector:
 
         # Filter by diversity key if specified
         if diversity_key:
-            filtered_items = [
-                item for item in items if item.diversity_key == diversity_key
-            ]
+            filtered_items = [item for item in items if item.diversity_key == diversity_key]
             if not filtered_items:
                 # Fallback to all items if no items match diversity key
                 filtered_items = items
@@ -88,9 +86,7 @@ class DPPSelector:
         selected_items = [filtered_items[i] for i in selected_indices]
 
         # Calculate diversity score
-        diversity_score = self._calculate_diversity_score(
-            selected_items, similarity_matrix
-        )
+        diversity_score = self._calculate_diversity_score(selected_items, similarity_matrix)
 
         # Create selection result
         selection = DiversitySelection(
@@ -130,9 +126,7 @@ class DPPSelector:
 
         return similarity_matrix
 
-    def _calculate_similarity(
-        self, item1: DiversityItem, item2: DiversityItem
-    ) -> float:
+    def _calculate_similarity(self, item1: DiversityItem, item2: DiversityItem) -> float:
         """Calculate similarity between two items."""
         features1 = np.array(item1.features)
         features2 = np.array(item2.features)
@@ -293,9 +287,7 @@ class SubmodularSelector:
 
         # Filter by diversity key if specified
         if diversity_key:
-            filtered_items = [
-                item for item in items if item.diversity_key == diversity_key
-            ]
+            filtered_items = [item for item in items if item.diversity_key == diversity_key]
             if not filtered_items:
                 filtered_items = items
         else:
@@ -366,9 +358,7 @@ class SubmodularSelector:
         coverage_gain = self.alpha * self._coverage_gain(selected_items, candidate_item)
 
         # Diversity gain
-        diversity_gain = self.beta * self._diversity_gain(
-            selected_items, candidate_item
-        )
+        diversity_gain = self.beta * self._diversity_gain(selected_items, candidate_item)
 
         return coverage_gain + diversity_gain
 
@@ -388,12 +378,7 @@ class SubmodularSelector:
 
         # Calculate minimum distance to selected items
         min_distance = (
-            min(
-                [
-                    np.linalg.norm(candidate_features - features)
-                    for features in selected_features
-                ]
-            )
+            min([np.linalg.norm(candidate_features - features) for features in selected_features])
             if selected_features
             else 0.0
         )
@@ -420,14 +405,10 @@ class SubmodularSelector:
             return 0.0
 
         # Coverage score
-        coverage_score = self.alpha * sum(
-            self._item_quality(item) for item in selected_items
-        )
+        coverage_score = self.alpha * sum(self._item_quality(item) for item in selected_items)
 
         # Diversity score
-        diversity_score = self.beta * len(
-            set(item.diversity_key for item in selected_items)
-        )
+        diversity_score = self.beta * len(set(item.diversity_key for item in selected_items))
 
         return coverage_score + diversity_score
 

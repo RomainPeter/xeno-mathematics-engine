@@ -33,9 +33,7 @@ class Verifier:
         self.attestation_generator = AttestationGenerator()
         self.verification_history: List[VerificationResult] = []
 
-    async def verify_implication(
-        self, implication: Dict[str, Any]
-    ) -> VerificationResult:
+    async def verify_implication(self, implication: Dict[str, Any]) -> VerificationResult:
         """Verify an implication using multiple methods."""
         errors = []
         warnings = []
@@ -83,9 +81,7 @@ class Verifier:
         self.verification_history.append(result)
         return result
 
-    async def verify_choreography(
-        self, choreography: Dict[str, Any]
-    ) -> VerificationResult:
+    async def verify_choreography(self, choreography: Dict[str, Any]) -> VerificationResult:
         """Verify a choreography."""
         errors = []
         warnings = []
@@ -97,9 +93,7 @@ class Verifier:
             try:
                 op_result = await self.verify_implication(operation)
                 if not op_result.valid:
-                    errors.append(
-                        f"Operation {i} failed: {', '.join(op_result.errors)}"
-                    )
+                    errors.append(f"Operation {i} failed: {', '.join(op_result.errors)}")
                 costs["time_ms"] += op_result.costs.get("time_ms", 0)
                 costs["audit_cost"] += op_result.costs.get("audit_cost", 0)
             except Exception as e:
@@ -136,16 +130,10 @@ class Verifier:
             "total_verifications": total_verifications,
             "successful_verifications": successful_verifications,
             "success_rate": (
-                successful_verifications / total_verifications
-                if total_verifications > 0
-                else 0
+                successful_verifications / total_verifications if total_verifications > 0 else 0
             ),
             "total_costs": {
-                "time_ms": sum(
-                    r.costs.get("time_ms", 0) for r in self.verification_history
-                ),
-                "audit_cost": sum(
-                    r.costs.get("audit_cost", 0) for r in self.verification_history
-                ),
+                "time_ms": sum(r.costs.get("time_ms", 0) for r in self.verification_history),
+                "audit_cost": sum(r.costs.get("audit_cost", 0) for r in self.verification_history),
             },
         }

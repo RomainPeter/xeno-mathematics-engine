@@ -72,9 +72,7 @@ class BanditSelector:
             "choreographies": selected_choreographies,
         }
 
-    def _extract_features(
-        self, state, diversity_scores: Dict[str, float]
-    ) -> np.ndarray:
+    def _extract_features(self, state, diversity_scores: Dict[str, float]) -> np.ndarray:
         """Extract feature vector from state."""
         features = []
 
@@ -103,8 +101,7 @@ class BanditSelector:
             )
         else:
             budget_utilization = (
-                sum(state.get("budget_used", {}).values())
-                / sum(state.get("budget", {}).values())
+                sum(state.get("budget_used", {}).values()) / sum(state.get("budget", {}).values())
                 if state.get("budget", {})
                 else 0
             )
@@ -112,9 +109,7 @@ class BanditSelector:
 
         return np.array(features)
 
-    async def _select_arms(
-        self, arms: List[str], features: np.ndarray, arm_type: str
-    ) -> List[str]:
+    async def _select_arms(self, arms: List[str], features: np.ndarray, arm_type: str) -> List[str]:
         """Select arms using LinUCB algorithm."""
         if not arms:
             return []
@@ -312,9 +307,7 @@ class MCTSSelector:
 
             # Create child state
             child_state = node["state"].copy()
-            child_state["selected_actions"] = child_state.get(
-                "selected_actions", []
-            ) + [action]
+            child_state["selected_actions"] = child_state.get("selected_actions", []) + [action]
 
             self.tree[child_id] = {
                 "id": child_id,
@@ -394,14 +387,10 @@ class MCTSSelector:
         selected_actions = best_child["state"].get("selected_actions", [])
 
         implications = [
-            action["id"]
-            for action in selected_actions
-            if action["type"] == "implication"
+            action["id"] for action in selected_actions if action["type"] == "implication"
         ]
         choreographies = [
-            action["id"]
-            for action in selected_actions
-            if action["type"] == "choreography"
+            action["id"] for action in selected_actions if action["type"] == "choreography"
         ]
 
         return {"implications": implications, "choreographies": choreographies}

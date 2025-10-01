@@ -23,15 +23,9 @@ class TestMetricsFairness:
 
     def test_work_units_equality(self):
         """Test WorkUnits equality comparison."""
-        wu1 = WorkUnits(
-            operators_run=1, proofs_checked=1, tests_run=1, opa_rules_evaluated=1
-        )
-        wu2 = WorkUnits(
-            operators_run=1, proofs_checked=1, tests_run=1, opa_rules_evaluated=1
-        )
-        wu3 = WorkUnits(
-            operators_run=2, proofs_checked=1, tests_run=1, opa_rules_evaluated=1
-        )
+        wu1 = WorkUnits(operators_run=1, proofs_checked=1, tests_run=1, opa_rules_evaluated=1)
+        wu2 = WorkUnits(operators_run=1, proofs_checked=1, tests_run=1, opa_rules_evaluated=1)
+        wu3 = WorkUnits(operators_run=2, proofs_checked=1, tests_run=1, opa_rules_evaluated=1)
 
         assert wu1 == wu2
         assert wu1 != wu3
@@ -45,9 +39,7 @@ class TestMetricsFairness:
         time_breakdown = TimeBreakdown(
             t_orchestrator_ms=100.0, t_llm_ms=0.0, t_verifier_ms=50.0, t_io_ms=10.0
         )
-        cache_info = CacheInfo(
-            cache_used=False, cache_hits={"opa": 0, "sbom": 0, "llm": 0}
-        )
+        cache_info = CacheInfo(cache_used=False, cache_hits={"opa": 0, "sbom": 0, "llm": 0})
 
         metrics = ExecutionMetrics(
             work_units=work_units,
@@ -72,9 +64,7 @@ class TestMetricsFairness:
         time_breakdown = TimeBreakdown(
             t_orchestrator_ms=100.0, t_llm_ms=0.0, t_verifier_ms=50.0, t_io_ms=10.0
         )
-        cache_info = CacheInfo(
-            cache_used=False, cache_hits={"opa": 0, "sbom": 0, "llm": 0}
-        )
+        cache_info = CacheInfo(cache_used=False, cache_hits={"opa": 0, "sbom": 0, "llm": 0})
 
         metrics = ExecutionMetrics(
             work_units=work_units,

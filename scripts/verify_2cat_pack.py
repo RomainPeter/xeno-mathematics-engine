@@ -13,9 +13,7 @@ def sha256_file(path: Path) -> str:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description="Verify 2cat vendor pack integrity (offline)"
-    )
+    parser = argparse.ArgumentParser(description="Verify 2cat vendor pack integrity (offline)")
     parser.add_argument("--zip", dest="zip_path", required=True)
     parser.add_argument("--sha256", dest="sha_path", required=True)
     args = parser.parse_args()

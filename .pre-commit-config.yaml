@@ -9,10 +9,21 @@ repos:
     rev: 24.10.0
     hooks:
       - id: black
+        args: ["--line-length=100"]
   - repo: https://github.com/pycqa/isort
     rev: 5.13.2
     hooks:
       - id: isort
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.11.2
+    hooks:
+      - id: mypy
+        additional_dependencies: ["pydantic>=2.7", "types-requests", "types-setuptools"]
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.8
+    hooks:
+      - id: bandit
+        args: ["-r", "src", "-s", "B101"]
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:
@@ -24,39 +35,13 @@ repos:
     rev: v3.29.0
     hooks:
       - id: commitizen
-
-repos:
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.6.8
-    hooks:
-      - id: ruff
-        args: ["--fix"]
-      - id: ruff-format
-
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.11.2
-    hooks:
-      - id: mypy
-        additional_dependencies: [types-requests, types-setuptools]
-        files: "^(pefc|orchestrator|scripts)/"
-
-  - repo: https://github.com/PyCQA/bandit
-    rev: 1.7.8
-    hooks:
-      - id: bandit
-        args: ["-r", "pefc", "-s", "B101"]
-repos:
-  - repo: https://github.com/psf/black
-    rev: 24.4.2
-    hooks:
-      - id: black
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.4.4
-    hooks:
-      - id: ruff
-        args: [--fix, --exit-non-zero-on-fix]
   - repo: local
     hooks:
+      - id: conflict-marker-check
+        name: Detect merge conflict markers
+        entry: python scripts/check_conflict_markers.py
+        language: system
+        pass_filenames: false
       - id: validate-schemas
         name: Validate JSON Schemas and Examples
         entry: python scripts/test_roundtrip.py

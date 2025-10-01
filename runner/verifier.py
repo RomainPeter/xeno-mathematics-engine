@@ -38,9 +38,7 @@ class Verifier:
             cost_consistency = self._verify_cost_consistency(pcap)
 
             # Calculer le verdict final
-            verdict = self._calculate_verdict(
-                integrity_check, replay_results, cost_consistency
-            )
+            verdict = self._calculate_verdict(integrity_check, replay_results, cost_consistency)
 
             # Enregistrer la vérification
             verification_record = {
@@ -130,8 +128,7 @@ class Verifier:
             if replayed_proofs:
                 replayed_proof = replayed_proofs[0]
                 success = (
-                    replayed_proof.passed == proof.passed
-                    and replayed_proof.name == proof.name
+                    replayed_proof.passed == proof.passed and replayed_proof.name == proof.name
                 )
             else:
                 success = False
@@ -158,9 +155,7 @@ class Verifier:
         cost_consistency = abs(justification.audit_cost - expected_audit_cost) < 1.0
 
         # Vérifier la cohérence temporelle
-        time_consistency = (
-            justification.time_ms > 0 and justification.time_ms < 30000
-        )  # 30s max
+        time_consistency = justification.time_ms > 0 and justification.time_ms < 30000  # 30s max
 
         # Vérifier la cohérence des risques
         risk_consistency = 0.0 <= justification.risk <= 1.0
@@ -227,9 +222,7 @@ class Verifier:
             if r.get("verdict") in ["pass", "pass_with_warnings"]
         )
         success_rate = (
-            successful_verifications / total_verifications
-            if total_verifications > 0
-            else 0
+            successful_verifications / total_verifications if total_verifications > 0 else 0
         )
 
         avg_verification_time = (

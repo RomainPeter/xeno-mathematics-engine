@@ -138,9 +138,7 @@ async def demo_unified_architecture():
         print(f"   - Total implications: {metrics.get('total_implications', 0)}")
         print(f"   - Total choreographies: {metrics.get('total_choreographies', 0)}")
         print(f"   - Total counterexamples: {metrics.get('total_counterexamples', 0)}")
-        print(
-            f"   - E-graph classes: {metrics.get('egraph_stats', {}).get('total_classes', 0)}"
-        )
+        print(f"   - E-graph classes: {metrics.get('egraph_stats', {}).get('total_classes', 0)}")
 
         # Show artifacts
         artifacts = results.get("artifacts", [])
@@ -152,9 +150,7 @@ async def demo_unified_architecture():
         output_dir = project_root / "out" / "unified_architecture_demo"
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        results_file = (
-            output_dir / f"results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-        )
+        results_file = output_dir / f"results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
         with open(results_file, "w") as f:
             json.dump(results, f, indent=2, default=str)
 

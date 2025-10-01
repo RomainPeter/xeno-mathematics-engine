@@ -89,9 +89,7 @@ async def test_deprecated_api_convergence():
     """Test convergence for deprecated API violations."""
     print("\n🧪 Testing Deprecated API Convergence...")
 
-    config = CEGISConfig(
-        max_iterations=5, mode=CEGISMode.STUB_ONLY, enable_pcap_emission=True
-    )
+    config = CEGISConfig(max_iterations=5, mode=CEGISMode.STUB_ONLY, enable_pcap_emission=True)
     engine = CEGISEngine(config)
 
     violations = create_toy_repo_violations()
@@ -109,9 +107,7 @@ async def test_deprecated_api_convergence():
     print_cegis_result(result, "Deprecated API Convergence")
 
     # Check convergence criteria
-    assert (
-        result.iterations <= 5
-    ), f"Convergence took {result.iterations} iterations > 5"
+    assert result.iterations <= 5, f"Convergence took {result.iterations} iterations > 5"
     assert result.success, "CEGIS should converge successfully"
     assert result.final_candidate is not None, "Final candidate should be generated"
     assert result.is_converged, "Result should be converged"
@@ -124,9 +120,7 @@ async def test_naming_convention_convergence():
     """Test convergence for naming convention violations."""
     print("\n🧪 Testing Naming Convention Convergence...")
 
-    config = CEGISConfig(
-        max_iterations=5, mode=CEGISMode.STUB_ONLY, enable_pcap_emission=True
-    )
+    config = CEGISConfig(max_iterations=5, mode=CEGISMode.STUB_ONLY, enable_pcap_emission=True)
     engine = CEGISEngine(config)
 
     violations = create_toy_repo_violations()
@@ -144,9 +138,7 @@ async def test_naming_convention_convergence():
     print_cegis_result(result, "Naming Convention Convergence")
 
     # Check convergence criteria
-    assert (
-        result.iterations <= 5
-    ), f"Convergence took {result.iterations} iterations > 5"
+    assert result.iterations <= 5, f"Convergence took {result.iterations} iterations > 5"
     assert result.success, "CEGIS should converge successfully"
     assert result.final_candidate is not None, "Final candidate should be generated"
     assert result.is_converged, "Result should be converged"
@@ -159,9 +151,7 @@ async def test_security_convergence():
     """Test convergence for security violations."""
     print("\n🧪 Testing Security Convergence...")
 
-    config = CEGISConfig(
-        max_iterations=5, mode=CEGISMode.STUB_ONLY, enable_pcap_emission=True
-    )
+    config = CEGISConfig(max_iterations=5, mode=CEGISMode.STUB_ONLY, enable_pcap_emission=True)
     engine = CEGISEngine(config)
 
     violations = create_toy_repo_violations()
@@ -179,9 +169,7 @@ async def test_security_convergence():
     print_cegis_result(result, "Security Convergence")
 
     # Check convergence criteria
-    assert (
-        result.iterations <= 5
-    ), f"Convergence took {result.iterations} iterations > 5"
+    assert result.iterations <= 5, f"Convergence took {result.iterations} iterations > 5"
     assert result.success, "CEGIS should converge successfully"
     assert result.final_candidate is not None, "Final candidate should be generated"
     assert result.is_converged, "Result should be converged"
@@ -194,9 +182,7 @@ async def test_mixed_violations_convergence():
     """Test convergence for mixed violations."""
     print("\n🧪 Testing Mixed Violations Convergence...")
 
-    config = CEGISConfig(
-        max_iterations=5, mode=CEGISMode.STUB_ONLY, enable_pcap_emission=True
-    )
+    config = CEGISConfig(max_iterations=5, mode=CEGISMode.STUB_ONLY, enable_pcap_emission=True)
     engine = CEGISEngine(config)
 
     violations = create_toy_repo_violations()
@@ -214,9 +200,7 @@ async def test_mixed_violations_convergence():
     print_cegis_result(result, "Mixed Violations Convergence")
 
     # Check convergence criteria
-    assert (
-        result.iterations <= 5
-    ), f"Convergence took {result.iterations} iterations > 5"
+    assert result.iterations <= 5, f"Convergence took {result.iterations} iterations > 5"
     assert result.success, "CEGIS should converge successfully"
     assert result.final_candidate is not None, "Final candidate should be generated"
     assert result.is_converged, "Result should be converged"
@@ -272,13 +256,9 @@ async def test_concurrent_execution():
         print(f"    Time: {result.convergence_time:.3f}s")
 
         # Check convergence criteria
-        assert (
-            result.iterations <= 5
-        ), f"Task {i+1} took {result.iterations} iterations > 5"
+        assert result.iterations <= 5, f"Task {i+1} took {result.iterations} iterations > 5"
         assert result.success, f"Task {i+1} should converge successfully"
-        assert (
-            result.final_candidate is not None
-        ), f"Task {i+1} should have final candidate"
+        assert result.final_candidate is not None, f"Task {i+1} should have final candidate"
         assert result.is_converged, f"Task {i+1} should be converged"
 
     print(f"✅ Concurrent execution test passed in {total_time:.3f}s")
@@ -289,9 +269,7 @@ async def test_deterministic_mode():
     """Test deterministic mode (stub-only)."""
     print("\n🧪 Testing Deterministic Mode...")
 
-    config = CEGISConfig(
-        max_iterations=5, mode=CEGISMode.STUB_ONLY, enable_pcap_emission=True
-    )
+    config = CEGISConfig(max_iterations=5, mode=CEGISMode.STUB_ONLY, enable_pcap_emission=True)
     engine = CEGISEngine(config)
 
     violations = create_toy_repo_violations()
@@ -321,9 +299,7 @@ async def test_deterministic_mode():
 
         # Check deterministic behavior
         assert result.success, f"Run {i+1} should succeed"
-        assert (
-            result.iterations == results[0].iterations
-        ), f"Run {i+1} should have same iterations"
+        assert result.iterations == results[0].iterations, f"Run {i+1} should have same iterations"
         assert (
             result.final_candidate.id == results[0].final_candidate.id
         ), f"Run {i+1} should have same candidate"
@@ -336,9 +312,7 @@ async def test_hybrid_mode():
     """Test hybrid mode (LLM mockable)."""
     print("\n🧪 Testing Hybrid Mode...")
 
-    config = CEGISConfig(
-        max_iterations=5, mode=CEGISMode.HYBRID, enable_pcap_emission=True
-    )
+    config = CEGISConfig(max_iterations=5, mode=CEGISMode.HYBRID, enable_pcap_emission=True)
     engine = CEGISEngine(config)
 
     violations = create_toy_repo_violations()
@@ -358,9 +332,7 @@ async def test_hybrid_mode():
     # Check hybrid mode behavior
     assert result.success, "Hybrid mode should succeed"
     assert result.iterations <= 5, "Hybrid mode should converge within 5 iterations"
-    assert (
-        result.final_candidate is not None
-    ), "Hybrid mode should generate final candidate"
+    assert result.final_candidate is not None, "Hybrid mode should generate final candidate"
 
     print(f"✅ Hybrid mode test passed in {total_time:.3f}s")
     return result
@@ -370,9 +342,7 @@ async def test_performance_benchmark():
     """Test performance benchmark."""
     print("\n🧪 Testing Performance Benchmark...")
 
-    config = CEGISConfig(
-        max_iterations=5, mode=CEGISMode.STUB_ONLY, enable_pcap_emission=True
-    )
+    config = CEGISConfig(max_iterations=5, mode=CEGISMode.STUB_ONLY, enable_pcap_emission=True)
     engine = CEGISEngine(config)
 
     violations = create_toy_repo_violations()
@@ -414,13 +384,9 @@ async def test_performance_benchmark():
         print(f"    PCAPs: {len(result.pcap_emissions)}")
 
         # Check performance criteria
-        assert (
-            execution_time < 10.0
-        ), f"{violation_type} took {execution_time:.3f}s > 10s"
+        assert execution_time < 10.0, f"{violation_type} took {execution_time:.3f}s > 10s"
         assert result.success, f"{violation_type} should succeed"
-        assert (
-            result.iterations <= 5
-        ), f"{violation_type} should converge within 5 iterations"
+        assert result.iterations <= 5, f"{violation_type} should converge within 5 iterations"
 
     print(f"✅ Performance benchmark test passed in {total_time:.3f}s")
     return results

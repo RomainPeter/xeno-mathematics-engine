@@ -118,9 +118,7 @@ class DeltaCalibrator:
 
         return rework + two_cells + journal_len
 
-    def calculate_delta_run(
-        self, df: pd.DataFrame, weights: Dict[str, float]
-    ) -> np.ndarray:
+    def calculate_delta_run(self, df: pd.DataFrame, weights: Dict[str, float]) -> np.ndarray:
         """Calculate δ_run using weighted combination"""
         delta_struct = self.calculate_delta_struct_code(df)
         dK = self.calculate_dK(df)
@@ -221,9 +219,7 @@ class DeltaCalibrator:
     ) -> Tuple[pd.DataFrame, pd.DataFrame]:
         """Stratified train/validation split"""
         # Stratify by incident category
-        stratify_col = (
-            "incident_category" if "incident_category" in df.columns else "incidents"
-        )
+        stratify_col = "incident_category" if "incident_category" in df.columns else "incidents"
 
         train_df, val_df = train_test_split(
             df,
@@ -234,9 +230,7 @@ class DeltaCalibrator:
 
         return train_df, val_df
 
-    def calibrate(
-        self, input_file: str, output_file: str, report_file: str
-    ) -> Dict[str, Any]:
+    def calibrate(self, input_file: str, output_file: str, report_file: str) -> Dict[str, Any]:
         """Main calibration process"""
         print("Loading data...")
         df = self.load_data(input_file)

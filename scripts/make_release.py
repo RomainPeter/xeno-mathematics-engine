@@ -8,15 +8,11 @@ from pathlib import Path
 
 def git_tag_or_commit():
     try:
-        tag = subprocess.check_output(
-            ["git", "describe", "--tags", "--always"], text=True
-        ).strip()
+        tag = subprocess.check_output(["git", "describe", "--tags", "--always"], text=True).strip()
         return tag
     except Exception:
         try:
-            h = subprocess.check_output(
-                ["git", "rev-parse", "--short", "HEAD"], text=True
-            ).strip()
+            h = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"], text=True).strip()
             return h
         except Exception:
             return "snapshot"

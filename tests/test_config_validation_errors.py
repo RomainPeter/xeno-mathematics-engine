@@ -136,10 +136,7 @@ pipelines:
             errors = validate_config(cfg)
 
             assert len(errors) > 0
-            assert any(
-                "Referenced capability 'unknown-cap' not found" in error
-                for error in errors
-            )
+            assert any("Referenced capability 'unknown-cap' not found" in error for error in errors)
 
         finally:
             os.unlink(f.name)
@@ -164,9 +161,7 @@ metrics:
             errors = validate_config(cfg)
 
             assert len(errors) > 0
-            assert any(
-                "Invalid metrics backend 'invalid_backend'" in error for error in errors
-            )
+            assert any("Invalid metrics backend 'invalid_backend'" in error for error in errors)
 
         finally:
             os.unlink(f.name)
@@ -191,9 +186,7 @@ metrics:
             errors = validate_config(cfg)
 
             assert len(errors) > 0
-            assert any(
-                "Invalid dedup strategy 'invalid_dedup'" in error for error in errors
-            )
+            assert any("Invalid dedup strategy 'invalid_dedup'" in error for error in errors)
 
         finally:
             os.unlink(f.name)
@@ -218,9 +211,7 @@ metrics:
             errors = validate_config(cfg)
 
             assert len(errors) > 0
-            assert any(
-                "Metrics weight_key cannot be empty" in error for error in errors
-            )
+            assert any("Metrics weight_key cannot be empty" in error for error in errors)
 
         finally:
             os.unlink(f.name)
@@ -256,9 +247,7 @@ capabilities:
             errors = validate_config(cfg)
 
             assert len(errors) > 0
-            assert any(
-                "cannot be in both allowlist and denylist" in error for error in errors
-            )
+            assert any("cannot be in both allowlist and denylist" in error for error in errors)
             assert any("cap2" in error for error in errors)
 
         finally:

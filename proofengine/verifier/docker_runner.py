@@ -128,9 +128,7 @@ class DockerRunner:
         start_time = time.time()
 
         try:
-            result = subprocess.run(
-                cmd, capture_output=True, text=True, timeout=timeout_s
-            )
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout_s)
 
             duration = time.time() - start_time
 

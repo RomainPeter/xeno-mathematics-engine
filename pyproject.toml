@@ -1,114 +1,36 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
 
 [project]
-name = "pefc"
-version = "0.1.0"
-description = "Proof Engine for Code - Unified CLI and pack operations"
-authors = [
-    {name = "Discovery Engine Team", email = "team@discovery-engine.org"}
-]
+name = "xme"
+version = "0.0.1"
+description = "Xeno-Math Engine — Proofengine Discovery CLI"
 readme = "README.md"
-license = {text = "MIT"}
-requires-python = ">=3.10"
-classifiers = [
-    "Development Status :: 4 - Beta",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-]
+requires-python = ">=3.11"
+authors = [{ name = "Romain Peter" }]
 dependencies = [
-    "openai>=1.43.0",
-    "tenacity>=8.4.2",
-    "pydantic>=2.7.0",
-    "python-dotenv>=1.0.1",
-    "typer>=0.12.3",
-    "rich>=13.7.1",
-    "fastjsonschema>=2.18.0",
-    "pytest>=7.0.0",
-    "flake8>=6.0.0",
-    "mypy>=1.0.0",
-    "bandit>=1.7.0",
-    "radon>=6.0.0",
+  "pydantic>=2.7",
+  "typer>=0.12",
+  "orjson>=3.9",
+  "networkx>=3.2",
+  "rich>=13.7",
 ]
 
 [project.scripts]
-pefc = "pefc.cli:app"
-bfk = "cli.bfk:app"
+xme = "xme.cli.main:app"
 
-[project.optional-dependencies]
-dev = [
-    "pytest>=7.0.0",
-    "pytest-cov>=4.0.0",
-    "black>=23.0.0",
-    "isort>=5.12.0",
-    "flake8>=6.0.0",
-    "mypy>=1.0.0",
-    "bandit>=1.7.0",
-    "radon>=6.0.0",
-]
-
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["pefc*"]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-python_files = ["test_*.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
-addopts = [
-    "--strict-markers",
-    "--strict-config",
-    "--verbose",
-    "--tb=short",
-]
+[tool.ruff]
+line-length = 100
 
 [tool.black]
-line-length = 88
-target-version = ['py310']
-include = '\.pyi?$'
-extend-exclude = '''
-/(
-  # directories
-  \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | build
-  | dist
-)/
-'''
+line-length = 100
 
-[tool.isort]
-profile = "black"
-line_length = 88
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-use_parentheses = true
-ensure_newline_before_comments = true
+[tool.pytest.ini_options]
+addopts = "-q"
 
-[tool.mypy]
-python_version = "3.10"
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-check_untyped_defs = true
-disallow_untyped_decorators = true
-no_implicit_optional = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-warn_no_return = true
-warn_unreachable = true
-strict_equality = true
+[tool.hatch.build.targets.wheel]
+packages = ["src/xme"]
 
 [tool.bandit]
 exclude_dirs = ["tests", "test_*"]

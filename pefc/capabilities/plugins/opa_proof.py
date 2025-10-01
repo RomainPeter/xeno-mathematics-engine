@@ -24,9 +24,7 @@ class OPAProofGenerator:
     def can_handle(self, incident: Dict[str, Any]) -> bool:
         return incident.get("type") in ("security.policy.violation", "compliance.check")
 
-    def plan(
-        self, incident: Dict[str, Any], ctx: Dict[str, Any] | None = None
-    ) -> List[ProofSpec]:
+    def plan(self, incident: Dict[str, Any], ctx: Dict[str, Any] | None = None) -> List[ProofSpec]:
         input_doc = {"incident": incident, "ctx": ctx or {}}
         return [
             ProofSpec(

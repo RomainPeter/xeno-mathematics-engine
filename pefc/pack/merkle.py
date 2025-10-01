@@ -72,9 +72,7 @@ def build_entries(paths: Iterable[Tuple[Path, str]]) -> List[PackEntry]:
         with src.open("rb") as f:
             sha = _sha256_stream(f)
         leaf = _leaf_hash(arcname, size, sha)
-        entries.append(
-            PackEntry(arcname=arcname, src_path=src, size=size, sha256=sha, leaf=leaf)
-        )
+        entries.append(PackEntry(arcname=arcname, src_path=src, size=size, sha256=sha, leaf=leaf))
     # sort by arcname for determinism
     entries.sort(key=lambda e: e.arcname)
     return entries
@@ -124,9 +122,7 @@ def build_manifest(
     import platform
 
     # Calculate total size (excluding manifest.json and merkle.txt)
-    total_size = sum(
-        e.size for e in entries if e.arcname not in {"manifest.json", "merkle.txt"}
-    )
+    total_size = sum(e.size for e in entries if e.arcname not in {"manifest.json", "merkle.txt"})
 
     manifest = {
         "format_version": "1.0",
@@ -138,8 +134,7 @@ def build_manifest(
         "total_size_bytes": total_size,
         "merkle_root": merkle_root,
         "files": [
-            {"path": e.arcname, "size": e.size, "sha256": e.sha256, "leaf": e.leaf}
-            for e in entries
+            {"path": e.arcname, "size": e.size, "sha256": e.sha256, "leaf": e.leaf} for e in entries
         ],
     }
 

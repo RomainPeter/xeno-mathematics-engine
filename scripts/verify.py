@@ -28,9 +28,7 @@ def main():
 
         client = LLMClient()
         ping = client.ping()
-        plan = propose_plan(
-            "Improve sanitize_input", "{}", '["tests_ok","docstring_ok"]', "[]"
-        )
+        plan = propose_plan("Improve sanitize_input", "{}", '["tests_ok","docstring_ok"]', "[]")
         actions = propose_actions(
             "Sanitize input in utils.py", "toy repo", '["no eval","docstring_ok"]', k=2
         )

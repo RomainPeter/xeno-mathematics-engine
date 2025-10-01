@@ -76,9 +76,7 @@ class MockBanditStrategy:
         """Initialize bandit strategy."""
         pass
 
-    async def select(
-        self, candidates: List[Dict[str, Any]], context: Any
-    ) -> Dict[str, Any]:
+    async def select(self, candidates: List[Dict[str, Any]], context: Any) -> Dict[str, Any]:
         """Select candidate using bandit strategy."""
         if candidates:
             selected = candidates[0]
@@ -406,9 +404,7 @@ async def run_demo():
         print(f"  - Candidats: {len(state.cegis_results)}")
         if state.cegis_results:
             for i, result in enumerate(state.cegis_results):
-                print(
-                    f"    {i+1}. Candidat: {result.candidate.id}, Vérifié: {result.success}"
-                )
+                print(f"    {i+1}. Candidat: {result.candidate.id}, Vérifié: {result.success}")
 
         print("\n⚠️ Incidents:")
         print(f"  - Total: {len(state.incidents)}")
@@ -468,9 +464,7 @@ async def run_demo():
         scheduler_status = await scheduler.get_status()
         print("  - Scheduler:")
         print(f"    - Tâches totales: {scheduler_status['stats']['total_tasks']}")
-        print(
-            f"    - Tâches complétées: {scheduler_status['stats']['completed_tasks']}"
-        )
+        print(f"    - Tâches complétées: {scheduler_status['stats']['completed_tasks']}")
         print(f"    - Tâches échouées: {scheduler_status['stats']['failed_tasks']}")
 
         # Budget manager stats

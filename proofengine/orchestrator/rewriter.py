@@ -155,9 +155,7 @@ class PlanRewriter:
         # Remove signature field for signing
         two_cell_dict.pop("signature", None)
 
-        canonical_json = json.dumps(
-            two_cell_dict, sort_keys=True, separators=(",", ":")
-        )
+        canonical_json = json.dumps(two_cell_dict, sort_keys=True, separators=(",", ":"))
         two_cell_bytes = canonical_json.encode("utf-8")
 
         # Sign with HMAC-SHA256
@@ -182,9 +180,7 @@ class PlanRewriter:
         two_cell_dict = two_cell.to_dict()
         two_cell_dict.pop("signature", None)
 
-        canonical_json = json.dumps(
-            two_cell_dict, sort_keys=True, separators=(",", ":")
-        )
+        canonical_json = json.dumps(two_cell_dict, sort_keys=True, separators=(",", ":"))
         two_cell_bytes = canonical_json.encode("utf-8")
 
         # Recreate signature

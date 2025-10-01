@@ -103,14 +103,8 @@ class TestMetricsAggregationParity:
         pandas_summary = pandas_agg.aggregate(collector.get_runs())
 
         # Compare key metrics (allow small floating point differences)
-        assert (
-            python_summary["overall"]["run_count"]
-            == pandas_summary["overall"]["run_count"]
-        )
-        assert (
-            python_summary["overall"]["total_items"]
-            == pandas_summary["overall"]["total_items"]
-        )
+        assert python_summary["overall"]["run_count"] == pandas_summary["overall"]["run_count"]
+        assert python_summary["overall"]["total_items"] == pandas_summary["overall"]["total_items"]
 
         # Compare weighted averages
         assert (
@@ -121,10 +115,7 @@ class TestMetricsAggregationParity:
             < 1e-6
         )
         assert (
-            abs(
-                python_summary["overall"]["novelty_avg"]
-                - pandas_summary["overall"]["novelty_avg"]
-            )
+            abs(python_summary["overall"]["novelty_avg"] - pandas_summary["overall"]["novelty_avg"])
             < 1e-6
         )
 
@@ -145,14 +136,8 @@ class TestMetricsAggregationParity:
         polars_summary = polars_agg.aggregate(collector.get_runs())
 
         # Compare key metrics (allow small floating point differences)
-        assert (
-            python_summary["overall"]["run_count"]
-            == polars_summary["overall"]["run_count"]
-        )
-        assert (
-            python_summary["overall"]["total_items"]
-            == polars_summary["overall"]["total_items"]
-        )
+        assert python_summary["overall"]["run_count"] == polars_summary["overall"]["run_count"]
+        assert python_summary["overall"]["total_items"] == polars_summary["overall"]["total_items"]
 
         # Compare weighted averages
         assert (
@@ -163,10 +148,7 @@ class TestMetricsAggregationParity:
             < 1e-6
         )
         assert (
-            abs(
-                python_summary["overall"]["novelty_avg"]
-                - polars_summary["overall"]["novelty_avg"]
-            )
+            abs(python_summary["overall"]["novelty_avg"] - polars_summary["overall"]["novelty_avg"])
             < 1e-6
         )
 
@@ -187,14 +169,8 @@ class TestMetricsAggregationParity:
         polars_summary = polars_agg.aggregate(collector.get_runs())
 
         # Compare key metrics (allow small floating point differences)
-        assert (
-            pandas_summary["overall"]["run_count"]
-            == polars_summary["overall"]["run_count"]
-        )
-        assert (
-            pandas_summary["overall"]["total_items"]
-            == polars_summary["overall"]["total_items"]
-        )
+        assert pandas_summary["overall"]["run_count"] == polars_summary["overall"]["run_count"]
+        assert pandas_summary["overall"]["total_items"] == polars_summary["overall"]["total_items"]
 
         # Compare weighted averages
         assert (
@@ -205,10 +181,7 @@ class TestMetricsAggregationParity:
             < 1e-6
         )
         assert (
-            abs(
-                pandas_summary["overall"]["novelty_avg"]
-                - polars_summary["overall"]["novelty_avg"]
-            )
+            abs(pandas_summary["overall"]["novelty_avg"] - polars_summary["overall"]["novelty_avg"])
             < 1e-6
         )
 
@@ -275,10 +248,7 @@ class TestMetricsAggregationParity:
                         < 1e-6
                     )
                     assert (
-                        abs(
-                            summary1["overall"]["novelty_avg"]
-                            - summary2["overall"]["novelty_avg"]
-                        )
+                        abs(summary1["overall"]["novelty_avg"] - summary2["overall"]["novelty_avg"])
                         < 1e-6
                     )
 
@@ -304,14 +274,8 @@ class TestMetricsAggregationParity:
                     summary1 = summaries[backend1]
                     summary2 = summaries[backend2]
 
-                    assert (
-                        summary1["overall"]["run_count"]
-                        == summary2["overall"]["run_count"]
-                    )
-                    assert (
-                        summary1["overall"]["total_items"]
-                        == summary2["overall"]["total_items"]
-                    )
+                    assert summary1["overall"]["run_count"] == summary2["overall"]["run_count"]
+                    assert summary1["overall"]["total_items"] == summary2["overall"]["total_items"]
 
     @pytest.mark.slow
     def test_large_dataset_parity(self, large_test_runs: List[Dict[str, Any]]):
@@ -338,14 +302,8 @@ class TestMetricsAggregationParity:
                     summary1 = summaries[backend1]
                     summary2 = summaries[backend2]
 
-                    assert (
-                        summary1["overall"]["run_count"]
-                        == summary2["overall"]["run_count"]
-                    )
-                    assert (
-                        summary1["overall"]["total_items"]
-                        == summary2["overall"]["total_items"]
-                    )
+                    assert summary1["overall"]["run_count"] == summary2["overall"]["run_count"]
+                    assert summary1["overall"]["total_items"] == summary2["overall"]["total_items"]
 
                     # Weighted averages should be very close
                     assert (

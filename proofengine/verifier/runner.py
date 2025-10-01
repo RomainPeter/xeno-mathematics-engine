@@ -23,9 +23,7 @@ def verify_pcap_dir(pcap_dir="out/pcap", audit_out="out/audit"):
         "ts": time.time(),
         "pcap_count": len(verdicts),
         "verdicts": verdicts,
-        "digest": hashlib.sha256(
-            json.dumps(verdicts, sort_keys=True).encode()
-        ).hexdigest(),
+        "digest": hashlib.sha256(json.dumps(verdicts, sort_keys=True).encode()).hexdigest(),
     }
     with open(os.path.join(audit_out, "attestation.json"), "w", encoding="utf-8") as f:
         json.dump(att, f, indent=2)

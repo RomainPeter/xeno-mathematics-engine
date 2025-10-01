@@ -79,9 +79,7 @@ class DeterministicProposer:
     def propose(self, context: ProposalContext) -> Candidate:
         """Generate a candidate solution."""
         # Get template for violation type
-        template = self.templates.get(
-            context.violation_type, self.templates["code_style"]
-        )
+        template = self.templates.get(context.violation_type, self.templates["code_style"])
 
         # Render prompt
         prompt = template.render(context)

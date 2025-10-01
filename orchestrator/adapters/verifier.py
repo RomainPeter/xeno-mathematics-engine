@@ -21,9 +21,7 @@ class VerificationConfig:
     tools: List[str] = field(
         default_factory=lambda: ["static_analysis", "property_check", "test_execution"]
     )
-    severity_levels: List[str] = field(
-        default_factory=lambda: ["error", "warning", "info"]
-    )
+    severity_levels: List[str] = field(default_factory=lambda: ["error", "warning", "info"])
 
 
 @dataclass
@@ -127,9 +125,7 @@ class Verifier:
                 verification_tasks.append(task)
 
             # Wait for all tools to complete
-            tool_results = await asyncio.gather(
-                *verification_tasks, return_exceptions=True
-            )
+            tool_results = await asyncio.gather(*verification_tasks, return_exceptions=True)
 
             # Analyze results
             valid, confidence, evidence, metrics = self._analyze_verification_results(
@@ -210,19 +206,13 @@ class Verifier:
 
         # Check for common issues
         if "TODO" in code:
-            issues.append(
-                {"type": "warning", "message": "TODO comment found", "line": 1}
-            )
+            issues.append({"type": "warning", "message": "TODO comment found", "line": 1})
 
         if "FIXME" in code:
-            issues.append(
-                {"type": "error", "message": "FIXME comment found", "line": 1}
-            )
+            issues.append({"type": "error", "message": "FIXME comment found", "line": 1})
 
         if len(code) < 10:
-            issues.append(
-                {"type": "warning", "message": "Implementation too short", "line": 1}
-            )
+            issues.append({"type": "warning", "message": "Implementation too short", "line": 1})
 
         return {
             "tool": "static_analysis",
@@ -362,9 +352,7 @@ class Verifier:
         confidence = total_score / max(valid_tools, 1) if valid_tools > 0 else 0.0
 
         # Determine validity
-        valid = confidence >= 0.8 and all(
-            result.get("result") != "failed" for result in evidence
-        )
+        valid = confidence >= 0.8 and all(result.get("result") != "failed" for result in evidence)
 
         # Calculate metrics
         metrics = {
@@ -387,11 +375,7 @@ class Verifier:
                         else "unknown"
                     )
                 elif "issues" in result:
-                    return (
-                        result["issues"][0]["message"]
-                        if result["issues"]
-                        else "unknown"
-                    )
+                    return result["issues"][0]["message"] if result["issues"] else "unknown"
 
         return "unknown"
 
@@ -440,8 +424,7 @@ class Verifier:
             "total_verifications": self.total_verifications,
             "successful_verifications": self.successful_verifications,
             "failed_verifications": self.failed_verifications,
-            "success_rate": self.successful_verifications
-            / max(self.total_verifications, 1),
+            "success_rate": self.successful_verifications / max(self.total_verifications, 1),
             "average_verification_time": self.average_verification_time,
             "config": {
                 "timeout": self.config.timeout,

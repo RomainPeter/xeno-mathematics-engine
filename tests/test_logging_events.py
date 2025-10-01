@@ -505,16 +505,10 @@ class TestEventLoggingRealWorld:
         # Simulate pipeline execution
         bus.publish("pipeline.started", {"pipeline_name": "test_pipeline"})
         bus.publish("pipeline.step.started", {"step_name": "CollectSeeds"})
-        bus.publish(
-            "pipeline.step.succeeded", {"step_name": "CollectSeeds", "duration_s": 1.5}
-        )
+        bus.publish("pipeline.step.succeeded", {"step_name": "CollectSeeds", "duration_s": 1.5})
         bus.publish("pipeline.step.started", {"step_name": "ComputeMerkle"})
-        bus.publish(
-            "pipeline.step.succeeded", {"step_name": "ComputeMerkle", "duration_s": 0.5}
-        )
-        bus.publish(
-            "pipeline.succeeded", {"pipeline_name": "test_pipeline", "duration_s": 2.0}
-        )
+        bus.publish("pipeline.step.succeeded", {"step_name": "ComputeMerkle", "duration_s": 0.5})
+        bus.publish("pipeline.succeeded", {"pipeline_name": "test_pipeline", "duration_s": 2.0})
 
         # Check logger was called for all events
         assert logger.info.call_count == 6

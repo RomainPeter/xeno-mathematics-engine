@@ -90,9 +90,7 @@ class HermeticRunner:
         }
 
         # Calculate hash
-        return hashlib.sha256(
-            json.dumps(hash_data, sort_keys=True).encode()
-        ).hexdigest()
+        return hashlib.sha256(json.dumps(hash_data, sort_keys=True).encode()).hexdigest()
 
     def _write_record(self, record: HermeticRecord):
         """Write record to file."""

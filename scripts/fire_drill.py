@@ -43,9 +43,7 @@ if handle_fail:
     res = handle_fail(event, state=state, journal=journal)
 else:
     # Fallback: simule ajout de règle/test
-    state.add_obligation(
-        {"type": "opa_rule", "name": "require_legal_basis_for_sensitive"}
-    )
+    state.add_obligation({"type": "opa_rule", "name": "require_legal_basis_for_sensitive"})
     journal.append(
         {
             "type": "FailHandled",

@@ -135,9 +135,7 @@ def load_manifest(zip_path: Path) -> dict:
 
         # Validate against schema
         try:
-            schema_path = (
-                Path(__file__).parent.parent.parent / "schema" / "manifest.schema.json"
-            )
+            schema_path = Path(__file__).parent.parent.parent / "schema" / "manifest.schema.json"
             with open(schema_path, "r") as f:
                 schema = json.load(f)
             fastjsonschema.validate(schema, manifest)
@@ -186,9 +184,7 @@ def verify_files_sha256(zip_path: Path, manifest: dict) -> tuple[bool, dict]:
             except Exception as e:
                 report["errors"].append(f"Error reading {path}: {e}")
 
-    success = (
-        len(report["errors"]) == 0 and report["files_verified"] == report["files_total"]
-    )
+    success = len(report["errors"]) == 0 and report["files_verified"] == report["files_total"]
     return success, report
 
 

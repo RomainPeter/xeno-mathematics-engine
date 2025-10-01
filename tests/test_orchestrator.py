@@ -99,9 +99,7 @@ class TestProofEngineOrchestrator:
                 "test_case", "test goal"
             )
 
-            with patch.object(
-                orchestrator.generator, "propose_variants"
-            ) as mock_variants:
+            with patch.object(orchestrator.generator, "propose_variants") as mock_variants:
                 mock_variants.return_value = [
                     MagicMock(
                         patch_unified="patch1",
@@ -121,9 +119,7 @@ class TestProofEngineOrchestrator:
                     ),
                 ]
 
-                with patch.object(
-                    orchestrator.controller, "evaluate_patch"
-                ) as mock_eval:
+                with patch.object(orchestrator.controller, "evaluate_patch") as mock_eval:
                     mock_eval.side_effect = [
                         {"success": False, "violations": 2},
                         {"success": True, "violations": 0},
@@ -147,9 +143,7 @@ class TestProofEngineOrchestrator:
                 "test_case", "test goal"
             )
 
-            with patch.object(
-                orchestrator.generator, "propose_variants"
-            ) as mock_variants:
+            with patch.object(orchestrator.generator, "propose_variants") as mock_variants:
                 mock_variants.return_value = [
                     MagicMock(
                         patch_unified="patch1",
@@ -161,14 +155,10 @@ class TestProofEngineOrchestrator:
                     )
                 ]
 
-                with patch.object(
-                    orchestrator.controller, "evaluate_patch"
-                ) as mock_eval:
+                with patch.object(orchestrator.controller, "evaluate_patch") as mock_eval:
                     mock_eval.return_value = {"success": False, "violations": 3}
 
-                    with patch.object(
-                        orchestrator, "_execute_rollback_phase"
-                    ) as mock_rollback:
+                    with patch.object(orchestrator, "_execute_rollback_phase") as mock_rollback:
                         mock_rollback.return_value = {
                             "success": False,
                             "rollback": True,
@@ -189,9 +179,7 @@ class TestProofEngineOrchestrator:
                 "test_case", "test goal"
             )
 
-            with patch.object(
-                orchestrator.planner, "replan_after_failure"
-            ) as mock_replan:
+            with patch.object(orchestrator.planner, "replan_after_failure") as mock_replan:
                 mock_replan.return_value = MagicMock(
                     plan=["new step1", "new step2"],
                     est_success=0.6,
@@ -232,18 +220,14 @@ class TestProofEngineOrchestrator:
         with tempfile.TemporaryDirectory() as temp_dir:
             orchestrator = ProofEngineOrchestrator(temp_dir, "out")
 
-            with patch.object(
-                orchestrator.metrics_collector, "collect_metrics"
-            ) as mock_collect:
+            with patch.object(orchestrator.metrics_collector, "collect_metrics") as mock_collect:
                 mock_collect.return_value = {
                     "total_pcaps": 5,
                     "basic_metrics": {"success_rate": 0.8},
                     "performance_metrics": {"average_time_ms": 1000},
                 }
 
-                with patch.object(
-                    orchestrator.report_generator, "save_report"
-                ) as mock_report:
+                with patch.object(orchestrator.report_generator, "save_report") as mock_report:
                     mock_report.side_effect = [
                         "out/metrics/report.md",
                         "out/metrics/report.json",
@@ -264,23 +248,17 @@ class TestProofEngineOrchestrator:
             with patch.object(orchestrator, "_execute_planning_phase") as mock_plan:
                 mock_plan.return_value = {"success": True, "plan": ["step1", "step2"]}
 
-                with patch.object(
-                    orchestrator, "_execute_generation_phase"
-                ) as mock_gen:
+                with patch.object(orchestrator, "_execute_generation_phase") as mock_gen:
                     mock_gen.return_value = {
                         "success": True,
                         "best_patch": "test patch",
                         "violations": 0,
                     }
 
-                    with patch.object(
-                        orchestrator, "_execute_verification_phase"
-                    ) as mock_verify:
+                    with patch.object(orchestrator, "_execute_verification_phase") as mock_verify:
                         mock_verify.return_value = {"success": True}
 
-                        with patch.object(
-                            orchestrator, "_execute_metrics_phase"
-                        ) as mock_metrics:
+                        with patch.object(orchestrator, "_execute_metrics_phase") as mock_metrics:
                             mock_metrics.return_value = {"success": True}
 
                             result = orchestrator.run_demo("test_case", "test goal")
@@ -302,23 +280,17 @@ class TestProofEngineOrchestrator:
             with patch.object(orchestrator, "_execute_planning_phase") as mock_plan:
                 mock_plan.return_value = {"success": True, "plan": ["step1", "step2"]}
 
-                with patch.object(
-                    orchestrator, "_execute_generation_phase"
-                ) as mock_gen:
+                with patch.object(orchestrator, "_execute_generation_phase") as mock_gen:
                     mock_gen.return_value = {
                         "success": False,
                         "rollback": True,
                         "replan": ["new step1"],
                     }
 
-                    with patch.object(
-                        orchestrator, "_execute_verification_phase"
-                    ) as mock_verify:
+                    with patch.object(orchestrator, "_execute_verification_phase") as mock_verify:
                         mock_verify.return_value = {"success": True}
 
-                        with patch.object(
-                            orchestrator, "_execute_metrics_phase"
-                        ) as mock_metrics:
+                        with patch.object(orchestrator, "_execute_metrics_phase") as mock_metrics:
                             mock_metrics.return_value = {"success": True}
 
                             result = orchestrator.run_demo("test_case", "test goal")
@@ -347,12 +319,8 @@ class TestOrchestratorIntegration:
 
             # Mock de tous les composants
             with patch.object(orchestrator.planner, "propose_plan") as mock_plan:
-                with patch.object(
-                    orchestrator.generator, "propose_variants"
-                ) as mock_variants:
-                    with patch.object(
-                        orchestrator.controller, "evaluate_patch"
-                    ) as mock_eval:
+                with patch.object(orchestrator.generator, "propose_variants") as mock_variants:
+                    with patch.object(orchestrator.controller, "evaluate_patch") as mock_eval:
                         with patch("verifier.runner.verify_pcap_dir") as mock_verify:
                             with patch.object(
                                 orchestrator.metrics_collector, "collect_metrics"
@@ -373,9 +341,7 @@ class TestOrchestratorIntegration:
                                         MagicMock(
                                             patch_unified="test patch",
                                             rationale="Test rationale",
-                                            predicted_obligations_satisfied=[
-                                                "tests_ok"
-                                            ],
+                                            predicted_obligations_satisfied=["tests_ok"],
                                             risk_score=0.3,
                                             notes="Test notes",
                                             llm_meta={"latency_ms": 500},
@@ -406,9 +372,7 @@ class TestOrchestratorIntegration:
                                     mock_collect.return_value = {
                                         "total_pcaps": 3,
                                         "basic_metrics": {"success_rate": 1.0},
-                                        "performance_metrics": {
-                                            "average_time_ms": 1000
-                                        },
+                                        "performance_metrics": {"average_time_ms": 1000},
                                     }
 
                                     mock_report.side_effect = [
@@ -417,9 +381,7 @@ class TestOrchestratorIntegration:
                                     ]
 
                                     # Exécuter la démonstration
-                                    result = orchestrator.run_demo(
-                                        "test_case", "test goal"
-                                    )
+                                    result = orchestrator.run_demo("test_case", "test goal")
 
                                     # Vérifier les résultats
                                     assert result["success"] == True

@@ -52,9 +52,7 @@ class DeltaCalculator:
         evidence_quality = evidence.get("quality_score", 0.5)
 
         e_score = (
-            min(proof_count / 5, 1.0) * 0.3
-            + verification_success * 0.4
-            + evidence_quality * 0.3
+            min(proof_count / 5, 1.0) * 0.3 + verification_success * 0.4 + evidence_quality * 0.3
         )
 
         return 1.0 - e_score
@@ -79,11 +77,7 @@ class DeltaCalculator:
         quality_score = artifacts.get("quality", 0.5)
         traceability = artifacts.get("traceability", 0.5)
 
-        a_score = (
-            min(artifact_count / 5, 1.0) * 0.3
-            + quality_score * 0.4
-            + traceability * 0.3
-        )
+        a_score = min(artifact_count / 5, 1.0) * 0.3 + quality_score * 0.4 + traceability * 0.3
 
         return 1.0 - a_score
 
@@ -94,9 +88,7 @@ class DeltaCalculator:
         audit_trail = journal.get("audit_trail", {}).get("completeness", 0.5)
         journal_quality = journal.get("quality", 0.5)
 
-        j_score = (
-            min(log_count / 10, 1.0) * 0.3 + audit_trail * 0.4 + journal_quality * 0.3
-        )
+        j_score = min(log_count / 10, 1.0) * 0.3 + audit_trail * 0.4 + journal_quality * 0.3
 
         return 1.0 - j_score
 
@@ -120,9 +112,7 @@ class DeltaCalculator:
 
         return total_delta
 
-    def calculate_incident_correlation(
-        self, deltas: List[float], incidents: List[int]
-    ) -> float:
+    def calculate_incident_correlation(self, deltas: List[float], incidents: List[int]) -> float:
         """Calculate correlation between delta and incidents"""
         if len(deltas) != len(incidents) or len(deltas) < 2:
             return 0.0
@@ -156,21 +146,11 @@ class MetricsCollector:
             "execution_time": execution_time,
             "incidents": incidents,
             "dimensions": {
-                "H": self.delta_calculator.calculate_h_dimension(
-                    state.get("context", {})
-                ),
-                "E": self.delta_calculator.calculate_e_dimension(
-                    state.get("evidence", {})
-                ),
-                "K": self.delta_calculator.calculate_k_dimension(
-                    state.get("obligations", [])
-                ),
-                "A": self.delta_calculator.calculate_a_dimension(
-                    state.get("artifacts", {})
-                ),
-                "J": self.delta_calculator.calculate_j_dimension(
-                    state.get("journal", {})
-                ),
+                "H": self.delta_calculator.calculate_h_dimension(state.get("context", {})),
+                "E": self.delta_calculator.calculate_e_dimension(state.get("evidence", {})),
+                "K": self.delta_calculator.calculate_k_dimension(state.get("obligations", [])),
+                "A": self.delta_calculator.calculate_a_dimension(state.get("artifacts", {})),
+                "J": self.delta_calculator.calculate_j_dimension(state.get("journal", {})),
             },
         }
 
@@ -192,9 +172,7 @@ class MetricsCollector:
         deltas = [m["delta"] for m in self.metrics_data]
         incidents = [m["incidents"] for m in self.metrics_data]
 
-        correlation = self.delta_calculator.calculate_incident_correlation(
-            deltas, incidents
-        )
+        correlation = self.delta_calculator.calculate_incident_correlation(deltas, incidents)
 
         return {
             "delta_incident_correlation": correlation,
@@ -234,12 +212,8 @@ def main():
 
     parser = argparse.ArgumentParser(description="Calculate delta metrics")
     parser.add_argument("--tasks", help="Path to tasks directory", default="corpus/s2")
-    parser.add_argument(
-        "--output", help="Output directory", default="artifacts/metrics"
-    )
-    parser.add_argument(
-        "--weights", help="Path to weights file", default="weights.json"
-    )
+    parser.add_argument("--output", help="Output directory", default="artifacts/metrics")
+    parser.add_argument("--weights", help="Path to weights file", default="weights.json")
 
     args = parser.parse_args()
 

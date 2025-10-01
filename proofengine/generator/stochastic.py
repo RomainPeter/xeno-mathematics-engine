@@ -15,12 +15,8 @@ def propose_actions(
     variants: List[Dict[str, Any]] = []
     for i in range(k):
         seed = 1000 + i
-        user = GENERATOR_USER_TMPL.format(
-            task=task, context=context, obligations=obligations
-        )
-        data, meta = llm.generate_json(
-            GENERATOR_SYSTEM, user, seed=seed, temperature=temperature
-        )
+        user = GENERATOR_USER_TMPL.format(task=task, context=context, obligations=obligations)
+        data, meta = llm.generate_json(GENERATOR_SYSTEM, user, seed=seed, temperature=temperature)
         if isinstance(data, dict) and "patch_unified" in data:
             variants.append({"proposal": data, "llm_meta": meta})
     return variants

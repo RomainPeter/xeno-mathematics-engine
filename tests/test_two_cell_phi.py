@@ -333,9 +333,7 @@ class TestTwoCellPhi:
             return {"steps": []}
 
         selection_result = {
-            "candidates": [
-                {"strategy_id": "test_strategy", "score": 0.8, "confidence": 0.9}
-            ],
+            "candidates": [{"strategy_id": "test_strategy", "score": 0.8, "confidence": 0.9}],
             "chosen": {"id": "test_strategy", "score": 0.8, "why": "Best match"},
         }
 
@@ -382,9 +380,7 @@ class TestTwoCellPhi:
 
         rewriter.apply_strategy = mock_apply_strategy
 
-        two_cell = rewriter.apply_strategy(
-            mock_strategy, plan, context, selection_result
-        )
+        two_cell = rewriter.apply_strategy(mock_strategy, plan, context, selection_result)
 
         assert two_cell.selection_result == selection_result
         assert two_cell.selection_result["chosen"]["id"] == "test_strategy"

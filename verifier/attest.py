@@ -34,9 +34,7 @@ class AttestationManager:
         """Charge les clés depuis un fichier."""
         try:
             with open(private_key_path, "rb") as f:
-                self.private_key = serialization.load_pem_private_key(
-                    f.read(), password=None
-                )
+                self.private_key = serialization.load_pem_private_key(f.read(), password=None)
             self.public_key = self.private_key.public_key()
         except Exception as e:
             print(f"Error loading keys: {e}")
@@ -101,9 +99,7 @@ class AttestationManager:
         except Exception:
             return False
 
-    def create_attestation(
-        self, pcap_count: int, verdicts: list, sign: bool = True
-    ) -> Attestation:
+    def create_attestation(self, pcap_count: int, verdicts: list, sign: bool = True) -> Attestation:
         """
         Crée une attestation complète.
 
@@ -120,9 +116,7 @@ class AttestationManager:
             ts=time.time(),
             pcap_count=pcap_count,
             verdicts=verdicts,
-            digest=hashlib.sha256(
-                json.dumps(verdicts, sort_keys=True).encode()
-            ).hexdigest(),
+            digest=hashlib.sha256(json.dumps(verdicts, sort_keys=True).encode()).hexdigest(),
         )
 
         # Signer si demandé
@@ -188,9 +182,7 @@ class AttestationManager:
             # Vérifier la signature si présente
             signature_valid = True
             if attestation.signature:
-                signature_valid = self.verify_attestation(
-                    attestation, attestation.signature
-                )
+                signature_valid = self.verify_attestation(attestation, attestation.signature)
 
             # Vérifier le digest
             expected_digest = hashlib.sha256(
@@ -224,9 +216,7 @@ def create_simple_attestation(pcap_count: int, verdicts: list) -> Dict[str, Any]
         "ts": time.time(),
         "pcap_count": pcap_count,
         "verdicts": verdicts,
-        "digest": hashlib.sha256(
-            json.dumps(verdicts, sort_keys=True).encode()
-        ).hexdigest(),
+        "digest": hashlib.sha256(json.dumps(verdicts, sort_keys=True).encode()).hexdigest(),
         "signature": None,
     }
 
