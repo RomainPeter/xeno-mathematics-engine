@@ -1,0 +1,16 @@
+.github/workflows/ci.yml merge=ours
+.pre-commit-config.yaml merge=ours
+Dockerfile merge=ours
+README.md merge=ours
+pyproject.toml merge=ours
+requirements.in merge=ours
+scripts/verify_2cat_pack.py merge=ours
+tests/test_smoke.py merge=ours
+vendor/2cat/README.md merge=ours
+
+# Docs & placeholders often churn elsewhere; prefer our versions
+docs/*.md merge=ours
+orchestrator/**/README.md merge=ours
+methods/README.md merge=ours
+
+
