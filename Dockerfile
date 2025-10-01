@@ -1,14 +1,10 @@
-FROM python:3.11-slim
+FROM nixpkgs/nix:latest AS builder
+WORKDIR /src
+COPY . .
+RUN nix build .#xme && ln -sf $(readlink -f result/bin/xme) /usr/local/bin/xme
 
-WORKDIR /app
-COPY requirements.txt /app/
-RUN pip install --no-cache-dir -r requirements.txt
-COPY . /app
-
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-
-ENTRYPOINT ["bfk"]
-CMD ["version"]
-
-
+FROM nixpkgs/nix:latest
+COPY --from=builder /nix/store /nix/store
+COPY --from=builder /usr/local/bin/xme /usr/local/bin/xme
+ENTRYPOINT ["xme"]
+CMD ["--help"]
