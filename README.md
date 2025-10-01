@@ -1,165 +1,167 @@
-# xeno-mathematics-engine
+# Xeno Mathematics Engine
 
-Badges
-- CI Hardening: ![CI Hardening](https://github.com/OWNER/REPO/actions/workflows/ci-harden.yml/badge.svg)
-- Pack Verify: ![Pack Verify](https://github.com/OWNER/REPO/actions/workflows/pack-verify.yml/badge.svg)
-- Orchestrator E2E: ![Orchestrator E2E](https://github.com/OWNER/REPO/actions/workflows/orchestrator-e2e.yml/badge.svg)
+A hermetic proof engine for mathematical verification, designed for reproducible and verifiable mathematical reasoning.
 
-![CI](https://github.com/RomainPeter/discovery-engine-2cat/actions/workflows/ci.yml/badge.svg)
-![Nightly Bench](https://github.com/RomainPeter/discovery-engine-2cat/actions/workflows/nightly-bench.yml/badge.svg)
-![Gate Merge](https://github.com/RomainPeter/discovery-engine-2cat/actions/workflows/gate-merge.yml/badge.svg)
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![CI](https://github.com/your-org/xeno-mathematics-engine/workflows/CI/badge.svg)](https://github.com/your-org/xeno-mathematics-engine/actions)
 
-Building a telescope to produce and observe alien Mathematics. Xeno-mathematics as an AI enhancement to our mathematical understanding.
+## Overview
 
-## Quickstart
+The Xeno Mathematics Engine (XME) is a comprehensive system for mathematical proof verification, built with hermetic principles to ensure reproducibility and security. It provides:
 
-- Dev shell (Nix): `nix develop`
-- Pré-commit: `pre-commit install`
-- Lancer CLI minimale: `bfk version`
-- Vérifier vendor 2cat offline: `bfk verify-vendor`
+- **PSP (Proof Structure Protocol)**: Structured representation of mathematical proofs
+- **PCAP (Proof Capability Protocol)**: Capability-based proof verification
+- **Supply Chain Security**: Cryptographic verification of all components
+- **Hermetic Builds**: Reproducible, deterministic builds using Nix
 
-## Ressources CI & Sécurité
+## Quick Start
 
-- Politique CI et portes: voir `docs/CI.md`
-- Politique de dérive (baseline Merkle): voir `docs/DRIFT_POLICY.md`
+### Development Environment
+
+```bash
+# Enter development environment
+make dev
+
+# Run tests
+make test
+
+# Build the CLI
+make build
+```
+
+### Docker Usage
+
+```bash
+# Build Docker image
+make docker
+
+# Run the CLI
+docker run --rm xme/dev:latest --help
+```
 
 ## Architecture
 
-Ce repository contient l'agent de découverte basé sur l'Architecture Unifiée v0.1, utilisant le Proof Engine comme dépendance versionnée.
+XME is built around several core components:
 
-### Structure
+- **Orchestrator**: Coordinates proof verification workflows
+- **Engines**: Specialized proof verification engines
+- **Methods**: Various proof methods (AE, CEGIS, etc.)
+- **Persistence**: Storage and retrieval of proofs and data
+- **Policy**: Security and verification policies
 
-```
-discovery-engine-2cat/
-├── external/
-│   └── proof-engine-core/          # Submodule @ tag v0.1.0
-├── orchestrator/                   # Orchestrateur principal
-├── methods/                        # Méthodes AE/CEGIS/e-graph
-├── domain/                         # Domain adapters
-├── schemas/                        # JSON Schemas v0.1
-├── bench/                          # Benchmarks + baselines
-├── ci/                            # CI/CD + attestations
-└── prompts/                       # Micro-prompts LLM
-```
+## Key Features
 
-### Composants
+### 🔒 Hermetic Security
+- All dependencies are cryptographically verified
+- Reproducible builds using Nix
+- Supply chain integrity verification
 
-- **AE (Attribute Exploration)**: Next-closure algorithm avec oracle Verifier
-- **CEGIS**: Counter-Example Guided Inductive Synthesis
-- **E-graphs**: Canonicalisation et anti-redondance structurelle
-- **Sélection**: Bandit contextuel, MCTS, Pareto
-- **Domain Adapters**: RegTech/Code, etc.
+### 🧮 Mathematical Rigor
+- Formal verification of proof structures
+- DAG validation for proof dependencies
+- Capability-based access control
 
-### Utilisation
+### 🚀 Performance
+- Optimized proof verification
+- Parallel processing capabilities
+- Efficient storage and retrieval
 
-#### CLI unifiée (T17)
+### 🔧 Developer Experience
+- Comprehensive CI/CD pipeline
+- Docker support for easy deployment
+- Extensive documentation and examples
 
-```bash
-# Pack operations
-pefc pack build --pipeline config/pipelines/bench_pack.yaml
-pefc pack verify --zip dist/*.zip --strict
-pefc pack manifest --zip dist/*.zip --print
-pefc pack sign --in dist/*.zip --provider cosign
+## Getting Started
 
-# Configuration
-pefc --config config/pack.yaml --json-logs pack build
-```
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-org/xeno-mathematics-engine.git
+   cd xeno-mathematics-engine
+   ```
 
-#### CI Pack smoke-test (T19)
+2. **Enter development environment**
+   ```bash
+   make dev
+   ```
 
-Le CI garantit en continu l'absence de régression dans la construction et la vérification des packs :
+3. **Run tests**
+   ```bash
+   make test
+   ```
 
-```bash
-# Test local du workflow CI
-python test_ci_workflow.py
+4. **Build the CLI**
+   ```bash
+   make build
+   ```
 
-# Vérification des doublons
-python scripts/check_zip_duplicates.py dist/dist/*.zip
+## Documentation
 
-# Vérification complète
-pefc pack verify --zip dist/dist/*.zip --strict
-```
+- [PSP (Proof Structure Protocol)](docs/psp.md) - Learn about proof structure representation
+- [PCAP (Proof Capability Protocol)](docs/pcap.md) - Understand capability-based verification
+- [Supply Chain Security](docs/supply-chain.md) - Security and verification processes
+- [Architecture](docs/architecture.md) - System architecture overview
+- [API Reference](docs/api/) - Detailed API documentation
 
-**Fonctionnalités CI :**
-- ✅ Construction automatique avec `pefc pack build`
-- ✅ Détection des doublons d'arcnames dans le ZIP
-- ✅ Vérification stricte manifest/SHA256/Merkle
-- ✅ Tests sur Python 3.10, 3.11, 3.12
-- ✅ Artefacts : ZIP, manifest.json, verify.json, merkle_root.txt
-- ✅ Résumé CI avec métriques détaillées
+## Contributing
 
-**Déclencheurs :**
-- Push sur `main`
-- Pull requests
-- Tags `v*`
-
-#### Makefile (compatible)
-
-```bash
-# Tests
-make ae-test          # Test AE Next-Closure
-make egraph-test      # Test E-graph canonicalization
-make bandit-test      # Test bandit/DPP selection
-make ci-test          # Test CI components
-
-# Pack operations (utilise pefc CLI)
-make public-bench-pack # Build pack avec pipeline par défaut
-make verify-pack      # Vérifier pack avec signature
-make pack-manifest    # Afficher manifest
-make pack-sign        # Signer pack
-
-# Démo
-make discovery-demo   # Démo complète
-
-# CI Pipeline
-make ci-full          # Pipeline CI complet
-make hermetic-test    # Test runner hermétique
-make merkle-test      # Test journal Merkle
-make attestation      # Génération attestation
-```
-
-### Dépendances
-
-- **proof-engine-core**: Noyau stable (PCAP, runner hermétique, attestations)
-- **Python 3.10+**: Runtime
-- **OPA**: Oracle pour vérification
-- **Static Analysis**: Outils d'analyse statique
-
-### Versioning
-
-- **discovery-engine**: v0.x (exploration et orchestration)
-- **proof-engine-core**: v0.x (noyau stable)
-- Compatibilité: `proof-engine-core>=0.1.0,<0.2.0`
-
-## Développement
-
-### Migration depuis proof-engine-for-code
-
-Ce repository a été créé en migrant les composants d'exploration depuis le Proof Engine principal pour permettre un développement indépendant et accéléré.
-
-### Garde-faus
-
-- Aucune modification directe de `proof-engine-core`
-- Toute évolution du core → PR sur proof-engine-core → nouveau tag → bump submodule
-- Attestations distinctes par repository
-- Versionnage coordonné avec contraintes de compatibilité
-
-## CI/CD
-
-### Workflows
-
-- **CI**: Tests sur Python 3.10, 3.11, 3.12 avec matrix
-- **Attestation**: Génération d'attestations avec Merkle root
-- **Hermetic Runner**: Exécution reproductible avec enregistrement
-
-### Artifacts
-
-- **Merkle Root**: Hachage d'intégrité du journal
-- **Attestation**: Signature des composants
-- **Test Results**: Résultats des tests avec couverture
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on how to get started.
 
 ## License
 
-Voir LICENSE pour les détails.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Status
+
+The project is currently in active development. See our [roadmap](docs/roadmap.md) for planned features and milestones.
+
+## Epic 0 Completion Criteria
+
+- [x] `nix develop` works correctly
+- [x] `flake.lock` committed
+- [x] Pre-commit hooks block CI correctly
+- [x] Pytest tests pass
+- [x] Docker image executes `xme --help`
+- [x] SBOM generated in CI with Syft
+- [x] Script `verify_2cat` works (when pack present)
+- [x] README with CI badge
+
+## Architecture Decisions
+
+### Naming Consistency
+- Unified "xme" naming throughout (CLI, package, workflow)
+- Avoided "bfk/bfk" naming conflicts
+
+### Deterministic JSON
+- Using `orjson` with `OPT_SORT_KEYS` for deterministic JSON
+- Roundtrip tests for PSP and PCAP
+
+### PSP Validation
+- NetworkX enforces DAG properties
+- Hooks for additional constraints (typing, contexts)
+- Normalized "kinds" via Enum
+
+### PCAP Schema
+- Minimal obligation schema (S0) defined
+- Required keys: `policy_id`, `invariant_id`, `result`, `proof_ref`
+
+### Supply Chain Security
+- Minisign public key required in `vendor/2cat/2cat.lock`
+- CI check that only fails if all three files exist and verification fails
+
+### Infrastructure vs Logic Separation
+- Epic 0 focuses on infrastructure, not orchestrator/engines logic
+- Placeholder directories with README.md files
+- No logic implementation until PSP/PCAP and CI are solid
+
+## Future Enhancements
+
+### Planned Features
+- **Distributed Verification**: Support for distributed proof verification
+- **Machine Learning Integration**: ML-based proof strategy selection
+- **Advanced Proof Methods**: Integration with Lean, Coq, and other provers
+- **Visual Proof Designer**: GUI for proof construction
+
+### Integration Points
+- **Cloud Integration**: Integration with cloud services
+- **Monitoring Systems**: Integration with monitoring tools
+- **Notification Systems**: Integration with notification services
+- **Analytics**: Integration with analytics platforms

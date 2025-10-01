@@ -1,8 +1,8 @@
-site_name: Discovery Engine 2‑Cat
-site_description: A Proof Engine for Code
-site_url: https://your-org.github.io/discovery-engine-2cat
-repo_url: https://github.com/your-org/discovery-engine-2cat
-repo_name: your-org/discovery-engine-2cat
+site_name: Xeno Mathematics Engine
+site_description: A Hermetic Proof Engine for Mathematical Verification
+site_url: https://your-org.github.io/xeno-mathematics-engine
+repo_url: https://github.com/your-org/xeno-mathematics-engine
+repo_name: your-org/xeno-mathematics-engine
 
 theme:
   name: material
@@ -31,6 +31,9 @@ theme:
 
 nav:
   - Home: index.md
+  - PSP: psp.md
+  - PCAP: pcap.md
+  - Supply Chain: supply-chain.md
   - Architecture: architecture.md
   - Benchmarks: benchmarks.md
   - Proofs: proofs.md
@@ -95,7 +98,7 @@ markdown_extensions:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/your-org/discovery-engine-2cat
+      link: https://github.com/your-org/xeno-mathematics-engine
     - icon: fontawesome/brands/twitter
       link: https://twitter.com/your-org
     - icon: fontawesome/brands/linkedin
