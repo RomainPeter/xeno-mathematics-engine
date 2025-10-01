@@ -22,7 +22,7 @@ gh label create "priority:lowest" --color 808080 --description "Lowest priority 
 
 # Component labels
 gh label create "component:psp" --color 4169E1 --description "Proof Structure Protocol"
-gh label create "component:pcap" --color 228B22 --description "Proof Capability Protocol"
+gh label create "component:pcap" --color 228B22 --description "Proof-Carrying Actions"
 gh label create "component:orchestrator" --color DC143C --description "Orchestration system"
 gh label create "component:engines" --color FF6347 --description "Proof verification engines"
 gh label create "component:persistence" --color 8A2BE2 --description "Data persistence layer"

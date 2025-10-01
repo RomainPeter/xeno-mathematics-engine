@@ -1,6 +1,6 @@
-# PCAP (Proof Capability Protocol)
+# PCAP (Proof-Carrying Actions)
 
-The Proof Capability Protocol (PCAP) defines how proof capabilities are managed, verified, and enforced within the Xeno Mathematics Engine.
+Proof-Carrying Actions (PCAP) define how proof-carrying actions are managed, verified, and enforced within the Xeno Mathematics Engine.
 
 ## Overview
 

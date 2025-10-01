@@ -9,7 +9,7 @@ A hermetic proof engine for mathematical verification, designed for reproducible
 The Xeno Mathematics Engine (XME) is a comprehensive system for mathematical proof verification, built with hermetic principles to ensure reproducibility and security. It provides:
 
 - **PSP (Proof Structure Protocol)**: Structured representation of mathematical proofs
-- **PCAP (Proof Capability Protocol)**: Capability-based proof verification
+- **PCAP (Proof-Carrying Actions)**: Action verification with embedded proofs
 - **Supply Chain Security**: Cryptographic verification of all components
 - **Hermetic Builds**: Reproducible, deterministic builds using Nix
 
@@ -96,7 +96,7 @@ XME is built around several core components:
 ## Documentation
 
 - [PSP (Proof Structure Protocol)](docs/psp.md) - Learn about proof structure representation
-- [PCAP (Proof Capability Protocol)](docs/pcap.md) - Understand capability-based verification
+- [PCAP (Proof-Carrying Actions)](docs/pcap.md) - Understand action verification with embedded proofs
 - [Supply Chain Security](docs/supply-chain.md) - Security and verification processes
 - [Architecture](docs/architecture.md) - System architecture overview
 - [API Reference](docs/api/) - Detailed API documentation
