@@ -1,6 +1,14 @@
-# PCAP (Proof-Carrying Actions)
+# PCAP — Proof-Carrying Actions
 
-Proof-Carrying Actions (PCAP) define how proof-carrying actions are managed, verified, and enforced within the Xeno Mathematics Engine.
+- Append-only JSONL with chained hashes:
+  - Each action entry includes prev_hash (hash of previous action) and hash = sha256(canonical(entry without hash)).
+  - RunHeader first line identifies the run (run_id, started_at).
+- Merkle root:
+  - Leaves = action.hash values in order; pairwise concat and sha256 up to a single root.
+  - `xme pcap merkle --run artifacts/pcap/run-*.jsonl`
+- Verification:
+  - `xme pcap verify --run ...` checks per-entry hash and chain continuity.
+- Levels: S0 (fast), S1 (pre-push), S2 (CI).
 
 ## Overview
 

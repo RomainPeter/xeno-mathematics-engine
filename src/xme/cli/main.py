@@ -65,27 +65,49 @@ def psp_topo(path: str, as_json: bool = typer.Option(False, "--json/--no-json"))
             typer.echo(n)
 
 
+@pcap_app.command("new-run")
+def pcap_new_run(out: str = typer.Option("artifacts/pcap", "--out")):
+    store = PCAPStore.new_run(Path(out))
+    print(f"[green]New run[/green] path={store.path}")
+
+
 @pcap_app.command("log")
 def pcap_log(
-    action: str,
-    actor: str = "xme",
-    psp_ref: Optional[str] = None,
-    out: str = "artifacts/pcap",
+    run: str = typer.Option(..., "--run", help="Path to run .jsonl"),
+    action: str = typer.Option(..., "--action"),
+    actor: str = typer.Option("xme", "--actor"),
+    level: str = typer.Option("S0", "--level"),
+    psp_ref: Optional[str] = typer.Option(None, "--psp-ref"),
 ):
-    run_id = str(uuid.uuid4())
-    ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    store = PCAPStore(Path(out) / f"run-{ts}.jsonl")
-    store.append(
-        PCAPEntry(
-            action=action,
-            actor=actor,
-            psp_ref=psp_ref,
-            obligations={},
-            deltas={},
-            timestamp=datetime.now(timezone.utc),
-        )
+    store = PCAPStore(Path(run))
+    entry = PCAPEntry(
+        action=action,
+        actor=actor,
+        level=level,
+        psp_ref=psp_ref,
+        obligations={},
+        deltas={},
+        timestamp=datetime.now(timezone.utc),
     )
-    print(f"[green]Logged[/green] run_id={run_id}")
+    stored = store.append(entry)
+    print(f"[green]Logged[/green] hash={stored.hash} prev={stored.prev_hash}")
+
+
+@pcap_app.command("merkle")
+def pcap_merkle(run: str = typer.Option(..., "--run")):
+    store = PCAPStore(Path(run))
+    root = store.merkle_root()
+    print(root or "")
+
+
+@pcap_app.command("verify")
+def pcap_verify(run: str = typer.Option(..., "--run")):
+    store = PCAPStore(Path(run))
+    ok, reason = store.verify()
+    if not ok:
+        print(f"[red]Verify failed[/red]: {reason}")
+        raise typer.Exit(code=1)
+    print("[green]Verify OK[/green]")
 
 
 @engine_app.command("verify-2cat")

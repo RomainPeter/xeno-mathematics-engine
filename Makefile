@@ -657,3 +657,12 @@ psp-schema:
 	@xme psp schema --out docs/psp.schema.json
 psp-normalize:
 	@xme psp normalize examples/psp/mock_yoneda.json --out /tmp/psp_norm.json
+
+# PCAP demo target
+pcap:
+	@RUN_PATH=$$(xme pcap new-run --out artifacts/pcap | awk '{print $$3}' | cut -d= -f2); \
+	xme pcap log --run $$RUN_PATH --action "demo:start"; \
+	xme pcap log --run $$RUN_PATH --action "demo:end"; \
+	echo "RUN=$$RUN_PATH"; \
+	xme pcap verify --run $$RUN_PATH; \
+	xme pcap merkle --run $$RUN_PATH
