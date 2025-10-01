@@ -37,6 +37,11 @@ repos:
       - id: commitizen
   - repo: local
     hooks:
+      - id: conflict-marker-check
+        name: Detect merge conflict markers
+        entry: python scripts/check_conflict_markers.py
+        language: system
+        pass_filenames: false
       - id: validate-schemas
         name: Validate JSON Schemas and Examples
         entry: python scripts/test_roundtrip.py
