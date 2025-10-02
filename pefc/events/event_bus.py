@@ -154,8 +154,9 @@ class EventBus:
                             # Best-effort pop left
                             self.buffer.popleft()
                             self.stats["dropped"] += 1
-                        except Exception:
-                            pass
+                        except Exception as e:
+                            import logging
+                            logging.warning(f"Error dropping event: {e}")
                     self.buffer.append(event)
                     self.stats["published"] += 1
                 else:
@@ -346,7 +347,9 @@ def replay_journal(path: Union[str, Path], callback: Callable[[Event], None]) ->
                 ev = Event.from_dict(data)
                 callback(ev)
                 count += 1
-            except Exception:
+            except Exception as e:
                 # Skip malformed lines but continue replay
+                import logging
+                logging.warning(f"Error replaying event: {e}")
                 continue
     return count

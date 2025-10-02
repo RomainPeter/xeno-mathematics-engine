@@ -14,8 +14,9 @@ def load_metrics(root):
             with open(f) as fh:
                 m = json.load(fh)
                 data.append(m)
-        except Exception:
-            pass
+        except Exception as e:
+            import logging
+            logging.warning(f"Failed to load metrics from {fp}: {e}")
     return data
 
 

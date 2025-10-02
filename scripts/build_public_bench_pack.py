@@ -35,8 +35,9 @@ try:
     from pefc.events.subscribers import LoggingSubscriber
 
     bus.subscribe("*", LoggingSubscriber(logger).handler, priority=-100)
-except Exception:
-    pass
+except Exception as e:
+    import logging
+    logging.warning(f"Failed to subscribe to event bus: {e}")
 
 
 class PublicBenchPackBuilder:

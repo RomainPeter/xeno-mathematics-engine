@@ -20,7 +20,9 @@ def load_json(fp):
     try:
         with open(fp, "r", encoding="utf-8") as f:
             return json.load(f)
-    except Exception:
+    except Exception as e:
+        import logging
+        logging.warning(f"Failed to load JSON from {fp}: {e}")
         return None
 
 
@@ -29,7 +31,9 @@ def git_commit():
         h = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"], text=True).strip()
         tag = subprocess.check_output(["git", "describe", "--tags", "--always"], text=True).strip()
         return h, tag
-    except Exception:
+    except Exception as e:
+        import logging
+        logging.warning(f"Failed to get git info: {e}")
         return None, None
 
 
@@ -79,8 +83,9 @@ def main():
     for e in verifies:
         try:
             delta_vals.append(float(e.get("post", {}).get("delta", 0)))
-        except Exception:
-            pass
+        except Exception as e:
+            import logging
+            logging.warning(f"Failed to parse delta value: {e}")
     delta_mean = round(sum(delta_vals) / len(delta_vals), 3) if delta_vals else None
 
     # Build sections

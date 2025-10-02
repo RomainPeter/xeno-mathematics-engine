@@ -101,9 +101,10 @@ class Orchestrator:
         # Start event bus drain loop to write events to sinks
         try:
             await self.event_bus.start()
-        except Exception:
+        except Exception as e:
             # Non-fatal: continue without background drain
-            pass
+            import logging
+            logging.warning(f"Failed to start event bus: {e}")
 
         # Emit start event
         self.event_bus.emit_orchestrator_event(
@@ -177,8 +178,9 @@ class Orchestrator:
             # Stop event bus (best-effort flush)
             try:
                 await self.event_bus.stop()
-            except Exception:
-                pass
+            except Exception as e:
+                import logging
+                logging.warning(f"Failed to stop event bus: {e}")
 
         return self.state
 

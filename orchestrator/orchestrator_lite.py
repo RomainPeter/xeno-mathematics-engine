@@ -71,8 +71,9 @@ class OrchestratorLite:
         self.event_bus.set_correlation_ids(self.trace_id, self.run_id)
         try:
             await self.event_bus.start()
-        except Exception:
-            pass
+        except Exception as e:
+            import logging
+            logging.warning(f"Failed to start event bus: {e}")
 
         self.event_bus.emit_orchestrator_event(
             "started",
@@ -103,8 +104,9 @@ class OrchestratorLite:
             )
             try:
                 await self.event_bus.stop()
-            except Exception:
-                pass
+            except Exception as e:
+                import logging
+                logging.warning(f"Failed to stop event bus: {e}")
         return self.metrics
 
     async def _initialize(self, domain_spec: Dict[str, Any]) -> None:
@@ -211,8 +213,9 @@ class OrchestratorLite:
                 # If res is a Counterexample-like, count it
                 if hasattr(res, "failing_property"):
                     self.metrics["cegis"]["ce_found_count"] += 1
-            except Exception:
-                pass
+            except Exception as e:
+                import logging
+                logging.warning(f"Error updating CEGIS metrics: {e}")
             # Progress metric update (no-accept → rate unchanged)
             self._progress_series.append(self.metrics["cegis"]["patch_accept_rate"])
             # Oscillation detection

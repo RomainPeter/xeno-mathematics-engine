@@ -73,9 +73,10 @@ class EventBus:
         for idx, s in to_call:
             try:
                 s.handler(ev)
-            except Exception:
+            except Exception as e:
                 # Bus should never crash; let logger subscriber capture errors
-                pass
+                import logging
+                logging.warning(f"Event handler error: {e}")
             if s.once:
                 removals.append(s)
 
