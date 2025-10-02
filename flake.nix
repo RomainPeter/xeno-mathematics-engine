@@ -15,6 +15,18 @@
           pip
           setuptools
           wheel
+          jsonschema
+          pydantic
+          typer
+          rich
+          orjson
+          networkx
+          pytest
+          black
+          ruff
+          mypy
+          bandit
+          pre-commit
         ]);
       in {
         devShells.default = pkgs.mkShell {
