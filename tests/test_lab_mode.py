@@ -50,7 +50,10 @@ def _load_types(journal: Path):
         try:
             ev = json.loads(line)
             types.append(ev.get("type"))
-        except Exception:
+        except Exception as e:
+            import logging
+
+            logging.debug(f"Failed to parse line: {e}")
             continue
     return types
 

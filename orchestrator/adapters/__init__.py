@@ -54,6 +54,8 @@ try:
         "RefinementStrategy",
         "RefinementConfig",
     ]
-except Exception:
+except Exception as e:
     # Lab mode can proceed without real adapters
-    pass
+    import logging
+
+    logging.warning(f"Failed to import adapters: {e}")

@@ -32,19 +32,19 @@ def test_make_risk_aliases():
     # Test aliases
     risk1 = make_risk("mean")
     risk2 = make_risk("neutral")
-    assert type(risk1) == type(risk2)
+    assert type(risk1) is type(risk2)
 
     risk1 = make_risk("cvar")
     risk2 = make_risk("cv@r")
-    assert type(risk1) == type(risk2)
+    assert type(risk1) is type(risk2)
 
     risk1 = make_risk("entropic")
     risk2 = make_risk("exp")
-    assert type(risk1) == type(risk2)
+    assert type(risk1) is type(risk2)
 
     risk1 = make_risk("semivar")
     risk2 = make_risk("semivariance")
-    assert type(risk1) == type(risk2)
+    assert type(risk1) is type(risk2)
 
 
 def test_make_risk_unknown():
@@ -76,11 +76,11 @@ def test_make_ids_aliases():
     ids1 = make_ids("epsilon")
     ids2 = make_ids("eps")
     ids3 = make_ids("epsilon-greedy")
-    assert type(ids1) == type(ids2) == type(ids3)
+    assert type(ids1) is type(ids2) is type(ids3)
 
     ids1 = make_ids("thompson")
     ids2 = make_ids("ts")
-    assert type(ids1) == type(ids2)
+    assert type(ids1) is type(ids2)
 
 
 def test_make_ids_unknown():
