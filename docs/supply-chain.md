@@ -13,6 +13,35 @@ Supply chain security in XME ensures that:
 
 ## Security Model
 
+### Pipelines et Audit Pack
+
+Le **Discovery Engine 2Cat** produit des **Audit Packs** hermétiques qui intègrent tous les artefacts du pipeline :
+
+- **Manifest** : Liste des fichiers avec SHA256 et Merkle root
+- **Artefacts** : PSP, PCAP, métriques, rapports
+- **Vérification** : Intégrité cryptographique du pack
+- **Traçabilité** : Chaîne complète de génération → vérification
+
+#### Structure de l'Audit Pack
+```
+2cat-pack-20240101T120000Z.zip
+├── manifest.json              # Manifest avec Merkle root
+├── artifacts/psp/2cat.json       # PSP généré par AE
+├── artifacts/pcap/run-*.jsonl    # Traces PCAP complètes
+├── artifacts/metrics/2cat.json   # Métriques δ calculées
+├── artifacts/reports/2cat.json  # Rapport final du pipeline
+└── docs/psp.schema.json          # Schéma PSP pour validation
+```
+
+#### Vérification du Pack
+```bash
+# Vérifier l'intégrité du pack
+xme 2cat verify-pack --pack dist/pack-*.zip
+
+# Vérifier le manifest
+xme pack verify --pack dist/pack-*.zip
+```
+
 ### Cryptographic Verification
 
 All components are cryptographically signed and verified:
@@ -49,21 +78,67 @@ vendor/2cat/
 
 The lock file contains essential verification information:
 
-```yaml
-# Package metadata
-name: 2cat
-version: 1.0.0
-description: 2cat vendor package for xeno-mathematics-engine
-
-# Security verification
-sha256: a1b2c3d4e5f6...
-pubkey: RWR+WQZ2jNToFXbeOaKihS2kSy5uz10Hi+HOA3Rq2rRF8u6n7wi3ws
-
-# Build information
-build_date: 2024-01-01T00:00:00Z
-build_system: nix
-build_commit: abc123def456
 ```
+# 2cat vendor lock file
+# This file contains the expected hash, size, and public key for the 2cat vendor package
+# Format:
+# sha256:<hex>
+# size:<bytes>
+# pubkey:<minisign_public_key>
+
+sha256:a1b2c3d4e5f6...
+size:1048576
+pubkey:RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3
+```
+
+### Vendor Policy
+
+XME implements a **dual-mode vendor verification policy**:
+
+#### Local Development (Strict Mode)
+- **Enforcement**: `FORCE_VERIFY_2CAT=1` - All vendor packages must be present and valid
+- **Behavior**: Missing or invalid packages cause build failure
+- **Use Case**: Development environments where vendor packages are required
+
+#### CI/CD (Permissive Mode)
+- **Enforcement**: `FORCE_VERIFY_2CAT=0` - Missing packages are skipped gracefully
+- **Behavior**: Missing packages log "skipped" and continue build
+- **Use Case**: CI environments where vendor packages may not be available
+
+#### Publishing a 2cat Pack
+
+To publish a new 2cat vendor package:
+
+1. **Create the package**:
+   ```bash
+   tar -czf vendor/2cat/2cat-pack.tar.gz -C vendor/2cat/ src/
+   ```
+
+2. **Sign the package**:
+   ```bash
+   minisign -S -s ~/.minisign/2cat.key -m vendor/2cat/2cat-pack.tar.gz
+   ```
+
+3. **Update the lock file**:
+   ```bash
+   # Calculate SHA256
+   sha256=$(shasum -a 256 vendor/2cat/2cat-pack.tar.gz | awk '{print $1}')
+
+   # Get file size
+   size=$(stat -c%s vendor/2cat/2cat-pack.tar.gz)
+
+   # Update lock file
+   cat > vendor/2cat/2cat.lock << EOF
+   sha256:$sha256
+   size:$size
+   pubkey:RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3
+   EOF
+   ```
+
+4. **Test verification**:
+   ```bash
+   FORCE_VERIFY_2CAT=1 bash scripts/verify_2cat_pack.sh
+   ```
 
 ### Verification Process
 
@@ -78,15 +153,15 @@ SIG="${PACK}.minisig"
 LOCK="vendor/2cat/2cat.lock"
 
 # Check file existence
-[ -f "$PACK" ] && [ -f "$SIG" ] && [ -f "$LOCK" ] || { 
-    echo "Missing pack/signature/lock"; exit 2; 
+[ -f "$PACK" ] && [ -f "$SIG" ] && [ -f "$LOCK" ] || {
+    echo "Missing pack/signature/lock"; exit 2;
 }
 
 # Verify SHA256 checksum
 EXPECTED_SHA=$(grep '^sha256:' "$LOCK" | cut -d: -f2)
 ACTUAL_SHA=$(shasum -a 256 "$PACK" | awk '{print $1}')
-[ "$EXPECTED_SHA" = "$ACTUAL_SHA" ] || { 
-    echo "SHA256 mismatch"; exit 3; 
+[ "$EXPECTED_SHA" = "$ACTUAL_SHA" ] || {
+    echo "SHA256 mismatch"; exit 3;
 }
 
 # Verify digital signature
@@ -112,7 +187,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v27
       - run: nix develop -c pre-commit run -a
-  
+
   sbom:
     runs-on: ubuntu-latest
     steps:
@@ -121,7 +196,7 @@ jobs:
       - run: nix develop -c bash -lc 'mkdir -p sbom && syft dir:. -o spdx-json > sbom/sbom.spdx.json'
       - uses: actions/upload-artifact@v4
         with: { name: sbom, path: sbom/sbom.spdx.json }
-  
+
   docker-build:
     runs-on: ubuntu-latest
     steps:
@@ -129,7 +204,7 @@ jobs:
       - uses: docker/setup-buildx-action@v3
       - uses: docker/build-push-action@v6
         with: { context: ., push: false, tags: xme/dev:latest }
-  
+
   attest:
     if: ${{ secrets.COSIGN_KEY != '' }}
     runs-on: ubuntu-latest
@@ -229,10 +304,10 @@ def verify_dependencies():
     """Verify all project dependencies."""
     # Check Python dependencies
     verify_python_deps()
-    
+
     # Check Nix dependencies
     verify_nix_deps()
-    
+
     # Check vendor packages
     verify_vendor_packages()
 ```
@@ -249,7 +324,7 @@ class SecurityPolicy:
             "pypi.org",
             "nixpkgs.org"
         ]
-    
+
     def verify_source(self, source):
         """Verify that source is allowed."""
         return source in self.allowed_sources
@@ -266,11 +341,11 @@ class SecurityMonitor:
     def monitor_builds(self):
         """Monitor build processes for security issues."""
         pass
-    
+
     def audit_dependencies(self):
         """Audit dependencies for vulnerabilities."""
         pass
-    
+
     def check_integrity(self):
         """Check system integrity."""
         pass
@@ -346,6 +421,144 @@ nix scan
 - **Vulnerability Databases**: Integration with vulnerability databases
 - **Compliance Frameworks**: Integration with compliance frameworks
 - **Security Orchestration**: Integration with security orchestration tools
+
+## Audit Pack v0
+
+### Overview
+
+The Audit Pack provides a tamper-evident archive of all project artifacts with cryptographic verification. It includes a manifest with file hashes, Merkle tree root, and comprehensive metadata.
+
+### Structure
+
+```
+pack-YYYYMMDDTHHMMSSZ.zip
+├── manifest.json          # Pack manifest with metadata
+├── file1.psp.json        # PSP artifacts
+├── file2.pcap.jsonl      # PCAP journal entries
+├── psp.schema.json        # JSON Schema
+└── sbom.spdx.json       # Software Bill of Materials
+```
+
+### Manifest Format
+
+The manifest contains comprehensive metadata:
+
+```json
+{
+  "version": 1,
+  "created_at": "2024-01-01T00:00:00Z",
+  "tool": "xme",
+  "run_path": "artifacts/pcap/run-20240101T000000Z.jsonl",
+  "files": [
+    {
+      "path": "artifacts/psp/ae_demo.json",
+      "kind": "psp",
+      "size": 1024,
+      "sha256": "a1b2c3d4e5f6..."
+    }
+  ],
+  "merkle_root": "f6e5d4c3b2a1...",
+  "notes": "Audit Pack generated at 2024-01-01T00:00:00Z"
+}
+```
+
+### Merkle Tree Calculation
+
+The Merkle tree provides tamper-evident verification:
+
+```python
+def build_merkle(leaves: List[str]) -> str:
+    """Build Merkle tree from file hashes."""
+    if not leaves:
+        return ""
+
+    if len(leaves) == 1:
+        return leaves[0]
+
+    # Build tree level by level
+    level = leaves[:]
+    while len(level) > 1:
+        next_level = []
+        for i in range(0, len(level), 2):
+            left = level[i]
+            right = level[i + 1] if i + 1 < len(level) else level[i]
+            combined = left + right
+            next_level.append(hashlib.sha256(combined.encode("utf-8")).hexdigest())
+        level = next_level
+
+    return level[0]
+```
+
+### CLI Commands
+
+Build an Audit Pack:
+
+```bash
+# Build with default patterns
+xme pack build --out dist/
+
+# Build with custom patterns
+xme pack build --include "artifacts/psp/*.json" --include "artifacts/pcap/*.jsonl" --out dist/
+
+# Build with PCAP run reference
+xme pack build --run-path "artifacts/pcap/run-20240101T000000Z.jsonl" --out dist/
+```
+
+Verify an Audit Pack:
+
+```bash
+# Verify specific pack
+xme pack verify --pack dist/pack-20240101T000000Z.zip
+
+# Verify latest pack
+xme pack verify --pack "$(ls -1t dist/pack-*.zip | head -1)"
+```
+
+### Tamper Detection
+
+The pack verification detects various types of tampering:
+
+1. **Hash Mismatch**: File content has been modified
+2. **Missing Files**: Files referenced in manifest are missing
+3. **Corrupted Manifest**: Manifest JSON is invalid
+4. **Merkle Root Mismatch**: Merkle tree integrity compromised
+
+### CI Integration
+
+The CI pipeline includes pack generation and verification:
+
+```yaml
+pack-smoke:
+  runs-on: ubuntu-latest
+  needs: [pytest]
+  steps:
+    - uses: actions/checkout@v4
+    - uses: cachix/install-nix-action@v27
+    - name: Install dependencies
+      run: nix develop -c python -m pip install -e .
+    - name: Create test artifacts
+      run: |
+        mkdir -p artifacts/psp artifacts/pcap
+        echo '{"blocks": [], "edges": [], "meta": {"theorem": "test"}}' > artifacts/psp/test.psp.json
+        echo '{"type": "action", "action": "test", "timestamp": "2024-01-01T00:00:00Z"}' > artifacts/pcap/run-test.jsonl
+    - name: Build Audit Pack
+      run: nix develop -c xme pack build --out dist/
+    - name: Verify Audit Pack
+      run: nix develop -c xme pack verify --pack "$(ls -1t dist/pack-*.zip | head -1)"
+    - name: Upload pack artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: audit-pack
+        path: dist/pack-*.zip
+```
+
+### Security Properties
+
+1. **Tamper Evidence**: Any modification is detected
+2. **Cryptographic Integrity**: SHA256 hashes for all files
+3. **Merkle Tree**: Efficient verification of large file sets
+4. **Deterministic**: Same inputs produce same outputs
+5. **Audit Trail**: Complete metadata for forensic analysis
 
 ## References
 

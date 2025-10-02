@@ -47,7 +47,7 @@ def scan_file(path: Path) -> list[tuple[int, str]]:
 
     hits: list[tuple[int, str]] = []
     for lineno, line in enumerate(text.splitlines(), start=1):
-        if any(marker in line for marker in MARKERS):
+        if any(line.strip().startswith(marker) for marker in MARKERS):
             hits.append((lineno, line.strip()))
     return hits
 

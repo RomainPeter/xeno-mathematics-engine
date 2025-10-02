@@ -42,6 +42,34 @@ class ProofKind(Enum):
     DEFINITION = "definition"
 ```
 
+## Obligations v1
+
+Le système de vérification PSP implémente des obligations de sécurité à plusieurs niveaux :
+
+### Niveau S0 (Sécurité de base)
+
+- **`psp_acyclic`** : Vérifie que le PSP est acyclique (pas de cycles)
+- **`psp_unique_ids`** : Vérifie l'unicité des IDs de blocs et la validité des références d'arêtes
+- **`psp_topo_consistency`** : Vérifie la cohérence de l'ordre topologique
+
+### Niveau S1 (Sécurité avancée)
+
+- **`psp_hasse_minimal`** : Vérifie que la couverture Hasse est minimale (aucune arête transitive)
+- **`psp_blocks_edges_consistency`** : Vérifie la cohérence entre blocs et arêtes (pas d'auto-boucles)
+
+### Utilisation
+
+```bash
+# Vérification S0
+xme verify psp --in artifacts/psp/ae_4x4.json --level S0
+
+# Vérification S1
+xme verify psp --in artifacts/psp/ae_4x4.json --level S1
+
+# Avec logging PCAP
+xme verify psp --in artifacts/psp/ae_4x4.json --level S1 --run artifacts/pcap/run-123.jsonl
+```
+
 ## PSP Schema
 
 ### Basic Structure

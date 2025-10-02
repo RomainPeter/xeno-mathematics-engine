@@ -1,6 +1,6 @@
 PY=python3
 
-.PHONY: setup verify demo audit-pack logs release schema-test validate fmt demo-s1 deps-lock build-verifier-pinned audit 2cat-shadow 2cat-active s2-bench 2cat-report validate-summary
+.PHONY: setup verify demo audit-pack logs release schema-test validate fmt demo-s1 deps-lock build-verifier-pinned audit 2cat-shadow 2cat-active s2-bench 2cat-report validate-summary verify-psp run-metrics 2cat 2cat-verify
 
 setup:
 	$(PY) -m venv .venv && . .venv/bin/activate && pip install -U pip && pip install -r requirements.txt
@@ -666,3 +666,56 @@ pcap:
 	echo "RUN=$$RUN_PATH"; \
 	xme pcap verify --run $$RUN_PATH; \
 	xme pcap merkle --run $$RUN_PATH
+
+# AE demo targets
+ae-demo:
+	@xme ae demo --context examples/fca/context_4x4.json --out artifacts/psp/ae_demo.json
+
+ae-demo-4x4:
+	@xme ae demo --context tests/fixtures/fca/context_4x4.json --out artifacts/psp/ae_4x4.json
+
+ae-demo-5x3:
+	@xme ae demo --context tests/fixtures/fca/context_5x3.json --out artifacts/psp/ae_5x3.json
+
+# Golden files generation
+goldens:
+	@python scripts/gen_goldens.py
+
+# Audit Pack targets
+pack:
+	@xme pack build --out dist/
+
+verify-pack:
+	@xme pack verify --pack "$$(ls -1t dist/pack-*.zip | head -1)"
+
+# CEGIS demo target
+cegis-demo:
+	@xme cegis demo --secret 10110 --out artifacts/cegis/demo.json
+
+# Discovery demo target
+discover-demo:
+	@xme discover demo --turns 5 --ae-context examples/fca/context_4x4.json --secret 10110
+
+# 2cat vendor verification target
+verify-2cat:
+	@FORCE_VERIFY_2CAT=1 python scripts/verify_2cat_pack.py
+
+# E-graph canonicalization target
+egraph-canon:
+	@xme egraph canon --in examples/egraph/add_comm.json --out artifacts/egraph/add_comm.canon.json
+
+# PSP verification target
+verify-psp:
+	@xme verify psp --in artifacts/psp/ae_4x4.json --level S1
+
+# Metrics analysis target
+run-metrics:
+	@xme metrics summarize --run "$$(ls -1 artifacts/pcap/run-*.jsonl | tail -1)" --json
+
+# Discovery Engine 2Cat pipeline target
+2cat:
+	@xme 2cat run --config config/pipelines/default.yaml
+
+# Discovery Engine 2Cat pack verification target
+2cat-verify:
+	@xme 2cat verify-pack --pack "$$(ls -1t dist/pack-*.zip | head -1)"

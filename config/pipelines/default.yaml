@@ -1,0 +1,31 @@
+ae:
+  context: examples/fca/context_4x4.json
+  max_concepts: 100
+  timeout_ms: 5000
+budgets:
+  ae_ms: 1500
+  cegis_ms: 1500
+  total_ms: 10000
+cegis:
+  domain: bitvector
+  max_iters: 16
+  secret: '10110'
+  timeout_ms: 5000
+description: "Discovery Engine 2Cat v0 - Pipeline unifi\xE9 AE+CEGIS"
+outputs:
+  metrics: artifacts/metrics/2cat.json
+  psp: artifacts/psp/2cat.json
+  report: artifacts/reports/2cat.json
+  run_dir: artifacts/pcap
+pack:
+  exclude:
+  - '**/__pycache__/**'
+  - '**/.git/**'
+  - '**/node_modules/**'
+  include:
+  - artifacts/psp/*.json
+  - artifacts/pcap/run-*.jsonl
+  - docs/psp.schema.json
+  name: 2cat-pack
+  out: dist/
+version: v0

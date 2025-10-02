@@ -13,6 +13,21 @@ The Xeno Mathematics Engine (XME) is a comprehensive system for mathematical pro
 
 ## Quick Start
 
+### Discovery Engine 2Cat Pipeline
+
+Le pipeline unifié AE+CEGIS avec pack hermétique :
+
+```bash
+# Exécuter le pipeline complet
+xme 2cat run --config config/pipelines/default.yaml
+
+# Vérifier le pack généré
+xme 2cat verify-pack --pack dist/pack-*.zip
+
+# Générer une configuration personnalisée
+xme 2cat config --template
+```
+
 ### Development Environment
 
 ```bash
@@ -93,8 +108,46 @@ XME is built around several core components:
 
 ## Documentation
 
+### Discovery Engine 2Cat Pipeline
+
+Le pipeline unifié **Discovery Engine 2Cat** combine Attribute Exploration (AE) et Counter-Example Guided Inductive Synthesis (CEGIS) pour produire des preuves vérifiables avec un pack hermétique.
+
+#### Fonctionnalités
+- **Pipeline unifié** : AE (algo réel) → CEGIS (v0) → Vérification PSP S1 → Métriques δ → Audit Pack
+- **Configuration YAML** : Configuration flexible et versionnée
+- **Pack hermétique** : Audit Pack avec manifest, Merkle root et vérification d'intégrité
+- **Métriques intégrées** : Calcul automatique des δ (adjunction defect)
+- **Logging PCAP** : Traçabilité complète des actions et vérifications
+
+#### Utilisation
+```bash
+# Configuration par défaut
+xme 2cat run --config config/pipelines/default.yaml
+
+# Configuration personnalisée
+xme 2cat config --template
+# Éditer le fichier généré
+xme 2cat run --config my-config.yaml
+
+# Vérification du pack
+xme 2cat verify-pack --pack dist/pack-*.zip
+```
+
+#### Structure du pack
+```
+dist/
+├── 2cat-pack-20240101T120000Z.zip
+│   ├── manifest.json          # Manifest avec Merkle root
+│   ├── artifacts/psp/2cat.json    # PSP généré
+│   ├── artifacts/pcap/run-*.jsonl # Traces PCAP
+│   └── docs/psp.schema.json      # Schéma PSP
+```
+
+### Core Components
+
 - [PSP (Proof Structure Protocol)](psp.md) - Learn about proof structure representation
 - [PCAP (Proof-Carrying Actions)](pcap.md) - Understand action verification with embedded proofs
+- [Metrics & δ](metrics.md) - Adjunction defect calculation and analysis
 - [Supply Chain Security](supply-chain.md) - Security and verification processes
 - [Architecture](architecture.md) - System architecture overview
 - [API Reference](api/) - Detailed API documentation

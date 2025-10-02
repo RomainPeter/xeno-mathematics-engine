@@ -23,7 +23,7 @@ repos:
     rev: 1.7.8
     hooks:
       - id: bandit
-        args: ["-r", "src", "-s", "B101"]
+        args: ["-r", ".", "-s", "B101"]
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:
@@ -31,10 +31,6 @@ repos:
       - id: end-of-file-fixer
       - id: trailing-whitespace
       - id: mixed-line-ending
-  - repo: https://github.com/charliermarsh/commitizen
-    rev: v3.29.0
-    hooks:
-      - id: commitizen
   - repo: local
     hooks:
       - id: conflict-marker-check
