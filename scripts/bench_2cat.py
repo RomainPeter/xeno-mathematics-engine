@@ -30,7 +30,7 @@ class S2PPBenchmark:
         """Run baseline (no strategies) on a case"""
         # Simulate baseline run with some variation
         # Note: Using random for simulation data, not security-sensitive operations
-        import random
+        import random  # nosec B311 - Using random for simulation, not security
 
         random.seed(hash(case_name) % 1000)
 
@@ -51,7 +51,7 @@ class S2PPBenchmark:
         """Run active (with 2-cat strategies) on a case"""
         # Simulate active run with strategies
         # Note: Using random for simulation data, not security-sensitive operations
-        import random
+        import random  # nosec B311 - Using random for simulation, not security
 
         random.seed(hash(case_name) % 1000)
 
@@ -103,7 +103,7 @@ class S2PPBenchmark:
         """Run expected fail test"""
         # Expected fail should fail
         # Note: Using random for simulation data, not security-sensitive operations
-        import random
+        import random  # nosec B311 - Using random for simulation, not security
 
         random.seed(hash(case_name) % 1000)
 
