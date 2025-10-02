@@ -4,11 +4,13 @@ Tests for LLM-based strategy selector.
 Tests auto-consistency, scoring, fallback behavior, and caching.
 """
 
-import pytest
 from unittest.mock import Mock, patch
-from proofengine.orchestrator.selector import StrategySelector, SelectionResult
-from proofengine.orchestrator.strategy_api import StrategyContext, Guards
+
+import pytest
+
 from proofengine.core.llm_client import LLMClient, LLMRequest, LLMResponse
+from proofengine.orchestrator.selector import SelectionResult, StrategySelector
+from proofengine.orchestrator.strategy_api import Guards, StrategyContext
 
 
 class TestStrategySelector:

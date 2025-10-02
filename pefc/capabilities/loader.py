@@ -1,7 +1,9 @@
 from __future__ import annotations
-from typing import List, Dict, Any
+
 import importlib
 import logging
+from typing import Any, Dict, List
+
 from pefc.capabilities.core import Capability
 from pefc.errors import ConfigError
 

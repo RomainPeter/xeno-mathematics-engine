@@ -8,8 +8,8 @@ import asyncio
 import time
 from typing import Dict
 
+from proofengine.domain.cegis_engine import CEGISConfig, CEGISEngine, CEGISMode
 from proofengine.domain.types import CodeSnippet
-from proofengine.domain.cegis_engine import CEGISEngine, CEGISConfig, CEGISMode
 
 
 def create_toy_repo_violations() -> Dict[str, CodeSnippet]:

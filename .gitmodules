@@ -1,0 +1,3 @@
+[submodule "discovery-engine-2cat"]
+	path = discovery-engine-2cat
+	url = https://github.com/RomainPeter/discovery-engine-2cat.git

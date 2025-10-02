@@ -7,16 +7,16 @@ Demonstrates end-to-end pipeline with real Next-Closure and CEGIS engines.
 import asyncio
 import json
 import logging
-import tempfile
 import shutil
-from pathlib import Path
+import tempfile
 from datetime import datetime
-from typing import Dict, Any
+from pathlib import Path
+from typing import Any, Dict
 
-from orchestrator.orchestrator import Orchestrator
 from orchestrator.config import OrchestratorConfig
-from orchestrator.engines.next_closure_engine import NextClosureEngine
 from orchestrator.engines.cegis_async_engine import AsyncCegisEngine
+from orchestrator.engines.next_closure_engine import NextClosureEngine
+from orchestrator.orchestrator import Orchestrator
 from pefc.events.structured_bus import StructuredEventBus
 
 

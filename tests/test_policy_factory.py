@@ -1,6 +1,8 @@
 from __future__ import annotations
+
 import pytest
-from pefc.policy.factory import make_risk, make_ids
+
+from pefc.policy.factory import make_ids, make_risk
 
 
 def test_make_risk_basic():

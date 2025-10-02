@@ -3,8 +3,8 @@ Formal Context structures for FCA.
 Implements Context{G,M,I} with objects, attributes, and incidence relation.
 """
 
-from typing import Set, List, Dict, Any, Iterator, Tuple
 from dataclasses import dataclass, field
+from typing import Any, Dict, Iterator, List, Set, Tuple
 
 
 @dataclass(frozen=True)

@@ -5,17 +5,17 @@ Supports: pytest, ruff, mypy, opa (optional)
 Runner modes: local, docker
 """
 
+import argparse
+import hashlib
 import json
+import os
+import shutil
 import subprocess
 import tempfile
-import shutil
-import os
 import time
 import zipfile
-from pathlib import Path
 from datetime import datetime
-import hashlib
-import argparse
+from pathlib import Path
 
 
 class VerifierError(Exception):

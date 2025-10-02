@@ -4,10 +4,10 @@ Provides specific rules for code compliance verification.
 """
 
 import re
-from typing import List, Dict, Any, Set
 from dataclasses import dataclass
+from typing import Any, Dict, List, Set
 
-from .types import Counterexample, CodeSnippet
+from .types import CodeSnippet, Counterexample
 
 
 @dataclass

@@ -35,7 +35,7 @@ examples/v0.1/     # Schema examples + round-trip tests
 ## Commands
 
 - `make validate` — Schema validation
-- `make demo-s1` — Run 5 S1 tasks  
+- `make demo-s1` — Run 5 S1 tasks
 - `python scripts/pcap.py new <file> --action <name> --target <path>`
 - `python scripts/verifier.py <pcap_file>`
 - `python orchestrator/skeleton.py --plan <plan> --state <state>`

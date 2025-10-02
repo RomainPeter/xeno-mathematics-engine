@@ -1,5 +1,6 @@
 from __future__ import annotations
-from pefc.events.bus import EventBus, Event
+
+from pefc.events.bus import Event, EventBus
 from pefc.events.subscribers import MemorySink
 
 

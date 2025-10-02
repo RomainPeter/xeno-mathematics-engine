@@ -4,14 +4,14 @@ Determinism Test for Discovery Engine 2-Cat
 Ensures reproducible results across multiple runs with identical seeds
 """
 
+import hashlib
 import json
+import statistics
 import subprocess
 import sys
 import time
-import hashlib
 from pathlib import Path
-from typing import Dict, List, Any
-import statistics
+from typing import Any, Dict, List
 
 
 class DeterminismTester:

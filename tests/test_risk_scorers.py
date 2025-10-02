@@ -1,5 +1,6 @@
 from __future__ import annotations
-from pefc.policy.risk import MeanRisk, CVaRRisk, EntropicRisk, SemiVarianceRisk
+
+from pefc.policy.risk import CVaRRisk, EntropicRisk, MeanRisk, SemiVarianceRisk
 
 
 def test_mean_risk():

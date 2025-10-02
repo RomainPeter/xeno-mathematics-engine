@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-import os
-import json
-import glob
 import datetime
+import glob
 import hashlib
+import json
+import os
 import platform
 import subprocess
 from pathlib import Path
@@ -22,6 +22,7 @@ def load_json(fp):
             return json.load(f)
     except Exception as e:
         import logging
+
         logging.warning(f"Failed to load JSON from {fp}: {e}")
         return None
 
@@ -33,6 +34,7 @@ def git_commit():
         return h, tag
     except Exception as e:
         import logging
+
         logging.warning(f"Failed to get git info: {e}")
         return None, None
 
@@ -85,6 +87,7 @@ def main():
             delta_vals.append(float(e.get("post", {}).get("delta", 0)))
         except Exception as e:
             import logging
+
             logging.warning(f"Failed to parse delta value: {e}")
     delta_mean = round(sum(delta_vals) / len(delta_vals), 3) if delta_vals else None
 

@@ -5,9 +5,9 @@
   "type": "object",
   "properties": {
     "version": { "type": "string", "const": "0.1.0" },
-    "role": { 
-      "type": "string", 
-      "enum": ["Meet", "Generalize", "Refute", "Specialize", "Contrast", "Normalize", "Verify"] 
+    "role": {
+      "type": "string",
+      "enum": ["Meet", "Generalize", "Refute", "Specialize", "Contrast", "Normalize", "Verify"]
     },
     "task": { "type": "string" },
     "inputs": {

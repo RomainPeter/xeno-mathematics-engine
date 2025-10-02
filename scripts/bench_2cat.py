@@ -4,10 +4,10 @@ Benchmark script for 2-cat strategies on S2++ suite
 """
 
 import argparse
-import json
 import csv
+import json
 import os
-from typing import Dict, List, Any
+from typing import Any, Dict, List
 
 
 class S2PPBenchmark:

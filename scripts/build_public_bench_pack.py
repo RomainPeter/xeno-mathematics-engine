@@ -37,6 +37,7 @@ try:
     bus.subscribe("*", LoggingSubscriber(logger).handler, priority=-100)
 except Exception as e:
     import logging
+
     logging.warning(f"Failed to subscribe to event bus: {e}")
 
 

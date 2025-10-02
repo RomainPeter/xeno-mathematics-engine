@@ -1,9 +1,11 @@
 import json
+
 import typer
 from rich import print
+
 from proofengine.core.llm_client import LLMClient, LLMError
-from proofengine.planner.meta import propose_plan
 from proofengine.generator.stochastic import propose_actions
+from proofengine.planner.meta import propose_plan
 
 app = typer.Typer(no_args_is_help=True)
 

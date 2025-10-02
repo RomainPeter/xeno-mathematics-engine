@@ -3,10 +3,11 @@ Bandit LinUCB + Thompson Sampling for Discovery Engine 2-Cat.
 Contextual bandit algorithms for option selection.
 """
 
-import numpy as np
-from typing import Dict, List, Any
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any, Dict, List
+
+import numpy as np
 
 
 @dataclass

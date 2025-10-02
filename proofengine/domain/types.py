@@ -3,10 +3,10 @@ Domain types for code compliance verification.
 Defines Candidate, Verdict, Counterexample, and ComplianceRule types.
 """
 
-from typing import List, Dict, Any, Optional
+import hashlib
 from dataclasses import dataclass, field
 from enum import Enum
-import hashlib
+from typing import Any, Dict, List, Optional
 
 
 class ComplianceStatus(Enum):

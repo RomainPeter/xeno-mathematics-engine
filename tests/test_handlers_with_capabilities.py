@@ -1,7 +1,8 @@
 from __future__ import annotations
+
 from pefc.capabilities.handlers.hstree import HSTreeHandler
-from pefc.capabilities.handlers.opa import OPAHandler
 from pefc.capabilities.handlers.ids import IDSHandler
+from pefc.capabilities.handlers.opa import OPAHandler
 
 
 def test_hstree_handler_with_capabilities():

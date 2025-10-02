@@ -11,7 +11,7 @@
   ],
   "obligations": [
     "k-api-versioning",
-    "k-backward-compatibility", 
+    "k-backward-compatibility",
     "k-deprecation-notice"
   ],
   "hostile_indicators": [

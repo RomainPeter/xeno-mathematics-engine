@@ -4,10 +4,11 @@ Round-trip validation script for Proof Engine v0.1 schemas.
 Validates JSON schemas, canonicalizes, and checks journal hash chain.
 """
 
-import json
 import hashlib
+import json
 import sys
 from pathlib import Path
+
 from jsonschema import Draft202012Validator
 from referencing import Registry, Resource
 from referencing.jsonschema import DRAFT202012

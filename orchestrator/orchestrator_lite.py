@@ -11,9 +11,10 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Dict, Optional
 
+from orchestrator.engines.ae_engine import AEContext, AEEngine
+from orchestrator.engines.cegis_engine import (CegisContext, CegisEngine,
+                                               Verdict)
 from pefc.events.structured_bus import StructuredEventBus
-from orchestrator.engines.ae_engine import AEEngine, AEContext
-from orchestrator.engines.cegis_engine import CegisEngine, CegisContext, Verdict
 
 
 @dataclass
@@ -73,6 +74,7 @@ class OrchestratorLite:
             await self.event_bus.start()
         except Exception as e:
             import logging
+
             logging.warning(f"Failed to start event bus: {e}")
 
         self.event_bus.emit_orchestrator_event(
@@ -106,6 +108,7 @@ class OrchestratorLite:
                 await self.event_bus.stop()
             except Exception as e:
                 import logging
+
                 logging.warning(f"Failed to stop event bus: {e}")
         return self.metrics
 
@@ -215,6 +218,7 @@ class OrchestratorLite:
                     self.metrics["cegis"]["ce_found_count"] += 1
             except Exception as e:
                 import logging
+
                 logging.warning(f"Error updating CEGIS metrics: {e}")
             # Progress metric update (no-accept → rate unchanged)
             self._progress_series.append(self.metrics["cegis"]["patch_accept_rate"])

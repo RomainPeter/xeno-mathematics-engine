@@ -3,11 +3,11 @@ Event types and schemas for structured telemetry.
 Defines Event v1 specification with all required fields and types.
 """
 
-from enum import Enum
-from typing import Dict, Any, Optional
-from dataclasses import dataclass, field
 import time
 import uuid
+from dataclasses import dataclass, field
+from enum import Enum
+from typing import Any, Dict, Optional
 
 
 class EventLevel(Enum):

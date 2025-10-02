@@ -4,9 +4,9 @@ Handles verification of implications using OPA and static analysis.
 """
 
 import asyncio
-from typing import Dict, Any, Optional, List
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 
 @dataclass

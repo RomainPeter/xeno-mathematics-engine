@@ -1,7 +1,9 @@
 from __future__ import annotations
-from pefc.events.subscribers import LoggingSubscriber, MemorySink
-from pefc.events.bus import EventBus
+
 import logging
+
+from pefc.events.bus import EventBus
+from pefc.events.subscribers import LoggingSubscriber, MemorySink
 
 
 def test_logging_levels_do_not_crash(caplog):

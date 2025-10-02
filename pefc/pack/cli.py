@@ -9,8 +9,9 @@ import socket
 import uuid
 from pathlib import Path
 
-from .builder import build_pack
 from pefc.events.manifest import AuditManifest, MerkleTree, calculate_file_hash
+
+from .builder import build_pack
 
 
 def main():

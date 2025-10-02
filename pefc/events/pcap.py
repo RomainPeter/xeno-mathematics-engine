@@ -3,12 +3,12 @@ PCAP (Proof-Carrying Action Plan) implementation for event persistence.
 Provides PCAPWriter and PCAPSchema for structured proof storage.
 """
 
-import json
 import hashlib
+import json
 import time
-from pathlib import Path
-from typing import Dict, Any, List, Optional
 from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 
 @dataclass

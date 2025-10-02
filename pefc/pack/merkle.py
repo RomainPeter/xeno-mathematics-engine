@@ -1,10 +1,11 @@
 from __future__ import annotations
+
 import hashlib
+import time
 import unicodedata
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
-from typing import Iterable, List, Dict, Tuple, Optional, BinaryIO
-import time
+from typing import BinaryIO, Dict, Iterable, List, Optional, Tuple
 
 CHUNK_SIZE = 1 << 20  # 1 MiB
 

@@ -11,14 +11,14 @@
       "expected": "design chosen for task-001"
     },
     {
-      "id": "s2", 
+      "id": "s2",
       "operator": "Generalize",
       "input_refs": ["h-task-001"],
       "expected": "specification created"
     },
     {
       "id": "s3",
-      "operator": "Verify", 
+      "operator": "Verify",
       "input_refs": ["pcap-task-001"],
       "expected": "task-001 verified"
     },
@@ -31,7 +31,7 @@
     {
       "id": "s5",
       "operator": "Verify",
-      "input_refs": ["pcap-task-002"], 
+      "input_refs": ["pcap-task-002"],
       "expected": "task-002 verified"
     }
   ],

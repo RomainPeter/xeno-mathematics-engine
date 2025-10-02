@@ -4,9 +4,9 @@ Handles incident journaling and persistence.
 """
 
 import json
-from typing import Dict, List, Any, Optional
 from datetime import datetime
 from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 from ...pefc.incidents.types import Incident
 

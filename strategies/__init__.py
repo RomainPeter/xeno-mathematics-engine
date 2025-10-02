@@ -4,8 +4,8 @@ Migrated from proof-engine-for-code.
 """
 
 from .bandit import BanditStrategy
-from .mcts import MCTSStrategy
 from .diversity import DiversityStrategy
+from .mcts import MCTSStrategy
 from .selection import SelectionStrategy
 
 __all__ = ["BanditStrategy", "MCTSStrategy", "DiversityStrategy", "SelectionStrategy"]

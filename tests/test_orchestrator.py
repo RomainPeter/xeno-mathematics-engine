@@ -2,10 +2,11 @@
 Tests pour l'orchestrateur principal.
 """
 
-import pytest
-import tempfile
 import os
-from unittest.mock import patch, MagicMock
+import tempfile
+from unittest.mock import MagicMock, patch
+
+import pytest
 from cli import ProofEngineOrchestrator
 
 

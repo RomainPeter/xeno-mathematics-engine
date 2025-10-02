@@ -6,22 +6,20 @@ Validates that strategies work correctly in red/green scenarios.
 import json
 import sys
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any, Dict
 
 # Add the project root to the Python path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-# Import after path setup
-from proofengine.strategies import (  # noqa: E402
-    SpecializeThenRetryStrategy,
-    AddMissingTestsStrategy,
-    RequireSemverStrategy,
-    ChangelogOrBlockStrategy,
-    DecomposeMeetStrategy,
-    RetryWithHardeningStrategy,
-)
 from proofengine.orchestrator.strategy_api import StrategyContext  # noqa: E402
+# Import after path setup
+from proofengine.strategies import (AddMissingTestsStrategy,  # noqa: E402
+                                    ChangelogOrBlockStrategy,
+                                    DecomposeMeetStrategy,
+                                    RequireSemverStrategy,
+                                    RetryWithHardeningStrategy,
+                                    SpecializeThenRetryStrategy)
 
 
 class StrategyExpectedFailTester:

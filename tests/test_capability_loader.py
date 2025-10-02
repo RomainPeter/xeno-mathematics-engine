@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from pefc.capabilities.loader import build_capabilities
 
 

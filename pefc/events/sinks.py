@@ -3,13 +3,13 @@ Event sinks for structured telemetry.
 Implements StdoutJSONLSink, FileJSONLSink, and MemorySink.
 """
 
-import json
 import gzip
+import json
 import sys
-from abc import ABC, abstractmethod
-from typing import Dict, Any, List, Optional
-from pathlib import Path
 import time
+from abc import ABC, abstractmethod
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 
 class EventSink(ABC):
@@ -85,6 +85,7 @@ class FileJSONLSink(EventSink):
                         self._rotate_file()
                 except Exception as e:
                     import logging
+
                     logging.warning(f"Error checking file size for rotation: {e}")
 
             json_line = json.dumps(event_dict, separators=(",", ":"))
@@ -110,6 +111,7 @@ class FileJSONLSink(EventSink):
                     self.current_file.flush()
                 except Exception as e:
                     import logging
+
                     logging.warning(f"Error flushing file: {e}")
 
     def _should_rotate(self) -> bool:
@@ -120,6 +122,7 @@ class FileJSONLSink(EventSink):
             return self.file_path.stat().st_size > (self.rotate_mb * 1024 * 1024)
         except Exception as e:
             import logging
+
             logging.warning(f"Error checking file size: {e}")
             return False
 
@@ -251,6 +254,7 @@ class RotatingFileSink(EventSink):
             current_size = self.base_path.stat().st_size if self.base_path.exists() else 0
         except Exception as e:
             import logging
+
             logging.warning(f"Error checking base path size: {e}")
             current_size = 0
         size_limit = self.max_size_mb * 1024 * 1024

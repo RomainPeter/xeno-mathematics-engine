@@ -1,7 +1,9 @@
 from __future__ import annotations
-from typing import List
-from .bus import Event
+
 import logging
+from typing import List
+
+from .bus import Event
 
 
 class MemorySink:

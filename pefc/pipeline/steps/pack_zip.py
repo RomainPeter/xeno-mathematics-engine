@@ -1,12 +1,13 @@
 from __future__ import annotations
-from pathlib import Path
-import zipfile
-import logging
-import json
 
-from pefc.pipeline.core import PackStep, PipelineContext
+import json
+import logging
+import zipfile
+from pathlib import Path
+
 from pefc.errors import PackBuildError
-from pefc.pack.merkle import build_entries, compute_merkle_root, build_manifest
+from pefc.pack.merkle import build_entries, build_manifest, compute_merkle_root
+from pefc.pipeline.core import PackStep, PipelineContext
 
 log = logging.getLogger(__name__)
 

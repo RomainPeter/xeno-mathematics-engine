@@ -3,16 +3,16 @@
 Test simple pour FCA Next-Closure algorithm.
 """
 
-import sys
 import os
+import sys
 
 # Ajouter le répertoire courant au path
 sys.path.insert(0, os.getcwd())
 
 try:
-    from proofengine.fca.context import FormalContext, Object, Attribute
-    from proofengine.fca.next_closure import NextClosure
     from proofengine.fca.ae_engine import NextClosureAEEngine
+    from proofengine.fca.context import Attribute, FormalContext, Object
+    from proofengine.fca.next_closure import NextClosure
 
     print("✅ Imports FCA réussis")
 except ImportError as e:

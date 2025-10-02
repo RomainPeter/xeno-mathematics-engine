@@ -3,7 +3,8 @@ Checker implementation for 2-category transformations.
 Provides concrete implementations of the Checker interface.
 """
 
-from typing import Dict, List, Any
+from typing import Any, Dict, List
+
 from .strategy_api import Checker, Strategy, StrategyContext
 
 

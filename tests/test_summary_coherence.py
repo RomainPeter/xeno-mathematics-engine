@@ -1,7 +1,8 @@
-from pathlib import Path
 import json
-from pefc.summary import build_summary
+from pathlib import Path
+
 from pefc.metrics.validator import validate_coherence
+from pefc.summary import build_summary
 
 
 def test_coherence_weighted_average(tmp_path: Path):

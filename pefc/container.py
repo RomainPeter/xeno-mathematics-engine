@@ -1,15 +1,16 @@
 from __future__ import annotations
-from typing import Optional, Dict, Any
-from pathlib import Path
-import glob
 
+import glob
+from pathlib import Path
+from typing import Any, Dict, Optional
+
+from .capabilities.loader import build_capabilities
+from .capabilities.registry import IncidentCapabilityRegistry
 from .config.model import RootConfig
 from .config.validators import validate_config
 from .events import get_event_bus
-from .logging import init_logging, get_logger
+from .logging import get_logger, init_logging
 from .metrics.providers import JsonMetricsProvider
-from .capabilities.registry import IncidentCapabilityRegistry
-from .capabilities.loader import build_capabilities
 
 
 class ServiceContainer:
@@ -77,14 +78,8 @@ class ServiceContainer:
     def _build_pipeline(self, pipeline_def):
         """Build pipeline from descriptor."""
         from .pipeline.core import Pipeline
-        from .pipeline.steps import (
-            CollectSeeds,
-            ComputeMerkle,
-            RenderDocs,
-            PackZip,
-            SignArtifact,
-            RunCapabilities,
-        )
+        from .pipeline.steps import (CollectSeeds, ComputeMerkle, PackZip,
+                                     RenderDocs, RunCapabilities, SignArtifact)
 
         # Step type mapping
         step_classes = {

@@ -4,11 +4,11 @@ Replaces mock components with actual FCA algorithms.
 """
 
 import uuid
-from typing import Dict, List, Any, Tuple, Optional
-from datetime import datetime
 from dataclasses import dataclass
+from datetime import datetime
+from typing import Any, Dict, List, Optional, Tuple
 
-from .ae_engine import AEEngine, AEContext, AEResult
+from .ae_engine import AEContext, AEEngine, AEResult
 
 
 @dataclass

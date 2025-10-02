@@ -3,10 +3,11 @@ FailReason v1 handlers for Discovery Engine 2-Cat.
 Maps incidents to rules and triggers replanning.
 """
 
-from typing import Dict, Any
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
+from typing import Any, Dict
+
 from methods.hstree.minimal_tests import HSTreeMinimalTests
 
 

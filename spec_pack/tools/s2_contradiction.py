@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 import json
-import time
 import os
 import subprocess
 import sys
+import time
 from datetime import datetime, timezone
 
 EVIDENCE = "spec_pack/samples/evidence.jsonl"

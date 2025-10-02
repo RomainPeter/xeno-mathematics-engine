@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 import argparse
+import hashlib
 import json
 import sys
-import hashlib
 from pathlib import Path
-from typing import Dict, List, Any, Tuple
+from typing import Any, Dict, List, Tuple
 
 try:
     import yaml
@@ -138,7 +138,7 @@ def expand_required_from_rules(
 
 
 def build_semantics_and_proof(required, present, anf_src, anf_obj, rules_used):
-    from z3 import Solver, Bool, sat
+    from z3 import Bool, Solver, sat
 
     solver = Solver()
     labels = {}

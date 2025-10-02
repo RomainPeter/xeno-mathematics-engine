@@ -183,7 +183,7 @@ expr = {"op": "*", "args": [{"var": "x"}, {"op": "+", "args": [{"var": "y"}, {"v
 # Règle de distribution
 rule = Rule(
     lhs={"op": "*", "args": [{"var": "x"}, {"op": "+", "args": [{"var": "y"}, {"var": "z"}]}]},
-    rhs={"op": "+", "args": [{"op": "*", "args": [{"var": "x"}, {"var": "y"}]}, 
+    rhs={"op": "+", "args": [{"op": "*", "args": [{"var": "x"}, {"var": "y"}]},
                               {"op": "*", "args": [{"var": "x"}, {"var": "z"}]}]}
 )
 
@@ -204,7 +204,7 @@ best = extract_best(forms, cost_fn=cost_weighted({"*": 1, "+": 2}))
     "rhs": {"var": "x"}
   },
   {
-    "name": "add_zero_right", 
+    "name": "add_zero_right",
     "lhs": {"op": "+", "args": [{"var": "x"}, {"const": 0}]},
     "rhs": {"var": "x"}
   },
@@ -238,7 +238,7 @@ best = extract_best(forms, cost_fn=cost_weighted({"*": 1, "+": 2}))
 # Tests de simplification
 python -m pytest tests/test_rewrites_simplify_units.py -v
 
-# Tests de commutativité/associativité  
+# Tests de commutativité/associativité
 python -m pytest tests/test_rewrites_comm_assoc_canon.py -v
 
 # Tests de distribution
@@ -297,13 +297,13 @@ best = extract_best(forms, cost_fn=cost_nodes)
 def are_equivalent(expr1, expr2, rules):
     forms1 = saturate(expr1, rules)
     forms2 = saturate(expr2, rules)
-    
+
     best1 = extract_best(forms1, cost_fn=cost_nodes)
     best2 = extract_best(forms2, cost_fn=cost_nodes)
-    
+
     _, sig1 = canonicalize(best1)
     _, sig2 = canonicalize(best2)
-    
+
     return sig1 == sig2
 ```
 

@@ -2,12 +2,13 @@
 Tests for CI components and artifacts.
 """
 
-import pytest
 import json
 import os
 import subprocess
 import tempfile
 from pathlib import Path
+
+import pytest
 
 
 class TestOPAInstallation:

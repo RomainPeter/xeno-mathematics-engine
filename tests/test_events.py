@@ -10,25 +10,11 @@ from pathlib import Path
 
 import pytest
 
-from pefc.events import (
-    EventBus,
-    EventBusConfig,
-    EventType,
-    EventLevel,
-    StdoutJSONLSink,
-    FileJSONLSink,
-    MemorySink,
-    RotatingFileSink,
-    AuditManifest,
-    MerkleTree,
-    PCAPWriter,
-    PCAPSchema,
-    PCAPManager,
-    create_event,
-    create_orchestrator_start_event,
-    create_incident_event,
-    replay_journal,
-)
+from pefc.events import (AuditManifest, EventBus, EventBusConfig, EventLevel,
+                         EventType, FileJSONLSink, MemorySink, MerkleTree,
+                         PCAPManager, PCAPSchema, PCAPWriter, RotatingFileSink,
+                         StdoutJSONLSink, create_event, create_incident_event,
+                         create_orchestrator_start_event, replay_journal)
 
 
 class TestEventBus:

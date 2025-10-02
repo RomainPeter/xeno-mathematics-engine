@@ -3,10 +3,11 @@ Diversity selection using DPP (Determinantal Point Process) for Discovery Engine
 Submodular diversity selection algorithms.
 """
 
-import numpy as np
-from typing import Dict, List, Any
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any, Dict, List
+
+import numpy as np
 
 
 @dataclass

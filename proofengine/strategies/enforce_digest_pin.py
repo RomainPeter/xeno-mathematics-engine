@@ -3,9 +3,10 @@ Strategy: enforce_digest_pin
 Ensures all dependencies are pinned to specific digests
 """
 
-from typing import Dict, List, Any
+from typing import Any, Dict, List
+
 from proofengine.core.strategy import Strategy
-from proofengine.core.types import Plan, Action, Evidence
+from proofengine.core.types import Action, Evidence, Plan
 
 
 class EnforceDigestPinStrategy(Strategy):

@@ -4,7 +4,7 @@ CEGIS Engine interface for Counter-Example Guided Inductive Synthesis.
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Dict, List, Any, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 
 @dataclass

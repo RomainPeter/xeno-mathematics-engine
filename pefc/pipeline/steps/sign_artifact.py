@@ -1,10 +1,11 @@
 from __future__ import annotations
-from pathlib import Path
-import subprocess
-import logging
 
-from pefc.pipeline.core import PackStep, PipelineContext
+import logging
+import subprocess
+from pathlib import Path
+
 from pefc.errors import SignatureError
+from pefc.pipeline.core import PackStep, PipelineContext
 
 log = logging.getLogger(__name__)
 

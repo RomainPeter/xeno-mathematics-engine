@@ -3,9 +3,10 @@ Bandit strategies for Discovery Engine 2-Cat.
 Migrated from proof-engine-for-code.
 """
 
-import numpy as np
-from typing import Dict, List, Any, Tuple
 from dataclasses import dataclass
+from typing import Any, Dict, List, Tuple
+
+import numpy as np
 
 
 @dataclass

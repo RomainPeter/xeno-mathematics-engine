@@ -1,5 +1,6 @@
 from pathlib import Path
-from pefc.pack.merkle import build_entries, compute_merkle_root, build_manifest
+
+from pefc.pack.merkle import build_entries, build_manifest, compute_merkle_root
 
 
 def write_bytes(p: Path, data: bytes):

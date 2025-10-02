@@ -3,7 +3,7 @@ Prompts pour le planificateur métacognitif.
 Définit les prompts système et utilisateur pour la planification.
 """
 
-PLANNER_SYSTEM = """You are a metacognitive planner for code improvement. 
+PLANNER_SYSTEM = """You are a metacognitive planner for code improvement.
 You analyze the current state, constraints, and goals to propose a step-by-step plan.
 Output ONLY JSON with the following fields:
 - plan: array of strings describing the steps

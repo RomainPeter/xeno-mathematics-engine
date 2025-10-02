@@ -1,7 +1,8 @@
-from pathlib import Path
 import json
-from pefc.metrics.providers import JsonMetricsProvider, CompositeProvider
+from pathlib import Path
+
 from pefc.metrics.parse import provider_to_runs
+from pefc.metrics.providers import CompositeProvider, JsonMetricsProvider
 
 
 def _write(p: Path, obj):

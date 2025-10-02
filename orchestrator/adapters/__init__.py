@@ -15,13 +15,17 @@ __all__ = [
 
 # Optionally expose real adapters if their dependencies are available
 try:
+    from .bandit_strategy import BanditConfig, BanditStrategy  # type: ignore
+    from .diversity_strategy import (DiversityConfig,  # type: ignore
+                                     DiversityStrategy)
     from .llm_adapter import LLMAdapter, LLMConfig, LLMResponse  # type: ignore
-    from .verifier import Verifier, VerificationResult, VerificationConfig  # type: ignore
     from .oracle_adapter import OracleAdapter, OracleConfig  # type: ignore
-    from .bandit_strategy import BanditStrategy, BanditConfig  # type: ignore
-    from .diversity_strategy import DiversityStrategy, DiversityConfig  # type: ignore
-    from .synthesis_strategy import SynthesisStrategy, SynthesisConfig  # type: ignore
-    from .refinement_strategy import RefinementStrategy, RefinementConfig  # type: ignore
+    from .refinement_strategy import (RefinementConfig,  # type: ignore
+                                      RefinementStrategy)
+    from .synthesis_strategy import (SynthesisConfig,  # type: ignore
+                                     SynthesisStrategy)
+    from .verifier import (VerificationConfig,  # type: ignore
+                           VerificationResult, Verifier)
 
     __all__ += [
         "LLMAdapter",

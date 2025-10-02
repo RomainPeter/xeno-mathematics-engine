@@ -39,27 +39,27 @@ class MethodType(Enum):
 
 class BaseMethod(ABC):
     """Base class for all proof methods."""
-    
+
     def __init__(self, config):
         self.config = config
         self.name = self.__class__.__name__
         self.type = self._get_method_type()
-    
+
     @abstractmethod
     def _get_method_type(self) -> MethodType:
         """Get the method type."""
         pass
-    
+
     @abstractmethod
     def verify_proof(self, proof: Dict[str, Any]) -> Dict[str, Any]:
         """Verify a proof using this method."""
         pass
-    
+
     @abstractmethod
     def can_handle(self, proof_type: str) -> bool:
         """Check if this method can handle the given proof type."""
         pass
-    
+
     @abstractmethod
     def get_capabilities(self) -> Dict[str, Any]:
         """Get method capabilities and limitations."""
@@ -73,19 +73,19 @@ class BaseMethod(ABC):
 ```python
 class AEMethod(BaseMethod):
     """Automated Theorem Proving method."""
-    
+
     def _get_method_type(self) -> MethodType:
         return MethodType.AE
-    
+
     def verify_proof(self, proof: Dict[str, Any]) -> Dict[str, Any]:
         """Verify proof using automated theorem proving."""
         # Implement AE verification logic
         pass
-    
+
     def can_handle(self, proof_type: str) -> bool:
         """AE can handle first-order logic proofs."""
         return proof_type in ["first_order", "propositional"]
-    
+
     def get_capabilities(self) -> Dict[str, Any]:
         """Return AE method capabilities."""
         return {
@@ -100,19 +100,19 @@ class AEMethod(BaseMethod):
 ```python
 class CEGISMethod(BaseMethod):
     """CEGIS method implementation."""
-    
+
     def _get_method_type(self) -> MethodType:
         return MethodType.CEGIS
-    
+
     def verify_proof(self, proof: Dict[str, Any]) -> Dict[str, Any]:
         """Verify proof using CEGIS method."""
         # Implement CEGIS verification logic
         pass
-    
+
     def can_handle(self, proof_type: str) -> bool:
         """CEGIS can handle synthesis problems."""
         return proof_type in ["synthesis", "inductive"]
-    
+
     def get_capabilities(self) -> Dict[str, Any]:
         """Return CEGIS method capabilities."""
         return {
@@ -129,20 +129,20 @@ The method registry manages available methods:
 ```python
 class MethodRegistry:
     """Registry for proof verification methods."""
-    
+
     def __init__(self):
         self.methods = {}
-    
+
     def register_method(self, name: str, method_class):
         """Register a new method."""
         self.methods[name] = method_class
-    
+
     def get_method(self, name: str, config: Dict[str, Any]):
         """Get a method instance."""
         if name not in self.methods:
             raise ValueError(f"Unknown method: {name}")
         return self.methods[name](config)
-    
+
     def list_methods(self) -> List[str]:
         """List all available methods."""
         return list(self.methods.keys())

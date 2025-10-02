@@ -4,21 +4,17 @@ Test script to validate the industrialised orchestrator demo.
 """
 
 import asyncio
-import tempfile
 import shutil
+import tempfile
 from pathlib import Path
 
-from demo_orchestrator import (
-    DemoLLMAdapter,
-    DemoVerifier,
-    create_demo_domain_spec,
-    create_demo_budgets,
-    create_demo_thresholds,
-)
-from orchestrator.orchestrator import Orchestrator
+from demo_orchestrator import (DemoLLMAdapter, DemoVerifier,
+                               create_demo_budgets, create_demo_domain_spec,
+                               create_demo_thresholds)
 from orchestrator.config import OrchestratorConfig
-from orchestrator.engines.next_closure_engine import NextClosureEngine
 from orchestrator.engines.cegis_async_engine import AsyncCegisEngine
+from orchestrator.engines.next_closure_engine import NextClosureEngine
+from orchestrator.orchestrator import Orchestrator
 from pefc.events.structured_bus import StructuredEventBus
 
 

@@ -4,10 +4,10 @@ Register all available strategies.
 """
 
 from proofengine.orchestrator.strategy_api import StrategyRegistry
-from proofengine.strategies.require_semver import RequireSemverStrategy
 from proofengine.strategies.changelog_or_block import ChangelogOrBlockStrategy
-from proofengine.strategies.pin_dependency import PinDependencyStrategy
 from proofengine.strategies.guard_before import GuardBeforeStrategy
+from proofengine.strategies.pin_dependency import PinDependencyStrategy
+from proofengine.strategies.require_semver import RequireSemverStrategy
 
 
 def register_all_strategies() -> StrategyRegistry:

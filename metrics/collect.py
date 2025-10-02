@@ -3,8 +3,9 @@ Collecteur de métriques pour le Proof Engine for Code v0.
 """
 
 import json
-from typing import Dict, Any, List
-from proofengine.core.pcap import read_pcap, list_pcaps
+from typing import Any, Dict, List
+
+from proofengine.core.pcap import list_pcaps, read_pcap
 
 
 class MetricsCollector:

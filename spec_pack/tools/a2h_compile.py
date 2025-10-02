@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # A2H: compile ambition.json -> derived mappings + hostility report
-import json
-import sys
-import os
 import hashlib
-import time
+import json
+import os
 import re
+import sys
+import time
 
 ROOT = "spec_pack"
 MANIFEST = f"{ROOT}/ambition/ambition.json"

@@ -4,7 +4,8 @@ Générateur de rapports pour le Proof Engine for Code v0.
 
 import json
 import os
-from typing import Dict, Any
+from typing import Any, Dict
+
 from .collect import MetricsCollector
 
 

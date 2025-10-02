@@ -2,8 +2,8 @@
 PEFC Pack module - Pack operations and verification.
 """
 
-from .verify import verify_zip, print_manifest
 from .signing import sign_with_cosign, sign_with_sha256
+from .verify import print_manifest, verify_zip
 
 __all__ = [
     "verify_zip",

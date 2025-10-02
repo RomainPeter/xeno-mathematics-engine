@@ -2,19 +2,15 @@
 Tests for metrics fairness guarantees.
 """
 
-import pytest
 import json
 import tempfile
 from pathlib import Path
 
-from proofengine.metrics import (
-    ExecutionMetrics,
-    WorkUnits,
-    TimeBreakdown,
-    CacheInfo,
-    compare_metrics_fairness,
-    enforce_fairness_gate,
-)
+import pytest
+
+from proofengine.metrics import (CacheInfo, ExecutionMetrics, TimeBreakdown,
+                                 WorkUnits, compare_metrics_fairness,
+                                 enforce_fairness_gate)
 from proofengine.orchestrator.modes import BaselineMode
 
 

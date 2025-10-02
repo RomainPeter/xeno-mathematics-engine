@@ -5,23 +5,17 @@ Coordinates AE and CEGIS engines with async scheduling and event publishing.
 
 import asyncio
 import uuid
-from typing import Dict, Any, Optional, List
-from datetime import datetime
 from dataclasses import dataclass
+from datetime import datetime
+from typing import Any, Dict, List, Optional
 
-from .engines import (
-    AEEngine,
-    CegisEngine,
-    AEContext,
-    CegisContext,
-    CegisResult,
-    Verdict,
-)
-from .config import OrchestratorConfig
-from .persistence import PCAPPersistence, IncidentPersistence, AuditPackBuilder
 from ..pefc.events.structured_bus import StructuredEventBus
-from ..pefc.pcap.model import PCAP
 from ..pefc.incidents.types import Incident
+from ..pefc.pcap.model import PCAP
+from .config import OrchestratorConfig
+from .engines import (AEContext, AEEngine, CegisContext, CegisEngine,
+                      CegisResult, Verdict)
+from .persistence import AuditPackBuilder, IncidentPersistence, PCAPPersistence
 
 
 @dataclass
@@ -104,6 +98,7 @@ class Orchestrator:
         except Exception as e:
             # Non-fatal: continue without background drain
             import logging
+
             logging.warning(f"Failed to start event bus: {e}")
 
         # Emit start event
@@ -180,6 +175,7 @@ class Orchestrator:
                 await self.event_bus.stop()
             except Exception as e:
                 import logging
+
                 logging.warning(f"Failed to stop event bus: {e}")
 
         return self.state

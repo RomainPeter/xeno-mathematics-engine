@@ -3,11 +3,11 @@ Next-Closure implementation for Formal Concept Analysis (FCA).
 Implements the Next-Closure algorithm for Attribute Exploration.
 """
 
-from typing import Dict, List, Any, Set, Tuple, Optional
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any, Dict, List, Optional, Set, Tuple
 
-from .ae_engine import AEEngine, AEContext, AEResult
+from .ae_engine import AEContext, AEEngine, AEResult
 
 
 @dataclass

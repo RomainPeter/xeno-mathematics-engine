@@ -1,5 +1,7 @@
 from __future__ import annotations
+
 from typing import Any, Dict, List
+
 from pefc.metrics.types import RunRecord
 
 RESERVED = {"run_id", "id", "group", "mode", "count", "n_items", "agg", "runs"}

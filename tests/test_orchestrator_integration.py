@@ -3,16 +3,17 @@ Integration tests for Orchestrator.
 Tests the complete AE/CEGIS pipeline with mocks.
 """
 
-import pytest
 import asyncio
-import tempfile
 import shutil
-from typing import Dict, Any
+import tempfile
+from typing import Any, Dict
 
-from orchestrator.orchestrator import Orchestrator
+import pytest
+
 from orchestrator.config import OrchestratorConfig
-from orchestrator.engines.next_closure_engine import NextClosureEngine
 from orchestrator.engines.cegis_async_engine import AsyncCegisEngine
+from orchestrator.engines.next_closure_engine import NextClosureEngine
+from orchestrator.orchestrator import Orchestrator
 from pefc.events.structured_bus import StructuredEventBus
 
 

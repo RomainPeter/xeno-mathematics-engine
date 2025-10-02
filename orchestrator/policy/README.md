@@ -36,22 +36,22 @@ class PolicyType(Enum):
 
 class BasePolicy(ABC):
     """Base class for all policies."""
-    
+
     def __init__(self, config):
         self.config = config
         self.name = self.__class__.__name__
         self.type = self._get_policy_type()
-    
+
     @abstractmethod
     def _get_policy_type(self) -> PolicyType:
         """Get the policy type."""
         pass
-    
+
     @abstractmethod
     def evaluate(self, context: Dict[str, Any]) -> bool:
         """Evaluate the policy against the given context."""
         pass
-    
+
     @abstractmethod
     def get_requirements(self) -> List[str]:
         """Get policy requirements."""
@@ -67,22 +67,22 @@ Manages access control and permissions:
 ```python
 class AccessPolicy(BasePolicy):
     """Access control policy implementation."""
-    
+
     def _get_policy_type(self) -> PolicyType:
         return PolicyType.ACCESS
-    
+
     def evaluate(self, context: Dict[str, Any]) -> bool:
         """Evaluate access control policy."""
         subject = context.get('subject')
         resource = context.get('resource')
         action = context.get('action')
-        
+
         # Check if subject has permission for action on resource
         permissions = self._get_permissions(subject)
         required_permission = f"{action}:{resource}"
-        
+
         return required_permission in permissions
-    
+
     def get_requirements(self) -> List[str]:
         """Get access control requirements."""
         return [
@@ -91,7 +91,7 @@ class AccessPolicy(BasePolicy):
             "Action authorization",
             "Permission validation"
         ]
-    
+
     def _get_permissions(self, subject: str) -> List[str]:
         """Get permissions for a subject."""
         # Implement permission lookup logic
@@ -105,26 +105,26 @@ Manages security requirements and constraints:
 ```python
 class SecurityPolicy(BasePolicy):
     """Security policy implementation."""
-    
+
     def _get_policy_type(self) -> PolicyType:
         return PolicyType.SECURITY
-    
+
     def evaluate(self, context: Dict[str, Any]) -> bool:
         """Evaluate security policy."""
         # Check cryptographic requirements
         if not self._check_cryptographic_requirements(context):
             return False
-        
+
         # Check data integrity
         if not self._check_data_integrity(context):
             return False
-        
+
         # Check access patterns
         if not self._check_access_patterns(context):
             return False
-        
+
         return True
-    
+
     def get_requirements(self) -> List[str]:
         """Get security requirements."""
         return [
@@ -133,17 +133,17 @@ class SecurityPolicy(BasePolicy):
             "Access pattern monitoring",
             "Threat detection"
         ]
-    
+
     def _check_cryptographic_requirements(self, context: Dict[str, Any]) -> bool:
         """Check cryptographic requirements."""
         # Implement cryptographic checks
         return True
-    
+
     def _check_data_integrity(self, context: Dict[str, Any]) -> bool:
         """Check data integrity."""
         # Implement integrity checks
         return True
-    
+
     def _check_access_patterns(self, context: Dict[str, Any]) -> bool:
         """Check access patterns for anomalies."""
         # Implement access pattern analysis
@@ -157,26 +157,26 @@ Manages compliance requirements:
 ```python
 class CompliancePolicy(BasePolicy):
     """Compliance policy implementation."""
-    
+
     def _get_policy_type(self) -> PolicyType:
         return PolicyType.COMPLIANCE
-    
+
     def evaluate(self, context: Dict[str, Any]) -> bool:
         """Evaluate compliance policy."""
         # Check regulatory requirements
         if not self._check_regulatory_requirements(context):
             return False
-        
+
         # Check audit requirements
         if not self._check_audit_requirements(context):
             return False
-        
+
         # Check data retention
         if not self._check_data_retention(context):
             return False
-        
+
         return True
-    
+
     def get_requirements(self) -> List[str]:
         """Get compliance requirements."""
         return [
@@ -185,17 +185,17 @@ class CompliancePolicy(BasePolicy):
             "Data retention policies",
             "Privacy protection"
         ]
-    
+
     def _check_regulatory_requirements(self, context: Dict[str, Any]) -> bool:
         """Check regulatory requirements."""
         # Implement regulatory checks
         return True
-    
+
     def _check_audit_requirements(self, context: Dict[str, Any]) -> bool:
         """Check audit requirements."""
         # Implement audit checks
         return True
-    
+
     def _check_data_retention(self, context: Dict[str, Any]) -> bool:
         """Check data retention policies."""
         # Implement retention checks
@@ -209,12 +209,12 @@ The policy engine manages and enforces policies:
 ```python
 class PolicyEngine:
     """Policy enforcement engine."""
-    
+
     def __init__(self, config):
         self.config = config
         self.policies = {}
         self._load_policies()
-    
+
     def _load_policies(self):
         """Load all policies."""
         for policy_config in self.config.get('policies', []):
@@ -227,9 +227,9 @@ class PolicyEngine:
                 policy = CompliancePolicy(policy_config)
             else:
                 continue
-            
+
             self.policies[policy.name] = policy
-    
+
     def evaluate_policies(self, context: Dict[str, Any]) -> Dict[str, bool]:
         """Evaluate all policies against the given context."""
         results = {}
@@ -240,12 +240,12 @@ class PolicyEngine:
                 print(f"Error evaluating policy {name}: {e}")
                 results[name] = False
         return results
-    
+
     def enforce_policies(self, context: Dict[str, Any]) -> bool:
         """Enforce all policies. Returns True if all policies pass."""
         results = self.evaluate_policies(context)
         return all(results.values())
-    
+
     def get_policy_requirements(self) -> Dict[str, List[str]]:
         """Get requirements for all policies."""
         requirements = {}
@@ -261,7 +261,7 @@ Policies can be configured through YAML files:
 ```yaml
 policy:
   enforcement_mode: "strict"  # strict, permissive, audit
-  
+
   policies:
     - name: "access_control"
       type: "access"
@@ -274,7 +274,7 @@ policy:
             permissions: ["*:*"]
           - subject: "user"
             permissions: ["read:*", "verify:*"]
-    
+
     - name: "security_requirements"
       type: "security"
       enabled: true
@@ -282,7 +282,7 @@ policy:
         require_encryption: true
         min_key_strength: 256
         require_audit_logging: true
-    
+
     - name: "compliance_requirements"
       type: "compliance"
       enabled: true
@@ -299,7 +299,7 @@ The policy enforcer handles policy violations:
 ```python
 class PolicyEnforcer:
     """Handles policy enforcement and violations."""
-    
+
     def __init__(self, config):
         self.config = config
         self.violations = []
@@ -308,8 +308,8 @@ class PolicyEnforcer:
             'audit': self._audit_action,
             'notify': self._notify_action
         }
-    
-    def handle_violation(self, policy_name: str, context: Dict[str, Any], 
+
+    def handle_violation(self, policy_name: str, context: Dict[str, Any],
                         action: str = 'audit'):
         """Handle a policy violation."""
         violation = {
@@ -318,20 +318,20 @@ class PolicyEnforcer:
             'timestamp': time.time(),
             'action': action
         }
-        
+
         self.violations.append(violation)
-        
+
         if action in self.enforcement_actions:
             self.enforcement_actions[action](violation)
-    
+
     def _block_action(self, violation: Dict[str, Any]):
         """Block the action that caused the violation."""
         print(f"BLOCKED: Policy {violation['policy']} violation")
-    
+
     def _audit_action(self, violation: Dict[str, Any]):
         """Audit the violation."""
         print(f"AUDIT: Policy {violation['policy']} violation logged")
-    
+
     def _notify_action(self, violation: Dict[str, Any]):
         """Notify about the violation."""
         print(f"NOTIFICATION: Policy {violation['policy']} violation detected")
@@ -344,11 +344,11 @@ The policy system includes comprehensive audit and monitoring:
 ```python
 class PolicyAuditor:
     """Audits policy compliance and violations."""
-    
+
     def __init__(self, config):
         self.config = config
         self.audit_log = []
-    
+
     def audit_policy_compliance(self, context: Dict[str, Any]) -> Dict[str, Any]:
         """Audit policy compliance for the given context."""
         audit_result = {
@@ -358,13 +358,13 @@ class PolicyAuditor:
             'violations': [],
             'recommendations': []
         }
-        
+
         # Check each policy
         for policy_name, policy in self.policies.items():
             try:
                 compliant = policy.evaluate(context)
                 audit_result['compliance'][policy_name] = compliant
-                
+
                 if not compliant:
                     audit_result['violations'].append({
                         'policy': policy_name,
@@ -375,17 +375,17 @@ class PolicyAuditor:
                     'policy': policy_name,
                     'reason': f'Policy evaluation error: {e}'
                 })
-        
+
         # Generate recommendations
         audit_result['recommendations'] = self._generate_recommendations(audit_result)
-        
+
         self.audit_log.append(audit_result)
         return audit_result
-    
+
     def _generate_recommendations(self, audit_result: Dict[str, Any]) -> List[str]:
         """Generate recommendations based on audit results."""
         recommendations = []
-        
+
         for violation in audit_result['violations']:
             policy_name = violation['policy']
             if policy_name == 'access_control':
@@ -394,7 +394,7 @@ class PolicyAuditor:
                 recommendations.append("Implement additional security measures")
             elif policy_name == 'compliance_requirements':
                 recommendations.append("Review compliance requirements and update policies")
-        
+
         return recommendations
 ```
 

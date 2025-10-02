@@ -1,5 +1,6 @@
 from __future__ import annotations
-from pefc.pcap.model import PCAP, VVector, ProofSpec
+
+from pefc.pcap.model import PCAP, ProofSpec, VVector
 
 
 def test_pcap_model_creation():

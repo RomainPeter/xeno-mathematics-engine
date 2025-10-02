@@ -3,11 +3,11 @@
 Benchmark script for S2 vendors scenarios
 """
 
+import argparse
 import json
 import time
-import argparse
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any, Dict
 
 
 class S2VendorsBenchmark:

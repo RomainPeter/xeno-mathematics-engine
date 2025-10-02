@@ -1,5 +1,6 @@
-from pathlib import Path
 import json
+from pathlib import Path
+
 from pefc.summary import build_summary
 
 

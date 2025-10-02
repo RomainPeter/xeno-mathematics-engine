@@ -3,8 +3,8 @@ FailReason v0.2 mapping for different runners.
 Maps runner types to granular failreason codes.
 """
 
-from typing import Dict, List, Any
 from enum import Enum
+from typing import Any, Dict, List
 
 
 class RunnerType(Enum):

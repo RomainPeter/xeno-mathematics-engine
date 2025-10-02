@@ -7,9 +7,9 @@ Demonstrates Next-Closure with 4×4 and 5×3 contexts, lectic order, and perform
 import time
 from typing import List
 
-from proofengine.fca.context import FormalContext, Object, Attribute
-from proofengine.fca.next_closure import NextClosure, Concept, ConceptLattice
 from proofengine.fca.ae_engine import NextClosureAEEngine
+from proofengine.fca.context import Attribute, FormalContext, Object
+from proofengine.fca.next_closure import Concept, ConceptLattice, NextClosure
 
 
 def create_context_4x4() -> FormalContext:

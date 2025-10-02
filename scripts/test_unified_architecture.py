@@ -14,17 +14,12 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from proofengine.core.egraph import (
-    EGraph,
-    canonicalize_state,
-    canonicalize_choreography,
-)
+from proofengine.core.egraph import (EGraph, canonicalize_choreography,
+                                     canonicalize_state)
 from proofengine.orchestrator.ae_loop import AELoop, Implication
 from proofengine.orchestrator.cegis_loop import CEGISLoop, Choreography
-from proofengine.orchestrator.unified_orchestrator import (
-    UnifiedOrchestrator,
-    ExplorationConfig,
-)
+from proofengine.orchestrator.unified_orchestrator import (ExplorationConfig,
+                                                           UnifiedOrchestrator)
 
 
 async def test_egraph_functionality():

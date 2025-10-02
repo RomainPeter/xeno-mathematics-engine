@@ -3,10 +3,11 @@ Strategy: redact_pii
 Redacts PII data from logs and outputs
 """
 
-from typing import Dict, List, Any
 import re
+from typing import Any, Dict, List
+
 from proofengine.core.strategy import Strategy
-from proofengine.core.types import Plan, Action, Evidence
+from proofengine.core.types import Action, Evidence, Plan
 
 
 class RedactPIIStrategy(Strategy):
@@ -138,10 +139,10 @@ def redact_{pii_type.lower()}():
     # Redact {pii_type.lower()} from log content
     pattern = r'{self.pii_patterns[pii_type.split('_')[0].lower()]}'
     replacement = '{redaction_map[pii_type]}'
-    
+
     def redact_content(content):
         return re.sub(pattern, replacement, content)
-    
+
     return redact_content
 """
 
@@ -155,13 +156,13 @@ pii_redaction:
     email: '\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b'
     phone: '\\b\\d{3}-\\d{3}-\\d{4}\\b'
     cc: '\\b\\d{4}[\\s-]?\\d{4}[\\s-]?\\d{4}[\\s-]?\\d{4}\\b'
-  
+
   replacements:
     ssn: 'REDACTED_SSN'
     email: 'REDACTED_EMAIL'
     phone: 'REDACTED_PHONE'
     cc: 'REDACTED_CC'
-  
+
   log_levels:
     - INFO
     - DEBUG

@@ -109,17 +109,17 @@ import networkx as nx
 def validate_psp_dag(proofs):
     """Validate that the proof structure forms a valid DAG."""
     G = nx.DiGraph()
-    
+
     # Add nodes and edges
     for proof in proofs:
         G.add_node(proof.id)
         for dep in proof.dependencies:
             G.add_edge(dep, proof.id)
-    
+
     # Check for cycles
     if not nx.is_directed_acyclic_graph(G):
         raise ValueError("Proof structure contains cycles")
-    
+
     return True
 ```
 
@@ -132,7 +132,7 @@ def validate_proof_constraints(proof):
     """Custom validation for specific proof constraints."""
     if proof.kind == "theorem" and not proof.dependencies:
         raise ValueError("Theorems must have dependencies")
-    
+
     if proof.kind == "axiom" and proof.dependencies:
         raise ValueError("Axioms cannot have dependencies")
 ```

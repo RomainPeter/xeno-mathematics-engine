@@ -41,4 +41,3 @@
   },
   "required": ["time_ms", "audit_cost", "legal_risk", "tech_debt", "novelty", "coverage"]
 }
-

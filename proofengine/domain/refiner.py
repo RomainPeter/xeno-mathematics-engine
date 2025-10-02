@@ -4,8 +4,8 @@ Implements refine() using counterexamples to specialize constraints or edit patc
 """
 
 import re
-from typing import List, Dict, Any
 from dataclasses import dataclass
+from typing import Any, Dict, List
 
 from .types import Candidate, Counterexample
 

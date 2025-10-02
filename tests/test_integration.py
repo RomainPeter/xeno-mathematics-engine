@@ -3,16 +3,18 @@ Tests d'intégration pour le Proof Engine for Code v0.
 Teste l'architecture complète avec rollback et replanning.
 """
 
-import pytest
-import tempfile
 import os
-from proofengine.core.schemas import VJustification, Proof, PCAP
-from proofengine.core.state import create_initial_state
-from planner.meta import MetacognitivePlanner
+import tempfile
+
+import pytest
 from generator.stochastic import StochasticGenerator
+
+from metrics.collect import MetricsCollector
+from planner.meta import MetacognitivePlanner
+from proofengine.core.schemas import PCAP, Proof, VJustification
+from proofengine.core.state import create_initial_state
 from runner.deterministic import DeterministicRunner
 from runner.verifier import Verifier
-from metrics.collect import MetricsCollector
 
 
 class TestIntegration:

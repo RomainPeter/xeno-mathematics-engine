@@ -49,4 +49,3 @@ Return a JSON array of choreographies:
 - ["Abduce", "Specialize", "Verify"] - Hypothesis-driven approach
 
 Generate choreographies now:
-

@@ -7,7 +7,6 @@ from typing import Any, Dict, List
 
 from proofengine.core.hashing import hash_pcap
 from proofengine.core.schemas import PCAP, Proof
-
 from runner.deterministic import DeterministicRunner
 
 

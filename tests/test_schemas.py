@@ -3,8 +3,9 @@ Tests for JSON schemas validation.
 """
 
 import json
-import jsonschema
 from pathlib import Path
+
+import jsonschema
 
 
 class TestSchemaValidation:

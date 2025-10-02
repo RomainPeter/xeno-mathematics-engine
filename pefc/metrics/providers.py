@@ -1,9 +1,10 @@
 from __future__ import annotations
-from typing import Iterable, Protocol, List, Optional
-from pathlib import Path
+
 import json
-import os
 import logging
+import os
+from pathlib import Path
+from typing import Iterable, List, Optional, Protocol
 
 log = logging.getLogger(__name__)
 

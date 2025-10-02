@@ -9,11 +9,11 @@ import os
 import sys
 from typing import Any, Dict, List
 
+from metrics.collect import MetricsCollector
+from planner.meta import MetacognitivePlanner
 from proofengine.core.schemas import PCAP, XState
 from proofengine.core.state import create_initial_state
-from planner.meta import MetacognitivePlanner
 from runner.verifier import Verifier
-from metrics.collect import MetricsCollector
 from scripts.audit_pack import AuditPackGenerator
 
 

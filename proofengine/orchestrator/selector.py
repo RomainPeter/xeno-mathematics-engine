@@ -7,8 +7,8 @@ multi-criteria scoring, and deterministic fallback.
 
 import json
 import logging
-from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
+from typing import Any, Dict, List, Optional
 
 from proofengine.core.llm_client import LLMClient, LLMRequest, get_llm_client
 from proofengine.orchestrator.strategy_api import Strategy, StrategyContext

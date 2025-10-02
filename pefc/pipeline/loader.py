@@ -1,6 +1,8 @@
 from __future__ import annotations
+
 from pathlib import Path
 from typing import Any, List
+
 import yaml
 
 from pefc.pipeline.registry import get_step

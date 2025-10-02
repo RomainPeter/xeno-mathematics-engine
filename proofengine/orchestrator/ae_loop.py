@@ -3,9 +3,9 @@ Attribute Exploration (AE) loop implementation.
 Implements next-closure algorithm with LLM + Verifier oracle.
 """
 
-from typing import Dict, List, Set, Any, Optional
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any, Dict, List, Optional, Set
 
 from ..core.egraph import EGraph
 from ..verifier.opa_client import OPAClient

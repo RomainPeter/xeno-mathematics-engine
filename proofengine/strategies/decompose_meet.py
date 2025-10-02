@@ -3,13 +3,10 @@ Decompose Meet Strategy.
 Handles runner.test_failure on Meet(A∧B) by separating into A then B.
 """
 
-from typing import Dict, List, Any
-from ..orchestrator.strategy_api import (
-    Strategy,
-    StrategyContext,
-    RewritePlan,
-    RewriteOperation,
-)
+from typing import Any, Dict, List
+
+from ..orchestrator.strategy_api import (RewriteOperation, RewritePlan,
+                                         Strategy, StrategyContext)
 
 
 class DecomposeMeetStrategy(Strategy):

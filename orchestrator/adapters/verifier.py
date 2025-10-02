@@ -5,9 +5,9 @@ Replaces mock verifier with actual verification algorithms.
 
 import asyncio
 import uuid
-from typing import Dict, List, Any
-from datetime import datetime
 from dataclasses import dataclass, field
+from datetime import datetime
+from typing import Any, Dict, List
 
 
 @dataclass

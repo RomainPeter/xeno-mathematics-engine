@@ -1,6 +1,7 @@
-from pathlib import Path
 import json
-from pefc.runner import run_pack_build, BuildStatus
+from pathlib import Path
+
+from pefc.runner import BuildStatus, run_pack_build
 
 
 def write_cfg(tmp: Path, enable_sign: bool, key: str | None):

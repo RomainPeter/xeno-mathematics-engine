@@ -4,9 +4,10 @@ Ensures only configured inputs are collected and empty config errors.
 """
 
 import json
-from pathlib import Path
-import tempfile
 import os
+import tempfile
+from pathlib import Path
+
 import pytest
 
 from pefc.pack.builder import build_pack

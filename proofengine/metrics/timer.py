@@ -2,8 +2,8 @@
 Timer utilities for real performance measurement.
 """
 
-from time import perf_counter
 from contextlib import contextmanager
+from time import perf_counter
 from typing import Generator
 
 

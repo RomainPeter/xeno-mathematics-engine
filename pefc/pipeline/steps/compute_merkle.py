@@ -1,9 +1,10 @@
 from __future__ import annotations
-from pathlib import Path
+
 import hashlib
 import json
 import logging
 from datetime import datetime, timezone
+from pathlib import Path
 
 from pefc.pipeline.core import PackStep, PipelineContext
 

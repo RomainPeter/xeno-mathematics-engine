@@ -28,26 +28,26 @@ from typing import Any, Dict, List, Optional
 
 class BaseStorage(ABC):
     """Base class for all storage implementations."""
-    
+
     def __init__(self, config):
         self.config = config
         self.name = self.__class__.__name__
-    
+
     @abstractmethod
     def store(self, key: str, data: Any) -> bool:
         """Store data with the given key."""
         pass
-    
+
     @abstractmethod
     def retrieve(self, key: str) -> Optional[Any]:
         """Retrieve data by key."""
         pass
-    
+
     @abstractmethod
     def delete(self, key: str) -> bool:
         """Delete data by key."""
         pass
-    
+
     @abstractmethod
     def list_keys(self, prefix: str = "") -> List[str]:
         """List all keys with optional prefix."""
@@ -67,12 +67,12 @@ from pathlib import Path
 
 class FileStorage(BaseStorage):
     """File-based storage implementation."""
-    
+
     def __init__(self, config):
         super().__init__(config)
         self.base_path = Path(config.get('base_path', 'data/storage'))
         self.base_path.mkdir(parents=True, exist_ok=True)
-    
+
     def store(self, key: str, data: Any) -> bool:
         """Store data to file."""
         try:
@@ -83,7 +83,7 @@ class FileStorage(BaseStorage):
         except Exception as e:
             print(f"Error storing {key}: {e}")
             return False
-    
+
     def retrieve(self, key: str) -> Optional[Any]:
         """Retrieve data from file."""
         try:
@@ -95,7 +95,7 @@ class FileStorage(BaseStorage):
         except Exception as e:
             print(f"Error retrieving {key}: {e}")
             return None
-    
+
     def delete(self, key: str) -> bool:
         """Delete data file."""
         try:
@@ -106,7 +106,7 @@ class FileStorage(BaseStorage):
         except Exception as e:
             print(f"Error deleting {key}: {e}")
             return False
-    
+
     def list_keys(self, prefix: str = "") -> List[str]:
         """List all keys with optional prefix."""
         try:
@@ -128,12 +128,12 @@ from typing import Any, Dict, List, Optional
 
 class DatabaseStorage(BaseStorage):
     """Database storage implementation."""
-    
+
     def __init__(self, config):
         super().__init__(config)
         self.db_path = config.get('db_path', 'data/xme.db')
         self._init_database()
-    
+
     def _init_database(self):
         """Initialize database schema."""
         with sqlite3.connect(self.db_path) as conn:
@@ -146,7 +146,7 @@ class DatabaseStorage(BaseStorage):
                 )
             ''')
             conn.commit()
-    
+
     def store(self, key: str, data: Any) -> bool:
         """Store data in database."""
         try:
@@ -162,7 +162,7 @@ class DatabaseStorage(BaseStorage):
         except Exception as e:
             print(f"Error storing {key}: {e}")
             return False
-    
+
     def retrieve(self, key: str) -> Optional[Any]:
         """Retrieve data from database."""
         try:
@@ -176,7 +176,7 @@ class DatabaseStorage(BaseStorage):
         except Exception as e:
             print(f"Error retrieving {key}: {e}")
             return None
-    
+
     def delete(self, key: str) -> bool:
         """Delete data from database."""
         try:
@@ -187,7 +187,7 @@ class DatabaseStorage(BaseStorage):
         except Exception as e:
             print(f"Error deleting {key}: {e}")
             return False
-    
+
     def list_keys(self, prefix: str = "") -> List[str]:
         """List all keys with optional prefix."""
         try:
@@ -209,12 +209,12 @@ Pack-based storage for structured data:
 ```python
 class PackStorage(BaseStorage):
     """Pack-based storage implementation."""
-    
+
     def __init__(self, config):
         super().__init__(config)
         self.pack_path = Path(config.get('pack_path', 'data/packs'))
         self.pack_path.mkdir(parents=True, exist_ok=True)
-    
+
     def store(self, key: str, data: Any) -> bool:
         """Store data as a pack."""
         try:
@@ -224,7 +224,7 @@ class PackStorage(BaseStorage):
         except Exception as e:
             print(f"Error storing pack {key}: {e}")
             return False
-    
+
     def retrieve(self, key: str) -> Optional[Any]:
         """Retrieve data from pack."""
         try:
@@ -245,12 +245,12 @@ The storage manager coordinates different storage backends:
 ```python
 class StorageManager:
     """Manages multiple storage backends."""
-    
+
     def __init__(self, config):
         self.config = config
         self.storages = {}
         self._init_storages()
-    
+
     def _init_storages(self):
         """Initialize storage backends."""
         for name, storage_config in self.config.get('storages', {}).items():
@@ -261,18 +261,18 @@ class StorageManager:
                 self.storages[name] = DatabaseStorage(storage_config)
             elif storage_type == 'pack':
                 self.storages[name] = PackStorage(storage_config)
-    
+
     def get_storage(self, name: str) -> BaseStorage:
         """Get a storage backend by name."""
         if name not in self.storages:
             raise ValueError(f"Unknown storage: {name}")
         return self.storages[name]
-    
+
     def store(self, storage_name: str, key: str, data: Any) -> bool:
         """Store data using specified storage."""
         storage = self.get_storage(storage_name)
         return storage.store(key, data)
-    
+
     def retrieve(self, storage_name: str, key: str) -> Optional[Any]:
         """Retrieve data using specified storage."""
         storage = self.get_storage(storage_name)
@@ -289,12 +289,12 @@ from typing import Any, Dict, Optional
 
 class CacheStorage(BaseStorage):
     """Caching storage implementation."""
-    
+
     def __init__(self, config):
         super().__init__(config)
         self.cache = {}
         self.ttl = config.get('ttl', 3600)  # Time to live in seconds
-    
+
     def store(self, key: str, data: Any) -> bool:
         """Store data in cache."""
         self.cache[key] = {
@@ -302,25 +302,25 @@ class CacheStorage(BaseStorage):
             'timestamp': time.time()
         }
         return True
-    
+
     def retrieve(self, key: str) -> Optional[Any]:
         """Retrieve data from cache."""
         if key not in self.cache:
             return None
-        
+
         entry = self.cache[key]
         if time.time() - entry['timestamp'] > self.ttl:
             del self.cache[key]
             return None
-        
+
         return entry['data']
-    
+
     def delete(self, key: str) -> bool:
         """Delete data from cache."""
         if key in self.cache:
             del self.cache[key]
         return True
-    
+
     def list_keys(self, prefix: str = "") -> List[str]:
         """List all keys with optional prefix."""
         keys = list(self.cache.keys())
@@ -336,24 +336,24 @@ Storage can be configured through YAML files:
 ```yaml
 persistence:
   default_storage: "file"
-  
+
   storages:
     file:
       type: "file"
       base_path: "data/storage"
-    
+
     database:
       type: "database"
       db_path: "data/xme.db"
-    
+
     pack:
       type: "pack"
       pack_path: "data/packs"
-    
+
     cache:
       type: "cache"
       ttl: 3600
-  
+
   backup:
     enabled: true
     schedule: "daily"

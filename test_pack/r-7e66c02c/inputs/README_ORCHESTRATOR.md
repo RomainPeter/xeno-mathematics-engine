@@ -23,7 +23,7 @@ class AEEngine(ABC):
     async def initialize(domain_spec: Dict[str, Any]) -> None
     async def cleanup() -> None
 
-# CEGIS Engine  
+# CEGIS Engine
 class CegisEngine(ABC):
     async def propose(ctx: CegisContext) -> Candidate
     async def verify(candidate: Candidate, ctx: CegisContext) -> Union[Verdict, Counterexample]
@@ -168,19 +168,19 @@ class OrchestratorConfig:
     cegis_propose_timeout: float = 10.0
     cegis_verify_timeout: float = 15.0
     cegis_refine_timeout: float = 10.0
-    
+
     # CEGIS parameters
     cegis_max_iterations: int = 10
     cegis_max_stable_no_improve: int = 3
-    
+
     # Retry configuration
     max_retries: int = 3
     retry_backoff_base: float = 1.0
-    
+
     # Determinism
     seed: Optional[int] = None
     hermetic_mode: bool = False
-    
+
     # Audit configuration
     audit_dir: str = "audit"
     pcap_retention_days: int = 30

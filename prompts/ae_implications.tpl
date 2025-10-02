@@ -33,4 +33,3 @@ Return a JSON array of implications:
 - {"premise": ["api_changed", "breaking_change"], "conclusion": ["version_bump_required"], "confidence": 0.95}
 
 Generate implications now:
-

@@ -7,8 +7,8 @@ Inject fake ConstraintBreach → verify HS-Tree → test added to K → OPA pass
 import json
 import subprocess
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 
 def create_fake_constraint_breach():

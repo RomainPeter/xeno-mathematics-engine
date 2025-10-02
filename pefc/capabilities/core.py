@@ -1,6 +1,8 @@
 from __future__ import annotations
+
 from dataclasses import dataclass, field
-from typing import Dict, Any, List, Protocol
+from typing import Any, Dict, List, Protocol
+
 from pefc.pcap.model import ProofSpec
 
 

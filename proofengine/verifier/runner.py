@@ -1,8 +1,9 @@
-import json
 import glob
-import time
 import hashlib
+import json
 import os
+import time
+
 from proofengine.core.schemas import PCAP
 
 

@@ -3,13 +3,13 @@ AE Loop orchestrator for Discovery Engine 2-Cat.
 Coordinates AE Next-Closure with state management and journaling.
 """
 
-from typing import Dict, Any
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any, Dict
 
 from ...methods.ae.next_closure import AEExplorer
 from ...methods.ae.oracle import Oracle
-from ...orchestrator.state import XState, Journal
+from ...orchestrator.state import Journal, XState
 from ...verifier.verifier import Verifier
 
 

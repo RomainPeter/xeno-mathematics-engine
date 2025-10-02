@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import json
-import sys
 import os
+import sys
 
 
 def load_metrics(file_path):

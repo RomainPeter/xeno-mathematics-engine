@@ -1,32 +1,21 @@
 from __future__ import annotations
+
+import json
+import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, Optional, List
-import logging
-import json
-from zipfile import ZipFile, ZIP_DEFLATED
+from typing import Dict, List, Optional
+from zipfile import ZIP_DEFLATED, ZipFile
 
-from pefc.errors import (
-    PEFCError,
-    ValidationError,
-    PackBuildError,
-    SignatureError,
-    MetricsError,
-    ManifestError,
-    EXIT_CODE,
-    SUCCESS_EXIT_CODE,
-    PARTIAL_EXIT_CODE,
-    UNEXPECTED_ERROR_EXIT_CODE,
-)
-from pefc.config.loader import get_config, expand_globs
-from pefc.pack.merkle import (
-    build_entries,
-    compute_merkle_root,
-    build_manifest,
-    PackEntry,
-)
-from pefc.pack.zipper import ZipAdder
+from pefc.config.loader import expand_globs, get_config
+from pefc.errors import (EXIT_CODE, PARTIAL_EXIT_CODE, SUCCESS_EXIT_CODE,
+                         UNEXPECTED_ERROR_EXIT_CODE, ManifestError,
+                         MetricsError, PackBuildError, PEFCError,
+                         SignatureError, ValidationError)
+from pefc.pack.merkle import (PackEntry, build_entries, build_manifest,
+                              compute_merkle_root)
 from pefc.pack.sign import sign_zip
+from pefc.pack.zipper import ZipAdder
 from pefc.summary import build_summary
 
 log = logging.getLogger(__name__)

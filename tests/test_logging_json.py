@@ -1,5 +1,6 @@
 import json
-from pefc.logging import init_logging, get_logger, set_context, clear_context
+
+from pefc.logging import clear_context, get_logger, init_logging, set_context
 
 
 def test_json_logging_basic(capsys):

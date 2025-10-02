@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 import json
 import os
+import statistics
+import subprocess
 import sys
 import time
-import subprocess
-import statistics
 
 ROOT = "spec_pack"
 DEC = f"{ROOT}/samples/decisions.jsonl"
@@ -42,6 +42,7 @@ def run_s1():
         return ok, details
     except Exception as e:
         import logging
+
         logging.warning(f"Failed to run S1 check: {e}")
         return False, {"S1_pass": False}
 
@@ -54,6 +55,7 @@ def get_k(anf):
                 return int(k)
     except Exception as e:
         import logging
+
         logging.warning(f"Failed to extract K parameter: {e}")
     return 10
 

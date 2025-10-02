@@ -4,11 +4,10 @@ Provides correlation IDs and simple emit helpers.
 """
 
 import logging
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
 
 from .event_bus import EventBus, EventBusConfig
-from .types import create_event, EventType, EventLevel
-
+from .types import EventLevel, EventType, create_event
 
 _TOPIC_TO_EVENT_TYPE = {
     "Orchestrator.Start": EventType.ORCHESTRATOR_START,

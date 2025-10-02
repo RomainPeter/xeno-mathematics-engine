@@ -3,12 +3,9 @@ Tests for Bandit LinUCB + DPP selection.
 """
 
 import pytest
-from policy.bandit import LinUCB, ThompsonSampling, BanditContext
-from policy.diversity import (
-    DPPSelector,
-    SubmodularSelector,
-    DiversityItem,
-)
+
+from policy.bandit import BanditContext, LinUCB, ThompsonSampling
+from policy.diversity import DiversityItem, DPPSelector, SubmodularSelector
 
 
 class TestLinUCB:
