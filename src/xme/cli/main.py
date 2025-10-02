@@ -21,6 +21,8 @@ from xme.verifier.ae_checks import get_ae_obligations
 from xme.verifier.cegis_checks import get_cegis_obligations
 from xme.verifier.report import Report, save_report
 from xme.adapters.logger import log_verdict
+from xme.metrics.delta import aggregate_run_delta, compute_delta_ae, compute_delta_cegis
+from xme.metrics.summarize import summarize_run, summarize_multiple_runs, export_summary_json
 from pathlib import Path
 import subprocess
 
@@ -34,6 +36,7 @@ discover_app = typer.Typer(help="Discovery operations")
 egraph_app = typer.Typer(help="E-graph operations")
 pack_app = typer.Typer(help="Audit Pack operations")
 verify_app = typer.Typer(help="Verification operations")
+metrics_app = typer.Typer(help="Metrics operations")
 app.add_typer(psp_app, name="psp")
 app.add_typer(pcap_app, name="pcap")
 app.add_typer(engine_app, name="engine")
@@ -43,6 +46,7 @@ app.add_typer(discover_app, name="discover")
 app.add_typer(egraph_app, name="egraph")
 app.add_typer(pack_app, name="pack")
 app.add_typer(verify_app, name="verify")
+app.add_typer(metrics_app, name="metrics")
 
 
 @app.callback()
@@ -474,6 +478,149 @@ def verify_run(
     # Code de retour
     if not report.ok_all:
         raise typer.Exit(code=1)
+
+
+@metrics_app.command("summarize")
+def metrics_summarize(
+    run_path: str = typer.Option(..., "--run", help="PCAP run path"),
+    output_file: Optional[str] = typer.Option(None, "--out", help="Output JSON file"),
+    json: bool = typer.Option(False, "--json", help="Output as JSON")
+):
+    """Synthétise les métriques d'un run PCAP."""
+    run_file = Path(run_path)
+    if not run_file.exists():
+        print(f"[red]Run file not found[/red] {run_file}")
+        raise typer.Exit(code=1)
+    
+    # Générer le résumé
+    summary = summarize_run(run_file)
+    
+    # Sauvegarder si spécifié
+    if output_file:
+        export_summary_json(summary, Path(output_file))
+        print(f"[green]Summary saved[/green] {output_file}")
+    
+    # Afficher le résumé
+    if json:
+        print(orjson.dumps(summary, option=orjson.OPT_INDENT_2).decode())
+    else:
+        print(f"[bold]Metrics Summary[/bold]")
+        print(f"Run: {summary['run_path']}")
+        print(f"Total entries: {summary['total_entries']}")
+        print(f"Incidents: {len(summary['incidents'])}")
+        print(f"δ_run: {summary['deltas']['delta_run']:.3f}")
+        print(f"Merkle root: {summary['merkle_root'] or 'N/A'}")
+        print(f"Summary: {summary['summary']}")
+        
+        # Afficher les actions
+        if summary['actions']:
+            print(f"[bold]Actions:[/bold]")
+            for action, count in summary['actions'].items():
+                print(f"  {action}: {count}")
+        
+        # Afficher les incidents
+        if summary['incidents']:
+            print(f"[bold red]Incidents:[/bold red]")
+            for incident in summary['incidents']:
+                print(f"  {incident['timestamp']}: {incident['action']} ({incident['type']})")
+
+
+@metrics_app.command("delta")
+def metrics_delta(
+    run_path: str = typer.Option(..., "--run", help="PCAP run path"),
+    phase: Optional[str] = typer.Option(None, "--phase", help="Specific phase to analyze")
+):
+    """Calcule les métriques δ d'un run PCAP."""
+    run_file = Path(run_path)
+    if not run_file.exists():
+        print(f"[red]Run file not found[/red] {run_file}")
+        raise typer.Exit(code=1)
+    
+    # Calculer les δ
+    delta_info = aggregate_run_delta(run_file)
+    
+    print(f"[bold]Delta Metrics[/bold]")
+    print(f"Run: {run_file}")
+    print(f"δ_run: {delta_info['delta_run']:.3f}")
+    print(f"Total entries: {delta_info['total_entries']}")
+    
+    if phase:
+        # Afficher le δ d'une phase spécifique
+        phase_deltas = delta_info.get('deltas_by_phase', {})
+        if phase in phase_deltas:
+            print(f"δ_{phase}: {phase_deltas[phase]:.3f}")
+        else:
+            print(f"[yellow]Phase '{phase}' not found[/yellow]")
+    else:
+        # Afficher tous les δ par phase
+        phase_deltas = delta_info.get('deltas_by_phase', {})
+        if phase_deltas:
+            print(f"[bold]Deltas by phase:[/bold]")
+            for phase_name, delta_value in phase_deltas.items():
+                print(f"  δ_{phase_name}: {delta_value:.3f}")
+        
+        phase_weights = delta_info.get('phase_weights', {})
+        if phase_weights:
+            print(f"[bold]Phase weights:[/bold]")
+            for phase_name, weight in phase_weights.items():
+                print(f"  {phase_name}: {weight}")
+
+
+@metrics_app.command("compare")
+def metrics_compare(
+    run1: str = typer.Option(..., "--run1", help="First PCAP run path"),
+    run2: str = typer.Option(..., "--run2", help="Second PCAP run path"),
+    output_file: Optional[str] = typer.Option(None, "--out", help="Output comparison JSON file")
+):
+    """Compare les métriques de deux runs PCAP."""
+    run1_file = Path(run1)
+    run2_file = Path(run2)
+    
+    if not run1_file.exists():
+        print(f"[red]First run file not found[/red] {run1_file}")
+        raise typer.Exit(code=1)
+    
+    if not run2_file.exists():
+        print(f"[red]Second run file not found[/red] {run2_file}")
+        raise typer.Exit(code=1)
+    
+    # Générer les résumés
+    summary1 = summarize_run(run1_file)
+    summary2 = summarize_run(run2_file)
+    
+    # Comparer
+    from xme.metrics.summarize import compare_summaries
+    comparison = compare_summaries(summary1, summary2)
+    
+    # Sauvegarder si spécifié
+    if output_file:
+        export_summary_json(comparison, Path(output_file))
+        print(f"[green]Comparison saved[/green] {output_file}")
+    
+    # Afficher la comparaison
+    print(f"[bold]Run Comparison[/bold]")
+    print(f"Run 1: {run1_file}")
+    print(f"Run 2: {run2_file}")
+    print(f"Summary: {comparison['summary']}")
+    
+    delta_comp = comparison['delta_comparison']
+    print(f"[bold]Delta comparison:[/bold]")
+    print(f"  Run 1 δ: {delta_comp['summary1']:.3f}")
+    print(f"  Run 2 δ: {delta_comp['summary2']:.3f}")
+    print(f"  Difference: {delta_comp['difference']:+.3f}")
+    print(f"  Improvement: {'[green]Yes[/green]' if delta_comp['improvement'] else '[red]No[/red]'}")
+    
+    entries_comp = comparison['entries_comparison']
+    print(f"[bold]Entries comparison:[/bold]")
+    print(f"  Run 1: {entries_comp['summary1']}")
+    print(f"  Run 2: {entries_comp['summary2']}")
+    print(f"  Difference: {entries_comp['difference']:+d}")
+    
+    incidents_comp = comparison['incidents_comparison']
+    print(f"[bold]Incidents comparison:[/bold]")
+    print(f"  Run 1: {incidents_comp['summary1']}")
+    print(f"  Run 2: {incidents_comp['summary2']}")
+    print(f"  Difference: {incidents_comp['difference']:+d}")
 
 
 if __name__ == "__main__":

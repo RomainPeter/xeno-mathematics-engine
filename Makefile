@@ -1,6 +1,6 @@
 PY=python3
 
-.PHONY: setup verify demo audit-pack logs release schema-test validate fmt demo-s1 deps-lock build-verifier-pinned audit 2cat-shadow 2cat-active s2-bench 2cat-report validate-summary verify-psp
+.PHONY: setup verify demo audit-pack logs release schema-test validate fmt demo-s1 deps-lock build-verifier-pinned audit 2cat-shadow 2cat-active s2-bench 2cat-report validate-summary verify-psp run-metrics
 
 setup:
 	$(PY) -m venv .venv && . .venv/bin/activate && pip install -U pip && pip install -r requirements.txt
@@ -707,3 +707,7 @@ egraph-canon:
 # PSP verification target
 verify-psp:
 	@xme verify psp --in artifacts/psp/ae_4x4.json --level S1
+
+# Metrics analysis target
+run-metrics:
+	@xme metrics summarize --run "$$(ls -1 artifacts/pcap/run-*.jsonl | tail -1)" --json
