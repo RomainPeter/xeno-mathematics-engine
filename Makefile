@@ -733,3 +733,17 @@ symbol-demo:
 
 referee-test:
 	@python -m pytest tests/test_referee_budgets.py tests/test_alien_reserve_embargo.py tests/test_pcn_requires_proofref.py -v
+
+# E-graph targets
+egraph-simplify:
+	@xme egraph saturate --in examples/egraph/unit_mul.json --rules examples/egraph/rules/arith.json --out artifacts/egraph/simplified.json
+
+egraph-explain:
+	@xme egraph explain --a examples/egraph/add_comm.json --b examples/egraph/add_comm_swapped.json
+
+egraph-test:
+	@python -m pytest tests/test_rewrites_simplify_units.py tests/test_rewrites_comm_assoc_canon.py tests/test_rewrites_distribution_opt_in.py -v
+
+egraph-demo:
+	@xme egraph saturate --in examples/egraph/unit_mul.json --rules examples/egraph/rules/arith.json --out artifacts/egraph/demo.json && \
+	xme egraph explain --a examples/egraph/add_comm.json --b examples/egraph/add_comm_swapped.json

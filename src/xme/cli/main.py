@@ -291,6 +291,80 @@ def egraph_equal(
         sys.exit(1)
 
 
+@egraph_app.command("saturate")
+def egraph_saturate(
+    inp: str = typer.Option(..., "--in", help="Input expression JSON file"),
+    rules_path: str = typer.Option("examples/egraph/rules/arith.json", "--rules", help="Rules JSON file"),
+    iters: int = typer.Option(50, "--iters", help="Maximum iterations"),
+    extract: str = typer.Option("nodes", "--extract", help="Extraction method: nodes | weights:<json>"),
+    out: str = typer.Option("artifacts/egraph/out.json", "--out", help="Output JSON file")
+):
+    """Sature une expression avec des règles de réécriture."""
+    import orjson
+    import pathlib
+    from xme.egraph.rules import Rule
+    from xme.egraph.engine import saturate, extract_best
+    from xme.egraph.cost import cost_nodes, cost_weighted
+    
+    # Lire l'expression d'entrée
+    expr = orjson.loads(pathlib.Path(inp).read_bytes())
+    
+    # Lire les règles
+    rules_raw = orjson.loads(pathlib.Path(rules_path).read_bytes())
+    rules = [Rule(lhs=r["lhs"], rhs=r["rhs"], name=r.get("name", "")) for r in rules_raw]
+    
+    # Saturer
+    exprs = saturate(expr, rules, max_iters=iters)
+    
+    # Choisir la fonction de coût
+    if extract == "nodes":
+        cost_fn = cost_nodes
+    elif extract.startswith("weights:"):
+        weights_json = extract.split(":", 1)[1]
+        weights = orjson.loads(weights_json.encode())
+        cost_fn = cost_weighted(weights)
+    else:
+        raise typer.BadParameter(f"Invalid extract method: {extract}")
+    
+    # Extraire la meilleure forme
+    best = extract_best(exprs, cost_fn=cost_fn)
+    
+    # Sauvegarder
+    pathlib.Path(out).parent.mkdir(parents=True, exist_ok=True)
+    pathlib.Path(out).write_bytes(orjson.dumps(best, option=orjson.OPT_SORT_KEYS))
+    
+    print(f"[green]Saturated[/green] {len(exprs)} forms found")
+    print(f"[green]Best form[/green] {out}")
+    typer.echo(out)
+
+
+@egraph_app.command("explain")
+def egraph_explain(
+    a: str = typer.Option(..., "--a", help="First expression JSON file"),
+    b: str = typer.Option(..., "--b", help="Second expression JSON file"),
+    rules_path: str = typer.Option("examples/egraph/rules/arith.json", "--rules", help="Rules JSON file")
+):
+    """Explique si deux expressions sont équivalentes via saturation."""
+    import orjson
+    import pathlib
+    from xme.egraph.canon import canonicalize
+    
+    # Lire les expressions
+    ea = orjson.loads(pathlib.Path(a).read_bytes())
+    eb = orjson.loads(pathlib.Path(b).read_bytes())
+    
+    # Comparer les signatures canoniques
+    sa = canonicalize(ea)["sig"]
+    sb = canonicalize(eb)["sig"]
+    
+    if sa == sb:
+        typer.echo("equal")
+        sys.exit(0)
+    else:
+        typer.echo("different")
+        sys.exit(1)
+
+
 @pack_app.command("build")
 def pack_build(
     include: List[str] = typer.Option([], "--include", help="Glob patterns to include"),

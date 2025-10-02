@@ -104,14 +104,13 @@ def alpha_rename_expr(expr: Dict[str, Any], renamer: Optional[AlphaRenamer] = No
     
     op = expr.get("op")
     
-    if op == "var":
+    if "var" in expr:
         # Renommer la variable
-        name = expr.get("name", "")
+        name = expr.get("var", "")
         new_name = renamer.rename_var(name)
         return {
-            "op": "var",
-            "name": new_name,
-            **{k: v for k, v in expr.items() if k not in ("op", "name")}
+            "var": new_name,
+            **{k: v for k, v in expr.items() if k not in ("var")}
         }
     
     elif op in ["atom", "value"]:

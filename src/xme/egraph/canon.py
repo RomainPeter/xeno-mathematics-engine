@@ -98,6 +98,10 @@ def sort_attrs(expr: Dict[str, Any]) -> Dict[str, Any]:
     if not isinstance(expr, dict):
         return expr
     
+    # Si c'est une variable ou une constante, la retourner telle quelle
+    if "var" in expr or "const" in expr:
+        return {k: v for k, v in expr.items() if k not in ("args", "op", "attrs")}
+    
     # Trier récursivement les arguments
     args = expr.get("args", [])
     sorted_args = [sort_attrs(arg) for arg in args]

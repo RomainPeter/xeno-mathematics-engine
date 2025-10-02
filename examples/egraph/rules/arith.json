@@ -1,0 +1,37 @@
+[
+  {
+    "name": "mul_unit_right",
+    "lhs": {"op": "*", "args": [{"var": "x"}, {"const": 1}]},
+    "rhs": {"var": "x"}
+  },
+  {
+    "name": "mul_unit_left",
+    "lhs": {"op": "*", "args": [{"const": 1}, {"var": "x"}]},
+    "rhs": {"var": "x"}
+  },
+  {
+    "name": "add_zero_right",
+    "lhs": {"op": "+", "args": [{"var": "x"}, {"const": 0}]},
+    "rhs": {"var": "x"}
+  },
+  {
+    "name": "add_zero_left",
+    "lhs": {"op": "+", "args": [{"const": 0}, {"var": "x"}]},
+    "rhs": {"var": "x"}
+  },
+  {
+    "name": "add_comm",
+    "lhs": {"op": "+", "args": [{"var": "x"}, {"var": "y"}]},
+    "rhs": {"op": "+", "args": [{"var": "y"}, {"var": "x"}]}
+  },
+  {
+    "name": "mul_comm",
+    "lhs": {"op": "*", "args": [{"var": "x"}, {"var": "y"}]},
+    "rhs": {"op": "*", "args": [{"var": "y"}, {"var": "x"}]}
+  },
+  {
+    "name": "add_assoc",
+    "lhs": {"op": "+", "args": [{"op": "+", "args": [{"var": "x"}, {"var": "y"}]}, {"var": "z"}]},
+    "rhs": {"op": "+", "args": [{"var": "x"}, {"op": "+", "args": [{"var": "y"}, {"var": "z"}]}]}
+  }
+]
