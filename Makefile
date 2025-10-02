@@ -667,6 +667,16 @@ pcap:
 	xme pcap verify --run $$RUN_PATH; \
 	xme pcap merkle --run $$RUN_PATH
 
-# AE demo target
+# AE demo targets
 ae-demo:
 	@xme ae demo --context examples/fca/context_4x4.json --out artifacts/psp/ae_demo.json
+
+ae-demo-4x4:
+	@xme ae demo --context tests/fixtures/fca/context_4x4.json --out artifacts/psp/ae_4x4.json
+
+ae-demo-5x3:
+	@xme ae demo --context tests/fixtures/fca/context_5x3.json --out artifacts/psp/ae_5x3.json
+
+# Golden files generation
+goldens:
+	@python scripts/gen_goldens.py

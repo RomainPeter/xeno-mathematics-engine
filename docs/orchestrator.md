@@ -15,8 +15,8 @@ L'Orchestrator Lite implémente une boucle AE (Attribute Exploration) minimalist
 ### Boucle AE
 
 1. **Chargement du contexte FCA** depuis un fichier JSON
-2. **Énumération des concepts** via Next-Closure stub
-3. **Construction du PSP** depuis les concepts (extent, intent)
+2. **Énumération des concepts** via Next-Closure (algorithme réel)
+3. **Construction du PSP** avec relation de couverture Hasse
 4. **Logging PCAP S0** des actions et incidents
 5. **Gestion des timeouts** avec incidents
 
@@ -64,8 +64,8 @@ xme ae demo --context examples/fca/context_4x4.json --out artifacts/psp/ae_demo.
 
 Le PSP contient :
 - **Blocs** : Concepts avec id `c{k}`, label `{a,b}`, data.intent
-- **Arêtes** : Relations de couverture (inclusion stricte d'intents)
-- **Méta** : `theorem: "AE demo"`
+- **Arêtes** : Relations de couverture Hasse (sans intermédiaires)
+- **Méta** : `theorem: "AE Next-Closure"`
 
 ## Tests
 

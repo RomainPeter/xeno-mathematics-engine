@@ -1,0 +1,10 @@
+{
+  "attributes": ["x", "y", "z"],
+  "objects": [
+    {"id": "o1", "attrs": ["x", "y"]},
+    {"id": "o2", "attrs": ["x"]},
+    {"id": "o3", "attrs": ["y", "z"]},
+    {"id": "o4", "attrs": ["z"]},
+    {"id": "o5", "attrs": ["x", "z"]}
+  ]
+}

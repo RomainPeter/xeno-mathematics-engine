@@ -1,0 +1,9 @@
+{
+  "attributes": ["a", "b", "c", "d"],
+  "objects": [
+    {"id": "g1", "attrs": ["a", "b"]},
+    {"id": "g2", "attrs": ["b", "c"]},
+    {"id": "g3", "attrs": ["a", "c", "d"]},
+    {"id": "g4", "attrs": ["b", "d"]}
+  ]
+}

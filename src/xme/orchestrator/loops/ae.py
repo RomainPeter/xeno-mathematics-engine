@@ -8,7 +8,7 @@ from pathlib import Path
 from xme.orchestrator.state import RunState
 from xme.orchestrator.event_bus import EventBus
 from xme.engines.ae.context import load_context
-from xme.engines.ae.next_closure_stub import enumerate_concepts_stub
+from xme.engines.ae.next_closure import enumerate_concepts
 from xme.engines.ae.psp_builder import concepts_to_psp
 from xme.adapters.logger import log_action
 from xme.pcap.store import PCAPStore
@@ -38,7 +38,7 @@ async def run_ae(
     """
     async def _task():
         ctx = load_context(context_path)
-        concepts = enumerate_concepts_stub(ctx)
+        concepts = enumerate_concepts(ctx)
         psp = concepts_to_psp(concepts)
         
         out_psp.parent.mkdir(parents=True, exist_ok=True)
