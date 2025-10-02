@@ -1,0 +1,7 @@
+budgets:
+  h_quota: 10
+  x_quota: 20
+embargo_rules:
+  min_checks: ["psp:S1"]
+naming:
+  allowed_charset: "^[A-Za-z0-9_]+$"

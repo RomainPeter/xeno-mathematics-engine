@@ -1,17 +1,21 @@
 """
 Manifest v1 pour Audit Pack avec calculs SHA256 et Merkle.
 """
+
 from __future__ import annotations
-from datetime import datetime, timezone
-from typing import List, Optional, Dict, Any
-from pydantic import BaseModel, Field
-from pathlib import Path
+
 import hashlib
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Dict, List, Optional
+
 import orjson
+from pydantic import BaseModel, Field
 
 
 class FileEntry(BaseModel):
     """Entrée de fichier dans le manifest."""
+
     path: str
     kind: str  # "psp", "pcap", "schema", "sbom", etc.
     size: int
@@ -20,6 +24,7 @@ class FileEntry(BaseModel):
 
 class Manifest(BaseModel):
     """Manifest v1 de l'Audit Pack."""
+
     version: int = 1
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     tool: str = "xme"
@@ -37,10 +42,10 @@ class Manifest(BaseModel):
 def calc_file_sha256(path: Path) -> str:
     """
     Calcule le SHA256 d'un fichier.
-    
+
     Args:
         path: Chemin vers le fichier
-    
+
     Returns:
         Hash SHA256 en hexadécimal
     """
@@ -54,19 +59,19 @@ def calc_file_sha256(path: Path) -> str:
 def build_merkle(leaves: List[str]) -> str:
     """
     Construit l'arbre de Merkle à partir des feuilles.
-    
+
     Args:
         leaves: Liste des hashes SHA256 des feuilles
-    
+
     Returns:
         Root de l'arbre de Merkle
     """
     if not leaves:
         return ""
-    
+
     if len(leaves) == 1:
         return leaves[0]
-    
+
     # Construire l'arbre niveau par niveau
     level = leaves[:]
     while len(level) > 1:
@@ -77,5 +82,5 @@ def build_merkle(leaves: List[str]) -> str:
             combined = left + right
             next_level.append(hashlib.sha256(combined.encode("utf-8")).hexdigest())
         level = next_level
-    
+
     return level[0]
