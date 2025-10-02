@@ -74,7 +74,7 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.emoji:
       emoji_index: materialx
-      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      emoji_generator: materialx
   - pymdownx.inlinehilite
   - pymdownx.keys
   - pymdownx.magiclink

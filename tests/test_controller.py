@@ -269,7 +269,7 @@ class TestPatchManager:
 """
 
         result = manager.validate_patch(patch_text)
-                assert result["valid"] is True
+        assert result["valid"] is True
         assert len(result["errors"]) == 0
 
     def test_validate_patch_invalid(self):

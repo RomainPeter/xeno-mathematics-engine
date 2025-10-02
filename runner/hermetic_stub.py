@@ -237,17 +237,18 @@ if __name__ == "__main__":
 
     print(f"✅ Hermetic execution recorded: {record.id}")
     print(f"✅ Merkle hash: {record.merkle_hash[:16]}...")
+    data = {
+        'id': record.id,
+        'timestamp': record.timestamp,
+        'environment': record.environment,
+        'seeds': record.seeds,
+        'prompt_hash': record.prompt_hash,
+        'costs': record.costs,
+        'inputs': record.inputs,
+        'outputs': record.outputs
+    }
     print(
-        f"✅ Integrity verified: {record.merkle_hash == hashlib.sha256(json.dumps({"
-        f"'id': record.id, "
-        f"'timestamp': record.timestamp, "
-        f"'environment': record.environment, "
-        f"'seeds': record.seeds, "
-        f"'prompt_hash': record.prompt_hash, "
-        f"'costs': record.costs, "
-        f"'inputs': record.inputs, "
-        f"'outputs': record.outputs"
-        f"}, sort_keys=True).encode()).hexdigest()}"
+        f"✅ Integrity verified: {record.merkle_hash == hashlib.sha256(json.dumps(data, sort_keys=True).encode()).hexdigest()}"
     )
 
     print("✅ Hermetic runner test completed!")
