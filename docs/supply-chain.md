@@ -13,6 +13,35 @@ Supply chain security in XME ensures that:
 
 ## Security Model
 
+### Pipelines et Audit Pack
+
+Le **Discovery Engine 2Cat** produit des **Audit Packs** hermétiques qui intègrent tous les artefacts du pipeline :
+
+- **Manifest** : Liste des fichiers avec SHA256 et Merkle root
+- **Artefacts** : PSP, PCAP, métriques, rapports
+- **Vérification** : Intégrité cryptographique du pack
+- **Traçabilité** : Chaîne complète de génération → vérification
+
+#### Structure de l'Audit Pack
+```
+2cat-pack-20240101T120000Z.zip
+├── manifest.json              # Manifest avec Merkle root
+├── artifacts/psp/2cat.json       # PSP généré par AE
+├── artifacts/pcap/run-*.jsonl    # Traces PCAP complètes
+├── artifacts/metrics/2cat.json   # Métriques δ calculées
+├── artifacts/reports/2cat.json  # Rapport final du pipeline
+└── docs/psp.schema.json          # Schéma PSP pour validation
+```
+
+#### Vérification du Pack
+```bash
+# Vérifier l'intégrité du pack
+xme 2cat verify-pack --pack dist/pack-*.zip
+
+# Vérifier le manifest
+xme pack verify --pack dist/pack-*.zip
+```
+
 ### Cryptographic Verification
 
 All components are cryptographically signed and verified:
@@ -71,7 +100,7 @@ XME implements a **dual-mode vendor verification policy**:
 - **Behavior**: Missing or invalid packages cause build failure
 - **Use Case**: Development environments where vendor packages are required
 
-#### CI/CD (Permissive Mode)  
+#### CI/CD (Permissive Mode)
 - **Enforcement**: `FORCE_VERIFY_2CAT=0` - Missing packages are skipped gracefully
 - **Behavior**: Missing packages log "skipped" and continue build
 - **Use Case**: CI environments where vendor packages may not be available
@@ -94,10 +123,10 @@ To publish a new 2cat vendor package:
    ```bash
    # Calculate SHA256
    sha256=$(shasum -a 256 vendor/2cat/2cat-pack.tar.gz | awk '{print $1}')
-   
+
    # Get file size
    size=$(stat -c%s vendor/2cat/2cat-pack.tar.gz)
-   
+
    # Update lock file
    cat > vendor/2cat/2cat.lock << EOF
    sha256:$sha256
@@ -124,15 +153,15 @@ SIG="${PACK}.minisig"
 LOCK="vendor/2cat/2cat.lock"
 
 # Check file existence
-[ -f "$PACK" ] && [ -f "$SIG" ] && [ -f "$LOCK" ] || { 
-    echo "Missing pack/signature/lock"; exit 2; 
+[ -f "$PACK" ] && [ -f "$SIG" ] && [ -f "$LOCK" ] || {
+    echo "Missing pack/signature/lock"; exit 2;
 }
 
 # Verify SHA256 checksum
 EXPECTED_SHA=$(grep '^sha256:' "$LOCK" | cut -d: -f2)
 ACTUAL_SHA=$(shasum -a 256 "$PACK" | awk '{print $1}')
-[ "$EXPECTED_SHA" = "$ACTUAL_SHA" ] || { 
-    echo "SHA256 mismatch"; exit 3; 
+[ "$EXPECTED_SHA" = "$ACTUAL_SHA" ] || {
+    echo "SHA256 mismatch"; exit 3;
 }
 
 # Verify digital signature
@@ -158,7 +187,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v27
       - run: nix develop -c pre-commit run -a
-  
+
   sbom:
     runs-on: ubuntu-latest
     steps:
@@ -167,7 +196,7 @@ jobs:
       - run: nix develop -c bash -lc 'mkdir -p sbom && syft dir:. -o spdx-json > sbom/sbom.spdx.json'
       - uses: actions/upload-artifact@v4
         with: { name: sbom, path: sbom/sbom.spdx.json }
-  
+
   docker-build:
     runs-on: ubuntu-latest
     steps:
@@ -175,7 +204,7 @@ jobs:
       - uses: docker/setup-buildx-action@v3
       - uses: docker/build-push-action@v6
         with: { context: ., push: false, tags: xme/dev:latest }
-  
+
   attest:
     if: ${{ secrets.COSIGN_KEY != '' }}
     runs-on: ubuntu-latest
@@ -275,10 +304,10 @@ def verify_dependencies():
     """Verify all project dependencies."""
     # Check Python dependencies
     verify_python_deps()
-    
+
     # Check Nix dependencies
     verify_nix_deps()
-    
+
     # Check vendor packages
     verify_vendor_packages()
 ```
@@ -295,7 +324,7 @@ class SecurityPolicy:
             "pypi.org",
             "nixpkgs.org"
         ]
-    
+
     def verify_source(self, source):
         """Verify that source is allowed."""
         return source in self.allowed_sources
@@ -312,11 +341,11 @@ class SecurityMonitor:
     def monitor_builds(self):
         """Monitor build processes for security issues."""
         pass
-    
+
     def audit_dependencies(self):
         """Audit dependencies for vulnerabilities."""
         pass
-    
+
     def check_integrity(self):
         """Check system integrity."""
         pass
@@ -442,10 +471,10 @@ def build_merkle(leaves: List[str]) -> str:
     """Build Merkle tree from file hashes."""
     if not leaves:
         return ""
-    
+
     if len(leaves) == 1:
         return leaves[0]
-    
+
     # Build tree level by level
     level = leaves[:]
     while len(level) > 1:
@@ -456,7 +485,7 @@ def build_merkle(leaves: List[str]) -> str:
             combined = left + right
             next_level.append(hashlib.sha256(combined.encode("utf-8")).hexdigest())
         level = next_level
-    
+
     return level[0]
 ```
 

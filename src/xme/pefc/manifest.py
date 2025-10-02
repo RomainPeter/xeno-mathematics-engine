@@ -29,7 +29,7 @@ class Manifest(BaseModel):
     notes: Optional[str] = None
     signatures: Optional[Dict[str, str]] = None
 
-    def model_dump_json(self) -> str:
+    def model_dump_json(self, **kwargs) -> str:
         """Sérialisation JSON canonique."""
         return orjson.dumps(self.model_dump(), option=orjson.OPT_SORT_KEYS).decode()
 

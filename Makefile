@@ -1,6 +1,6 @@
 PY=python3
 
-.PHONY: setup verify demo audit-pack logs release schema-test validate fmt demo-s1 deps-lock build-verifier-pinned audit 2cat-shadow 2cat-active s2-bench 2cat-report validate-summary verify-psp run-metrics
+.PHONY: setup verify demo audit-pack logs release schema-test validate fmt demo-s1 deps-lock build-verifier-pinned audit 2cat-shadow 2cat-active s2-bench 2cat-report validate-summary verify-psp run-metrics 2cat 2cat-verify
 
 setup:
 	$(PY) -m venv .venv && . .venv/bin/activate && pip install -U pip && pip install -r requirements.txt
@@ -711,3 +711,11 @@ verify-psp:
 # Metrics analysis target
 run-metrics:
 	@xme metrics summarize --run "$$(ls -1 artifacts/pcap/run-*.jsonl | tail -1)" --json
+
+# Discovery Engine 2Cat pipeline target
+2cat:
+	@xme 2cat run --config config/pipelines/default.yaml
+
+# Discovery Engine 2Cat pack verification target
+2cat-verify:
+	@xme 2cat verify-pack --pack "$$(ls -1t dist/pack-*.zip | head -1)"
