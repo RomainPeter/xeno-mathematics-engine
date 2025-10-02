@@ -4,12 +4,14 @@ import asyncio
 from datetime import datetime, timezone
 import typer
 from rich import print
+import orjson
 from xme.psp.schema import PSP, load_psp, save_psp
 from xme.pcap.store import PCAPStore, PCAPEntry
 from xme.orchestrator.state import RunState, Budgets
 from xme.orchestrator.event_bus import EventBus
 from xme.orchestrator.loops.ae import run_ae
 from xme.orchestrator.loops.cegis import run_cegis
+from xme.orchestrator.scheduler import DiscoveryConfig, DiscoveryScheduler
 from xme.pefc.pack import collect_inputs, build_manifest, write_zip, verify_pack
 from pathlib import Path
 import subprocess
@@ -20,12 +22,14 @@ pcap_app = typer.Typer(help="PCAP journal")
 engine_app = typer.Typer(help="Engine ops")
 ae_app = typer.Typer(help="AE operations")
 cegis_app = typer.Typer(help="CEGIS operations")
+discover_app = typer.Typer(help="Discovery operations")
 pack_app = typer.Typer(help="Audit Pack operations")
 app.add_typer(psp_app, name="psp")
 app.add_typer(pcap_app, name="pcap")
 app.add_typer(engine_app, name="engine")
 app.add_typer(ae_app, name="ae")
 app.add_typer(cegis_app, name="cegis")
+app.add_typer(discover_app, name="discover")
 app.add_typer(pack_app, name="pack")
 
 
@@ -159,6 +163,50 @@ def cegis_demo(
     bus = EventBus()
     asyncio.run(run_cegis(secret, max_iters, state, bus, store, out_path))
     print(f"[green]CEGIS demo OK[/green] result={out_path}")
+
+
+@discover_app.command("demo")
+def discover_demo(
+    turns: int = typer.Option(5, "--turns", help="Number of discovery turns"),
+    ae_context: str = typer.Option("examples/fca/context_4x4.json", "--ae-context", help="FCA context for AE"),
+    secret: str = typer.Option("10110", "--secret", help="Secret bitvector for CEGIS"),
+    out: str = typer.Option("artifacts/discovery/run.json", "--out"),
+    run: str = typer.Option("", "--run", help="PCAP run path; if empty, a new run is created"),
+    epsilon: float = typer.Option(0.1, "--epsilon", help="Exploration rate (0.0-1.0)"),
+    ae_ms: int = typer.Option(1500, "--ae-ms", help="AE timeout budget (ms)"),
+    cegis_ms: int = typer.Option(5000, "--cegis-ms", help="CEGIS timeout budget (ms)")
+):
+    """Exécute une démonstration discovery avec sélection AE/CEGIS."""
+    out_path = Path(out)
+    store = PCAPStore(Path(run)) if run else PCAPStore.new_run(Path("artifacts/pcap"))
+    state = RunState(
+        run_id=(store.path.stem if hasattr(store, "path") else str(uuid.uuid4())), 
+        budgets=Budgets(ae_ms=ae_ms, cegis_ms=cegis_ms)
+    )
+    bus = EventBus()
+    
+    # Configuration discovery
+    config = DiscoveryConfig(
+        turns=turns,
+        ae_context=ae_context,
+        cegis_secret=secret,
+        ae_budget_ms=ae_ms,
+        cegis_budget_ms=cegis_ms,
+        epsilon=epsilon
+    )
+    
+    # Scheduler discovery
+    scheduler = DiscoveryScheduler(config)
+    
+    # Exécution
+    results = asyncio.run(scheduler.run_discovery(state, bus, store, out_path.parent))
+    
+    # Sauvegarde des résultats
+    out_path.write_text(orjson.dumps(results).decode())
+    
+    print(f"[green]Discovery demo OK[/green] result={out_path}")
+    print(f"[green]Best arm[/green] {results['best_arm']}")
+    print(f"[green]Total reward[/green] {results['total_reward']}")
 
 
 @pack_app.command("build")

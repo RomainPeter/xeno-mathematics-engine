@@ -28,6 +28,14 @@ L'Orchestrator Lite implémente une boucle AE (Attribute Exploration) minimalist
 4. **Logging PCAP S0** des actions (start, propose, verify_ok/fail, refine, done)
 5. **Gestion des timeouts** avec incidents cegis_timeout
 
+### Discovery Loop
+
+1. **Sélection d'arme** via bandit ε-greedy (AE vs CEGIS)
+2. **Exécution de l'arme** sélectionnée avec budgets temporels
+3. **Calcul de récompense** basé sur les résultats (AE: +arêtes, CEGIS: +convergence)
+4. **Mise à jour du bandit** avec la récompense reçue
+5. **Logging PCAP S0** des actions (start, select, reward, done)
+
 ## Utilisation
 
 ### Commandes CLI
@@ -40,6 +48,11 @@ xme ae demo --context examples/fca/context_4x4.json --out artifacts/psp/ae_demo.
 **CEGIS (Counter-Example Guided Inductive Synthesis):**
 ```bash
 xme cegis demo --secret 10110 --max-iters 16 --out artifacts/cegis/result.json
+```
+
+**Discovery (Sélection AE/CEGIS):**
+```bash
+xme discover demo --turns 5 --ae-context examples/fca/context_4x4.json --secret 10110 --out artifacts/discovery/run.json
 ```
 
 ### Options
@@ -55,6 +68,16 @@ xme cegis demo --secret 10110 --max-iters 16 --out artifacts/cegis/result.json
 - `--max-iters` : Nombre maximum d'itérations (défaut: 16)
 - `--out` : Chemin de sortie pour le résultat (défaut: `artifacts/cegis/result.json`)
 - `--run` : Chemin PCAP run (optionnel, crée un nouveau run si vide)
+- `--cegis-ms` : Budget timeout CEGIS en millisecondes (défaut: 5000)
+
+**Discovery:**
+- `--turns` : Nombre de tours de discovery (défaut: 5)
+- `--ae-context` : Contexte FCA pour AE (défaut: `examples/fca/context_4x4.json`)
+- `--secret` : Vecteur de bits secret pour CEGIS (défaut: `10110`)
+- `--out` : Chemin de sortie pour les résultats (défaut: `artifacts/discovery/run.json`)
+- `--run` : Chemin PCAP run (optionnel, crée un nouveau run si vide)
+- `--epsilon` : Taux d'exploration (0.0-1.0, défaut: 0.1)
+- `--ae-ms` : Budget timeout AE en millisecondes (défaut: 1500)
 - `--cegis-ms` : Budget timeout CEGIS en millisecondes (défaut: 5000)
 
 ### Exemples de contextes
@@ -99,3 +122,7 @@ Le PSP contient :
 - `test_cegis_converges.py` : Vérifie la convergence en ≤ L itérations
 - `test_cegis_pcap_logs.py` : Vérifie les logs PCAP (propose, verify, refine)
 - `test_cegis_timeout_incident.py` : Vérifie la gestion des timeouts
+
+**Discovery:**
+- `test_selection_updates_rewards.py` : Vérifie la mise à jour des récompenses
+- `test_discover_demo_runs.py` : Vérifie l'exécution de N tours sans erreur

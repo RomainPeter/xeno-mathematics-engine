@@ -691,3 +691,7 @@ verify-pack:
 # CEGIS demo target
 cegis-demo:
 	@xme cegis demo --secret 10110 --out artifacts/cegis/demo.json
+
+# Discovery demo target
+discover-demo:
+	@xme discover demo --turns 5 --ae-context examples/fca/context_4x4.json --secret 10110
