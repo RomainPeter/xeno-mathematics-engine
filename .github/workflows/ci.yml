@@ -85,7 +85,7 @@ jobs:
   attest:
     runs-on: ubuntu-latest
     needs: [docker-build, sbom]
-    if: ${{ secrets.COSIGN_KEY }}
+    if: false  # Désactivé temporairement
     steps:
       - uses: actions/checkout@v4
       - uses: sigstore/cosign-installer@v3
