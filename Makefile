@@ -719,3 +719,17 @@ run-metrics:
 # Discovery Engine 2Cat pack verification target
 2cat-verify:
 	@xme 2cat verify-pack --pack "$$(ls -1t dist/pack-*.zip | head -1)"
+
+# Referee H/X targets
+referee-status:
+	@xme referee status
+
+embargo-demo:
+	@xme referee embargo-add --lineage X123 --meta '{"area":"demo"}'; \
+	xme referee embargo-release --lineage X123 --reason ok
+
+symbol-demo:
+	@xme symbol baptize --concept C42 --symbol Xi_1 --proof-ref "psp:proof123" --lineage X123
+
+referee-test:
+	@python -m pytest tests/test_referee_budgets.py tests/test_alien_reserve_embargo.py tests/test_pcn_requires_proofref.py -v

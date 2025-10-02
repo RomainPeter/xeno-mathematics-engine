@@ -797,5 +797,88 @@ def discovery_2cat_config(
         raise typer.Exit(code=1)
 
 
+# Referee H/X commands
+referee_app = typer.Typer(help="Referee H/X")
+app.add_typer(referee_app, name="referee")
+
+
+@referee_app.command("status")
+def referee_status(
+    cfg: str = typer.Option("config/referee.yaml", "--config"),
+    reserve: str = typer.Option("artifacts/referee/reserve.json", "--reserve"),
+    symbols: str = typer.Option("artifacts/referee/symbols.json", "--symbols"),
+):
+    """Affiche le statut du Referee H/X."""
+    from xme.referee.referee import Referee
+    
+    r = Referee(Path(cfg), Path(reserve), Path(symbols))
+    typer.echo(orjson.dumps(r.status()).decode())
+
+
+@referee_app.command("embargo-add")
+def embargo_add(
+    lineage: str,
+    meta: str = typer.Option("{}", "--meta"),
+    reserve: str = typer.Option("artifacts/referee/reserve.json", "--reserve"),
+    run: str = typer.Option("", "--run"),
+):
+    """Ajoute un lineage à l'embargo."""
+    store = PCAPStore(Path(run)) if run else None
+    from xme.referee.alien_reserve import AlienReserve
+    
+    res = AlienReserve(Path(reserve))
+    import orjson as _o
+    res.register(lineage, _o.loads(meta))
+    if store: 
+        from xme.adapters.logger import log_action
+        log_action(store, "reserve.register", obligations={"lineage": lineage})
+
+
+@referee_app.command("embargo-release")
+def embargo_release(
+    lineage: str,
+    reason: str = "ok",
+    reserve: str = typer.Option("artifacts/referee/reserve.json", "--reserve"),
+    run: str = typer.Option("", "--run"),
+):
+    """Libère un lineage de l'embargo."""
+    store = PCAPStore(Path(run)) if run else None
+    from xme.referee.alien_reserve import AlienReserve
+    
+    res = AlienReserve(Path(reserve))
+    ok = res.release(lineage, reason)
+    if store: 
+        from xme.adapters.logger import log_action
+        log_action(store, "reserve.release", obligations={"lineage": lineage, "ok": str(ok)})
+
+
+# PCN Symbol Forge commands
+symbol_app = typer.Typer(help="PCN Symbol Forge")
+app.add_typer(symbol_app, name="symbol")
+
+
+@symbol_app.command("baptize")
+def symbol_baptize(
+    concept: str,
+    symbol: str,
+    proof_ref: str = typer.Option(..., "--proof-ref"),
+    lineage: str = typer.Option(..., "--lineage"),
+    cfg: str = typer.Option("config/referee.yaml", "--config"),
+    reserve: str = typer.Option("artifacts/referee/reserve.json", "--reserve"),
+    symbols: str = typer.Option("artifacts/referee/symbols.json", "--symbols"),
+    run: str = typer.Option("", "--run"),
+):
+    """Baptise un symbole avec preuve."""
+    store = PCAPStore(Path(run)) if run else None
+    from xme.referee.referee import Referee
+    
+    r = Referee(Path(cfg), Path(reserve), Path(symbols))
+    verdict = r.gate_baptism(lineage, concept, symbol, proof_ref, pcap=store)
+    if not verdict.get("ok"):
+        typer.echo(orjson.dumps(verdict).decode())
+        raise typer.Exit(1)
+    typer.echo(orjson.dumps(verdict).decode())
+
+
 if __name__ == "__main__":
     app()
