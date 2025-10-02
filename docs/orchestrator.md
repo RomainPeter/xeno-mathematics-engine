@@ -1,0 +1,73 @@
+# Orchestrator Lite (AE)
+
+## Vue d'ensemble
+
+L'Orchestrator Lite implémente une boucle AE (Attribute Exploration) minimaliste sur un petit contexte FCA, produisant un PSP valide et journalisant en PCAP (S0) avec gestion des budgets/timeout et incidents.
+
+## Architecture
+
+### Composants principaux
+
+- **État (RunState)** : `run_id`, budgets temporels, métriques
+- **EventBus** : Queue asynchrone pour les événements
+- **Boucle AE** : Timeout + incidents avec logging PCAP
+
+### Boucle AE
+
+1. **Chargement du contexte FCA** depuis un fichier JSON
+2. **Énumération des concepts** via Next-Closure stub
+3. **Construction du PSP** depuis les concepts (extent, intent)
+4. **Logging PCAP S0** des actions et incidents
+5. **Gestion des timeouts** avec incidents
+
+## Utilisation
+
+### Commande CLI
+
+```bash
+xme ae demo --context examples/fca/context_4x4.json --out artifacts/psp/ae_demo.json
+```
+
+### Options
+
+- `--context` : Chemin vers le contexte FCA JSON
+- `--out` : Chemin de sortie pour le PSP (défaut: `artifacts/psp/ae_demo.json`)
+- `--run` : Chemin PCAP run (optionnel, crée un nouveau run si vide)
+- `--ae-ms` : Budget timeout AE en millisecondes (défaut: 1500)
+
+### Exemples de contextes
+
+- `examples/fca/context_4x4.json` : Contexte 4×4 (4 objets, 4 attributs)
+- `examples/fca/context_5x3.json` : Contexte 5×3 (5 objets, 3 attributs)
+
+## Format des contextes FCA
+
+```json
+{
+  "attributes": ["a", "b", "c", "d"],
+  "objects": [
+    {"id": "g1", "attrs": ["a", "b"]},
+    {"id": "g2", "attrs": ["b", "c"]},
+    {"id": "g3", "attrs": ["a", "c", "d"]},
+    {"id": "g4", "attrs": ["b", "d"]}
+  ]
+}
+```
+
+## Gestion des incidents
+
+- **Timeout AE** : Loggé comme `incident.ae_timeout` avec budget_ms
+- **Niveau S0** : Logging rapide pour les démonstrations
+- **PCAP** : Journalisation tamper-evident des actions
+
+## PSP généré
+
+Le PSP contient :
+- **Blocs** : Concepts avec id `c{k}`, label `{a,b}`, data.intent
+- **Arêtes** : Relations de couverture (inclusion stricte d'intents)
+- **Méta** : `theorem: "AE demo"`
+
+## Tests
+
+- `test_ae_demo_produces_psp.py` : Vérifie la production d'un PSP valide
+- `test_ae_timeout_incident.py` : Vérifie la gestion des timeouts

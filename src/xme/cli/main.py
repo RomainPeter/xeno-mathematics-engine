@@ -1,10 +1,14 @@
 from typing import Optional
 import uuid
+import asyncio
 from datetime import datetime, timezone
 import typer
 from rich import print
 from xme.psp.schema import PSP, load_psp, save_psp
 from xme.pcap.store import PCAPStore, PCAPEntry
+from xme.orchestrator.state import RunState, Budgets
+from xme.orchestrator.event_bus import EventBus
+from xme.orchestrator.loops.ae import run_ae
 from pathlib import Path
 import subprocess
 
@@ -12,9 +16,11 @@ app = typer.Typer(help="XME — Xeno-Math Engine CLI")
 psp_app = typer.Typer(help="PSP commands")
 pcap_app = typer.Typer(help="PCAP journal")
 engine_app = typer.Typer(help="Engine ops")
+ae_app = typer.Typer(help="AE operations")
 app.add_typer(psp_app, name="psp")
 app.add_typer(pcap_app, name="pcap")
 app.add_typer(engine_app, name="engine")
+app.add_typer(ae_app, name="ae")
 
 
 @app.callback()
@@ -108,6 +114,25 @@ def pcap_verify(run: str = typer.Option(..., "--run")):
         print(f"[red]Verify failed[/red]: {reason}")
         raise typer.Exit(code=1)
     print("[green]Verify OK[/green]")
+
+
+@ae_app.command("demo")
+def ae_demo(
+    context: str = typer.Option(..., "--context"),
+    out: str = typer.Option("artifacts/psp/ae_demo.json", "--out"),
+    run: str = typer.Option("", "--run", help="PCAP run path; if empty, a new run is created"),
+    ae_ms: int = typer.Option(1500, "--ae-ms", help="AE timeout budget (ms)")
+):
+    """Exécute une démonstration AE sur un contexte FCA."""
+    out_psp = Path(out)
+    store = PCAPStore(Path(run)) if run else PCAPStore.new_run(Path("artifacts/pcap"))
+    state = RunState(
+        run_id=(store.path.stem if hasattr(store, "path") else str(uuid.uuid4())), 
+        budgets=Budgets(ae_ms=ae_ms)
+    )
+    bus = EventBus()
+    asyncio.run(run_ae(context, state, bus, store, out_psp))
+    print(f"[green]AE demo OK[/green] PSP={out_psp}")
 
 
 @engine_app.command("verify-2cat")

@@ -666,3 +666,7 @@ pcap:
 	echo "RUN=$$RUN_PATH"; \
 	xme pcap verify --run $$RUN_PATH; \
 	xme pcap merkle --run $$RUN_PATH
+
+# AE demo target
+ae-demo:
+	@xme ae demo --context examples/fca/context_4x4.json --out artifacts/psp/ae_demo.json
