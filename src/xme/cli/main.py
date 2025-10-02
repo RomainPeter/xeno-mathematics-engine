@@ -424,7 +424,8 @@ def verify_2cat():
     if not script.exists():
         typer.echo("Missing scripts/verify_2cat_pack.sh", err=True)
         raise typer.Exit(code=2)
-    subprocess.run(["/bin/bash", str(script)], check=True)
+    # Use absolute path to bash for security
+    subprocess.run(["/bin/bash", str(script)], check=True)  # nosec B603 - script path is validated
     print("[green]2cat pack verified[/green]")
 
 

@@ -25,6 +25,7 @@
           black
           mypy
           bandit
+          types-PyYAML
         ]);
       in {
         devShells.default = pkgs.mkShell {
