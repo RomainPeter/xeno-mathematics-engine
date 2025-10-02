@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 import uuid
 import asyncio
 from datetime import datetime, timezone
@@ -9,6 +9,7 @@ from xme.pcap.store import PCAPStore, PCAPEntry
 from xme.orchestrator.state import RunState, Budgets
 from xme.orchestrator.event_bus import EventBus
 from xme.orchestrator.loops.ae import run_ae
+from xme.pefc.pack import collect_inputs, build_manifest, write_zip, verify_pack
 from pathlib import Path
 import subprocess
 
@@ -17,10 +18,12 @@ psp_app = typer.Typer(help="PSP commands")
 pcap_app = typer.Typer(help="PCAP journal")
 engine_app = typer.Typer(help="Engine ops")
 ae_app = typer.Typer(help="AE operations")
+pack_app = typer.Typer(help="Audit Pack operations")
 app.add_typer(psp_app, name="psp")
 app.add_typer(pcap_app, name="pcap")
 app.add_typer(engine_app, name="engine")
 app.add_typer(ae_app, name="ae")
+app.add_typer(pack_app, name="pack")
 
 
 @app.callback()
@@ -133,6 +136,48 @@ def ae_demo(
     bus = EventBus()
     asyncio.run(run_ae(context, state, bus, store, out_psp))
     print(f"[green]AE demo OK[/green] PSP={out_psp}")
+
+
+@pack_app.command("build")
+def pack_build(
+    include: List[str] = typer.Option([], "--include", help="Glob patterns to include"),
+    out: str = typer.Option("dist/", "--out", help="Output directory"),
+    run_path: Optional[str] = typer.Option(None, "--run-path", help="PCAP run path")
+):
+    """Construit un Audit Pack avec manifest et vérification d'intégrité."""
+    # Collecter les fichiers
+    inputs = collect_inputs(include)
+    if not inputs:
+        print("[yellow]No files found to include in pack[/yellow]")
+        return
+    
+    # Construire le manifest
+    manifest = build_manifest(inputs, run_path)
+    
+    # Écrire le pack ZIP
+    pack_path = write_zip(manifest, out)
+    
+    print(f"[green]Pack built[/green] path={pack_path}")
+    print(f"[green]Files included[/green] count={len(manifest.files)}")
+    print(f"[green]Merkle root[/green] {manifest.merkle_root}")
+
+
+@pack_app.command("verify")
+def pack_verify(
+    pack: str = typer.Option(..., "--pack", help="Path to pack ZIP file")
+):
+    """Vérifie l'intégrité d'un Audit Pack."""
+    pack_path = Path(pack)
+    if not pack_path.exists():
+        print(f"[red]Pack not found[/red] {pack_path}")
+        raise typer.Exit(code=1)
+    
+    ok, reason = verify_pack(pack_path)
+    if not ok:
+        print(f"[red]Verify failed[/red] {reason}")
+        raise typer.Exit(code=1)
+    
+    print(f"[green]Pack verified[/green] {pack_path}")
 
 
 @engine_app.command("verify-2cat")

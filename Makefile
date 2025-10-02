@@ -680,3 +680,10 @@ ae-demo-5x3:
 # Golden files generation
 goldens:
 	@python scripts/gen_goldens.py
+
+# Audit Pack targets
+pack:
+	@xme pack build --out dist/
+
+verify-pack:
+	@xme pack verify --pack "$$(ls -1t dist/pack-*.zip | head -1)"

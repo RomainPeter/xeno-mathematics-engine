@@ -347,6 +347,144 @@ nix scan
 - **Compliance Frameworks**: Integration with compliance frameworks
 - **Security Orchestration**: Integration with security orchestration tools
 
+## Audit Pack v0
+
+### Overview
+
+The Audit Pack provides a tamper-evident archive of all project artifacts with cryptographic verification. It includes a manifest with file hashes, Merkle tree root, and comprehensive metadata.
+
+### Structure
+
+```
+pack-YYYYMMDDTHHMMSSZ.zip
+├── manifest.json          # Pack manifest with metadata
+├── file1.psp.json        # PSP artifacts
+├── file2.pcap.jsonl      # PCAP journal entries
+├── psp.schema.json        # JSON Schema
+└── sbom.spdx.json       # Software Bill of Materials
+```
+
+### Manifest Format
+
+The manifest contains comprehensive metadata:
+
+```json
+{
+  "version": 1,
+  "created_at": "2024-01-01T00:00:00Z",
+  "tool": "xme",
+  "run_path": "artifacts/pcap/run-20240101T000000Z.jsonl",
+  "files": [
+    {
+      "path": "artifacts/psp/ae_demo.json",
+      "kind": "psp",
+      "size": 1024,
+      "sha256": "a1b2c3d4e5f6..."
+    }
+  ],
+  "merkle_root": "f6e5d4c3b2a1...",
+  "notes": "Audit Pack generated at 2024-01-01T00:00:00Z"
+}
+```
+
+### Merkle Tree Calculation
+
+The Merkle tree provides tamper-evident verification:
+
+```python
+def build_merkle(leaves: List[str]) -> str:
+    """Build Merkle tree from file hashes."""
+    if not leaves:
+        return ""
+    
+    if len(leaves) == 1:
+        return leaves[0]
+    
+    # Build tree level by level
+    level = leaves[:]
+    while len(level) > 1:
+        next_level = []
+        for i in range(0, len(level), 2):
+            left = level[i]
+            right = level[i + 1] if i + 1 < len(level) else level[i]
+            combined = left + right
+            next_level.append(hashlib.sha256(combined.encode("utf-8")).hexdigest())
+        level = next_level
+    
+    return level[0]
+```
+
+### CLI Commands
+
+Build an Audit Pack:
+
+```bash
+# Build with default patterns
+xme pack build --out dist/
+
+# Build with custom patterns
+xme pack build --include "artifacts/psp/*.json" --include "artifacts/pcap/*.jsonl" --out dist/
+
+# Build with PCAP run reference
+xme pack build --run-path "artifacts/pcap/run-20240101T000000Z.jsonl" --out dist/
+```
+
+Verify an Audit Pack:
+
+```bash
+# Verify specific pack
+xme pack verify --pack dist/pack-20240101T000000Z.zip
+
+# Verify latest pack
+xme pack verify --pack "$(ls -1t dist/pack-*.zip | head -1)"
+```
+
+### Tamper Detection
+
+The pack verification detects various types of tampering:
+
+1. **Hash Mismatch**: File content has been modified
+2. **Missing Files**: Files referenced in manifest are missing
+3. **Corrupted Manifest**: Manifest JSON is invalid
+4. **Merkle Root Mismatch**: Merkle tree integrity compromised
+
+### CI Integration
+
+The CI pipeline includes pack generation and verification:
+
+```yaml
+pack-smoke:
+  runs-on: ubuntu-latest
+  needs: [pytest]
+  steps:
+    - uses: actions/checkout@v4
+    - uses: cachix/install-nix-action@v27
+    - name: Install dependencies
+      run: nix develop -c python -m pip install -e .
+    - name: Create test artifacts
+      run: |
+        mkdir -p artifacts/psp artifacts/pcap
+        echo '{"blocks": [], "edges": [], "meta": {"theorem": "test"}}' > artifacts/psp/test.psp.json
+        echo '{"type": "action", "action": "test", "timestamp": "2024-01-01T00:00:00Z"}' > artifacts/pcap/run-test.jsonl
+    - name: Build Audit Pack
+      run: nix develop -c xme pack build --out dist/
+    - name: Verify Audit Pack
+      run: nix develop -c xme pack verify --pack "$(ls -1t dist/pack-*.zip | head -1)"
+    - name: Upload pack artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: audit-pack
+        path: dist/pack-*.zip
+```
+
+### Security Properties
+
+1. **Tamper Evidence**: Any modification is detected
+2. **Cryptographic Integrity**: SHA256 hashes for all files
+3. **Merkle Tree**: Efficient verification of large file sets
+4. **Deterministic**: Same inputs produce same outputs
+5. **Audit Trail**: Complete metadata for forensic analysis
+
 ## References
 
 - [Supply Chain Security Best Practices](supply-chain-best-practices.md)
