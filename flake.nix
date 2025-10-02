@@ -23,7 +23,6 @@
           networkx
           pytest
           black
-          ruff
           mypy
           bandit
           pre-commit
@@ -51,5 +50,3 @@
         };
       });
 }
-
-
