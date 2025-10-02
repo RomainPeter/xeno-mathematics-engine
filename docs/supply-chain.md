@@ -49,21 +49,67 @@ vendor/2cat/
 
 The lock file contains essential verification information:
 
-```yaml
-# Package metadata
-name: 2cat
-version: 1.0.0
-description: 2cat vendor package for xeno-mathematics-engine
-
-# Security verification
-sha256: a1b2c3d4e5f6...
-pubkey: RWR+WQZ2jNToFXbeOaKihS2kSy5uz10Hi+HOA3Rq2rRF8u6n7wi3ws
-
-# Build information
-build_date: 2024-01-01T00:00:00Z
-build_system: nix
-build_commit: abc123def456
 ```
+# 2cat vendor lock file
+# This file contains the expected hash, size, and public key for the 2cat vendor package
+# Format:
+# sha256:<hex>
+# size:<bytes>
+# pubkey:<minisign_public_key>
+
+sha256:a1b2c3d4e5f6...
+size:1048576
+pubkey:RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3
+```
+
+### Vendor Policy
+
+XME implements a **dual-mode vendor verification policy**:
+
+#### Local Development (Strict Mode)
+- **Enforcement**: `FORCE_VERIFY_2CAT=1` - All vendor packages must be present and valid
+- **Behavior**: Missing or invalid packages cause build failure
+- **Use Case**: Development environments where vendor packages are required
+
+#### CI/CD (Permissive Mode)  
+- **Enforcement**: `FORCE_VERIFY_2CAT=0` - Missing packages are skipped gracefully
+- **Behavior**: Missing packages log "skipped" and continue build
+- **Use Case**: CI environments where vendor packages may not be available
+
+#### Publishing a 2cat Pack
+
+To publish a new 2cat vendor package:
+
+1. **Create the package**:
+   ```bash
+   tar -czf vendor/2cat/2cat-pack.tar.gz -C vendor/2cat/ src/
+   ```
+
+2. **Sign the package**:
+   ```bash
+   minisign -S -s ~/.minisign/2cat.key -m vendor/2cat/2cat-pack.tar.gz
+   ```
+
+3. **Update the lock file**:
+   ```bash
+   # Calculate SHA256
+   sha256=$(shasum -a 256 vendor/2cat/2cat-pack.tar.gz | awk '{print $1}')
+   
+   # Get file size
+   size=$(stat -c%s vendor/2cat/2cat-pack.tar.gz)
+   
+   # Update lock file
+   cat > vendor/2cat/2cat.lock << EOF
+   sha256:$sha256
+   size:$size
+   pubkey:RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3
+   EOF
+   ```
+
+4. **Test verification**:
+   ```bash
+   FORCE_VERIFY_2CAT=1 bash scripts/verify_2cat_pack.sh
+   ```
 
 ### Verification Process
 

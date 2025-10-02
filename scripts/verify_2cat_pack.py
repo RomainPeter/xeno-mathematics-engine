@@ -1,52 +1,89 @@
-import argparse
-import hashlib
+#!/usr/bin/env python3
+"""
+Script de vérification du pack 2cat avec logique de skip.
+Équivalent Python du script bash pour compatibilité Windows.
+"""
+import os
 import sys
+import hashlib
+import subprocess
 from pathlib import Path
 
 
-def sha256_file(path: Path) -> str:
-    h = hashlib.sha256()
-    with path.open("rb") as f:
-        for chunk in iter(lambda: f.read(1024 * 1024), b""):
-            h.update(chunk)
-    return h.hexdigest()
-
-
-def main() -> int:
-    parser = argparse.ArgumentParser(description="Verify 2cat vendor pack integrity (offline)")
-    parser.add_argument("--zip", dest="zip_path", required=True)
-    parser.add_argument("--sha256", dest="sha_path", required=True)
-    args = parser.parse_args()
-
-    zip_path = Path(args.zip_path)
-    sha_path = Path(args.sha_path)
-
-    if not zip_path.exists():
-        print(f"Missing pack: {zip_path}", file=sys.stderr)
-        return 2
-    if not sha_path.exists():
-        print(f"Missing sha256 file: {sha_path}", file=sys.stderr)
-        return 3
-
-    # Read SHA file robustly (handle non-UTF8, extra text); extract first hex digest
-    import re
-
-    raw = sha_path.read_bytes()
-    text = raw.decode("utf-8", errors="ignore")
-    m = re.search(r"\b([a-fA-F0-9]{64})\b", text)
-    if not m:
-        print("No SHA256 digest found in sha file", file=sys.stderr)
-        return 4
-    expected = m.group(1)
-    expected_norm = expected.lower()
-    actual = sha256_file(zip_path)
-    actual_norm = actual.lower()
-    if actual_norm != expected_norm:
-        print(f"SHA256 mismatch: expected {expected}, got {actual}", file=sys.stderr)
-        return 1
-    print("2cat pack verified")
-    return 0
+def main():
+    """Vérifie le pack 2cat avec logique de skip."""
+    # Configuration
+    pack_path = Path("vendor/2cat/2cat-pack.tar.gz")
+    sig_path = Path("vendor/2cat/2cat-pack.tar.gz.minisig")
+    lock_path = Path("vendor/2cat/2cat.lock")
+    
+    # Vérifier l'existence des fichiers
+    missing_files = []
+    if not pack_path.exists():
+        missing_files.append(str(pack_path))
+    if not sig_path.exists():
+        missing_files.append(str(sig_path))
+    if not lock_path.exists():
+        missing_files.append(str(lock_path))
+    
+    # Skip si fichiers manquants et pas forcé
+    if missing_files:
+        force_verify = os.environ.get("FORCE_VERIFY_2CAT", "0")
+        if force_verify != "1":
+            print(f"2cat verification skipped (missing files: {', '.join(missing_files)}). Set FORCE_VERIFY_2CAT=1 to enforce.")
+            sys.exit(0)
+        else:
+            print(f"Missing files: {', '.join(missing_files)} and FORCE_VERIFY_2CAT=1 set. Failing.")
+            sys.exit(2)
+    
+    try:
+        # Lire le fichier lock
+        lock_content = lock_path.read_text()
+        expected_sha = None
+        expected_size = None
+        pubkey = None
+        
+        for line in lock_content.split('\n'):
+            if line.startswith('sha256:'):
+                expected_sha = line.split(':', 1)[1].strip()
+            elif line.startswith('size:'):
+                expected_size = int(line.split(':', 1)[1].strip())
+            elif line.startswith('pubkey:'):
+                pubkey = line.split(':', 1)[1].strip()
+        
+        if not all([expected_sha, expected_size is not None, pubkey]):
+            print("Invalid lock file format")
+            sys.exit(6)
+        
+        # Vérifier SHA256
+        with open(pack_path, 'rb') as f:
+            content = f.read()
+            actual_sha = hashlib.sha256(content).hexdigest()
+        
+        if expected_sha != actual_sha:
+            print(f"SHA256 mismatch: expected {expected_sha}, got {actual_sha}")
+            sys.exit(3)
+        
+        # Vérifier la taille
+        actual_size = len(content)
+        if expected_size != actual_size:
+            print(f"Size mismatch: expected {expected_size}, got {actual_size}")
+            sys.exit(4)
+        
+        # Vérifier la signature (si minisign est disponible)
+        try:
+            result = subprocess.run([
+                'minisign', '-V', '-P', pubkey, '-m', str(pack_path), '-x', str(sig_path)
+            ], capture_output=True, text=True, check=True)
+            print(f"2cat pack verified (sha256: {actual_sha}, size: {actual_size})")
+        except (subprocess.CalledProcessError, FileNotFoundError):
+            print("Signature verification failed or minisign not available")
+            sys.exit(5)
+            
+    except Exception as e:
+        print(f"Error during verification: {e}")
+        sys.exit(7)
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    main()

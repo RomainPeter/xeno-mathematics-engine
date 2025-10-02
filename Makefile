@@ -695,3 +695,7 @@ cegis-demo:
 # Discovery demo target
 discover-demo:
 	@xme discover demo --turns 5 --ae-context examples/fca/context_4x4.json --secret 10110
+
+# 2cat vendor verification target
+verify-2cat:
+	@FORCE_VERIFY_2CAT=1 python scripts/verify_2cat_pack.py
