@@ -294,28 +294,34 @@ def egraph_equal(
 @egraph_app.command("saturate")
 def egraph_saturate(
     inp: str = typer.Option(..., "--in", help="Input expression JSON file"),
-    rules_path: str = typer.Option("examples/egraph/rules/arith.json", "--rules", help="Rules JSON file"),
+    rules_path: str = typer.Option(
+        "examples/egraph/rules/arith.json", "--rules", help="Rules JSON file"
+    ),
     iters: int = typer.Option(50, "--iters", help="Maximum iterations"),
-    extract: str = typer.Option("nodes", "--extract", help="Extraction method: nodes | weights:<json>"),
-    out: str = typer.Option("artifacts/egraph/out.json", "--out", help="Output JSON file")
+    extract: str = typer.Option(
+        "nodes", "--extract", help="Extraction method: nodes | weights:<json>"
+    ),
+    out: str = typer.Option("artifacts/egraph/out.json", "--out", help="Output JSON file"),
 ):
     """Sature une expression avec des règles de réécriture."""
-    import orjson
     import pathlib
-    from xme.egraph.rules import Rule
-    from xme.egraph.engine import saturate, extract_best
+
+    import orjson
+
     from xme.egraph.cost import cost_nodes, cost_weighted
-    
+    from xme.egraph.engine import extract_best, saturate
+    from xme.egraph.rules import Rule
+
     # Lire l'expression d'entrée
     expr = orjson.loads(pathlib.Path(inp).read_bytes())
-    
+
     # Lire les règles
     rules_raw = orjson.loads(pathlib.Path(rules_path).read_bytes())
     rules = [Rule(lhs=r["lhs"], rhs=r["rhs"], name=r.get("name", "")) for r in rules_raw]
-    
+
     # Saturer
     exprs = saturate(expr, rules, max_iters=iters)
-    
+
     # Choisir la fonction de coût
     if extract == "nodes":
         cost_fn = cost_nodes
@@ -325,14 +331,14 @@ def egraph_saturate(
         cost_fn = cost_weighted(weights)
     else:
         raise typer.BadParameter(f"Invalid extract method: {extract}")
-    
+
     # Extraire la meilleure forme
     best = extract_best(exprs, cost_fn=cost_fn)
-    
+
     # Sauvegarder
     pathlib.Path(out).parent.mkdir(parents=True, exist_ok=True)
     pathlib.Path(out).write_bytes(orjson.dumps(best, option=orjson.OPT_SORT_KEYS))
-    
+
     print(f"[green]Saturated[/green] {len(exprs)} forms found")
     print(f"[green]Best form[/green] {out}")
     typer.echo(out)
@@ -342,21 +348,25 @@ def egraph_saturate(
 def egraph_explain(
     a: str = typer.Option(..., "--a", help="First expression JSON file"),
     b: str = typer.Option(..., "--b", help="Second expression JSON file"),
-    rules_path: str = typer.Option("examples/egraph/rules/arith.json", "--rules", help="Rules JSON file")
+    rules_path: str = typer.Option(
+        "examples/egraph/rules/arith.json", "--rules", help="Rules JSON file"
+    ),
 ):
     """Explique si deux expressions sont équivalentes via saturation."""
-    import orjson
     import pathlib
+
+    import orjson
+
     from xme.egraph.canon import canonicalize
-    
+
     # Lire les expressions
     ea = orjson.loads(pathlib.Path(a).read_bytes())
     eb = orjson.loads(pathlib.Path(b).read_bytes())
-    
+
     # Comparer les signatures canoniques
     sa = canonicalize(ea)["sig"]
     sb = canonicalize(eb)["sig"]
-    
+
     if sa == sb:
         typer.echo("equal")
         sys.exit(0)
@@ -884,7 +894,7 @@ def referee_status(
 ):
     """Affiche le statut du Referee H/X."""
     from xme.referee.referee import Referee
-    
+
     r = Referee(Path(cfg), Path(reserve), Path(symbols))
     typer.echo(orjson.dumps(r.status()).decode())
 
@@ -899,12 +909,14 @@ def embargo_add(
     """Ajoute un lineage à l'embargo."""
     store = PCAPStore(Path(run)) if run else None
     from xme.referee.alien_reserve import AlienReserve
-    
+
     res = AlienReserve(Path(reserve))
     import orjson as _o
+
     res.register(lineage, _o.loads(meta))
-    if store: 
+    if store:
         from xme.adapters.logger import log_action
+
         log_action(store, "reserve.register", obligations={"lineage": lineage})
 
 
@@ -918,11 +930,12 @@ def embargo_release(
     """Libère un lineage de l'embargo."""
     store = PCAPStore(Path(run)) if run else None
     from xme.referee.alien_reserve import AlienReserve
-    
+
     res = AlienReserve(Path(reserve))
     ok = res.release(lineage, reason)
-    if store: 
+    if store:
         from xme.adapters.logger import log_action
+
         log_action(store, "reserve.release", obligations={"lineage": lineage, "ok": str(ok)})
 
 
@@ -945,7 +958,7 @@ def symbol_baptize(
     """Baptise un symbole avec preuve."""
     store = PCAPStore(Path(run)) if run else None
     from xme.referee.referee import Referee
-    
+
     r = Referee(Path(cfg), Path(reserve), Path(symbols))
     verdict = r.gate_baptism(lineage, concept, symbol, proof_ref, pcap=store)
     if not verdict.get("ok"):

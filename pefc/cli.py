@@ -2,21 +2,24 @@
 """
 PEFC CLI - Unified CLI with Typer for pack operations
 """
+
 from __future__ import annotations
+
 import json
 from pathlib import Path
-import typer
 from typing import Optional
 
+import typer
+
 from pefc.config.loader import load_config
-from pefc.logging import init_logging
+from pefc.errors import UNEXPECTED_ERROR_EXIT_CODE
 from pefc.events import get_event_bus
 from pefc.events.subscribers import LoggingSubscriber
-from pefc.pipeline.loader import load_pipeline
-from pefc.pipeline.core import PipelineRunner
-from pefc.pack.verify import verify_zip, print_manifest
+from pefc.logging import init_logging
 from pefc.pack.signing import sign_with_cosign
-from pefc.errors import UNEXPECTED_ERROR_EXIT_CODE
+from pefc.pack.verify import print_manifest, verify_zip
+from pefc.pipeline.core import PipelineRunner
+from pefc.pipeline.loader import load_pipeline
 
 app = typer.Typer(add_completion=False, help="PEFC CLI")
 pack = typer.Typer(help="Pack operations")

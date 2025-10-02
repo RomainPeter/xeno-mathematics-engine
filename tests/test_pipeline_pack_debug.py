@@ -2,11 +2,12 @@
 """
 Debug tests for pipeline pack zip functionality.
 """
+
 from pathlib import Path
 from unittest.mock import Mock
 
-from pefc.pipeline.steps.pack_zip import PackZip
 from pefc.pipeline.core import PipelineContext
+from pefc.pipeline.steps.pack_zip import PackZip
 
 
 class TestPipelinePackZipDebug:

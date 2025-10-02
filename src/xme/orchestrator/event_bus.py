@@ -1,13 +1,14 @@
 """
 Bus d'événements asynchrone pour l'orchestrator.
 """
+
 import asyncio
 from typing import Any
 
 
 class EventBus:
     """Bus d'événements asynchrone."""
-    
+
     def __init__(self) -> None:
         self.q: asyncio.Queue[dict[str, Any]] = asyncio.Queue()
 

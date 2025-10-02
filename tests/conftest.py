@@ -2,10 +2,11 @@
 """
 Pytest configuration and fixtures for PEFC tests.
 """
+
 import json
 import tempfile
 from pathlib import Path
-from typing import Dict, List, Any, Generator
+from typing import Any, Dict, Generator, List
 from unittest.mock import Mock
 
 import pytest

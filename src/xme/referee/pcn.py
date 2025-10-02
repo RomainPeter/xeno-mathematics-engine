@@ -1,16 +1,20 @@
 """
 Proof-Carrying Notation (PCN) - Symbol Forge.
 """
+
 from __future__ import annotations
-from typing import List, Optional, Dict
-from pydantic import BaseModel, Field
+
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import List, Optional
+
 import orjson
+from pydantic import BaseModel, Field
 
 
 class SymbolEntry(BaseModel):
     """Entrée de symbole dans le PCN."""
+
     concept_id: str
     symbol: str
     version: int = 1
@@ -20,7 +24,7 @@ class SymbolEntry(BaseModel):
 
 class SymbolStore:
     """Store pour les symboles PCN."""
-    
+
     def __init__(self, path: Path):
         self.path = path
         self._state = {"symbols": []}  # list[SymbolEntry]

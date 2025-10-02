@@ -2,11 +2,13 @@
 """
 Metrics validation module.
 """
+
 from __future__ import annotations
-from pathlib import Path
-from typing import Dict, Any
+
 import json
 import logging
+from pathlib import Path
+from typing import Any, Dict
 
 log = logging.getLogger(__name__)
 

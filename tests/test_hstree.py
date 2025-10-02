@@ -3,10 +3,13 @@
 Tests for HS-Tree minimal test generation
 Tests the HS-Tree algorithm for generating minimal test cases from constraint breaches
 """
-import pytest
+
 import json
 import tempfile
 from pathlib import Path
+
+import pytest
+
 from methods.hstree.minimal_tests import HSTreeMinimalTests
 
 

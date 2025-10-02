@@ -3,7 +3,9 @@
 Tests for e-graph rules v0.2
 Tests the new safe rules: Normalize∘Verify commute under strict guard, Meet absorption with K disjoint
 """
+
 import pytest
+
 from methods.egraph.rules import EGraphRules
 
 

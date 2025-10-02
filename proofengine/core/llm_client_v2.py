@@ -2,14 +2,15 @@
 """
 LLM Client v2 with auto-consistency and signed logs
 """
+
 import hashlib
+import hmac
 import json
 import os
 import time
-import hmac
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, Optional, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from dotenv import load_dotenv
 from openai import OpenAI

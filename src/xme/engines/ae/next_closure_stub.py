@@ -1,8 +1,11 @@
 """
 Stub Next-Closure pour l'énumération de concepts FCA.
 """
+
 from __future__ import annotations
-from typing import List, Set, Dict, Tuple
+
+from typing import List, Set, Tuple
+
 from .context import FCAContext
 
 
@@ -27,7 +30,7 @@ def enumerate_concepts_stub(ctx: FCAContext) -> List[Tuple[Set[str], Set[str]]]:
     intents.append(closure(ctx, set()))
     for a in ctx.attributes[:3]:  # borne courte, stub
         intents.append(closure(ctx, {a}))
-    
+
     # Uniques et triés par taille puis lexique
     uniq = []
     seen = set()
@@ -37,13 +40,13 @@ def enumerate_concepts_stub(ctx: FCAContext) -> List[Tuple[Set[str], Set[str]]]:
             continue
         seen.add(key)
         uniq.append(I)
-    
+
     uniq.sort(key=lambda s: (len(s), tuple(sorted(s))))
-    
+
     # Extents = objets qui ont l'intent
     res = []
     for I in uniq:
         extent = {o.id for o in ctx.objects if set(I).issubset(set(o.attrs))}
         res.append((extent, I))
-    
+
     return res

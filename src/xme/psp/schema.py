@@ -1,13 +1,16 @@
 """
 Schéma PSP (Proof Structure Protocol) avec validation et normalisation.
 """
+
 from __future__ import annotations
-from typing import List, Dict, Optional, Iterable
+
 from enum import Enum
-from pydantic import BaseModel, Field, field_validator, ConfigDict
-import orjson
-import networkx as nx
 from pathlib import Path
+from typing import Dict, List, Optional
+
+import networkx as nx
+import orjson
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 def _orjson_dumps(v, *, default):
@@ -76,7 +79,9 @@ class PSP(BaseModel):
             g.add_edge(e.src, e.dst)
         if not nx.is_directed_acyclic_graph(g):
             raise ValueError("PSP graph must be acyclic")
-        info.data["dag"] = DAGMeta(nodes=g.number_of_nodes(), edges=g.number_of_edges(), acyclic=True)
+        info.data["dag"] = DAGMeta(
+            nodes=g.number_of_nodes(), edges=g.number_of_edges(), acyclic=True
+        )
         return edges
 
     def canonical_json(self) -> str:
@@ -99,7 +104,9 @@ class PSP(BaseModel):
             key=lambda c: c.id,
         )
         # Recompute DAG meta
-        _ = self._validate_acyclic(self.edges, info=type("I", (), {"data": {"blocks": self.blocks}}))
+        _ = self._validate_acyclic(
+            self.edges, info=type("I", (), {"data": {"blocks": self.blocks}})
+        )
         return self
 
     def model_json_schema(self) -> dict:

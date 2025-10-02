@@ -2,11 +2,12 @@
 """
 Deterministic audit pack builder with reproducible zip files
 """
-import os
+
+import hashlib
 import json
+import os
 import time
 import zipfile
-import hashlib
 from pathlib import Path
 
 

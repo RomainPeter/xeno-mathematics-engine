@@ -1,8 +1,11 @@
 """
 Tests pour Next-Closure sur de petits contextes.
 """
-import orjson
+
 from pathlib import Path
+
+import orjson
+
 from xme.engines.ae.context import load_context
 from xme.engines.ae.next_closure import enumerate_concepts
 

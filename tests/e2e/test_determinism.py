@@ -3,6 +3,7 @@
 Determinism E2E Test
 3 runs with same seeds → identical Merkle root; variance V_actual ≤ 2%
 """
+
 import json
 import os
 import subprocess

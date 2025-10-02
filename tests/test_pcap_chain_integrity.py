@@ -1,7 +1,8 @@
-from pathlib import Path
 from datetime import datetime, timezone
-from xme.pcap.store import PCAPStore
+from pathlib import Path
+
 from xme.pcap.model import PCAPEntry
+from xme.pcap.store import PCAPStore
 
 
 def test_chain_and_merkle(tmp_path: Path):
@@ -13,5 +14,3 @@ def test_chain_and_merkle(tmp_path: Path):
     root = store.merkle_root()
     assert isinstance(root, str) and len(root) == 64
     assert e2.prev_hash == e1.hash
-
-

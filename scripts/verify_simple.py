@@ -2,8 +2,10 @@
 """
 Simple verification script for CI
 """
-import os
+
 import json
+import os
+
 from dotenv import load_dotenv
 
 

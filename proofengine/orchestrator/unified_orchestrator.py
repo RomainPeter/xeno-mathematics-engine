@@ -3,14 +3,14 @@ Unified Orchestrator for Architecture Unifiée v0.1.
 Implements AE (Attribute Exploration) + CEGIS (Counter-Example Guided Inductive Synthesis) loops.
 """
 
-from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any, Dict, List, Optional
 
 from ..core.egraph import EGraph, canonicalize_state
-from .ae_loop import AELoop, Implication, CounterExample
-from .cegis_loop import CEGISLoop, Choreography, SynthesisResult
 from ..planner.selection import BanditSelector, MCTSSelector
+from .ae_loop import AELoop, CounterExample, Implication
+from .cegis_loop import CEGISLoop, Choreography, SynthesisResult
 
 
 @dataclass
@@ -133,7 +133,7 @@ class UnifiedOrchestrator:
         print("Running AE phase...")
 
         # Generate implications using LLM
-        implications = await self._generate_implications()
+        _implications = await self._generate_implications()
 
         # Run AE loop
         ae_results = await self.ae_loop.explore_attributes(self.current_state.X, self.config.budget)

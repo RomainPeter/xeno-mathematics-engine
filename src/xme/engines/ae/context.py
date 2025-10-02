@@ -1,21 +1,26 @@
 """
 Contexte FCA (Formal Concept Analysis) et chargement.
 """
+
 from __future__ import annotations
-from typing import List, Dict, Set
-from pydantic import BaseModel
-import orjson
+
 from pathlib import Path
+from typing import Dict, List, Set
+
+import orjson
+from pydantic import BaseModel
 
 
 class FCAObject(BaseModel):
     """Objet FCA avec ses attributs."""
+
     id: str
     attrs: List[str]
 
 
 class FCAContext(BaseModel):
     """Contexte FCA complet."""
+
     attributes: List[str]
     objects: List[FCAObject]
 

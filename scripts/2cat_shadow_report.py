@@ -5,27 +5,26 @@ Executes S1 in shadow mode and produces report with proposals.
 
 import json
 import sys
+from datetime import datetime
 from pathlib import Path
 from typing import List
-from datetime import datetime
+
+from proofengine.orchestrator.checker import BasicChecker
+from proofengine.orchestrator.modes import (ShadowReport,
+                                            TwoCategoryOrchestrator)
+from proofengine.orchestrator.rewriter import PlanRewriter
+from proofengine.orchestrator.strategy_api import (StrategyContext,
+                                                   StrategyRegistry)
+from proofengine.strategies import (AddMissingTestsStrategy,
+                                    ChangelogOrBlockStrategy,
+                                    DecomposeMeetStrategy,
+                                    RequireSemverStrategy,
+                                    RetryWithHardeningStrategy,
+                                    SpecializeThenRetryStrategy)
 
 # Add the project root to the Python path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
-
-# Import after path setup
-from proofengine.strategies import (
-    SpecializeThenRetryStrategy,
-    AddMissingTestsStrategy,
-    RequireSemverStrategy,
-    ChangelogOrBlockStrategy,
-    DecomposeMeetStrategy,
-    RetryWithHardeningStrategy,
-)
-from proofengine.orchestrator.strategy_api import StrategyRegistry, StrategyContext
-from proofengine.orchestrator.modes import TwoCategoryOrchestrator, ShadowReport
-from proofengine.orchestrator.rewriter import PlanRewriter
-from proofengine.orchestrator.checker import BasicChecker
 
 
 class ShadowReportGenerator:

@@ -2,10 +2,11 @@
 """
 Tests for LLM Client v0.1 with auto-consistency
 """
+
 import os
 import tempfile
 import time
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 from proofengine.core.llm_client import LLMClient, LLMConfig
 

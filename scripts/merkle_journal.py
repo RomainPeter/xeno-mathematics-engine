@@ -2,8 +2,9 @@
 """
 Merkle Journal script for CI artifacts testing
 """
-import json
+
 import hashlib
+import json
 import sys
 from pathlib import Path
 

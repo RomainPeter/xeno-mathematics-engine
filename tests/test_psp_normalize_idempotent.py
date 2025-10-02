@@ -1,5 +1,6 @@
-from xme.psp.schema import PSP
 import orjson
+
+from xme.psp.schema import PSP
 
 
 def test_normalize_idempotent():
@@ -14,5 +15,3 @@ def test_normalize_idempotent():
     p2 = PSP(**orjson.loads(j1)).normalize()
     j2 = p2.canonical_json()
     assert j1 == j2
-
-

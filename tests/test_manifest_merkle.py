@@ -2,6 +2,7 @@
 """
 Tests for manifest and Merkle root validation and reproducibility.
 """
+
 import json
 import zipfile
 from pathlib import Path
@@ -9,13 +10,9 @@ from typing import Any, List
 
 import pytest
 
-from pefc.pack.merkle import build_entries, compute_merkle_root, build_manifest
-from pefc.pack.verify import (
-    verify_zip,
-    load_manifest,
-    verify_files_sha256,
-    verify_merkle,
-)
+from pefc.pack.merkle import build_entries, build_manifest, compute_merkle_root
+from pefc.pack.verify import (load_manifest, verify_files_sha256,
+                              verify_merkle, verify_zip)
 
 
 class TestManifestMerkle:

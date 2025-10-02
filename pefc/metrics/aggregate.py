@@ -2,9 +2,11 @@
 """
 Metrics aggregation utilities.
 """
+
 from __future__ import annotations
-from typing import List, Dict, Any, Optional
+
 import logging
+from typing import Any, Dict, List, Optional
 
 from pefc.metrics.types import RunRecord
 

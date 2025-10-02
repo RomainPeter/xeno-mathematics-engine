@@ -2,7 +2,9 @@
 """
 Generate One-Pager using config and shared services
 """
+
 from __future__ import annotations
+
 import argparse
 import sys
 from pathlib import Path

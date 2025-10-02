@@ -1,11 +1,13 @@
 from __future__ import annotations
-from pathlib import Path
-from typing import Iterator, Union, List, Tuple
-from datetime import datetime, timezone
-import uuid
-import orjson
-from xme.pcap.model import PCAPEntry, RunHeader, canonical_dumps, sha256_hex
 
+import uuid
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Iterator, List, Tuple
+
+import orjson
+
+from xme.pcap.model import PCAPEntry, RunHeader, canonical_dumps, sha256_hex
 
 JSONObj = dict
 

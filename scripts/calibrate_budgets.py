@@ -3,9 +3,10 @@
 Budget and Timeout Calibration Script
 Calibrates p95 verify_ms budgets and timeouts based on historical data
 """
+
 import json
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Any, Dict, List
 
 
 class BudgetCalibrator:

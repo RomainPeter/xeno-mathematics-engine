@@ -2,10 +2,12 @@
 """
 Tests for orchestrator LLM integration
 """
-import pytest
+
 import json
-import tempfile
 import os
+import tempfile
+
+import pytest
 
 
 class TestOrchestratorLLM:
@@ -78,8 +80,9 @@ class TestOrchestratorLLM:
 
             spec = importlib.util.find_spec("orchestrator.skeleton_llm")
             if spec:
-                from orchestrator.skeleton_llm import Orchestrator
                 from unittest.mock import MagicMock
+
+                from orchestrator.skeleton_llm import Orchestrator
 
                 # Create mock LLM adapter
                 mock_adapter = MagicMock()

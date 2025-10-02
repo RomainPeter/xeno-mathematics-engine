@@ -3,11 +3,11 @@ E-graph implementation for canonicalization and anti-redundancy.
 Implements idempotence and guarded commutations for safe equivalence classes.
 """
 
-from typing import Dict, List, Set, Any, Optional
-from dataclasses import dataclass
-from enum import Enum
 import hashlib
 import json
+from dataclasses import dataclass
+from enum import Enum
+from typing import Any, Dict, List, Optional, Set
 
 
 class OperatorType(Enum):
@@ -158,12 +158,13 @@ class EGraph:
             equiv1 = rule.equivalent(n1)
             equiv2 = rule.equivalent(n2)
             return self._deep_equivalent(equiv1, equiv2)
-        except:
+        except Exception:
+            # Rule equivalence check failed, nodes are not equivalent
             return False
 
     def _deep_equivalent(self, obj1: Any, obj2: Any) -> bool:
         """Deep equivalence check for objects."""
-        if type(obj1) != type(obj2):
+        if type(obj1) is not type(obj2):
             return False
 
         if isinstance(obj1, dict):

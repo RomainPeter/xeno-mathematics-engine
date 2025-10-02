@@ -2,12 +2,15 @@
 """
 Pack verification utilities for manifest, merkle, and signature validation.
 """
+
 from __future__ import annotations
-from zipfile import ZipFile
-from pathlib import Path
-import json
+
 import hashlib
+import json
 import subprocess
+from pathlib import Path
+from zipfile import ZipFile
+
 import fastjsonschema
 
 
@@ -203,7 +206,7 @@ def verify_merkle(zip_path: Path, manifest: dict) -> tuple[bool, dict]:
 
     try:
         # Recalculate Merkle root from manifest files
-        from pefc.pack.merkle import compute_merkle_root, PackEntry
+        from pefc.pack.merkle import PackEntry, compute_merkle_root
 
         # Create PackEntry objects from manifest
         entries = []

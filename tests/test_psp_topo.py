@@ -14,5 +14,3 @@ def test_topo_order_respects_edges():
     )
     order = p.topo_sort()
     assert order.index("A") < order.index("B") < order.index("C")
-
-

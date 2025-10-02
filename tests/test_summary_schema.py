@@ -2,14 +2,16 @@
 """
 Tests for summary.json schema validation and consistency.
 """
+
 import json
-import pytest
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Any, Dict, List
 
 import fastjsonschema
-from pefc.metrics.collect import MetricsCollector
+import pytest
+
 from pefc.metrics.aggregate import MetricsAggregator
+from pefc.metrics.collect import MetricsCollector
 
 
 class TestSummarySchema:

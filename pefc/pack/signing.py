@@ -2,10 +2,12 @@
 """
 Pack signing utilities with cosign and other providers.
 """
+
 from __future__ import annotations
-from pathlib import Path
+
 import os
 import subprocess
+from pathlib import Path
 from typing import Optional
 
 

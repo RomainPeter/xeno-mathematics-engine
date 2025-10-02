@@ -2,9 +2,11 @@
 """
 Tests for metrics aggregation parity across backends.
 """
-import pytest
-from typing import List, Dict, Any
+
+from typing import Any, Dict, List
 from unittest.mock import patch
+
+import pytest
 
 from pefc.metrics.aggregate import MetricsAggregator
 from pefc.metrics.collect import MetricsCollector

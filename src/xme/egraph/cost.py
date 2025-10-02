@@ -1,17 +1,19 @@
 """
 Système de coûts pour E-graph.
 """
+
 from __future__ import annotations
-from typing import Dict, Any
+
+from typing import Any, Dict
 
 
 def cost_nodes(expr: Dict[str, Any]) -> int:
     """
     Calcule le coût basé sur le nombre de nœuds.
-    
+
     Args:
         expr: Expression à évaluer
-    
+
     Returns:
         Coût (nombre de nœuds)
     """
@@ -25,13 +27,14 @@ def cost_nodes(expr: Dict[str, Any]) -> int:
 def cost_weighted(weights: Dict[str, int]):
     """
     Crée une fonction de coût pondérée.
-    
+
     Args:
         weights: Dictionnaire des poids par opérateur
-    
+
     Returns:
         Fonction de coût pondérée
     """
+
     def _cost(expr):
         if "const" in expr or "var" in expr:
             return weights.get("leaf", 1)
@@ -39,5 +42,5 @@ def cost_weighted(weights: Dict[str, int]):
             w = weights.get(expr["op"], 1)
             return w + sum(_cost(a) for a in expr.get("args", []))
         return 1
-    
+
     return _cost

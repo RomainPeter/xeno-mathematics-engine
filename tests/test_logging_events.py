@@ -2,12 +2,12 @@
 """
 Tests for logging and events functionality.
 """
-from unittest.mock import Mock
 
+from unittest.mock import Mock
 
 from pefc.events import EventBus
 from pefc.events.subscribers import LoggingSubscriber
-from pefc.logging import init_logging, get_logger
+from pefc.logging import get_logger, init_logging
 
 
 class TestEventBus:

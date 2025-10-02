@@ -1,21 +1,24 @@
 """
 Budgets H/X pour la gouvernance bifocale.
 """
+
 from __future__ import annotations
-from dataclasses import dataclass, field
+
+from dataclasses import dataclass
 from typing import Dict
 
 
 @dataclass
 class BudgetsHX:
     """Budgets pour les espaces H et X."""
+
     h_quota: int = 10
     x_quota: int = 20
 
 
 class BudgetTracker:
     """Suivi des budgets H/X avec consommation et limites."""
-    
+
     def __init__(self, budgets: BudgetsHX):
         self.budgets = budgets
         self.used: Dict[str, int] = {"H": 0, "X": 0}

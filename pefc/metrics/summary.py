@@ -2,11 +2,13 @@
 """
 Metrics summary module.
 """
+
 from __future__ import annotations
-from pathlib import Path
-from typing import Dict, Any, List, Optional
+
 import json
 import logging
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 from pefc.metrics.types import MetricsData
 from pefc.metrics.validator import validate_metrics_data

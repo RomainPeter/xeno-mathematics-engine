@@ -2,12 +2,12 @@
 """
 Tests for capabilities bundle generation.
 """
+
 import json
 from pathlib import Path
 from unittest.mock import patch
 
-
-from pefc.capabilities.bundle import ProofBundle, CapabilityRegistry
+from pefc.capabilities.bundle import CapabilityRegistry, ProofBundle
 from pefc.capabilities.handlers import HSTreeHandler, OPAHandler
 
 
