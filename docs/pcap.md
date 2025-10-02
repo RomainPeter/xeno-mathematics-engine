@@ -44,6 +44,59 @@ Each capability is represented as a signed token:
 }
 ```
 
+## Obligations dans PCAP
+
+Le système PCAP intègre les obligations de vérification pour assurer la traçabilité et l'auditabilité :
+
+### Logging des Verdicts
+
+Les verdicts de vérification sont logués dans PCAP avec la fonction `log_verdict` :
+
+```python
+from xme.adapters.logger import log_verdict
+
+# Loguer un verdict de vérification
+log_verdict(
+    store=store,
+    obligation_id="psp_acyclic",
+    level="S0",
+    ok=True,
+    details={"message": "PSP is acyclic", "n_blocks": 5}
+)
+```
+
+### Structure des Entrées de Vérification
+
+```json
+{
+  "action": "verification_verdict",
+  "actor": "xme",
+  "level": "S0",
+  "obligations": {
+    "psp_acyclic": "True",
+    "psp_acyclic_message": "PSP is acyclic",
+    "psp_acyclic_n_blocks": "5"
+  },
+  "deltas": {
+    "verdict_psp_acyclic": 1.0,
+    "level_S0": 1.0
+  },
+  "timestamp": "2024-01-01T12:00:00Z",
+  "hash": "...",
+  "prev_hash": "..."
+}
+```
+
+### Vérification des Runs PCAP
+
+```bash
+# Vérifier un run PCAP complet
+xme verify run --run artifacts/pcap/run-123.jsonl
+
+# Avec rapport de sortie
+xme verify run --run artifacts/pcap/run-123.jsonl --out artifacts/verification/report.json
+```
+
 ### Obligations Schema
 
 PCAP defines a minimal obligations schema (S0) with required fields:

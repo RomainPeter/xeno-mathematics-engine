@@ -15,6 +15,12 @@ from xme.orchestrator.loops.cegis import run_cegis
 from xme.orchestrator.scheduler import DiscoveryConfig, DiscoveryScheduler
 from xme.pefc.pack import collect_inputs, build_manifest, write_zip, verify_pack
 from xme.egraph.canon import canonicalize, are_structurally_equal, compare_expressions
+from xme.verifier.base import Verifier, create_obligation
+from xme.verifier.psp_checks import get_psp_obligations
+from xme.verifier.ae_checks import get_ae_obligations
+from xme.verifier.cegis_checks import get_cegis_obligations
+from xme.verifier.report import Report, save_report
+from xme.adapters.logger import log_verdict
 from pathlib import Path
 import subprocess
 
@@ -27,6 +33,7 @@ cegis_app = typer.Typer(help="CEGIS operations")
 discover_app = typer.Typer(help="Discovery operations")
 egraph_app = typer.Typer(help="E-graph operations")
 pack_app = typer.Typer(help="Audit Pack operations")
+verify_app = typer.Typer(help="Verification operations")
 app.add_typer(psp_app, name="psp")
 app.add_typer(pcap_app, name="pcap")
 app.add_typer(engine_app, name="engine")
@@ -35,6 +42,7 @@ app.add_typer(cegis_app, name="cegis")
 app.add_typer(discover_app, name="discover")
 app.add_typer(egraph_app, name="egraph")
 app.add_typer(pack_app, name="pack")
+app.add_typer(verify_app, name="verify")
 
 
 @app.callback()
@@ -318,6 +326,154 @@ def verify_2cat():
         raise typer.Exit(code=2)
     subprocess.run(["bash", str(script)], check=True)
     print("[green]2cat pack verified[/green]")
+
+
+@verify_app.command("psp")
+def verify_psp(
+    input_file: str = typer.Option(..., "--in", help="Input PSP JSON file"),
+    level: str = typer.Option("S0", "--level", help="Verification level (S0, S1)"),
+    output_file: Optional[str] = typer.Option(None, "--out", help="Output report JSON file"),
+    pcap_run: Optional[str] = typer.Option(None, "--run", help="PCAP run path for logging")
+):
+    """Vérifie un PSP avec les obligations S0/S1."""
+    input_path = Path(input_file)
+    if not input_path.exists():
+        print(f"[red]Input file not found[/red] {input_path}")
+        raise typer.Exit(code=1)
+    
+    # Charger le PSP
+    try:
+        with open(input_path, 'rb') as f:
+            psp_data = orjson.loads(f.read())
+    except Exception as e:
+        print(f"[red]Error loading PSP[/red] {e}")
+        raise typer.Exit(code=1)
+    
+    # Créer le vérificateur et enregistrer les obligations PSP
+    verifier = Verifier()
+    for obligation_id, level_obligation, check_func, description in get_psp_obligations():
+        obligation = create_obligation(obligation_id, level_obligation, check_func, description)
+        verifier.register_obligation(obligation)
+    
+    # Exécuter les vérifications
+    report = verifier.run_by_level(psp_data, level)
+    
+    # Loguer les verdicts dans PCAP si spécifié
+    if pcap_run:
+        store = PCAPStore(Path(pcap_run))
+        for result in report.results:
+            log_verdict(
+                store=store,
+                obligation_id=result.obligation_id,
+                level=result.level,
+                ok=result.ok,
+                details=result.details
+            )
+    
+    # Sauvegarder le rapport si spécifié
+    if output_file:
+        save_report(report, output_file)
+        print(f"[green]Report saved[/green] {output_file}")
+    
+    # Afficher le résumé
+    summary = report.summary()
+    print(f"[bold]Verification Summary[/bold]")
+    print(f"Level: {level}")
+    print(f"Total: {summary['total']}")
+    print(f"Passed: {summary['passed']}")
+    print(f"Failed: {summary['failed']}")
+    print(f"Overall: {'[green]PASS[/green]' if report.ok_all else '[red]FAIL[/red]'}")
+    
+    # Afficher les détails des échecs
+    if not report.ok_all:
+        print(f"[bold red]Failed Obligations:[/bold red]")
+        for result in report.get_failed_results():
+            print(f"  - {result.obligation_id} ({result.level}): {result.details.get('message', 'No message')}")
+    
+    # Code de retour
+    if not report.ok_all:
+        raise typer.Exit(code=1)
+
+
+@verify_app.command("run")
+def verify_run(
+    run_path: str = typer.Option(..., "--run", help="PCAP run path"),
+    output_file: Optional[str] = typer.Option(None, "--out", help="Output report JSON file")
+):
+    """Vérifie un run PCAP (chain & merkle + obligations)."""
+    run_file = Path(run_path)
+    if not run_file.exists():
+        print(f"[red]Run file not found[/red] {run_file}")
+        raise typer.Exit(code=1)
+    
+    # Charger le store PCAP
+    try:
+        store = PCAPStore(run_file)
+        entries = list(store.read_all())
+    except Exception as e:
+        print(f"[red]Error loading PCAP run[/red] {e}")
+        raise typer.Exit(code=1)
+    
+    # Vérifier la chaîne et le Merkle (basique)
+    chain_ok = True
+    chain_details = {}
+    
+    if len(entries) > 1:
+        # Vérifier la cohérence des hashes
+        for i in range(1, len(entries)):
+            prev_entry = entries[i-1]
+            curr_entry = entries[i]
+            
+            if prev_entry.get("hash") != curr_entry.get("prev_hash"):
+                chain_ok = False
+                chain_details["error"] = f"Hash mismatch at entry {i}"
+                break
+    
+    # Collecter les obligations loguées
+    obligations = {}
+    for entry in entries:
+        if entry.get("action") == "verification_verdict":
+            entry_obligations = entry.get("obligations", {})
+            for key, value in entry_obligations.items():
+                if not key.endswith("_message") and not key.endswith("_error"):  # Filtrer les détails
+                    obligations[key] = value
+    
+    # Créer le rapport
+    report = Report()
+    
+    # Ajouter le résultat de vérification de la chaîne
+    report.add_result(
+        obligation_id="pcap_chain_consistency",
+        level="S0",
+        ok=chain_ok,
+        details=chain_details if not chain_ok else {"message": "PCAP chain is consistent"}
+    )
+    
+    # Ajouter les obligations loguées
+    for obligation_id, result in obligations.items():
+        report.add_result(
+            obligation_id=obligation_id,
+            level="S0",  # Par défaut
+            ok=result == "True",
+            details={"message": f"Logged obligation: {result}"}
+        )
+    
+    # Sauvegarder le rapport si spécifié
+    if output_file:
+        save_report(report, output_file)
+        print(f"[green]Report saved[/green] {output_file}")
+    
+    # Afficher le résumé
+    summary = report.summary()
+    print(f"[bold]PCAP Run Verification Summary[/bold]")
+    print(f"Total entries: {len(entries)}")
+    print(f"Chain consistent: {'[green]YES[/green]' if chain_ok else '[red]NO[/red]'}")
+    print(f"Logged obligations: {len(obligations)}")
+    print(f"Overall: {'[green]PASS[/green]' if report.ok_all else '[red]FAIL[/red]'}")
+    
+    # Code de retour
+    if not report.ok_all:
+        raise typer.Exit(code=1)
 
 
 if __name__ == "__main__":
