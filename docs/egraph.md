@@ -1,325 +1,344 @@
-# E-graph v0 — Canonicalisation et Signatures Structurelles
-
-L'e-graph v0 de XME implémente un système minimaliste de canonicalisation d'expressions avec alpha-renaming, hash-consing, et signatures structurelles. Il évite la redondance structurelle en normalisant les expressions selon des règles commutatives et d'alpha-équivalence.
+# E-graph v1 : Réécritures + Saturation + Extraction par coût
 
 ## Vue d'ensemble
 
-L'e-graph v0 fournit :
-
-- **Alpha-renaming** : Normalisation des variables libres (var:x → var:_1, var:_2 par ordre d'apparition)
-- **Hash-consing** : Interning des nœuds pour éviter la duplication
-- **Signatures canoniques** : SHA256 des expressions normalisées
-- **Règles commutatives** : Normalisation des opérateurs commutatifs
-- **CLI** : Commandes pour canonicaliser et tester l'égalité structurelle
+L'E-graph v1 implémente un système de réécriture déclarative avec saturation jusqu'au fixpoint et extraction par coût. Il utilise la signature canonique (PR #13) pour dédupliquer les formes et éviter la redondance structurelle.
 
 ## Architecture
 
-### Nœuds
+### Composants principaux
 
-Les nœuds de l'e-graph sont définis dans `src/xme/egraph/node.py` :
+1. **DSL de patterns** (`src/xme/egraph/rules.py`)
+   - Patterns avec variables, constantes et opérations
+   - Matching et substitution
+   - Règles de réécriture LHS → RHS
 
-```python
-@dataclass
-class Node:
-    op: str                    # Opérateur
-    args: List[NodeId]        # Arguments (IDs de nœuds)
-    attrs: Dict[str, Any]     # Attributs triés
-```
+2. **Moteur de saturation** (`src/xme/egraph/engine.py`)
+   - Exploration des formes atteignables
+   - Déduplication par signature canonique
+   - Limites de sécurité (max_iters, seen_limit)
 
-**Types de nœuds :**
+3. **Système de coûts** (`src/xme/egraph/cost.py`)
+   - Coût basé sur le nombre de nœuds
+   - Coût pondéré par opérateur
+   - Extraction de la forme optimale
 
-- **Atom** : Symboles et constantes (`{"op": "atom", "attrs": {"symbol": "x"}}`)
-- **Value** : Nombres et strings (`{"op": "value", "attrs": {"value": 42}}`)
-- **Variable** : Variables avec alpha-renaming (`{"op": "var", "attrs": {"name": "x"}}`)
+## DSL de patterns
 
-### Alpha-renaming
-
-L'alpha-renaming normalise les variables libres selon l'ordre d'apparition :
-
-```python
-# Variables originales
-expr = {
-    "op": "+",
-    "args": [
-        {"op": "var", "name": "x"},
-        {"op": "var", "name": "y"}
-    ]
-}
-
-# Après alpha-renaming
-renamed = {
-    "op": "+",
-    "args": [
-        {"op": "var", "name": "_1"},
-        {"op": "var", "name": "_2"}
-    ]
-}
-```
-
-**Propriétés :**
-
-- **Invariant** : Deux expressions alpha-équivalentes → même signature
-- **Ordre d'apparition** : Variables renommées par ordre de première occurrence
-- **Récursif** : Fonctionne sur des expressions imbriquées
-
-### Hash-consing
-
-Le hash-consing évite la duplication de nœuds identiques :
+### Types d'expressions
 
 ```python
-class HashCons:
-    def intern(self, node: Dict[str, Any]) -> NodeId:
-        """Interne un nœud et retourne son ID stable."""
-        key = self._canonical_key(node)
-        if key in self._intern:
-            return self._intern[key]  # Nœud existant
-        # Créer nouveau nœud
+# Variable
+{"var": "x"}
+
+# Constante
+{"const": 42}
+
+# Opération
+{"op": "+", "args": [{"var": "x"}, {"var": "y"}]}
 ```
 
-**Avantages :**
-
-- **Déduplication** : Nœuds identiques partagent le même ID
-- **Efficacité** : Évite la duplication mémoire
-- **Stabilité** : IDs stables pour les nœuds canoniques
-
-### E-graph
-
-L'e-graph gère les classes d'équivalence :
+### Règles de réécriture
 
 ```python
-class EGraph:
-    def add_node(self, node: Dict[str, Any]) -> NodeId:
-        """Ajoute un nœud à l'e-graph."""
-    
-    def merge(self, node_id1: NodeId, node_id2: NodeId):
-        """Fusionne deux nœuds dans la même classe d'équivalence."""
-    
-    def are_equal(self, node_id1: NodeId, node_id2: NodeId) -> bool:
-        """Vérifie si deux nœuds sont égaux."""
+from xme.egraph.rules import Rule
+
+# Simplification : x * 1 → x
+rule = Rule(
+    lhs={"op": "*", "args": [{"var": "x"}, {"const": 1}]},
+    rhs={"var": "x"},
+    name="mul_unit_right"
+)
 ```
 
-## Canonicalisation
-
-### Règles de canonicalisation
-
-La canonicalisation suit ces étapes :
-
-1. **Alpha-renaming** : Variables renommées par ordre d'apparition
-2. **Normalisation commutative** : Arguments triés pour opérateurs commutatifs
-3. **Tri des attributs** : Attributs triés lexicographiquement
-4. **Signature** : SHA256 du parcours postfix canonique
-
-### Opérateurs commutatifs
-
-Les opérateurs suivants sont traités comme commutatifs :
+### Matching et substitution
 
 ```python
-COMMUTATIVE_OPS = {"+", "*", "and", "or", "∧", "∨", "&", "|"}
+from xme.egraph.rules import match, substitute
+
+# Matching
+env = match(expr, pattern)
+if env is not None:
+    # Pattern matché, env contient les variables
+
+# Substitution
+new_expr = substitute(pattern, env)
 ```
 
-**Exemple :**
+## Moteur de saturation
 
-```json
-// Expression originale
-{
-  "op": "+",
-  "args": [
-    {"op": "var", "name": "y"},
-    {"op": "var", "name": "x"}
-  ]
-}
-
-// Après canonicalisation
-{
-  "op": "+",
-  "args": [
-    {"op": "var", "name": "_1"},
-    {"op": "var", "name": "_2"}
-  ]
-}
-```
-
-### Signature structurelle
-
-La signature est calculée via un parcours postfix des tokens canoniques :
+### Saturation jusqu'au fixpoint
 
 ```python
-def generate_signature(expr: Dict[str, Any]) -> str:
-    tokens = postfix_traversal(expr)
-    serialized = json.dumps(tokens, sort_keys=True, separators=(',', ':'))
-    return hashlib.sha256(serialized.encode('utf-8')).hexdigest()
+from xme.egraph.engine import saturate
+
+# Saturer une expression
+forms = saturate(expr, rules, max_iters=50, seen_limit=5000)
 ```
 
-**Propriétés :**
+**Paramètres :**
+- `max_iters` : Nombre maximum d'itérations (défaut: 50)
+- `seen_limit` : Limite du nombre de formes vues (défaut: 5000)
 
-- **Déterministe** : Même expression → même signature
-- **Structurelle** : Expressions structurellement égales → même signature
-- **Alpha-invariante** : Expressions alpha-équivalentes → même signature
+**Algorithme :**
+1. Explore les formes atteignables via réécritures
+2. Déduplique par signature canonique
+3. S'arrête au fixpoint ou aux limites
 
-## Format d'entrée
+### Extraction par coût
 
-### Structure JSON
+```python
+from xme.egraph.engine import extract_best
+from xme.egraph.cost import cost_nodes
 
-Les expressions sont représentées en JSON avec cette structure :
-
-```json
-{
-  "op": "opérateur",
-  "args": [/* arguments */],
-  "attrs": {/* attributs optionnels */}
-}
+# Extraire la meilleure forme
+best = extract_best(forms, cost_fn=cost_nodes)
 ```
 
-### Exemples
+## Système de coûts
 
-**Addition commutative :**
+### Coût basé sur les nœuds
 
-```json
-{
-  "op": "+",
-  "args": [
-    {"op": "var", "name": "x"},
-    {"op": "var", "name": "y"}
-  ]
-}
+```python
+from xme.egraph.cost import cost_nodes
+
+cost = cost_nodes(expr)  # Nombre de nœuds dans l'expression
 ```
 
-**Expression imbriquée :**
+### Coût pondéré
 
-```json
-{
-  "op": "compose",
-  "args": [
-    {
-      "op": "+",
-      "args": [
-        {"op": "var", "name": "f"},
-        {"op": "var", "name": "g"}
-      ]
-    },
-    {
-      "op": "*",
-      "args": [
-        {"op": "value", "attrs": {"value": 2}},
-        {"op": "var", "name": "x"}
-      ]
-    }
-  ]
-}
+```python
+from xme.egraph.cost import cost_weighted
+
+# Définir les poids
+weights = {"*": 1, "+": 2, "leaf": 1}
+cost_fn = cost_weighted(weights)
+
+cost = cost_fn(expr)  # Coût pondéré
 ```
 
-## CLI
+## Commandes CLI
 
-### Commandes disponibles
-
-**Canonicalisation :**
+### Saturation
 
 ```bash
-xme egraph canon --in input.json --out output.json
+# Saturer une expression
+xme egraph saturate --in examples/egraph/unit_mul.json \
+                    --rules examples/egraph/rules/arith.json \
+                    --out artifacts/egraph/simplified.json
+
+# Avec extraction pondérée
+xme egraph saturate --in expr.json \
+                    --extract "weights:{\"*\":1,\"+\":2}" \
+                    --out result.json
 ```
 
-**Comparaison d'égalité :**
+### Explication d'équivalence
 
 ```bash
-xme egraph equal --a expr1.json --b expr2.json
+# Vérifier si deux expressions sont équivalentes
+xme egraph explain --a examples/egraph/add_comm.json \
+                   --b examples/egraph/add_comm_swapped.json
 ```
 
-### Exemples d'utilisation
+## Exemples d'usage
 
-**Canonicaliser une expression :**
+### Simplification des unités
 
-```bash
-# Input: examples/egraph/add_comm.json
-xme egraph canon --in examples/egraph/add_comm.json --out artifacts/egraph/add_comm.canon.json
+```python
+# Expression : x * 1 + 0
+expr = {"op": "+", "args": [{"op": "*", "args": [{"var": "x"}, {"const": 1}]}, {"const": 0}]}
+
+# Règles de simplification
+rules = [
+    Rule(lhs={"op": "*", "args": [{"var": "x"}, {"const": 1}]}, rhs={"var": "x"}),
+    Rule(lhs={"op": "+", "args": [{"var": "x"}, {"const": 0}]}, rhs={"var": "x"}),
+]
+
+# Résultat : x
+forms = saturate(expr, rules)
+best = extract_best(forms, cost_fn=cost_nodes)
+# best == {"var": "x"}
 ```
 
-**Tester l'égalité structurelle :**
+### Commutativité et associativité
 
-```bash
-# Test que add_comm.json == add_comm_swapped.json
-xme egraph equal --a examples/egraph/add_comm.json --b examples/egraph/add_comm_swapped.json
-# Exit code: 0 (égales)
+```python
+# Les expressions (a+b)+c et c+(b+a) mènent à la même forme canonique
+e1 = {"op": "+", "args": [{"op": "+", "args": [{"var": "a"}, {"var": "b"}]}, {"var": "c"}]}
+e2 = {"op": "+", "args": [{"var": "c"}, {"op": "+", "args": [{"var": "b"}, {"var": "a"}]}]}
+
+# Après saturation, elles ont la même signature canonique
+_, s1 = canonicalize(extract_best(saturate(e1, rules), cost_fn))
+_, s2 = canonicalize(extract_best(saturate(e2, rules), cost_fn))
+assert s1 == s2
 ```
 
-## Contraintes et limites v0
+### Distribution optionnelle
 
-### Contraintes actuelles
+```python
+# Expression : x * (y + z)
+expr = {"op": "*", "args": [{"var": "x"}, {"op": "+", "args": [{"var": "y"}, {"var": "z"}]}]}
 
-1. **Opérateurs commutatifs limités** : Seuls `+`, `*`, `and`, `or`, `∧`, `∨`, `&`, `|` sont traités comme commutatifs
-2. **Pas de règles de réécriture** : Aucune règle de transformation automatique
-3. **Pas de congruence** : Les classes d'équivalence ne sont pas propagées automatiquement
-4. **Pas de saturation** : L'e-graph ne sature pas les règles
+# Règle de distribution
+rule = Rule(
+    lhs={"op": "*", "args": [{"var": "x"}, {"op": "+", "args": [{"var": "y"}, {"var": "z"}]}]},
+    rhs={"op": "+", "args": [{"op": "*", "args": [{"var": "x"}, {"var": "y"}]}, 
+                              {"op": "*", "args": [{"var": "x"}, {"var": "z"}]}]}
+)
 
-### Limites v0
+# Avec coût pondéré, la distribution peut être optionnelle
+forms = saturate(expr, [rule])
+best = extract_best(forms, cost_fn=cost_weighted({"*": 1, "+": 2}))
+```
 
-1. **Performance** : Pas d'optimisations avancées pour de gros e-graphs
-2. **Règles complexes** : Pas de support pour des règles de réécriture complexes
-3. **Persistence** : Pas de sauvegarde/chargement d'e-graphs
-4. **Visualisation** : Pas d'outils de visualisation
+## Règles d'exemple
 
-### Extensions futures
+### Règles arithmétiques
 
-1. **Règles de réécriture** : Support pour des règles de transformation
-2. **Congruence** : Propagation automatique des classes d'équivalence
-3. **Saturation** : Algorithme de saturation des règles
-4. **Performance** : Optimisations pour de gros e-graphs
-5. **Persistence** : Sauvegarde/chargement d'e-graphs
-6. **Visualisation** : Outils de visualisation graphique
+```json
+[
+  {
+    "name": "mul_unit_right",
+    "lhs": {"op": "*", "args": [{"var": "x"}, {"const": 1}]},
+    "rhs": {"var": "x"}
+  },
+  {
+    "name": "add_zero_right", 
+    "lhs": {"op": "+", "args": [{"var": "x"}, {"const": 0}]},
+    "rhs": {"var": "x"}
+  },
+  {
+    "name": "add_comm",
+    "lhs": {"op": "+", "args": [{"var": "x"}, {"var": "y"}]},
+    "rhs": {"op": "+", "args": [{"var": "y"}, {"var": "x"}]}
+  }
+]
+```
+
+## Limites et sécurité
+
+### Limites de saturation
+
+- **max_iters** : Évite les boucles infinies
+- **seen_limit** : Contrôle la mémoire utilisée
+- **Déduplication** : Évite la redondance via signatures canoniques
+
+### Bonnes pratiques
+
+1. **Règles confluentes** : Éviter les conflits entre règles
+2. **Limites raisonnables** : Ajuster max_iters selon la complexité
+3. **Coûts appropriés** : Choisir des fonctions de coût cohérentes
 
 ## Tests
 
-### Tests d'alpha-renaming
+### Tests unitaires
+
+```bash
+# Tests de simplification
+python -m pytest tests/test_rewrites_simplify_units.py -v
+
+# Tests de commutativité/associativité  
+python -m pytest tests/test_rewrites_comm_assoc_canon.py -v
+
+# Tests de distribution
+python -m pytest tests/test_rewrites_distribution_opt_in.py -v
+```
+
+### Tests d'intégration
+
+```bash
+# Test complet avec CLI
+xme egraph saturate --in examples/egraph/unit_mul.json \
+                    --rules examples/egraph/rules/arith.json \
+                    --out artifacts/egraph/simplified.json
+
+# Vérifier le résultat
+cat artifacts/egraph/simplified.json
+# Devrait contenir {"var": "x"}
+```
+
+## Intégration avec PR #13
+
+L'E-graph v1 utilise la signature canonique de PR #13 pour :
+
+1. **Déduplication** : Éviter les formes redondantes
+2. **Équivalence** : Détecter les expressions équivalentes
+3. **Optimisation** : Réduire l'espace de recherche
 
 ```python
-def test_alpha_equivalent_same_vars():
-    """var:x, var:y vs var:a, var:b → même sig"""
-    expr1 = {"op": "+", "args": [{"op": "var", "name": "x"}, {"op": "var", "name": "y"}]}
-    expr2 = {"op": "+", "args": [{"op": "var", "name": "a"}, {"op": "var", "name": "b"}]}
-    assert is_alpha_equivalent(expr1, expr2)
+from xme.egraph.canon import canonicalize
+
+# Canonicaliser avant comparaison
+canon_expr, signature = canonicalize(expr)
 ```
 
-### Tests commutatifs
+## Cas d'usage avancés
+
+### Optimisation de code
 
 ```python
-def test_commutative_addition():
-    """add_comm.json vs swapped → même sig"""
-    expr1 = {"op": "+", "args": [{"op": "var", "name": "x"}, {"op": "var", "name": "y"}]}
-    expr2 = {"op": "+", "args": [{"op": "var", "name": "y"}, {"op": "var", "name": "x"}]}
-    assert are_structurally_equal(expr1, expr2)
+# Expression complexe
+expr = {"op": "+", "args": [
+    {"op": "*", "args": [{"var": "x"}, {"const": 1}]},
+    {"op": "*", "args": [{"const": 0}, {"var": "y"}]}
+]}
+
+# Simplification automatique
+forms = saturate(expr, simplification_rules)
+best = extract_best(forms, cost_fn=cost_nodes)
+# Résultat : {"var": "x"}
 ```
 
-### Tests non-commutatifs
+### Vérification d'équivalence
 
 ```python
-def test_compose_order_matters():
-    """("compose", f,g) vs (g,f) → sig différent"""
-    expr1 = {"op": "compose", "args": [{"op": "var", "name": "f"}, {"op": "var", "name": "g"}]}
-    expr2 = {"op": "compose", "args": [{"op": "var", "name": "g"}, {"op": "var", "name": "f"}]}
-    assert not are_structurally_equal(expr1, expr2)
+# Vérifier que deux expressions sont équivalentes
+def are_equivalent(expr1, expr2, rules):
+    forms1 = saturate(expr1, rules)
+    forms2 = saturate(expr2, rules)
+    
+    best1 = extract_best(forms1, cost_fn=cost_nodes)
+    best2 = extract_best(forms2, cost_fn=cost_nodes)
+    
+    _, sig1 = canonicalize(best1)
+    _, sig2 = canonicalize(best2)
+    
+    return sig1 == sig2
 ```
 
-## Intégration
+## Dépannage
 
-### Makefile
+### Problèmes courants
 
-```makefile
-egraph-canon:
-	@xme egraph canon --in examples/egraph/add_comm.json --out artifacts/egraph/add_comm.canon.json
+1. **Saturation infinie** : Augmenter max_iters ou seen_limit
+2. **Mémoire insuffisante** : Réduire seen_limit
+3. **Règles conflictuelles** : Vérifier la confluence des règles
+
+### Debug
+
+```python
+# Vérifier les formes générées
+forms = saturate(expr, rules, max_iters=10)
+print(f"Generated {len(forms)} forms")
+
+# Vérifier les coûts
+for i, form in enumerate(forms):
+    cost = cost_nodes(form)
+    print(f"Form {i}: cost={cost}")
 ```
 
-### CI
+## Roadmap
 
-Les tests e-graph sont intégrés dans la CI :
+### Améliorations futures
 
-```yaml
-pytest:
-  steps:
-    - run: nix develop -c pytest tests/test_egraph_*.py
-```
+1. **Règles conditionnelles** : Patterns avec conditions
+2. **Saturation incrémentale** : Mise à jour des formes existantes
+3. **Parallélisation** : Saturation distribuée
+4. **Règles dynamiques** : Ajout/suppression de règles à l'exécution
 
-## Références
+### Intégration
 
-- [E-graphs: A Core Data Structure](https://egraphs-good.github.io/)
-- [Alpha-equivalence](https://en.wikipedia.org/wiki/Alpha_equivalence)
-- [Hash-consing](https://en.wikipedia.org/wiki/Hash_consing)
-- [Commutative operations](https://en.wikipedia.org/wiki/Commutative_property)
+- **PSP** : Génération de preuves de réécriture
+- **PCAP** : Journalisation des transformations
+- **Verifier** : Vérification des équivalences
