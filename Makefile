@@ -687,3 +687,7 @@ pack:
 
 verify-pack:
 	@xme pack verify --pack "$$(ls -1t dist/pack-*.zip | head -1)"
+
+# CEGIS demo target
+cegis-demo:
+	@xme cegis demo --secret 10110 --out artifacts/cegis/demo.json

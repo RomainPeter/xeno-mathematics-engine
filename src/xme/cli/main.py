@@ -9,6 +9,7 @@ from xme.pcap.store import PCAPStore, PCAPEntry
 from xme.orchestrator.state import RunState, Budgets
 from xme.orchestrator.event_bus import EventBus
 from xme.orchestrator.loops.ae import run_ae
+from xme.orchestrator.loops.cegis import run_cegis
 from xme.pefc.pack import collect_inputs, build_manifest, write_zip, verify_pack
 from pathlib import Path
 import subprocess
@@ -18,11 +19,13 @@ psp_app = typer.Typer(help="PSP commands")
 pcap_app = typer.Typer(help="PCAP journal")
 engine_app = typer.Typer(help="Engine ops")
 ae_app = typer.Typer(help="AE operations")
+cegis_app = typer.Typer(help="CEGIS operations")
 pack_app = typer.Typer(help="Audit Pack operations")
 app.add_typer(psp_app, name="psp")
 app.add_typer(pcap_app, name="pcap")
 app.add_typer(engine_app, name="engine")
 app.add_typer(ae_app, name="ae")
+app.add_typer(cegis_app, name="cegis")
 app.add_typer(pack_app, name="pack")
 
 
@@ -136,6 +139,26 @@ def ae_demo(
     bus = EventBus()
     asyncio.run(run_ae(context, state, bus, store, out_psp))
     print(f"[green]AE demo OK[/green] PSP={out_psp}")
+
+
+@cegis_app.command("demo")
+def cegis_demo(
+    secret: str = typer.Option(..., "--secret", help="Secret bitvector to synthesize"),
+    max_iters: int = typer.Option(16, "--max-iters", help="Maximum iterations"),
+    out: str = typer.Option("artifacts/cegis/result.json", "--out"),
+    run: str = typer.Option("", "--run", help="PCAP run path; if empty, a new run is created"),
+    cegis_ms: int = typer.Option(5000, "--cegis-ms", help="CEGIS timeout budget (ms)")
+):
+    """Exécute une démonstration CEGIS pour synthétiser un vecteur de bits secret."""
+    out_path = Path(out)
+    store = PCAPStore(Path(run)) if run else PCAPStore.new_run(Path("artifacts/pcap"))
+    state = RunState(
+        run_id=(store.path.stem if hasattr(store, "path") else str(uuid.uuid4())), 
+        budgets=Budgets(cegis_ms=cegis_ms)
+    )
+    bus = EventBus()
+    asyncio.run(run_cegis(secret, max_iters, state, bus, store, out_path))
+    print(f"[green]CEGIS demo OK[/green] result={out_path}")
 
 
 @pack_app.command("build")
