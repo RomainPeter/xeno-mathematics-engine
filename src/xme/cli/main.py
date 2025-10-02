@@ -1,6 +1,7 @@
 from typing import Optional, List
 import uuid
 import asyncio
+import sys
 from datetime import datetime, timezone
 import typer
 from rich import print
@@ -13,6 +14,7 @@ from xme.orchestrator.loops.ae import run_ae
 from xme.orchestrator.loops.cegis import run_cegis
 from xme.orchestrator.scheduler import DiscoveryConfig, DiscoveryScheduler
 from xme.pefc.pack import collect_inputs, build_manifest, write_zip, verify_pack
+from xme.egraph.canon import canonicalize, are_structurally_equal, compare_expressions
 from pathlib import Path
 import subprocess
 
@@ -23,6 +25,7 @@ engine_app = typer.Typer(help="Engine ops")
 ae_app = typer.Typer(help="AE operations")
 cegis_app = typer.Typer(help="CEGIS operations")
 discover_app = typer.Typer(help="Discovery operations")
+egraph_app = typer.Typer(help="E-graph operations")
 pack_app = typer.Typer(help="Audit Pack operations")
 app.add_typer(psp_app, name="psp")
 app.add_typer(pcap_app, name="pcap")
@@ -30,6 +33,7 @@ app.add_typer(engine_app, name="engine")
 app.add_typer(ae_app, name="ae")
 app.add_typer(cegis_app, name="cegis")
 app.add_typer(discover_app, name="discover")
+app.add_typer(egraph_app, name="egraph")
 app.add_typer(pack_app, name="pack")
 
 
@@ -97,14 +101,14 @@ def pcap_log(
 ):
     store = PCAPStore(Path(run))
     entry = PCAPEntry(
-        action=action,
-        actor=actor,
+            action=action,
+            actor=actor,
         level=level,
-        psp_ref=psp_ref,
-        obligations={},
-        deltas={},
-        timestamp=datetime.now(timezone.utc),
-    )
+            psp_ref=psp_ref,
+            obligations={},
+            deltas={},
+            timestamp=datetime.now(timezone.utc),
+        )
     stored = store.append(entry)
     print(f"[green]Logged[/green] hash={stored.hash} prev={stored.prev_hash}")
 
@@ -207,6 +211,61 @@ def discover_demo(
     print(f"[green]Discovery demo OK[/green] result={out_path}")
     print(f"[green]Best arm[/green] {results['best_arm']}")
     print(f"[green]Total reward[/green] {results['total_reward']}")
+
+
+@egraph_app.command("canon")
+def egraph_canon(
+    input_file: str = typer.Option(..., "--in", help="Input JSON file"),
+    output_file: str = typer.Option(..., "--out", help="Output canonical JSON file")
+):
+    """Canonicalise une expression et génère sa signature."""
+    import orjson
+    
+    # Lire l'expression d'entrée
+    with open(input_file, 'rb') as f:
+        expr = orjson.loads(f.read())
+    
+    # Canonicaliser
+    result = canonicalize(expr)
+    
+    # Créer le répertoire de sortie si nécessaire
+    Path(output_file).parent.mkdir(parents=True, exist_ok=True)
+    
+    # Sauvegarder le résultat
+    with open(output_file, 'wb') as f:
+        f.write(orjson.dumps(result, option=orjson.OPT_INDENT_2))
+    
+    print(f"[green]Canonicalized[/green] input={input_file} output={output_file}")
+    print(f"[green]Signature[/green] {result['sig']}")
+
+
+@egraph_app.command("equal")
+def egraph_equal(
+    expr_a: str = typer.Option(..., "--a", help="First expression JSON file"),
+    expr_b: str = typer.Option(..., "--b", help="Second expression JSON file")
+):
+    """Vérifie si deux expressions sont structurellement égales."""
+    import orjson
+    
+    # Lire les expressions
+    with open(expr_a, 'rb') as f:
+        expr1 = orjson.loads(f.read())
+    
+    with open(expr_b, 'rb') as f:
+        expr2 = orjson.loads(f.read())
+    
+    # Comparer
+    result = compare_expressions(expr1, expr2)
+    
+    if result["equal"]:
+        print(f"[green]Equal[/green] {expr_a} == {expr_b}")
+        print(f"[green]Signature[/green] {result['sig1']}")
+        sys.exit(0)
+    else:
+        print(f"[red]Different[/red] {expr_a} != {expr_b}")
+        print(f"[yellow]Signature A[/yellow] {result['sig1']}")
+        print(f"[yellow]Signature B[/yellow] {result['sig2']}")
+        sys.exit(1)
 
 
 @pack_app.command("build")

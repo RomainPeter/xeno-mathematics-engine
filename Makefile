@@ -699,3 +699,7 @@ discover-demo:
 # 2cat vendor verification target
 verify-2cat:
 	@FORCE_VERIFY_2CAT=1 python scripts/verify_2cat_pack.py
+
+# E-graph canonicalization target
+egraph-canon:
+	@xme egraph canon --in examples/egraph/add_comm.json --out artifacts/egraph/add_comm.canon.json
