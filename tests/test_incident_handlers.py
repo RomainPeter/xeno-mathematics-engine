@@ -3,6 +3,7 @@ Tests for incident handlers (FailReason v1).
 """
 
 import os
+
 # Import our modules
 import sys
 
@@ -10,8 +11,7 @@ import pytest
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from orchestrator.handlers.failreason import (FailReason, FailReasonCategory,
-                                              IncidentHandler)
+from orchestrator.handlers.failreason import FailReason, FailReasonCategory, IncidentHandler
 
 
 class TestIncidentHandler:

@@ -55,7 +55,7 @@ def normalize_commutative_args(expr: Dict[str, Any]) -> Dict[str, Any]:
 
     op = expr.get("op", "")
     args = expr.get("args", [])
-    attrs = expr.get("attrs", {})
+    expr.get("attrs", {})
 
     # Normaliser récursivement les arguments
     normalized_args = [normalize_commutative_args(arg) for arg in args]

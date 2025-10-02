@@ -5,8 +5,7 @@ Handles runner.test_failure on Meet(A∧B) by separating into A then B.
 
 from typing import Any, Dict, List
 
-from ..orchestrator.strategy_api import (RewriteOperation, RewritePlan,
-                                         Strategy, StrategyContext)
+from ..orchestrator.strategy_api import RewriteOperation, RewritePlan, Strategy, StrategyContext
 
 
 class DecomposeMeetStrategy(Strategy):
@@ -55,7 +54,7 @@ class DecomposeMeetStrategy(Strategy):
                         "evidence_types": params.get("evidence_types", []),
                         "min_confidence": params.get("min_confidence", 0.8),
                     },
-                    "expected": f"Hypothesis {i+1} supported",
+                    "expected": f"Hypothesis {i + 1} supported",
                 }
             )
 

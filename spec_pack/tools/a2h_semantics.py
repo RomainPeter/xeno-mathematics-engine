@@ -151,7 +151,7 @@ def build_semantics_and_proof(required, present, anf_src, anf_obj, rules_used):
             bools[_id] = v
             is_present = _id in present[kind]
             # constraint: v == is_present
-            solver.add(v == True if is_present else v == False)
+            solver.add(v is True if is_present else v is False)
             # tracked assertion that v must be True (if not present, contradiction)
             lbl = Bool(f"need_{kind}:{_id}")
             labels[_id] = lbl

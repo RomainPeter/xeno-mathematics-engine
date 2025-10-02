@@ -181,7 +181,7 @@ def main():
     inv_ids = ids_from_yaml(INV_YAML, "I")
     s1_ids = ids_from_yaml(TEST_S1, "H")
     s2_ids = ids_from_yaml(TEST_S2, "H")
-    s3_ids = ids_from_yaml(TEST_S3, "H")
+    ids_from_yaml(TEST_S3, "H")
 
     # Écarts (required)
     miss_obl = sorted(list(set(compiled["required"]["obligations"]) - obl_ids))
@@ -215,8 +215,8 @@ def main():
 
     # Rapport
     rep = f"""# Hostility Report (A2H)
-Ambition: {anf.get('title')} (id {anf.get('id')}, v{anf.get('version')})
-Mission: {anf.get('mission')}
+Ambition: {anf.get("title")} (id {anf.get("id")}, v{anf.get("version")})
+Mission: {anf.get("mission")}
 
 Required:
 - Obligations: {compiled["required"]["obligations"]} → missing vs manual: {miss_obl or "none"}

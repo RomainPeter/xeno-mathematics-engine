@@ -58,7 +58,7 @@ def test_cegis_timeout_incident_obligations(tmp_path: Path):
 
     # Exécuter CEGIS avec un budget très court
     result_path = tmp_path / "result.json"
-    r = subprocess.run(
+    subprocess.run(
         [
             sys.executable,
             "-m",

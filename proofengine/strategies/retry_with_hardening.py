@@ -3,8 +3,7 @@ Retry With Hardening Strategy.
 Handles nondet.flaky_test failures by fixing seed and rerunning.
 """
 
-from ..orchestrator.strategy_api import (RewriteOperation, RewritePlan,
-                                         Strategy, StrategyContext)
+from ..orchestrator.strategy_api import RewriteOperation, RewritePlan, Strategy, StrategyContext
 
 
 class RetryWithHardeningStrategy(Strategy):

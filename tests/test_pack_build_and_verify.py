@@ -6,8 +6,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from xme.pefc.pack import (build_manifest, collect_inputs, verify_pack,
-                           write_zip)
+from xme.pefc.pack import build_manifest, collect_inputs, verify_pack, write_zip
 
 
 def test_pack_build_and_verify(tmp_path: Path):

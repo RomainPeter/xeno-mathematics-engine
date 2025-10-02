@@ -128,7 +128,7 @@ You are a strategy selector for 2-category transformations in a proof engine.
 CONTEXT:
 - FailReason: {context.failreason}
 - Operator: {context.operator}
-- Plan steps: {len(context.plan.get('steps', []))}
+- Plan steps: {len(context.plan.get("steps", []))}
 - Budgets: {context.budgets}
 - History: {len(context.history)} previous transformations
 

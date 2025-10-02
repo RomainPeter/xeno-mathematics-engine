@@ -5,8 +5,7 @@ Tests unitaires pour les modules centraux.
 import pytest
 
 from proofengine.core.delta import DeltaCalculator
-from proofengine.core.hashing import (hash_pcap, hash_state,
-                                      verify_state_integrity)
+from proofengine.core.hashing import hash_pcap, hash_state, verify_state_integrity
 from proofengine.core.schemas import PCAP, Proof, VJustification, XState
 from proofengine.core.state import StateManager, create_initial_state
 
@@ -54,7 +53,7 @@ class TestProof:
 
         assert proof.kind == "unit"
         assert proof.name == "test_proof"
-        assert proof.passed == True
+        assert proof.passed is True
         assert proof.logs == "Test successful"
         assert proof.artifacts == ["test_file.py"]
 
@@ -65,7 +64,7 @@ class TestProof:
 
         assert isinstance(proof_dict, dict)
         assert proof_dict["kind"] == "policy"
-        assert proof_dict["passed"] == False
+        assert proof_dict["passed"] is False
 
 
 class TestXState:
@@ -151,11 +150,11 @@ class TestHashing:
         state = create_initial_state()
         state.state_hash = hash_state(state)
 
-        assert verify_state_integrity(state) == True
+        assert verify_state_integrity(state) is True
 
         # Modifier l'état sans recalculer le hash
         state.H.add("new_hypothesis")
-        assert verify_state_integrity(state) == False
+        assert verify_state_integrity(state) is False
 
 
 class TestStateManager:
@@ -184,7 +183,7 @@ class TestStateManager:
 
         # Rollback
         success = manager.rollback(snapshot_id)
-        assert success == True
+        assert success is True
         assert "new_hypothesis" not in manager.current_state.H
 
     def test_add_rule_from_incident(self):

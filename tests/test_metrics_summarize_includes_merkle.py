@@ -6,8 +6,7 @@ import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
-from xme.metrics.summarize import (compare_summaries, summarize_multiple_runs,
-                                   summarize_run)
+from xme.metrics.summarize import compare_summaries, summarize_multiple_runs, summarize_run
 from xme.pcap.model import PCAPEntry
 from xme.pcap.store import PCAPStore
 
@@ -302,7 +301,7 @@ def test_compare_summaries():
     assert delta_comp["summary1"] == 0.3
     assert delta_comp["summary2"] == 0.1
     assert abs(delta_comp["difference"] - (-0.2)) < 0.001
-    assert delta_comp["improvement"] == True  # 0.3 > 0.1, donc amélioration
+    assert delta_comp["improvement"] is True  # 0.3 > 0.1, donc amélioration
 
     entries_comp = comparison["entries_comparison"]
     assert entries_comp["summary1"] == 10
@@ -319,7 +318,7 @@ def test_summarize_run_empty():
     """Test la synthèse d'un run vide."""
     with tempfile.TemporaryDirectory() as tmpdir:
         run_path = Path(tmpdir) / "empty_run.jsonl"
-        store = PCAPStore(run_path)
+        PCAPStore(run_path)
 
         # Générer le résumé d'un run vide
         summary = summarize_run(run_path)

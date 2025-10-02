@@ -3,8 +3,7 @@ Require Semver Strategy.
 Handles api.semver_missing failures by blocking or inserting semver step.
 """
 
-from ..orchestrator.strategy_api import (RewriteOperation, RewritePlan,
-                                         Strategy, StrategyContext)
+from ..orchestrator.strategy_api import RewriteOperation, RewritePlan, Strategy, StrategyContext
 
 
 class RequireSemverStrategy(Strategy):

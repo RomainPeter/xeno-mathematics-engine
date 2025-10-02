@@ -5,8 +5,7 @@ Tests pour la détection de tampering dans les Audit Packs.
 import zipfile
 from pathlib import Path
 
-from xme.pefc.pack import (build_manifest, collect_inputs, verify_pack,
-                           write_zip)
+from xme.pefc.pack import build_manifest, collect_inputs, verify_pack, write_zip
 
 
 def test_pack_tamper_detection(tmp_path: Path):

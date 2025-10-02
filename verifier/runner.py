@@ -110,7 +110,7 @@ def verify_single_pcap(pcap_file: str) -> Dict[str, Any]:
         # Vérifier le hash
         hash_valid = True
         try:
-            computed_hash = hashlib.sha256(
+            hashlib.sha256(
                 json.dumps(pcap.model_dump(), sort_keys=True).encode()
             ).hexdigest()
             # Le hash est dans le nom du fichier, pas dans le PCAP lui-même

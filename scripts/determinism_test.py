@@ -25,7 +25,7 @@ class DeterminismTester:
         print(f"🔬 Running determinism test with {self.num_runs} runs (seed: {self.seed})")
 
         for i in range(self.num_runs):
-            print(f"\n🏃 Run {i+1}/{self.num_runs}...")
+            print(f"\n🏃 Run {i + 1}/{self.num_runs}...")
             result = self._run_single_execution()
             self.results.append(result)
 

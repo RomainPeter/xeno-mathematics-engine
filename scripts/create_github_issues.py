@@ -59,7 +59,7 @@ for i, issue in enumerate(issues, 1):
     print(f"   Labels: {', '.join(issue['labels'])}")
     print(f"   Body: {issue['body']}")
     print(
-        f"   Command: gh issue create --title \"{issue['title']}\" --body \"{issue['body']}\" --label {','.join(issue['labels'])}"
+        f'   Command: gh issue create --title "{issue["title"]}" --body "{issue["body"]}" --label {",".join(issue["labels"])}'
     )
 
 print(f"\nTotal: {len(issues)} issues to create")

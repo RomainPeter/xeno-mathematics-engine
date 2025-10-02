@@ -103,7 +103,7 @@ def print_concepts(concepts: List[Concept], context: FormalContext):
         extent_names = sorted([obj.name for obj in concept.extent.objects])
         intent_names = sorted([attr.name for attr in concept.intent.attributes])
 
-        print(f"{i+1:2d}. Extent: {{{', '.join(extent_names)}}}")
+        print(f"{i + 1:2d}. Extent: {{{', '.join(extent_names)}}}")
         print(f"    Intent: {{{', '.join(intent_names)}}}")
         print(f"    Size: {len(concept.extent)}×{len(concept.intent)}")
         print()
@@ -171,16 +171,16 @@ def test_closure_idempotence(context: FormalContext, concepts: List[Concept]):
 
 def test_performance(context: FormalContext, max_time: float = 0.1):
     """Test performance of Next-Closure algorithm."""
-    print(f"🧪 Testing Performance (< {max_time*1000:.0f}ms)...")
+    print(f"🧪 Testing Performance (< {max_time * 1000:.0f}ms)...")
 
     start_time = time.time()
     next_closure = NextClosure(context)
     concepts = list(next_closure.generate_concepts())
     elapsed_time = time.time() - start_time
 
-    print(f"  ⏱️  Elapsed time: {elapsed_time*1000:.2f}ms")
+    print(f"  ⏱️  Elapsed time: {elapsed_time * 1000:.2f}ms")
     print(f"  📊 Concepts generated: {len(concepts)}")
-    print(f"  🚀 Concepts per second: {len(concepts)/max(elapsed_time, 0.001):.2f}")
+    print(f"  🚀 Concepts per second: {len(concepts) / max(elapsed_time, 0.001):.2f}")
 
     if elapsed_time < max_time:
         print("  ✅ Performance test passed")
@@ -211,15 +211,15 @@ def demo_ae_engine(context: FormalContext):
         result = engine.next_step(ctx)
 
         if not result.success:
-            print(f"Step {step+1}: Failed - {result.error}")
+            print(f"Step {step + 1}: Failed - {result.error}")
             break
 
         if result.concept is None:
-            print(f"Step {step+1}: No more concepts")
+            print(f"Step {step + 1}: No more concepts")
             break
 
         concepts.append(result.concept)
-        print(f"Step {step+1}: Generated concept with intent {result.concept.intent}")
+        print(f"Step {step + 1}: Generated concept with intent {result.concept.intent}")
         print(
             f"         Statistics: {result.statistics.concepts_generated} concepts, "
             f"{result.statistics.elapsed_time:.3f}s"
@@ -260,7 +260,7 @@ def demo_concept_lattice(concepts: List[Concept]):
     print("\nSubconcept relations:")
     for i, concept in enumerate(concepts[:3]):  # Show first 3
         subconcepts = lattice.get_subconcepts(concept)
-        print(f"  Concept {i+1}: {len(subconcepts)} subconcepts")
+        print(f"  Concept {i + 1}: {len(subconcepts)} subconcepts")
         for subconcept in subconcepts[:2]:  # Show first 2 subconcepts
             print(f"    - {subconcept}")
 
@@ -280,9 +280,9 @@ def run_demo():
     results = {}
 
     for name, context in contexts.items():
-        print(f"\n{'='*60}")
+        print(f"\n{'=' * 60}")
         print(f"Testing {name} Context")
-        print(f"{'='*60}")
+        print(f"{'=' * 60}")
 
         # Print context matrix
         print_context_matrix(context)
@@ -296,7 +296,7 @@ def run_demo():
         concepts = list(next_closure.generate_concepts())
         elapsed_time = time.time() - start_time
 
-        print(f"Generated {len(concepts)} concepts in {elapsed_time*1000:.2f}ms")
+        print(f"Generated {len(concepts)} concepts in {elapsed_time * 1000:.2f}ms")
 
         # Print concepts
         print_concepts(concepts, context)
@@ -334,14 +334,14 @@ def run_demo():
         }
 
     # Summary
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("📊 Demo Summary")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     for name, result in results.items():
         print(
             f"{name:10s}: {result['concepts']:3d} concepts, "
-            f"{result['time']*1000:6.2f}ms, "
+            f"{result['time'] * 1000:6.2f}ms, "
             f"{result['tests_passed']}/{result['total_tests']} tests passed"
         )
 

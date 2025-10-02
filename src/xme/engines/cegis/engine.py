@@ -4,7 +4,7 @@ Moteur CEGIS générique (Counter-Example Guided Inductive Synthesis).
 
 from __future__ import annotations
 
-from typing import Any, Protocol, Tuple
+from typing import Any, Optional, Protocol, Tuple
 
 from .types import Candidate, CEGISResult, CEGISState, Counterexample, Verdict
 

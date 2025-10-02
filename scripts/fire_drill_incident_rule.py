@@ -59,7 +59,7 @@ def test_hs_tree_diagnostics():
         print(f"✅ Found {len(hitting_sets)} minimal hitting sets")
 
         for i, hs in enumerate(hitting_sets):
-            print(f"   Hitting set {i+1}: {hs}")
+            print(f"   Hitting set {i + 1}: {hs}")
 
         return hitting_sets
     except ImportError as e:

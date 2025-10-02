@@ -164,7 +164,6 @@ def aggregate_run_delta(pcap_path: Path) -> Dict[str, Any]:
 
         deltas_by_phase = {}
         phase_weights = {}
-        phase_durations = {}
 
         # Analyser les entrées pour extraire les δ
         for entry in entries:

@@ -3,8 +3,7 @@ Changelog Or Block Strategy.
 Handles api.changelog_missing failures by requiring changelog or blocking.
 """
 
-from ..orchestrator.strategy_api import (RewriteOperation, RewritePlan,
-                                         Strategy, StrategyContext)
+from ..orchestrator.strategy_api import RewriteOperation, RewritePlan, Strategy, StrategyContext
 
 
 class ChangelogOrBlockStrategy(Strategy):

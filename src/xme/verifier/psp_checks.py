@@ -54,7 +54,7 @@ def check_psp_acyclic(payload: Dict[str, Any]) -> Tuple[bool, Dict[str, Any]]:
                     "n_blocks": len(psp.blocks),
                     "n_edges": len(psp.edges),
                 }
-            except:
+            except Exception:
                 return False, {
                     "message": "PSP contains cycles (unable to enumerate)",
                     "n_blocks": len(psp.blocks),

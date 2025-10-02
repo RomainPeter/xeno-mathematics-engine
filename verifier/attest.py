@@ -5,6 +5,7 @@ Gère la signature et la vérification des attestations.
 
 import hashlib
 import json
+import os
 import time
 from typing import Any, Dict, Optional
 

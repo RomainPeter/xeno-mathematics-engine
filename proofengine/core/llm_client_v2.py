@@ -232,7 +232,7 @@ class LLMClient:
                 response = self._call_api(messages, params)
                 responses.append(response)
             except Exception as e:
-                print(f"Consistency call {i+1} failed: {e}")
+                print(f"Consistency call {i + 1} failed: {e}")
                 continue
 
         if not responses:

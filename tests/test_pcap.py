@@ -8,8 +8,14 @@ import tempfile
 
 import pytest
 
-from proofengine.core.pcap import (list_pcaps, merkle_of, now_iso, read_pcap,
-                                   verify_pcap_chain, write_pcap)
+from proofengine.core.pcap import (
+    list_pcaps,
+    merkle_of,
+    now_iso,
+    read_pcap,
+    verify_pcap_chain,
+    write_pcap,
+)
 from proofengine.core.schemas import PCAP, VJustification
 
 

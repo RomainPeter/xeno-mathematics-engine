@@ -136,7 +136,7 @@ def main():
         ver = e.get("pre", {}).get("verdicts") or {}
         if ver:
             keys = ", ".join([f"{k}:{'✔' if ok else '✖'}" for k, ok in ver.items()])
-            lines.append(f"- {e.get('case_id','case')} → {keys}")
+            lines.append(f"- {e.get('case_id', 'case')} → {keys}")
     lines.append("")
 
     lines.append("## Attestation")

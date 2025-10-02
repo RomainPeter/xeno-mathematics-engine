@@ -255,7 +255,7 @@ class IncidentHandler:
         opa_rule = {
             "type": "opa_rule",
             "name": f"constraint_{constraint.get('id', 'unknown')}",
-            "content": f"deny[msg] {{ {constraint.get('condition', 'true')}; msg := \"{constraint.get('message', 'Constraint violated')}\" }}",
+            "content": f'deny[msg] {{ {constraint.get("condition", "true")}; msg := "{constraint.get("message", "Constraint violated")}" }}',
             "source": "incident_handler",
             "timestamp": datetime.now().isoformat(),
         }

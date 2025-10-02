@@ -87,8 +87,8 @@ class PromptContractManager:
         """Generate prompt content."""
         prompt = f"""
 Goal: {goal}
-Generate {k} diverse items with the following diversity keys: {', '.join(diversity_keys)}
-Hard constraints: {', '.join(hard_constraints)}
+Generate {k} diverse items with the following diversity keys: {", ".join(diversity_keys)}
+Hard constraints: {", ".join(hard_constraints)}
 
 Please provide structured output with the following fields:
 - premises: List of premises

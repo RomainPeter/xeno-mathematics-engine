@@ -13,8 +13,7 @@ from ..pefc.events.structured_bus import StructuredEventBus
 from ..pefc.incidents.types import Incident
 from ..pefc.pcap.model import PCAP
 from .config import OrchestratorConfig
-from .engines import (AEContext, AEEngine, CegisContext, CegisEngine,
-                      CegisResult, Verdict)
+from .engines import AEContext, AEEngine, CegisContext, CegisEngine, CegisResult, Verdict
 from .persistence import AuditPackBuilder, IncidentPersistence, PCAPPersistence
 
 

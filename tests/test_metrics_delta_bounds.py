@@ -4,9 +4,13 @@ Tests pour les métriques δ et leurs bornes.
 
 import pytest
 
-from xme.metrics.delta import (compute_delta_ae, compute_delta_bounds,
-                               compute_delta_cegis, compute_phase_delta,
-                               validate_delta)
+from xme.metrics.delta import (
+    compute_delta_ae,
+    compute_delta_bounds,
+    compute_delta_cegis,
+    compute_phase_delta,
+    validate_delta,
+)
 
 
 def test_delta_bounds():

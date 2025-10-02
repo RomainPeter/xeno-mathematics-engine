@@ -165,7 +165,7 @@ class TestDPPSelector:
 
     def test_statistics(self, selector, test_items):
         """Test selector statistics."""
-        selection = selector.select_diverse_items(test_items, k=3)
+        selector.select_diverse_items(test_items, k=3)
 
         stats = selector.get_statistics()
 
@@ -229,7 +229,7 @@ class TestSubmodularSelector:
 
     def test_statistics(self, selector, test_items):
         """Test selector statistics."""
-        selection = selector.select_diverse_items(test_items, k=3)
+        selector.select_diverse_items(test_items, k=3)
 
         stats = selector.get_statistics()
 

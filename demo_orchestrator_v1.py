@@ -16,8 +16,7 @@ from orchestrator.adapters.verifier import VerificationConfig, Verifier
 from orchestrator.engines.real_ae_engine import RealAEEngine
 from orchestrator.engines.real_cegis_engine import RealCegisEngine
 from orchestrator.orchestrator_v1 import OrchestratorV1, OrchestratorV1Config
-from orchestrator.scheduler.async_scheduler import (AsyncScheduler,
-                                                    SchedulerConfig)
+from orchestrator.scheduler.async_scheduler import AsyncScheduler, SchedulerConfig
 from orchestrator.scheduler.budget_manager import BudgetConfig, BudgetManager
 from pefc.events.structured_bus import StructuredEventBus
 
@@ -398,14 +397,14 @@ async def run_demo():
         if state.ae_results:
             for i, result in enumerate(state.ae_results):
                 print(
-                    f"    {i+1}. Concepts: {len(result.concepts)}, Implications: {len(result.implications)}"
+                    f"    {i + 1}. Concepts: {len(result.concepts)}, Implications: {len(result.implications)}"
                 )
 
         print("\n🔧 Résultats CEGIS:")
         print(f"  - Candidats: {len(state.cegis_results)}")
         if state.cegis_results:
             for i, result in enumerate(state.cegis_results):
-                print(f"    {i+1}. Candidat: {result.candidate.id}, Vérifié: {result.success}")
+                print(f"    {i + 1}. Candidat: {result.candidate.id}, Vérifié: {result.success}")
 
         print("\n⚠️ Incidents:")
         print(f"  - Total: {len(state.incidents)}")

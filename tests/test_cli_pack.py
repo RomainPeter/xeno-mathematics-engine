@@ -223,8 +223,7 @@ class TestCLIPack:
         test_file.write_text("test content")
 
         # Create entries and manifest
-        from pefc.pack.merkle import (build_entries, build_manifest,
-                                      compute_merkle_root)
+        from pefc.pack.merkle import build_entries, build_manifest, compute_merkle_root
 
         entries = build_entries([(test_file, "test.txt")])
         merkle_root = compute_merkle_root(entries)
@@ -310,8 +309,7 @@ class TestCLIPack:
         test_file = temp_workspace / "test.txt"
         test_file.write_text("test content")
 
-        from pefc.pack.merkle import (build_entries, build_manifest,
-                                      compute_merkle_root)
+        from pefc.pack.merkle import build_entries, build_manifest, compute_merkle_root
 
         entries = build_entries([(test_file, "test.txt")])
         merkle_root = compute_merkle_root(entries)
@@ -350,8 +348,7 @@ class TestCLIPack:
         test_file = temp_workspace / "test.txt"
         test_file.write_text("test content")
 
-        from pefc.pack.merkle import (build_entries, build_manifest,
-                                      compute_merkle_root)
+        from pefc.pack.merkle import build_entries, build_manifest, compute_merkle_root
 
         entries = build_entries([(test_file, "test.txt")])
         merkle_root = compute_merkle_root(entries)

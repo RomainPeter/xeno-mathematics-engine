@@ -137,7 +137,7 @@ import re
 
 def redact_{pii_type.lower()}():
     # Redact {pii_type.lower()} from log content
-    pattern = r'{self.pii_patterns[pii_type.split('_')[0].lower()]}'
+    pattern = r'{self.pii_patterns[pii_type.split("_")[0].lower()]}'
     replacement = '{redaction_map[pii_type]}'
 
     def redact_content(content):

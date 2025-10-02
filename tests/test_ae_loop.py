@@ -3,6 +3,7 @@ Tests for AE Next-Closure loop.
 """
 
 import os
+
 # Import our modules
 import sys
 from unittest.mock import Mock, patch

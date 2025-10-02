@@ -65,10 +65,10 @@ class TestProofEngineOrchestrator:
                     llm_meta={"latency_ms": 1000, "model": "moonshotai/kimi-k2:free"},
                 )
 
-                with patch("core.pcap.write_pcap") as mock_write:
+                with patch("core.pcap.write_pcap"):
                     result = orchestrator._execute_planning_phase("test goal")
 
-                    assert result["success"] == True
+                    assert result["success"] is True
                     assert result["plan"] == ["step1", "step2"]
                     assert result["estimated_success"] == 0.8
                     assert result["estimated_cost"] == 2.0
@@ -87,7 +87,7 @@ class TestProofEngineOrchestrator:
 
                 result = orchestrator._execute_planning_phase("test goal")
 
-                assert result["success"] == False
+                assert result["success"] is False
                 assert "error" in result
                 assert result["plan"] == []
                 assert result["estimated_success"] == 0.0
@@ -126,12 +126,12 @@ class TestProofEngineOrchestrator:
                         {"success": True, "violations": 0},
                     ]
 
-                    with patch("core.pcap.write_pcap") as mock_write:
+                    with patch("core.pcap.write_pcap"):
                         result = orchestrator._execute_generation_phase("test goal")
 
-                        assert result["success"] == True
+                        assert result["success"] is True
                         assert result["best_patch"] == "patch2"
-                        assert result["best_result"]["success"] == True
+                        assert result["best_result"]["success"] is True
                         assert result["best_result"]["violations"] == 0
                         assert result["best_index"] == 1
                         assert result["total_variants"] == 2
@@ -168,8 +168,8 @@ class TestProofEngineOrchestrator:
 
                         result = orchestrator._execute_generation_phase("test goal")
 
-                        assert result["success"] == False
-                        assert result["rollback"] == True
+                        assert result["success"] is False
+                        assert result["rollback"] is True
                         assert "replan" in result
 
     def test_execute_rollback_phase(self):
@@ -189,11 +189,11 @@ class TestProofEngineOrchestrator:
                     llm_meta={"latency_ms": 800},
                 )
 
-                with patch("core.pcap.write_pcap") as mock_write:
+                with patch("core.pcap.write_pcap"):
                     result = orchestrator._execute_rollback_phase("test goal")
 
-                    assert result["success"] == False
-                    assert result["rollback"] == True
+                    assert result["success"] is False
+                    assert result["rollback"] is True
                     assert result["replan"] == ["new step1", "new step2"]
                     assert result["estimated_success"] == 0.6
                     assert result["notes"] == "Replan after failure"
@@ -212,7 +212,7 @@ class TestProofEngineOrchestrator:
 
                 result = orchestrator._execute_verification_phase()
 
-                assert result["success"] == True
+                assert result["success"] is True
                 assert "verification" in result
                 assert "attestation_file" in result
 
@@ -236,7 +236,7 @@ class TestProofEngineOrchestrator:
 
                     result = orchestrator._execute_metrics_phase()
 
-                    assert result["success"] == True
+                    assert result["success"] is True
                     assert "metrics" in result
                     assert "markdown_report" in result
                     assert "json_report" in result
@@ -264,7 +264,7 @@ class TestProofEngineOrchestrator:
 
                             result = orchestrator.run_demo("test_case", "test goal")
 
-                            assert result["success"] == True
+                            assert result["success"] is True
                             assert result["case_id"] == "test_case"
                             assert result["goal"] == "test goal"
                             assert "planning" in result
@@ -296,7 +296,7 @@ class TestProofEngineOrchestrator:
 
                             result = orchestrator.run_demo("test_case", "test goal")
 
-                            assert result["success"] == False
+                            assert result["success"] is False
                             assert result["case_id"] == "test_case"
                             assert result["goal"] == "test goal"
                             assert "planning" in result
@@ -385,7 +385,7 @@ class TestOrchestratorIntegration:
                                     result = orchestrator.run_demo("test_case", "test goal")
 
                                     # Vérifier les résultats
-                                    assert result["success"] == True
+                                    assert result["success"] is True
                                     assert result["case_id"] == "test_case"
                                     assert result["goal"] == "test goal"
                                     assert "planning" in result

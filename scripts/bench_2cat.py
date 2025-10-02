@@ -29,6 +29,7 @@ class S2PPBenchmark:
     def run_baseline(self, case_name: str, case_path: str) -> Dict[str, Any]:
         """Run baseline (no strategies) on a case"""
         # Simulate baseline run with some variation
+        # Note: Using random for simulation data, not security-sensitive operations
         import random
 
         random.seed(hash(case_name) % 1000)
@@ -49,6 +50,7 @@ class S2PPBenchmark:
     def run_active(self, case_name: str, case_path: str) -> Dict[str, Any]:
         """Run active (with 2-cat strategies) on a case"""
         # Simulate active run with strategies
+        # Note: Using random for simulation data, not security-sensitive operations
         import random
 
         random.seed(hash(case_name) % 1000)
@@ -100,6 +102,7 @@ class S2PPBenchmark:
     def run_expected_fail(self, case_name: str, case_path: str) -> Dict[str, Any]:
         """Run expected fail test"""
         # Expected fail should fail
+        # Note: Using random for simulation data, not security-sensitive operations
         import random
 
         random.seed(hash(case_name) % 1000)
@@ -134,7 +137,7 @@ class S2PPBenchmark:
         for case_name, case_path in cases:
             for mode in modes:
                 for run in range(runs):
-                    print(f"Running {case_name} - {mode} - run {run+1}/{runs}")
+                    print(f"Running {case_name} - {mode} - run {run + 1}/{runs}")
 
                     if mode == "baseline":
                         result = self.run_baseline(case_name, case_path)

@@ -77,7 +77,7 @@ def main():
 
         # Vérifier la signature (si minisign est disponible)
         try:
-            result = subprocess.run(
+            subprocess.run(
                 ["minisign", "-V", "-P", pubkey, "-m", str(pack_path), "-x", str(sig_path)],
                 capture_output=True,
                 text=True,
