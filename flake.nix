@@ -25,7 +25,6 @@
           black
           mypy
           bandit
-          pre-commit
         ]);
       in {
         devShells.default = pkgs.mkShell {
