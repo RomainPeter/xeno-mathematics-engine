@@ -72,6 +72,11 @@ class PSP(BaseModel):
     @classmethod
     def _validate_acyclic(cls, edges: List[Edge], info):
         blocks: List[Block] = info.data.get("blocks", [])
+        info.data["dag"] = cls._compute_dag_meta(blocks, edges)
+        return edges
+
+    @staticmethod
+    def _compute_dag_meta(blocks: List[Block], edges: List[Edge]) -> DAGMeta:
         g = nx.DiGraph()
         for b in blocks:
             g.add_node(b.id)
@@ -79,10 +84,7 @@ class PSP(BaseModel):
             g.add_edge(e.src, e.dst)
         if not nx.is_directed_acyclic_graph(g):
             raise ValueError("PSP graph must be acyclic")
-        info.data["dag"] = DAGMeta(
-            nodes=g.number_of_nodes(), edges=g.number_of_edges(), acyclic=True
-        )
-        return edges
+        return DAGMeta(nodes=g.number_of_nodes(), edges=g.number_of_edges(), acyclic=True)
 
     def canonical_json(self) -> str:
         return self.model_dump_json()
@@ -104,7 +106,7 @@ class PSP(BaseModel):
             key=lambda c: c.id,
         )
         # Recompute DAG meta
-        _ = type(self)._validate_acyclic(self.edges, info=type("I", (), {"data": {"blocks": self.blocks}}))
+        self.dag = self._compute_dag_meta(self.blocks, self.edges)
         return self
 
     # Use BaseModel.model_json_schema (no override to avoid signature mismatch)
