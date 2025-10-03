@@ -60,7 +60,7 @@ class Cut(BaseModel):
 
 
 class PSP(BaseModel):
-    model_config = ConfigDict(json_dumps=_orjson_dumps, populate_by_name=True)
+    model_config = ConfigDict(populate_by_name=True)
 
     blocks: List[Block] = Field(default_factory=list)
     edges: List[Edge] = Field(default_factory=list)
@@ -104,14 +104,10 @@ class PSP(BaseModel):
             key=lambda c: c.id,
         )
         # Recompute DAG meta
-        _ = self._validate_acyclic(
-            self.edges, info=type("I", (), {"data": {"blocks": self.blocks}})
-        )
+        _ = type(self)._validate_acyclic(self.edges, info=type("I", (), {"data": {"blocks": self.blocks}}))
         return self
 
-    def model_json_schema(self) -> dict:
-        # Expose pydantic-generated JSON Schema
-        return type(self).model_json_schema()
+    # Use BaseModel.model_json_schema (no override to avoid signature mismatch)
 
 
 def load_psp(path: str | Path) -> PSP:

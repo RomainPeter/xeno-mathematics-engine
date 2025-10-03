@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import datetime, timezone
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
 import orjson
 
@@ -16,9 +16,9 @@ class Report:
     """Rapport de vérification JSON."""
 
     version: int = 1
-    when: datetime = None
+    when: Optional[datetime] = None
     tool: str = "xme"
-    results: List[Dict[str, Any]] = None
+    results: Optional[List[Dict[str, Any]]] = None
     ok_all: bool = True
 
     def __post_init__(self):

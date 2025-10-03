@@ -4,7 +4,7 @@ Vérifications AE S0/S1.
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, Callable
 
 from xme.engines.ae.context import FCAContext
 from xme.engines.ae.next_closure import enumerate_concepts
@@ -208,7 +208,7 @@ def check_ae_concepts_completeness(payload: Dict[str, Any]) -> Tuple[bool, Dict[
         }
 
 
-def get_ae_obligations() -> List[Tuple[str, str, callable, str]]:
+def get_ae_obligations() -> List[Tuple[str, str, Callable[[Dict[str, Any]], Tuple[bool, Dict[str, Any]]], str]]:
     """
     Retourne toutes les obligations AE.
 

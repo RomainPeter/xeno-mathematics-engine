@@ -5,7 +5,7 @@ Calcul des métriques de friction δ (adjunction defect).
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, DefaultDict
 
 from xme.engines.cegis.types import CEGISResult
 from xme.pcap.store import PCAPStore
@@ -162,8 +162,8 @@ def aggregate_run_delta(pcap_path: Path) -> Dict[str, Any]:
         store = PCAPStore(pcap_path)
         entries = list(store.read_all())
 
-        deltas_by_phase = {}
-        phase_weights = {}
+        deltas_by_phase: Dict[str, List[float]] = {}
+        phase_weights: Dict[str, int] = {}
 
         # Analyser les entrées pour extraire les δ
         for entry in entries:
@@ -195,7 +195,7 @@ def aggregate_run_delta(pcap_path: Path) -> Dict[str, Any]:
                 phase_weights[phase] += 1
 
         # Calculer les δ moyens par phase
-        phase_averages = {}
+        phase_averages: Dict[str, float] = {}
         for phase, deltas in deltas_by_phase.items():
             if deltas:
                 phase_averages[phase] = sum(deltas) / len(deltas)

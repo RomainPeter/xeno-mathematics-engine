@@ -40,9 +40,9 @@ class VerificationReport:
     """Rapport de vérification."""
 
     version: int = 1
-    when: datetime = None
+    when: Optional[datetime] = None
     tool: str = "xme"
-    results: List[VerificationResult] = None
+    results: Optional[List[VerificationResult]] = None
     ok_all: bool = True
 
     def __post_init__(self):

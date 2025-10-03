@@ -4,7 +4,7 @@ Vérifications CEGIS S0.
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, Callable
 
 from xme.engines.cegis.types import CEGISResult
 
@@ -137,7 +137,7 @@ def check_cegis_convergence(payload: Dict[str, Any]) -> Tuple[bool, Dict[str, An
         return False, {"message": f"Error checking CEGIS convergence: {str(e)}", "error": str(e)}
 
 
-def get_cegis_obligations() -> List[Tuple[str, str, callable, str]]:
+def get_cegis_obligations() -> List[Tuple[str, str, Callable[[Dict[str, Any]], Tuple[bool, Dict[str, Any]]], str]]:
     """
     Retourne toutes les obligations CEGIS.
 

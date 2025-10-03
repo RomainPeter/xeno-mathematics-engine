@@ -39,7 +39,7 @@ def summarize_run(pcap_path: Path) -> Dict[str, Any]:
             }
 
         # Compter les actions
-        actions = {}
+        actions: Dict[str, int] = {}
         for entry in entries:
             action = entry.get("action", "unknown")
             actions[action] = actions.get(action, 0) + 1
@@ -164,7 +164,7 @@ def summarize_multiple_runs(pcap_paths: List[Path]) -> Dict[str, Any]:
     summaries = []
     total_entries = 0
     total_incidents = 0
-    all_actions = {}
+    all_actions: Dict[str, int] = {}
     all_deltas = []
 
     for pcap_path in pcap_paths:
