@@ -6,7 +6,8 @@ import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
-from xme.metrics.summarize import compare_summaries, summarize_multiple_runs, summarize_run
+from xme.metrics.summarize import (compare_summaries, summarize_multiple_runs,
+                                   summarize_run)
 from xme.pcap.model import PCAPEntry
 from xme.pcap.store import PCAPStore
 

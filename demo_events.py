@@ -8,19 +8,11 @@ import json
 import tempfile
 from pathlib import Path
 
-from pefc.events import (
-    AuditManifest,
-    EventBus,
-    EventBusConfig,
-    EventType,
-    MerkleTree,
-    PCAPManager,
-    create_ae_step_event,
-    create_cegis_iter_start_event,
-    create_event,
-    create_orchestrator_start_event,
-    create_verify_attempt_event,
-)
+from pefc.events import (AuditManifest, EventBus, EventBusConfig, EventType,
+                         MerkleTree, PCAPManager, create_ae_step_event,
+                         create_cegis_iter_start_event, create_event,
+                         create_orchestrator_start_event,
+                         create_verify_attempt_event)
 
 
 async def demo_basic_event_bus():

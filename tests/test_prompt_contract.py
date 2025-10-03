@@ -3,7 +3,6 @@ Tests for PromptContract++ system.
 """
 
 import os
-
 # Import our modules
 import sys
 
@@ -11,13 +10,10 @@ import pytest
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from prompts.contracts import (
-    PromptContractManager,
-    PromptTemplateManager,
-    create_ae_counterexamples_contract,
-    create_ae_implications_contract,
-    create_cegis_choreographies_contract,
-)
+from prompts.contracts import (PromptContractManager, PromptTemplateManager,
+                               create_ae_counterexamples_contract,
+                               create_ae_implications_contract,
+                               create_cegis_choreographies_contract)
 
 
 class TestPromptContractManager:

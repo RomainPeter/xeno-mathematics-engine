@@ -20,17 +20,19 @@ from proofengine.orchestrator.checker import BasicChecker
 from proofengine.orchestrator.modes import TwoCategoryOrchestrator
 from proofengine.orchestrator.rewriter import PlanRewriter
 from proofengine.orchestrator.selector import StrategySelector
-from proofengine.orchestrator.strategy_api import StrategyContext, StrategyRegistry
+from proofengine.orchestrator.strategy_api import (StrategyContext,
+                                                   StrategyRegistry)
 from proofengine.strategies.add_missing_tests import AddMissingTestsStrategy
 from proofengine.strategies.changelog_or_block import ChangelogOrBlockStrategy
 from proofengine.strategies.decompose_meet import DecomposeMeetStrategy
 from proofengine.strategies.guard_before import GuardBeforeStrategy
 from proofengine.strategies.pin_dependency import PinDependencyStrategy
 from proofengine.strategies.require_semver import RequireSemverStrategy
-from proofengine.strategies.retry_with_hardening import RetryWithHardeningStrategy
-
+from proofengine.strategies.retry_with_hardening import \
+    RetryWithHardeningStrategy
 # Import strategies
-from proofengine.strategies.specialize_then_retry import SpecializeThenRetryStrategy
+from proofengine.strategies.specialize_then_retry import \
+    SpecializeThenRetryStrategy
 
 
 def create_test_context(plan_path: str) -> StrategyContext:

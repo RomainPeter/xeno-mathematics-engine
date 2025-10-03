@@ -8,16 +8,10 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from controller.deterministic import DeterministicController
-from controller.obligations import (
-    check_bandit,
-    check_complexity,
-    check_docstrings,
-    check_flake8,
-    check_mypy,
-    check_tests,
-    evaluate_obligations,
-    get_violation_summary,
-)
+from controller.obligations import (check_bandit, check_complexity,
+                                    check_docstrings, check_flake8, check_mypy,
+                                    check_tests, evaluate_obligations,
+                                    get_violation_summary)
 from controller.patch import PatchManager, Workspace
 
 from proofengine.core.schemas import ObligationResults

@@ -12,7 +12,8 @@ from datetime import datetime
 from typing import Any, Dict, Optional
 
 from orchestrator.engines.ae_engine import AEContext, AEEngine
-from orchestrator.engines.cegis_engine import CegisContext, CegisEngine, Verdict
+from orchestrator.engines.cegis_engine import (CegisContext, CegisEngine,
+                                               Verdict)
 from pefc.events.structured_bus import StructuredEventBus
 
 

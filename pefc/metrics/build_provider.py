@@ -2,13 +2,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from pefc.metrics.providers import (
-    BenchAPIClient,
-    CompositeProvider,
-    HistoricalMetricsCache,
-    JsonMetricsProvider,
-    MetricsProvider,
-)
+from pefc.metrics.providers import (BenchAPIClient, CompositeProvider,
+                                    HistoricalMetricsCache,
+                                    JsonMetricsProvider, MetricsProvider)
 
 
 def build_provider(cfg) -> MetricsProvider:

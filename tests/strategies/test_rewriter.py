@@ -7,12 +7,9 @@ from unittest.mock import Mock
 
 from proofengine.orchestrator.checker import BasicChecker
 from proofengine.orchestrator.rewriter import CycleDetector, PlanRewriter
-from proofengine.orchestrator.strategy_api import (
-    RewriteOperation,
-    RewritePlan,
-    Strategy,
-    StrategyContext,
-)
+from proofengine.orchestrator.strategy_api import (RewriteOperation,
+                                                   RewritePlan, Strategy,
+                                                   StrategyContext)
 
 
 class TestCycleDetector:

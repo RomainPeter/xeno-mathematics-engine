@@ -4,7 +4,7 @@ Vérifications PSP S0/S1.
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Tuple, Callable
+from typing import Any, Callable, Dict, List, Tuple
 
 import networkx as nx
 
@@ -277,7 +277,9 @@ def check_psp_blocks_edges_consistency(payload: Dict[str, Any]) -> Tuple[bool, D
         }
 
 
-def get_psp_obligations() -> List[Tuple[str, str, Callable[[Dict[str, Any]], Tuple[bool, Dict[str, Any]]], str]]:
+def get_psp_obligations() -> (
+    List[Tuple[str, str, Callable[[Dict[str, Any]], Tuple[bool, Dict[str, Any]]], str]]
+):
     """
     Retourne toutes les obligations PSP.
 

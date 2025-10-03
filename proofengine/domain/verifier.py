@@ -11,15 +11,8 @@ import time
 from dataclasses import dataclass
 from typing import Any, Dict, List
 
-from .types import (
-    Candidate,
-    CodeSnippet,
-    ComplianceResult,
-    ComplianceStatus,
-    Counterexample,
-    Proof,
-    Verdict,
-)
+from .types import (Candidate, CodeSnippet, ComplianceResult, ComplianceStatus,
+                    Counterexample, Proof, Verdict)
 
 
 @dataclass

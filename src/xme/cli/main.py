@@ -11,14 +11,10 @@ import typer
 from rich import print
 
 from xme.adapters.logger import log_verdict
-from xme.discovery_engine_2cat.config import (
-    AEConfig,
-    BudgetsConfig,
-    CEGISConfig,
-    DiscoveryEngine2CatConfig,
-    OutputsConfig,
-    PackConfig,
-)
+from xme.discovery_engine_2cat.config import (AEConfig, BudgetsConfig,
+                                              CEGISConfig,
+                                              DiscoveryEngine2CatConfig,
+                                              OutputsConfig, PackConfig)
 from xme.discovery_engine_2cat.runner import run_discovery_engine_2cat
 from xme.egraph.canon import canonicalize, compare_expressions
 from xme.metrics.delta import aggregate_run_delta
@@ -29,7 +25,8 @@ from xme.orchestrator.loops.cegis import run_cegis
 from xme.orchestrator.scheduler import DiscoveryConfig, DiscoveryScheduler
 from xme.orchestrator.state import Budgets, RunState
 from xme.pcap.store import PCAPEntry, PCAPStore
-from xme.pefc.pack import build_manifest, collect_inputs, verify_pack, write_zip
+from xme.pefc.pack import (build_manifest, collect_inputs, verify_pack,
+                           write_zip)
 from xme.psp.schema import PSP, load_psp, save_psp
 from xme.verifier.base import Verifier, create_obligation
 from xme.verifier.psp_checks import get_psp_obligations

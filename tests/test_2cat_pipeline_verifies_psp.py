@@ -7,14 +7,10 @@ from pathlib import Path
 
 import pytest
 
-from xme.discovery_engine_2cat.config import (
-    AEConfig,
-    BudgetsConfig,
-    CEGISConfig,
-    DiscoveryEngine2CatConfig,
-    OutputsConfig,
-    PackConfig,
-)
+from xme.discovery_engine_2cat.config import (AEConfig, BudgetsConfig,
+                                              CEGISConfig,
+                                              DiscoveryEngine2CatConfig,
+                                              OutputsConfig, PackConfig)
 from xme.discovery_engine_2cat.runner import DiscoveryEngine2CatRunner
 from xme.verifier.base import Verifier, create_obligation
 from xme.verifier.psp_checks import get_psp_obligations

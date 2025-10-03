@@ -2,7 +2,8 @@
 Tests pour l'alpha-renaming dans l'e-graph.
 """
 
-from xme.egraph.node import AlphaRenamer, alpha_rename_expr, is_alpha_equivalent
+from xme.egraph.node import (AlphaRenamer, alpha_rename_expr,
+                             is_alpha_equivalent)
 
 
 def test_alpha_rename_simple():

@@ -3,7 +3,6 @@ Tests for AE Next-Closure loop.
 """
 
 import os
-
 # Import our modules
 import sys
 from unittest.mock import Mock, patch
@@ -14,7 +13,6 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from methods.ae.next_closure import AEExplorer
 from methods.ae.oracle import Oracle
-
 from orchestrator.state import XState
 
 

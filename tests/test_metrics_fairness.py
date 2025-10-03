@@ -8,14 +8,9 @@ from pathlib import Path
 
 import pytest
 
-from proofengine.metrics import (
-    CacheInfo,
-    ExecutionMetrics,
-    TimeBreakdown,
-    WorkUnits,
-    compare_metrics_fairness,
-    enforce_fairness_gate,
-)
+from proofengine.metrics import (CacheInfo, ExecutionMetrics, TimeBreakdown,
+                                 WorkUnits, compare_metrics_fairness,
+                                 enforce_fairness_gate)
 from proofengine.orchestrator.modes import BaselineMode
 
 

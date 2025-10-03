@@ -7,13 +7,9 @@ to prevent data exfiltration and secret exposure.
 
 from typing import Any, Dict, List
 
-from proofengine.orchestrator.strategy_api import (
-    Guards,
-    RewriteOperation,
-    RewritePlan,
-    Strategy,
-    StrategyContext,
-)
+from proofengine.orchestrator.strategy_api import (Guards, RewriteOperation,
+                                                   RewritePlan, Strategy,
+                                                   StrategyContext)
 
 
 class GuardBeforeStrategy(Strategy):

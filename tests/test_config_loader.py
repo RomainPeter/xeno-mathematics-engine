@@ -3,7 +3,8 @@ from pathlib import Path
 
 import yaml
 
-from pefc.config.loader import clear_cache, expand_globs, get_config, load_config
+from pefc.config.loader import (clear_cache, expand_globs, get_config,
+                                load_config)
 from pefc.config.model import RootConfig
 
 

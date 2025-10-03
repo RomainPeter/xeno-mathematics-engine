@@ -31,7 +31,7 @@ def load_config(path: Path) -> RefereeConfig:
         return RefereeConfig()
 
     # Charger YAML
-    import yaml
+    import yaml  # type: ignore[import-untyped]
 
     with open(path, "r", encoding="utf-8") as f:
         cfg = yaml.safe_load(f)

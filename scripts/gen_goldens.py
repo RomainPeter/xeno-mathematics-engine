@@ -17,7 +17,7 @@ from xme.engines.ae.next_closure import enumerate_concepts
 
 def intents_sorted(concepts):
     """Extrait et trie les intents des concepts."""
-    return [sorted(list(I)) for (_, I) in concepts]
+    return [sorted(list(intent)) for (_, intent) in concepts]
 
 
 def generate_golden(context_path: str, output_path: str):

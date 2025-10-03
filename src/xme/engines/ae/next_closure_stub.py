@@ -34,19 +34,19 @@ def enumerate_concepts_stub(ctx: FCAContext) -> List[Tuple[Set[str], Set[str]]]:
     # Uniques et triés par taille puis lexique
     uniq = []
     seen = set()
-    for I in intents:
-        key = tuple(sorted(I))
+    for intent in intents:
+        key = tuple(sorted(intent))
         if key in seen:
             continue
         seen.add(key)
-        uniq.append(I)
+        uniq.append(intent)
 
     uniq.sort(key=lambda s: (len(s), tuple(sorted(s))))
 
     # Extents = objets qui ont l'intent
     res = []
-    for I in uniq:
-        extent = {o.id for o in ctx.objects if set(I).issubset(set(o.attrs))}
-        res.append((extent, I))
+    for intent in uniq:
+        extent = {o.id for o in ctx.objects if set(intent).issubset(set(o.attrs))}
+        res.append((extent, intent))
 
     return res

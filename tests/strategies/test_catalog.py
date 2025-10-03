@@ -4,14 +4,12 @@ Tests golden cases for each strategy.
 """
 
 from proofengine.orchestrator.strategy_api import StrategyContext
-from proofengine.strategies import (
-    AddMissingTestsStrategy,
-    ChangelogOrBlockStrategy,
-    DecomposeMeetStrategy,
-    RequireSemverStrategy,
-    RetryWithHardeningStrategy,
-    SpecializeThenRetryStrategy,
-)
+from proofengine.strategies import (AddMissingTestsStrategy,
+                                    ChangelogOrBlockStrategy,
+                                    DecomposeMeetStrategy,
+                                    RequireSemverStrategy,
+                                    RetryWithHardeningStrategy,
+                                    SpecializeThenRetryStrategy)
 
 
 class TestSpecializeThenRetryStrategy:

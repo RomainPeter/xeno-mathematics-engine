@@ -78,14 +78,8 @@ class ServiceContainer:
     def _build_pipeline(self, pipeline_def):
         """Build pipeline from descriptor."""
         from .pipeline.core import Pipeline
-        from .pipeline.steps import (
-            CollectSeeds,
-            ComputeMerkle,
-            PackZip,
-            RenderDocs,
-            RunCapabilities,
-            SignArtifact,
-        )
+        from .pipeline.steps import (CollectSeeds, ComputeMerkle, PackZip,
+                                     RenderDocs, RunCapabilities, SignArtifact)
 
         # Step type mapping
         step_classes = {

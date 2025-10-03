@@ -5,7 +5,7 @@ Calcul des métriques de friction δ (adjunction defect).
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Dict, List, DefaultDict
+from typing import Any, Dict, List
 
 from xme.engines.cegis.types import CEGISResult
 from xme.pcap.store import PCAPStore

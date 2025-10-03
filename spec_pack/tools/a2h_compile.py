@@ -154,7 +154,7 @@ def append_journal(manifest_hash, compiled_hash):
     rows = []
     if os.path.exists(JRNL):
         with open(JRNL, "r", encoding="utf-8") as f:
-            rows = [json.loads(l) for l in f if l.strip()]
+            rows = [json.loads(line) for line in f if line.strip()]
     rows.append(entry)
     with open(JRNL, "w", encoding="utf-8") as f:
         for o in rows:

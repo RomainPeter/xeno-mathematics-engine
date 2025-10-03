@@ -46,16 +46,16 @@ def concepts_to_psp(concepts: List[Tuple[Set[str], Set[str]]]) -> PSP:
         PSP normalisé avec blocs et arêtes de couverture
     """
     blocks: List[Block] = []
-    intents = [I for (_, I) in concepts]
+    intents = [intent for (_, intent) in concepts]
 
     # Créer les blocs
-    for i, (_, I) in enumerate(concepts):
+    for i, (_, intent) in enumerate(concepts):
         blocks.append(
             Block(
                 id=f"c{i}",
                 kind=BlockKind.concept,
-                label="{" + ",".join(sorted(I)) + "}",
-                data={"intent": sorted(I)},
+                label="{" + ",".join(sorted(intent)) + "}",
+                data={"intent": sorted(intent)},
             )
         )
 

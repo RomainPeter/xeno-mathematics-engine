@@ -10,17 +10,17 @@ from pathlib import Path
 from typing import List
 
 from proofengine.orchestrator.checker import BasicChecker
-from proofengine.orchestrator.modes import ShadowReport, TwoCategoryOrchestrator
+from proofengine.orchestrator.modes import (ShadowReport,
+                                            TwoCategoryOrchestrator)
 from proofengine.orchestrator.rewriter import PlanRewriter
-from proofengine.orchestrator.strategy_api import StrategyContext, StrategyRegistry
-from proofengine.strategies import (
-    AddMissingTestsStrategy,
-    ChangelogOrBlockStrategy,
-    DecomposeMeetStrategy,
-    RequireSemverStrategy,
-    RetryWithHardeningStrategy,
-    SpecializeThenRetryStrategy,
-)
+from proofengine.orchestrator.strategy_api import (StrategyContext,
+                                                   StrategyRegistry)
+from proofengine.strategies import (AddMissingTestsStrategy,
+                                    ChangelogOrBlockStrategy,
+                                    DecomposeMeetStrategy,
+                                    RequireSemverStrategy,
+                                    RetryWithHardeningStrategy,
+                                    SpecializeThenRetryStrategy)
 
 # Add the project root to the Python path
 project_root = Path(__file__).parent.parent

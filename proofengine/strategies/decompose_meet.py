@@ -5,7 +5,8 @@ Handles runner.test_failure on Meet(A∧B) by separating into A then B.
 
 from typing import Any, Dict, List
 
-from ..orchestrator.strategy_api import RewriteOperation, RewritePlan, Strategy, StrategyContext
+from ..orchestrator.strategy_api import (RewriteOperation, RewritePlan,
+                                         Strategy, StrategyContext)
 
 
 class DecomposeMeetStrategy(Strategy):

@@ -8,7 +8,8 @@ from typing import Any, Dict, List, Optional, Tuple
 from proofengine.core.delta import compute_delta
 from proofengine.core.schemas import VJustification
 
-from .obligations import evaluate_obligations, get_obligation_details, get_violation_summary
+from .obligations import (evaluate_obligations, get_obligation_details,
+                          get_violation_summary)
 from .patch import PatchManager, Workspace
 
 

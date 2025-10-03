@@ -8,19 +8,12 @@ from typing import Dict, List, Optional
 from zipfile import ZIP_DEFLATED, ZipFile
 
 from pefc.config.loader import expand_globs, get_config
-from pefc.errors import (
-    EXIT_CODE,
-    PARTIAL_EXIT_CODE,
-    SUCCESS_EXIT_CODE,
-    UNEXPECTED_ERROR_EXIT_CODE,
-    ManifestError,
-    MetricsError,
-    PackBuildError,
-    PEFCError,
-    SignatureError,
-    ValidationError,
-)
-from pefc.pack.merkle import PackEntry, build_entries, build_manifest, compute_merkle_root
+from pefc.errors import (EXIT_CODE, PARTIAL_EXIT_CODE, SUCCESS_EXIT_CODE,
+                         UNEXPECTED_ERROR_EXIT_CODE, ManifestError,
+                         MetricsError, PackBuildError, PEFCError,
+                         SignatureError, ValidationError)
+from pefc.pack.merkle import (PackEntry, build_entries, build_manifest,
+                              compute_merkle_root)
 from pefc.pack.sign import sign_zip
 from pefc.pack.zipper import ZipAdder
 from pefc.summary import build_summary

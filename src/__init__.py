@@ -1,18 +1,12 @@
 """Re-export demo utilities for tests."""
 
-from .pure_fn import (
-    binary_search,
-    calculate_combinations,
-    calculate_fibonacci,
-    calculate_gcd,
-    calculate_permutations,
-    calculate_prime_factors,
-    calculate_statistics,
-    is_prime,
-    merge_sorted_lists,
-    quicksort,
-)
-from .rate_limiter import RateLimiter, RateLimitManager, SlidingWindowRateLimiter
+from .pure_fn import (binary_search, calculate_combinations,
+                      calculate_fibonacci, calculate_gcd,
+                      calculate_permutations, calculate_prime_factors,
+                      calculate_statistics, is_prime, merge_sorted_lists,
+                      quicksort)
+from .rate_limiter import (RateLimiter, RateLimitManager,
+                           SlidingWindowRateLimiter)
 from .sanitize import clean_html, escape_sql, sanitize_input, validate_email
 from .utils import add
 from .utils import sanitize_input as basic_sanitize_input

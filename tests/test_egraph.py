@@ -3,7 +3,6 @@ Tests for e-graph rules and canonicalization.
 """
 
 import os
-
 # Import our modules
 import sys
 
@@ -11,11 +10,9 @@ import pytest
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from methods.egraph.canonicalize import (
-    EGraphCanonicalizer,
-    canonicalize_choreography,
-    canonicalize_state,
-)
+from methods.egraph.canonicalize import (EGraphCanonicalizer,
+                                         canonicalize_choreography,
+                                         canonicalize_state)
 from methods.egraph.rules import EGraphRules, EquivalenceRule
 
 

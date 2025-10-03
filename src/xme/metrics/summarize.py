@@ -5,7 +5,7 @@ Système de synthèse des métriques et résumés de run.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Dict, List, MutableMapping
+from typing import Any, Dict, List
 
 import orjson
 

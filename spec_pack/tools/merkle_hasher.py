@@ -10,7 +10,7 @@ def load_ndjson(path):
     if not os.path.exists(path):
         return []
     with open(path, "r", encoding="utf-8") as f:
-        return [json.loads(l) for l in f if l.strip()]
+        return [json.loads(line) for line in f if line.strip()]
 
 
 def write_ndjson(path, items):

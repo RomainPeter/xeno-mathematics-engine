@@ -19,7 +19,7 @@ def load_ndjson(p):
     if not os.path.exists(p):
         return []
     with open(p, "r", encoding="utf-8") as f:
-        return [json.loads(l) for l in f if l.strip()]
+        return [json.loads(line) for line in f if line.strip()]
 
 
 def load_json(p, default=None):

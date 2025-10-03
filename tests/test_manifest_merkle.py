@@ -11,7 +11,8 @@ from typing import Any, List
 import pytest
 
 from pefc.pack.merkle import build_entries, build_manifest, compute_merkle_root
-from pefc.pack.verify import load_manifest, verify_files_sha256, verify_merkle, verify_zip
+from pefc.pack.verify import (load_manifest, verify_files_sha256,
+                              verify_merkle, verify_zip)
 
 
 class TestManifestMerkle:

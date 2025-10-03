@@ -5,7 +5,8 @@ Tests unitaires pour les modules centraux.
 import pytest
 
 from proofengine.core.delta import DeltaCalculator
-from proofengine.core.hashing import hash_pcap, hash_state, verify_state_integrity
+from proofengine.core.hashing import (hash_pcap, hash_state,
+                                      verify_state_integrity)
 from proofengine.core.schemas import PCAP, Proof, VJustification, XState
 from proofengine.core.state import StateManager, create_initial_state
 

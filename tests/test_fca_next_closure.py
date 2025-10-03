@@ -8,8 +8,10 @@ import time
 import pytest
 
 from proofengine.fca.ae_engine import AEContext, AEResult, NextClosureAEEngine
-from proofengine.fca.context import Attribute, Extent, FormalContext, Intent, Object
-from proofengine.fca.next_closure import Concept, ConceptLattice, NextClosure, closure, lectic_leq
+from proofengine.fca.context import (Attribute, Extent, FormalContext, Intent,
+                                     Object)
+from proofengine.fca.next_closure import (Concept, ConceptLattice, NextClosure,
+                                          closure, lectic_leq)
 
 
 class TestFCAContexts:

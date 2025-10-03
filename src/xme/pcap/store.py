@@ -48,12 +48,16 @@ class PCAPStore:
     def read_all(self) -> Iterator[dict]:
         if not self.path.exists():
             return iter(())
-        with self.path.open("rb") as f:
-            for line in f:
-                line = line.strip()
-                if not line:
-                    continue
-                yield orjson.loads(line)
+
+        def _gen() -> Iterator[dict]:
+            with self.path.open("rb") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    yield orjson.loads(line)
+
+        return _gen()
 
     def _leaves(self) -> List[str]:
         return [obj["hash"] for obj in self.read_all() if obj.get("type") == "action"]

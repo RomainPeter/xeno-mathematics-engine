@@ -11,15 +11,8 @@ from typing import Any, Dict, List, Optional
 
 from .proposer import ProposalEngine
 from .refiner import RefinementContext, RefinementEngine
-from .types import (
-    Candidate,
-    CodeSnippet,
-    ComplianceResult,
-    ComplianceStatus,
-    Counterexample,
-    Proof,
-    Verdict,
-)
+from .types import (Candidate, CodeSnippet, ComplianceResult, ComplianceStatus,
+                    Counterexample, Proof, Verdict)
 from .verifier import ComplianceVerifier, VerificationContext
 
 

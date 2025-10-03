@@ -70,9 +70,9 @@ def enumerate_concepts(ctx: FCAContext) -> List[Tuple[Set[str], Set[str]]]:
 
     # Construire couples (extent, intent)
     concepts: List[Tuple[Set[str], Set[str]]] = []
-    for I in intents:
-        E = extent_of(ctx, I)
-        concepts.append((E, I))
+    for intent in intents:
+        E = extent_of(ctx, intent)
+        concepts.append((E, intent))
 
     # Tri stable: par |I|, puis lex
     concepts.sort(key=lambda c: (len(c[1]), tuple(sorted(c[1]))))

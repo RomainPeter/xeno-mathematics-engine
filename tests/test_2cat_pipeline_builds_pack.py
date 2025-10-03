@@ -6,14 +6,10 @@ from pathlib import Path
 
 import pytest
 
-from xme.discovery_engine_2cat.config import (
-    AEConfig,
-    BudgetsConfig,
-    CEGISConfig,
-    DiscoveryEngine2CatConfig,
-    OutputsConfig,
-    PackConfig,
-)
+from xme.discovery_engine_2cat.config import (AEConfig, BudgetsConfig,
+                                              CEGISConfig,
+                                              DiscoveryEngine2CatConfig,
+                                              OutputsConfig, PackConfig)
 from xme.discovery_engine_2cat.runner import DiscoveryEngine2CatRunner
 from xme.pefc.pack import verify_pack
 

@@ -11,7 +11,8 @@ from orchestrator.adapters.llm_stub import LLMStub
 from orchestrator.adapters.verifier_stub import VerifierStub
 from orchestrator.engines.cegis_async_engine import AsyncCegisEngine
 from orchestrator.engines.next_closure_engine import NextClosureEngine
-from orchestrator.orchestrator_lite import OrchestratorLite, OrchestratorLiteConfig
+from orchestrator.orchestrator_lite import (OrchestratorLite,
+                                            OrchestratorLiteConfig)
 from pefc.events import EventBusConfig, FileJSONLSink, StructuredEventBus
 
 
