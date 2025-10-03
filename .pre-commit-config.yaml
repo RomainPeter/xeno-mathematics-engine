@@ -27,7 +27,8 @@ repos:
           "-r", ".",
           "-s", "B101",
           "-x", "tests,discovery-engine-2cat,proofengine,examples,fixtures,out,dist,demo,demo_repo,out_lab",
-          "-b", "bandit_baseline.json"
+          "-lll",
+          "-iii"
         ]
         pass_filenames: false
   - repo: https://github.com/pre-commit/pre-commit-hooks
