@@ -3,6 +3,7 @@ on: [push, pull_request]
 jobs:
   pre-commit:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -14,14 +15,16 @@ jobs:
       - run: nix develop -c pre-commit run -a
   pytest:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     needs: pre-commit
     steps:
       - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v27
       - run: nix develop -c python -m pip install -e .
-      - run: nix develop -c pytest -q
+      - run: nix develop -c pytest -q tests/
   build-cli:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     needs: pytest
     steps:
       - uses: actions/checkout@v4
@@ -29,15 +32,17 @@ jobs:
       - run: nix build .#xme && ls -l result/
   sbom:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     needs: build-cli
     steps:
       - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v27
-      - run: nix develop -c bash -lc 'mkdir -p sbom && syft dir:. -o spdx-json > sbom/sbom.spdx.json'
+      - run: nix develop -c bash -lc 'mkdir -p sbom && syft dir:. -o spdx-json --exclude out --exclude dist --exclude discovery-engine-2cat --exclude demo_repo --exclude out_lab --exclude artifacts > sbom/sbom.spdx.json'
       - uses: actions/upload-artifact@v4
         with: { name: sbom, path: sbom/sbom.spdx.json }
   docker-build:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     needs: build-cli
     steps:
       - uses: actions/checkout@v4
@@ -49,6 +54,7 @@ jobs:
           tags: xme/dev:latest
   verify-2cat:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     needs: build-cli
     continue-on-error: true
     steps:
@@ -62,6 +68,7 @@ jobs:
         run: nix develop -c bash -lc 'bash scripts/verify_2cat_pack.sh'
   pack-smoke:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     needs: [pytest]
     steps:
       - uses: actions/checkout@v4
