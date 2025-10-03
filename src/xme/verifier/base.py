@@ -4,7 +4,7 @@ Système de vérification unifié avec obligations S0/S1.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
@@ -40,17 +40,13 @@ class VerificationReport:
     """Rapport de vérification."""
 
     version: int = 1
-    when: Optional[datetime] = None
+    when: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     tool: str = "xme"
-    results: Optional[List[VerificationResult]] = None
+    results: List[VerificationResult] = field(default_factory=list)
     ok_all: bool = True
 
     def __post_init__(self):
         """Initialise les valeurs par défaut."""
-        if self.when is None:
-            self.when = datetime.now(timezone.utc)
-        if self.results is None:
-            self.results = []
         if self.results:
             self.ok_all = all(result.ok for result in self.results)
 

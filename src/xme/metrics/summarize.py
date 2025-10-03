@@ -5,7 +5,7 @@ Système de synthèse des métriques et résumés de run.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict, List, MutableMapping
 
 import orjson
 
@@ -96,7 +96,7 @@ def summarize_run(pcap_path: Path) -> Dict[str, Any]:
         end_time = max(timestamps) if timestamps else None
 
         # Calculer les métriques par niveau
-        level_stats = {}
+        level_stats: Dict[str, Dict[str, Any]] = {}
         for entry in entries:
             level = entry.get("level", "unknown")
             if level not in level_stats:

@@ -4,9 +4,9 @@ Système de rapport de vérification.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List
 
 import orjson
 
@@ -16,17 +16,13 @@ class Report:
     """Rapport de vérification JSON."""
 
     version: int = 1
-    when: Optional[datetime] = None
+    when: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
     tool: str = "xme"
-    results: Optional[List[Dict[str, Any]]] = None
+    results: List[Dict[str, Any]] = field(default_factory=list)
     ok_all: bool = True
 
     def __post_init__(self):
         """Initialise les valeurs par défaut."""
-        if self.when is None:
-            self.when = datetime.now(timezone.utc)
-        if self.results is None:
-            self.results = []
         if self.results:
             self.ok_all = all(result.get("ok", False) for result in self.results)
 

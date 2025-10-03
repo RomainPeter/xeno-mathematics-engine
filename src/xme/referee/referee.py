@@ -5,7 +5,7 @@ Referee H/X - Gouvernance bifocale opérationnelle.
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Dict
 
@@ -22,7 +22,7 @@ class RefereeConfig:
     h_quota: int = 10
     x_quota: int = 20
     naming_charset: str = r"^[A-Za-z0-9_]+$"
-    embargo_min_checks: list[str] = None  # e.g., ["psp:S1"]
+    embargo_min_checks: list[str] = field(default_factory=list)  # e.g., ["psp:S1"]
 
 
 def load_config(path: Path) -> RefereeConfig:

@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, Optional, Any
 
 import orjson
 
@@ -16,7 +16,7 @@ class AlienReserve:
 
     def __init__(self, path: Path):
         self.path = path
-        self._state = {
+        self._state: Dict[str, Any] = {
             "lineages": {}
         }  # lineage_id -> {meta, embargoed:bool, created_at, released_at?}
         self._load()

@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 import orjson
 from pydantic import BaseModel, Field
@@ -27,7 +27,7 @@ class SymbolStore:
 
     def __init__(self, path: Path):
         self.path = path
-        self._state = {"symbols": []}  # list[SymbolEntry]
+        self._state: Dict[str, Any] = {"symbols": []}  # list[SymbolEntry]
         self._load()
 
     def _load(self):
