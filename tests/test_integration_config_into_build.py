@@ -1,6 +1,7 @@
-from pathlib import Path
 import json
-from pefc.config.loader import load_config, expand_globs
+from pathlib import Path
+
+from pefc.config.loader import expand_globs, load_config
 from pefc.summary import build_summary
 
 

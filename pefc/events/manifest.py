@@ -3,12 +3,12 @@ Audit manifest and Merkle tree implementation for event persistence.
 Provides AuditManifest and MerkleTree for integrity verification.
 """
 
-import json
 import hashlib
-from pathlib import Path
-from typing import Dict, Any, List, Optional
-from dataclasses import dataclass, field
+import json
 import time
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 
 @dataclass

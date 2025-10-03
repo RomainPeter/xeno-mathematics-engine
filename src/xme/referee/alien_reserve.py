@@ -1,19 +1,24 @@
 """
 Alien Reserves - Embargo des X-lineages.
 """
+
 from __future__ import annotations
-from pathlib import Path
-from typing import Dict, Optional
-import orjson
+
 from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any, Dict, Optional
+
+import orjson
 
 
 class AlienReserve:
     """Gestion des embargos sur les X-lineages."""
-    
+
     def __init__(self, path: Path):
         self.path = path
-        self._state = {"lineages": {}}  # lineage_id -> {meta, embargoed:bool, created_at, released_at?}
+        self._state: Dict[str, Any] = {
+            "lineages": {}
+        }  # lineage_id -> {meta, embargoed:bool, created_at, released_at?}
         self._load()
 
     def _load(self) -> None:
@@ -32,9 +37,9 @@ class AlienReserve:
         """Enregistre un lineage avec embargo."""
         now = datetime.now(timezone.utc).isoformat()
         self._state["lineages"][lineage_id] = {
-            "embargoed": True, 
-            "meta": meta or {}, 
-            "created_at": now
+            "embargoed": True,
+            "meta": meta or {},
+            "created_at": now,
         }
         self._save()
 

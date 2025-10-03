@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 import argparse
-import json
-import sys
 import itertools
+import json
 import re
+import sys
+
 import yaml
 
 HEX64 = re.compile(r"^[a-f0-9]{64}$")

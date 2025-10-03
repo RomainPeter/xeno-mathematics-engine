@@ -2,8 +2,9 @@
 """
 Simple audit pack script for CI
 """
-import os
+
 import json
+import os
 import time
 import zipfile
 

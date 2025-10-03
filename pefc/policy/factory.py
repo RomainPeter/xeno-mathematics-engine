@@ -1,8 +1,9 @@
 from __future__ import annotations
+
 from typing import Any
 
-from .risk import MeanRisk, CVaRRisk, EntropicRisk, SemiVarianceRisk
 from .ids import UCB1, EpsilonGreedy, ThompsonSampling
+from .risk import CVaRRisk, EntropicRisk, MeanRisk, SemiVarianceRisk
 
 
 def make_risk(name: str, **kw: Any):

@@ -1,9 +1,11 @@
 from __future__ import annotations
-from typing import Dict, Any, List
+
+from typing import Any, Dict, List
+
 from pefc.capabilities.base import CapabilityMetadata
-from pefc.incidents.types import CapabilityResult
 from pefc.capabilities.loader import build_capabilities
 from pefc.capabilities.manager import CapabilityManager
+from pefc.incidents.types import CapabilityResult
 
 
 class HSTreeHandler:

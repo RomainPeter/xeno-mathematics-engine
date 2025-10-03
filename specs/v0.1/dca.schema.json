@@ -6,16 +6,16 @@
   "properties": {
     "version": { "type": "string", "const": "0.1.0" },
     "id": { "type": "string" },
-    "type": { 
-      "type": "string", 
-      "enum": ["AE_query", "CEGIS_prog"] 
+    "type": {
+      "type": "string",
+      "enum": ["AE_query", "CEGIS_prog"]
     },
-    "context_hash": { 
-      "type": "string", 
+    "context_hash": {
+      "type": "string",
       "pattern": "^[A-Fa-f0-9]{64}$",
       "description": "Hash of X_subset context"
     },
-    "query_or_prog": { 
+    "query_or_prog": {
       "type": "string",
       "description": "The implication query (A⇒B) or synthesized program"
     },
@@ -25,15 +25,15 @@
     "S_actual": { "$ref": "#/$defs/S" },
     "coverage_delta": { "type": "number" },
     "novelty": { "type": "number", "minimum": 0, "maximum": 1 },
-    "verdict": { 
-      "type": "string", 
-      "enum": ["accept", "reject"] 
+    "verdict": {
+      "type": "string",
+      "enum": ["accept", "reject"]
     },
-    "counterexample_ref": { 
+    "counterexample_ref": {
       "type": "string",
       "description": "Reference to PCAP counterexample if verdict=reject"
     },
-    "egraph_class": { 
+    "egraph_class": {
       "type": "string",
       "description": "Canonical e-graph equivalence class"
     },
@@ -70,4 +70,3 @@
     }
   }
 }
-

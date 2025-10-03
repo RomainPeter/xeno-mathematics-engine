@@ -2,13 +2,12 @@
 Tests for Next-Closure algorithm implementation.
 """
 
-import pytest
-from typing import Dict, Any
+from typing import Any, Dict
 
-from orchestrator.engines.next_closure_engine import (
-    NextClosureEngine,
-)
+import pytest
+
 from orchestrator.engines.ae_engine import AEContext
+from orchestrator.engines.next_closure_engine import NextClosureEngine
 
 
 class TestNextClosureEngine:

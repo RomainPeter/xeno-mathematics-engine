@@ -1,11 +1,12 @@
-from pathlib import Path
-import json
 import importlib
+import json
 import time
+from pathlib import Path
+
 import pytest
 
-from pefc.summary import build_summary
 from pefc.errors import ValidationError
+from pefc.summary import build_summary
 
 
 def _write(p: Path, obj):

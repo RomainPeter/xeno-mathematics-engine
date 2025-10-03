@@ -10,7 +10,7 @@
       "created_at": "2025-09-27T11:45:00Z"
     },
     {
-      "id": "h-task-002", 
+      "id": "h-task-002",
       "title": "Fix off-by-one bug",
       "body": "Fix off-by-one error in range() loop in algorithms.py",
       "status": "open",
@@ -28,7 +28,7 @@
     },
     {
       "id": "e-task-002",
-      "kind": "code", 
+      "kind": "code",
       "uri": "file://algorithms.py",
       "hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
       "created_at": "2025-09-27T11:45:00Z"
@@ -44,7 +44,7 @@
     },
     {
       "id": "k-perf-1",
-      "source": "internal", 
+      "source": "internal",
       "rule": "performance regression < 5%",
       "severity": "medium",
       "tags": ["performance"]

@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 import json
 import os
+import statistics
+import subprocess
 import sys
 import time
-import subprocess
-import statistics
 
 ROOT = "spec_pack"
 DEC = f"{ROOT}/samples/decisions.jsonl"
@@ -19,7 +19,7 @@ def load_ndjson(p):
     if not os.path.exists(p):
         return []
     with open(p, "r", encoding="utf-8") as f:
-        return [json.loads(l) for l in f if l.strip()]
+        return [json.loads(line) for line in f if line.strip()]
 
 
 def load_json(p, default=None):
@@ -40,7 +40,10 @@ def run_s1():
         ok = p.returncode == 0
         details = json.loads(p.stdout) if p.stdout.strip().startswith("{") else {"S1_pass": ok}
         return ok, details
-    except Exception:
+    except Exception as e:
+        import logging
+
+        logging.warning(f"Failed to run S1 check: {e}")
         return False, {"S1_pass": False}
 
 
@@ -50,8 +53,10 @@ def get_k(anf):
             if g.get("id") == "G-4":
                 k = g.get("params", {}).get("K", 10)
                 return int(k)
-    except Exception:
-        pass
+    except Exception as e:
+        import logging
+
+        logging.warning(f"Failed to extract K parameter: {e}")
     return 10
 
 

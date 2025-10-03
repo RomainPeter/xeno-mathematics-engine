@@ -4,12 +4,12 @@ Generate Public Bench Pack for v0.1.0
 Includes: summary.json, seeds, merkle root, signature, SBOM
 """
 
+import hashlib
 import json
 import os
 import sys
-import hashlib
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 
 def generate_merkle_root():

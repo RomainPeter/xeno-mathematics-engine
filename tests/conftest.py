@@ -2,10 +2,11 @@
 """
 Pytest configuration and fixtures for PEFC tests.
 """
+
 import json
 import tempfile
 from pathlib import Path
-from typing import Dict, List, Any, Generator
+from typing import Any, Dict, Generator, List
 from unittest.mock import Mock
 
 import pytest
@@ -187,7 +188,7 @@ def sample_pack_entries(sample_files: List[Path]) -> List[PackEntry]:
     entries = []
     for i, file_path in enumerate(sample_files):
         entry = PackEntry(
-            arcname=f"file{i+1}.txt",
+            arcname=f"file{i + 1}.txt",
             src_path=file_path,
             size=file_path.stat().st_size,
             sha256="",  # Will be computed

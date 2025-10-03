@@ -2,11 +2,12 @@
 """
 Docker runner for hermetic verification
 """
+
 import json
 import subprocess
 import time
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 
 class DockerRunner:

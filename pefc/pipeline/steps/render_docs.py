@@ -1,8 +1,9 @@
 from __future__ import annotations
+
 import logging
 
-from pefc.pipeline.core import PackStep, PipelineContext
 from pefc.onepager.render import build_onepager
+from pefc.pipeline.core import PackStep, PipelineContext
 
 log = logging.getLogger(__name__)
 

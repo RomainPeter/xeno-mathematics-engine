@@ -2,11 +2,11 @@
 Metrics for 2-category transformations with fairness guarantees.
 """
 
-from dataclasses import dataclass
-from typing import Dict, Any
 import json
 import time
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Any, Dict
 
 
 @dataclass

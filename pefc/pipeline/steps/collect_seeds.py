@@ -1,8 +1,9 @@
 from __future__ import annotations
+
 import logging
 
-from pefc.pipeline.core import PackStep, PipelineContext
 from pefc.metrics.build_provider import build_provider
+from pefc.pipeline.core import PackStep, PipelineContext
 
 log = logging.getLogger(__name__)
 

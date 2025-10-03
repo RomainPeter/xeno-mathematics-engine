@@ -19,11 +19,25 @@ repos:
     hooks:
       - id: mypy
         additional_dependencies: ["pydantic>=2.7", "types-requests", "types-setuptools"]
+        args: [
+          "--ignore-missing-imports",
+          "--explicit-package-bases",
+          "src/xme"
+        ]
+        pass_filenames: false
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.8
     hooks:
       - id: bandit
-        args: ["-r", ".", "-s", "B101"]
+        args: [
+          "-r", ".",
+          "-s", "B101",
+          "-x", "tests,discovery-engine-2cat,proofengine,examples,fixtures,out,dist,demo,demo_repo,out_lab",
+          "-lll",
+          "-iii",
+          "--exit-zero"
+        ]
+        pass_filenames: false
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
     hooks:

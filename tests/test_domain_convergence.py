@@ -3,12 +3,13 @@ Tests for domain convergence with CEGIS.
 Tests convergence < N=5 iterations on toy repository.
 """
 
-import pytest
 import asyncio
 import time
 
+import pytest
+
+from proofengine.domain.cegis_engine import CEGISConfig, CEGISEngine, CEGISMode
 from proofengine.domain.types import CodeSnippet
-from proofengine.domain.cegis_engine import CEGISEngine, CEGISConfig, CEGISMode
 
 
 class TestConvergence:

@@ -2,8 +2,10 @@
 """
 Tests for LLM client v2
 """
-import pytest
+
 import os
+
+import pytest
 
 
 class TestLLMClientV2:

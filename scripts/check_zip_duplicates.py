@@ -2,6 +2,7 @@
 """
 Check for duplicate arcnames in ZIP files.
 """
+
 import sys
 import zipfile
 from pathlib import Path

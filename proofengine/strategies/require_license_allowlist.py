@@ -3,9 +3,10 @@ Strategy: require_license_allowlist
 Ensures license allowlist is configured for dependency management
 """
 
-from typing import Dict, List, Any
+from typing import Any, Dict, List
+
 from proofengine.core.strategy import Strategy
-from proofengine.core.types import Plan, Action, Evidence
+from proofengine.core.types import Action, Evidence, Plan
 
 
 class RequireLicenseAllowlistStrategy(Strategy):

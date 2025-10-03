@@ -3,13 +3,13 @@ Hermetic runner stub for Discovery Engine 2-Cat.
 Records environment, seeds, prompt_hash, and costs for reproducibility.
 """
 
-import os
-import json
 import hashlib
+import json
+import os
 import subprocess
-from typing import Dict, Any, List, Optional
+from dataclasses import asdict, dataclass
 from datetime import datetime
-from dataclasses import dataclass, asdict
+from typing import Any, Dict, List, Optional
 
 
 @dataclass
@@ -238,14 +238,14 @@ if __name__ == "__main__":
     print(f"✅ Hermetic execution recorded: {record.id}")
     print(f"✅ Merkle hash: {record.merkle_hash[:16]}...")
     data = {
-        'id': record.id,
-        'timestamp': record.timestamp,
-        'environment': record.environment,
-        'seeds': record.seeds,
-        'prompt_hash': record.prompt_hash,
-        'costs': record.costs,
-        'inputs': record.inputs,
-        'outputs': record.outputs
+        "id": record.id,
+        "timestamp": record.timestamp,
+        "environment": record.environment,
+        "seeds": record.seeds,
+        "prompt_hash": record.prompt_hash,
+        "costs": record.costs,
+        "inputs": record.inputs,
+        "outputs": record.outputs,
     }
     print(
         f"✅ Integrity verified: {record.merkle_hash == hashlib.sha256(json.dumps(data, sort_keys=True).encode()).hexdigest()}"

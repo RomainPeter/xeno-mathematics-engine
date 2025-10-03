@@ -1,4 +1,4 @@
-from pefc.logging import init_logging, get_logger
+from pefc.logging import get_logger, init_logging
 
 
 def test_log_level_env_debug(capsys):

@@ -3,12 +3,8 @@ Specialize Then Retry Strategy.
 Handles contract.ambiguous_spec failures by adding specialization step.
 """
 
-from ..orchestrator.strategy_api import (
-    Strategy,
-    StrategyContext,
-    RewritePlan,
-    RewriteOperation,
-)
+from ..orchestrator.strategy_api import (RewriteOperation, RewritePlan,
+                                         Strategy, StrategyContext)
 
 
 class SpecializeThenRetryStrategy(Strategy):

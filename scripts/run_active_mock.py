@@ -6,31 +6,33 @@ This script runs the active gated mode using mock LLM client
 to test the full pipeline without network dependencies.
 """
 
-import sys
-import os
-import json
 import argparse
+import json
+import os
+import sys
 from pathlib import Path
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
+from proofengine.core.llm_client import MockLLMClient
+from proofengine.orchestrator.checker import BasicChecker
 from proofengine.orchestrator.modes import TwoCategoryOrchestrator
-from proofengine.orchestrator.strategy_api import StrategyContext, StrategyRegistry
 from proofengine.orchestrator.rewriter import PlanRewriter
 from proofengine.orchestrator.selector import StrategySelector
-from proofengine.orchestrator.checker import BasicChecker
-from proofengine.core.llm_client import MockLLMClient
-
-# Import strategies
-from proofengine.strategies.specialize_then_retry import SpecializeThenRetryStrategy
+from proofengine.orchestrator.strategy_api import (StrategyContext,
+                                                   StrategyRegistry)
 from proofengine.strategies.add_missing_tests import AddMissingTestsStrategy
-from proofengine.strategies.require_semver import RequireSemverStrategy
 from proofengine.strategies.changelog_or_block import ChangelogOrBlockStrategy
 from proofengine.strategies.decompose_meet import DecomposeMeetStrategy
-from proofengine.strategies.retry_with_hardening import RetryWithHardeningStrategy
-from proofengine.strategies.pin_dependency import PinDependencyStrategy
 from proofengine.strategies.guard_before import GuardBeforeStrategy
+from proofengine.strategies.pin_dependency import PinDependencyStrategy
+from proofengine.strategies.require_semver import RequireSemverStrategy
+from proofengine.strategies.retry_with_hardening import \
+    RetryWithHardeningStrategy
+# Import strategies
+from proofengine.strategies.specialize_then_retry import \
+    SpecializeThenRetryStrategy
 
 
 def create_test_context(plan_path: str) -> StrategyContext:

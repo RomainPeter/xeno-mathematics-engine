@@ -2,14 +2,16 @@
 """
 Basic tests for pipeline pack zip functionality.
 """
+
 import json
 from pathlib import Path
 from unittest.mock import Mock
+
 import pytest
 
-from pefc.pipeline.steps.pack_zip import PackZip
-from pefc.pipeline.core import PipelineContext
 from pefc.errors import PackBuildError
+from pefc.pipeline.core import PipelineContext
+from pefc.pipeline.steps.pack_zip import PackZip
 
 
 class TestPipelinePackZipBasic:

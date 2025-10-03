@@ -2,13 +2,14 @@
 """
 Tests for ZIP deduplication guard functionality.
 """
+
 from pathlib import Path
 
 import pytest
 
-from pefc.pipeline.steps.pack_zip import PackZip
-from pefc.pipeline.core import PipelineContext
 from pefc.errors import PackBuildError
+from pefc.pipeline.core import PipelineContext
+from pefc.pipeline.steps.pack_zip import PackZip
 
 
 class TestZipDedupGuard:
@@ -421,14 +422,14 @@ class TestZipDedupGuard:
 
         # Create pipeline context with unicode whitespace duplicates
         ctx = PipelineContext()
-        ctx.add_file("file\u00A0.txt", file1)  # Non-breaking space
-        ctx.add_file("file\u00A0.txt", file2)  # Duplicate
+        ctx.add_file("file\u00a0.txt", file1)  # Non-breaking space
+        ctx.add_file("file\u00a0.txt", file2)  # Duplicate
 
         # Create PackZip step
         step = PackZip({"out": str(temp_workspace / "test.zip")})
 
         # Run step - should raise error
-        with pytest.raises(PackBuildError, match="duplicate arcname: file\u00A0.txt"):
+        with pytest.raises(PackBuildError, match="duplicate arcname: file\u00a0.txt"):
             step.run(ctx)
 
     def test_pack_zip_with_duplicates_control_characters(self, temp_workspace: Path):
@@ -463,14 +464,14 @@ class TestZipDedupGuard:
 
         # Create pipeline context with high unicode duplicates
         ctx = PipelineContext()
-        ctx.add_file("file\u1F600.txt", file1)  # Emoji
-        ctx.add_file("file\u1F600.txt", file2)  # Duplicate
+        ctx.add_file("file\u1f600.txt", file1)  # Emoji
+        ctx.add_file("file\u1f600.txt", file2)  # Duplicate
 
         # Create PackZip step
         step = PackZip({"out": str(temp_workspace / "test.zip")})
 
         # Run step - should raise error
-        with pytest.raises(PackBuildError, match="duplicate arcname: file\u1F600.txt"):
+        with pytest.raises(PackBuildError, match="duplicate arcname: file\u1f600.txt"):
             step.run(ctx)
 
     def test_pack_zip_with_duplicates_very_long_names(self, temp_workspace: Path):

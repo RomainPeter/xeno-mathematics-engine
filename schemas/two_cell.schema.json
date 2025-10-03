@@ -22,7 +22,7 @@
       "description": "Plan state before transformation"
     },
     "plan_after": {
-      "type": "object", 
+      "type": "object",
       "description": "Plan state after transformation"
     },
     "phi_before": {
@@ -71,7 +71,7 @@
       "description": "Predicted value change (ΔV) before application"
     },
     "delta_v_observed": {
-      "type": "number", 
+      "type": "number",
       "description": "Observed value change (ΔV) after application"
     },
     "selection_result": {
@@ -113,7 +113,7 @@
   },
   "required": [
     "cell_id",
-    "timestamp", 
+    "timestamp",
     "strategy_applied",
     "phi_before",
     "phi_after",

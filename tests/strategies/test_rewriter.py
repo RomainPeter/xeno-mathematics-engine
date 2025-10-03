@@ -4,14 +4,12 @@ Tests cycle detection, depth caps, and idempotence.
 """
 
 from unittest.mock import Mock
-from proofengine.orchestrator.rewriter import PlanRewriter, CycleDetector
+
 from proofengine.orchestrator.checker import BasicChecker
-from proofengine.orchestrator.strategy_api import (
-    Strategy,
-    StrategyContext,
-    RewritePlan,
-    RewriteOperation,
-)
+from proofengine.orchestrator.rewriter import CycleDetector, PlanRewriter
+from proofengine.orchestrator.strategy_api import (RewriteOperation,
+                                                   RewritePlan, Strategy,
+                                                   StrategyContext)
 
 
 class TestCycleDetector:

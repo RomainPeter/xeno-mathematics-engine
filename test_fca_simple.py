@@ -3,16 +3,16 @@
 Test simple pour FCA Next-Closure algorithm.
 """
 
-import sys
 import os
+import sys
 
 # Ajouter le répertoire courant au path
 sys.path.insert(0, os.getcwd())
 
 try:
-    from proofengine.fca.context import FormalContext, Object, Attribute
-    from proofengine.fca.next_closure import NextClosure
     from proofengine.fca.ae_engine import NextClosureAEEngine
+    from proofengine.fca.context import Attribute, FormalContext, Object
+    from proofengine.fca.next_closure import NextClosure
 
     print("✅ Imports FCA réussis")
 except ImportError as e:
@@ -47,7 +47,7 @@ def test_simple_context():
         extent_names = [obj.name for obj in concept.extent.objects]
         intent_names = [attr.name for attr in concept.intent.attributes]
         print(
-            f"  {i+1}. Extent: {{{', '.join(extent_names)}}}, Intent: {{{', '.join(intent_names)}}}"
+            f"  {i + 1}. Extent: {{{', '.join(extent_names)}}}, Intent: {{{', '.join(intent_names)}}}"
         )
 
     return len(concepts) > 0
@@ -83,10 +83,10 @@ def test_ae_engine():
             extent_names = [obj.name for obj in result.concept.extent.objects]
             intent_names = [attr.name for attr in result.concept.intent.attributes]
             print(
-                f"  Étape {step+1}: Extent: {{{', '.join(extent_names)}}}, Intent: {{{', '.join(intent_names)}}}"
+                f"  Étape {step + 1}: Extent: {{{', '.join(extent_names)}}}, Intent: {{{', '.join(intent_names)}}}"
             )
         else:
-            print(f"  Étape {step+1}: {result.error if result.error else 'Pas de concept'}")
+            print(f"  Étape {step + 1}: {result.error if result.error else 'Pas de concept'}")
             break
 
     return True

@@ -55,9 +55,3 @@ Troubleshooting
 Expected Outputs (Example)
 - merkle_root: stored in {run_dir}/manifest.json
 - verify --file <path> should return file_ok=true when the path is present in merkle.json order
-
-
-
-
-
-

@@ -3,12 +3,9 @@ Tests for Bandit LinUCB + DPP selection.
 """
 
 import pytest
-from policy.bandit import LinUCB, ThompsonSampling, BanditContext
-from policy.diversity import (
-    DPPSelector,
-    SubmodularSelector,
-    DiversityItem,
-)
+
+from policy.bandit import BanditContext, LinUCB, ThompsonSampling
+from policy.diversity import DiversityItem, DPPSelector, SubmodularSelector
 
 
 class TestLinUCB:
@@ -168,7 +165,7 @@ class TestDPPSelector:
 
     def test_statistics(self, selector, test_items):
         """Test selector statistics."""
-        selection = selector.select_diverse_items(test_items, k=3)
+        selector.select_diverse_items(test_items, k=3)
 
         stats = selector.get_statistics()
 
@@ -232,7 +229,7 @@ class TestSubmodularSelector:
 
     def test_statistics(self, selector, test_items):
         """Test selector statistics."""
-        selection = selector.select_diverse_items(test_items, k=3)
+        selector.select_diverse_items(test_items, k=3)
 
         stats = selector.get_statistics()
 

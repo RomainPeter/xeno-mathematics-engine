@@ -3,17 +3,17 @@ Execution modes for 2-category transformations.
 Implements shadow mode and active gated mode.
 """
 
-from typing import Dict, List, Any, Optional
-from dataclasses import dataclass
-from enum import Enum
 import json
 import os
+from dataclasses import dataclass
 from datetime import datetime
+from enum import Enum
+from typing import Any, Dict, List, Optional
 
-from .strategy_api import StrategyContext, StrategySelector, StrategyRegistry
-from ..metrics import ExecutionMetrics, WorkUnits, TimeBreakdown, CacheInfo
+from ..metrics import CacheInfo, ExecutionMetrics, TimeBreakdown, WorkUnits
 from .rewriter import PlanRewriter
 from .selector import SelectionResult
+from .strategy_api import StrategyContext, StrategyRegistry, StrategySelector
 
 
 class ExecutionMode(Enum):

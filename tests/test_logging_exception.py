@@ -1,5 +1,6 @@
 import json
-from pefc.logging import init_logging, get_logger
+
+from pefc.logging import get_logger, init_logging
 
 
 def test_exception_logging_json(capsys):

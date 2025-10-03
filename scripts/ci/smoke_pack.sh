@@ -69,11 +69,3 @@ PY
 "$RUN_DIR"
 
 echo "[OK] Smoke pack test completed."
-
-
-
-
-
-
-
-

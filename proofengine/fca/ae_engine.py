@@ -3,13 +3,13 @@ Attribute Exploration (AE) Engine implementation.
 Provides AEEngine with next_step() and comprehensive statistics.
 """
 
-from typing import Dict, Any, Optional, List, Set
-from dataclasses import dataclass, field
 import time
 from abc import ABC, abstractmethod
+from dataclasses import dataclass, field
+from typing import Any, Dict, List, Optional, Set
 
-from .context import FormalContext, Intent, Attribute
-from .next_closure import NextClosure, Concept, ConceptLattice
+from .context import Attribute, FormalContext, Intent
+from .next_closure import Concept, ConceptLattice, NextClosure
 
 
 @dataclass

@@ -8,7 +8,7 @@
       "type": "string",
       "enum": [
         "LowNovelty",
-        "LowCoverage", 
+        "LowCoverage",
         "ConstraintBreach",
         "OracleTimeout",
         "Flaky",
@@ -46,4 +46,3 @@
   },
   "required": ["code", "severity", "timestamp"]
 }
-

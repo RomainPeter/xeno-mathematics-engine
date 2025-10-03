@@ -44,5 +44,3 @@ echo "[demo] Checking KPIs and incidents..."
 python scripts/check_e2e.py --run-dir "${RUN_DIR}" --kpi-threshold "${KPI_THRESHOLD}" --require-no-fatal
 
 echo "[demo] Done. Artifacts in: ${RUN_DIR}"
-
-

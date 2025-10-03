@@ -7,9 +7,9 @@ import hashlib
 import json
 import random
 import time
-from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any, Dict, List, Optional, Tuple
 
 
 @dataclass
@@ -87,12 +87,12 @@ class PromptContractManager:
         """Generate prompt content."""
         prompt = f"""
 Goal: {goal}
-Generate {k} diverse items with the following diversity keys: {', '.join(diversity_keys)}
-Hard constraints: {', '.join(hard_constraints)}
+Generate {k} diverse items with the following diversity keys: {", ".join(diversity_keys)}
+Hard constraints: {", ".join(hard_constraints)}
 
 Please provide structured output with the following fields:
 - premises: List of premises
-- conclusions: List of conclusions  
+- conclusions: List of conclusions
 - justification: Explanation
 - diversity_key: One of {diversity_keys}
 """

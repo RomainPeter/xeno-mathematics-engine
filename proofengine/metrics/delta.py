@@ -2,7 +2,8 @@
 Delta metrics for structural changes and obligation violations.
 """
 
-from typing import Dict, Set, Tuple, Any
+from typing import Any, Dict, Set, Tuple
+
 import libcst as cst
 
 

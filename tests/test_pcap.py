@@ -2,19 +2,15 @@
 Tests pour le système PCAP.
 """
 
-import pytest
 import json
 import os
 import tempfile
+
+import pytest
+
+from proofengine.core.pcap import (list_pcaps, merkle_of, now_iso, read_pcap,
+                                   verify_pcap_chain, write_pcap)
 from proofengine.core.schemas import PCAP, VJustification
-from proofengine.core.pcap import (
-    now_iso,
-    merkle_of,
-    write_pcap,
-    read_pcap,
-    list_pcaps,
-    verify_pcap_chain,
-)
 
 
 class TestPCAPSchemas:

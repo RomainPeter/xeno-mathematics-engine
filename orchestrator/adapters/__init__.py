@@ -15,13 +15,17 @@ __all__ = [
 
 # Optionally expose real adapters if their dependencies are available
 try:
+    from .bandit_strategy import BanditConfig, BanditStrategy  # type: ignore
+    from .diversity_strategy import DiversityConfig  # type: ignore
+    from .diversity_strategy import DiversityStrategy
     from .llm_adapter import LLMAdapter, LLMConfig, LLMResponse  # type: ignore
-    from .verifier import Verifier, VerificationResult, VerificationConfig  # type: ignore
     from .oracle_adapter import OracleAdapter, OracleConfig  # type: ignore
-    from .bandit_strategy import BanditStrategy, BanditConfig  # type: ignore
-    from .diversity_strategy import DiversityStrategy, DiversityConfig  # type: ignore
-    from .synthesis_strategy import SynthesisStrategy, SynthesisConfig  # type: ignore
-    from .refinement_strategy import RefinementStrategy, RefinementConfig  # type: ignore
+    from .refinement_strategy import RefinementConfig  # type: ignore
+    from .refinement_strategy import RefinementStrategy
+    from .synthesis_strategy import SynthesisConfig  # type: ignore
+    from .synthesis_strategy import SynthesisStrategy
+    from .verifier import VerificationConfig  # type: ignore
+    from .verifier import VerificationResult, Verifier
 
     __all__ += [
         "LLMAdapter",
@@ -41,6 +45,8 @@ try:
         "RefinementStrategy",
         "RefinementConfig",
     ]
-except Exception:
+except Exception as e:
     # Lab mode can proceed without real adapters
-    pass
+    import logging
+
+    logging.warning(f"Failed to import adapters: {e}")

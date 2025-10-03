@@ -2,6 +2,7 @@
 """
 Tests for manifest and Merkle root validation and reproducibility.
 """
+
 import json
 import zipfile
 from pathlib import Path
@@ -9,13 +10,9 @@ from typing import Any, List
 
 import pytest
 
-from pefc.pack.merkle import build_entries, compute_merkle_root, build_manifest
-from pefc.pack.verify import (
-    verify_zip,
-    load_manifest,
-    verify_files_sha256,
-    verify_merkle,
-)
+from pefc.pack.merkle import build_entries, build_manifest, compute_merkle_root
+from pefc.pack.verify import (load_manifest, verify_files_sha256,
+                              verify_merkle, verify_zip)
 
 
 class TestManifestMerkle:
@@ -73,8 +70,8 @@ class TestManifestMerkle:
     def test_merkle_root_reproducibility(self, sample_files: List[Path]):
         """Test that Merkle root is reproducible for identical content."""
         # Create entries twice
-        entries1 = build_entries([(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)])
-        entries2 = build_entries([(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)])
+        entries1 = build_entries([(f, f"file{i + 1}.txt") for i, f in enumerate(sample_files)])
+        entries2 = build_entries([(f, f"file{i + 1}.txt") for i, f in enumerate(sample_files)])
 
         # Compute Merkle roots
         root1 = compute_merkle_root(entries1)
@@ -86,9 +83,9 @@ class TestManifestMerkle:
     def test_merkle_root_deterministic_ordering(self, sample_files: List[Path]):
         """Test that Merkle root is deterministic regardless of file order."""
         # Create entries in different orders
-        entries1 = build_entries([(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)])
+        entries1 = build_entries([(f, f"file{i + 1}.txt") for i, f in enumerate(sample_files)])
         entries2 = build_entries(
-            [(f, f"file{i+1}.txt") for i, f in enumerate(reversed(sample_files))]
+            [(f, f"file{i + 1}.txt") for i, f in enumerate(reversed(sample_files))]
         )
 
         # Compute Merkle roots
@@ -101,7 +98,7 @@ class TestManifestMerkle:
     def test_manifest_merkle_consistency(self, temp_workspace: Path, sample_files: List[Path]):
         """Test that manifest Merkle root matches actual Merkle root."""
         # Create entries
-        entries = build_entries([(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)])
+        entries = build_entries([(f, f"file{i + 1}.txt") for i, f in enumerate(sample_files)])
         merkle_root = compute_merkle_root(entries)
 
         # Build manifest
@@ -132,7 +129,7 @@ class TestManifestMerkle:
         zip_path = temp_workspace / "test.zip"
 
         # Create entries
-        entries = build_entries([(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)])
+        entries = build_entries([(f, f"file{i + 1}.txt") for i, f in enumerate(sample_files)])
         merkle_root = compute_merkle_root(entries)
 
         # Build manifest
@@ -147,7 +144,7 @@ class TestManifestMerkle:
         with zipfile.ZipFile(zip_path, "w") as zf:
             # Add files
             for i, file_path in enumerate(sample_files):
-                zf.write(file_path, f"file{i+1}.txt")
+                zf.write(file_path, f"file{i + 1}.txt")
 
             # Add manifest and merkle
             zf.writestr("manifest.json", json.dumps(manifest, indent=2))
@@ -195,7 +192,7 @@ class TestManifestMerkle:
         # Create ZIP
         zip_path = temp_workspace / "test.zip"
 
-        entries = build_entries([(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)])
+        entries = build_entries([(f, f"file{i + 1}.txt") for i, f in enumerate(sample_files)])
         merkle_root = compute_merkle_root(entries)
 
         manifest = build_manifest(
@@ -207,7 +204,7 @@ class TestManifestMerkle:
 
         with zipfile.ZipFile(zip_path, "w") as zf:
             for i, file_path in enumerate(sample_files):
-                zf.write(file_path, f"file{i+1}.txt")
+                zf.write(file_path, f"file{i + 1}.txt")
             zf.writestr("manifest.json", json.dumps(manifest, indent=2))
             zf.writestr("merkle.txt", merkle_root + "\n")
 
@@ -224,7 +221,7 @@ class TestManifestMerkle:
         # Create ZIP
         zip_path = temp_workspace / "test.zip"
 
-        entries = build_entries([(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)])
+        entries = build_entries([(f, f"file{i + 1}.txt") for i, f in enumerate(sample_files)])
         merkle_root = compute_merkle_root(entries)
 
         manifest = build_manifest(
@@ -236,7 +233,7 @@ class TestManifestMerkle:
 
         with zipfile.ZipFile(zip_path, "w") as zf:
             for i, file_path in enumerate(sample_files):
-                zf.write(file_path, f"file{i+1}.txt")
+                zf.write(file_path, f"file{i + 1}.txt")
             zf.writestr("manifest.json", json.dumps(manifest, indent=2))
             zf.writestr("merkle.txt", merkle_root + "\n")
 
@@ -253,7 +250,7 @@ class TestManifestMerkle:
         # Create ZIP
         zip_path = temp_workspace / "test.zip"
 
-        entries = build_entries([(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)])
+        entries = build_entries([(f, f"file{i + 1}.txt") for i, f in enumerate(sample_files)])
         merkle_root = compute_merkle_root(entries)
 
         manifest = build_manifest(
@@ -265,7 +262,7 @@ class TestManifestMerkle:
 
         with zipfile.ZipFile(zip_path, "w") as zf:
             for i, file_path in enumerate(sample_files):
-                zf.write(file_path, f"file{i+1}.txt")
+                zf.write(file_path, f"file{i + 1}.txt")
             zf.writestr("manifest.json", json.dumps(manifest, indent=2))
             zf.writestr("merkle.txt", merkle_root + "\n")
 
@@ -279,7 +276,7 @@ class TestManifestMerkle:
         # Create ZIP with corrupted file
         zip_path = temp_workspace / "test.zip"
 
-        entries = build_entries([(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)])
+        entries = build_entries([(f, f"file{i + 1}.txt") for i, f in enumerate(sample_files)])
         merkle_root = compute_merkle_root(entries)
 
         manifest = build_manifest(
@@ -293,7 +290,7 @@ class TestManifestMerkle:
             # Add corrupted file (different content)
             zf.writestr("file1.txt", b"corrupted content")
             for i, file_path in enumerate(sample_files[1:], 1):
-                zf.write(file_path, f"file{i+1}.txt")
+                zf.write(file_path, f"file{i + 1}.txt")
             zf.writestr("manifest.json", json.dumps(manifest, indent=2))
             zf.writestr("merkle.txt", merkle_root + "\n")
 
@@ -311,7 +308,7 @@ class TestManifestMerkle:
 
         with zipfile.ZipFile(zip_path, "w") as zf:
             for i, file_path in enumerate(sample_files):
-                zf.write(file_path, f"file{i+1}.txt")
+                zf.write(file_path, f"file{i + 1}.txt")
             zf.writestr("merkle.txt", "dummy_merkle_root\n")
 
         # Test verification (should fail)
@@ -326,7 +323,7 @@ class TestManifestMerkle:
         # Create ZIP
         zip_path = temp_workspace / "test.zip"
 
-        entries = build_entries([(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)])
+        entries = build_entries([(f, f"file{i + 1}.txt") for i, f in enumerate(sample_files)])
         merkle_root = compute_merkle_root(entries)
 
         manifest = build_manifest(
@@ -338,7 +335,7 @@ class TestManifestMerkle:
 
         with zipfile.ZipFile(zip_path, "w") as zf:
             for i, file_path in enumerate(sample_files):
-                zf.write(file_path, f"file{i+1}.txt")
+                zf.write(file_path, f"file{i + 1}.txt")
             zf.writestr("manifest.json", json.dumps(manifest, indent=2))
             zf.writestr("merkle.txt", merkle_root + "\n")
 
@@ -357,7 +354,7 @@ class TestManifestMerkle:
     ):
         """Test that manifest.json and merkle.txt are excluded from Merkle calculation."""
         # Create entries
-        entries = build_entries([(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)])
+        entries = build_entries([(f, f"file{i + 1}.txt") for i, f in enumerate(sample_files)])
         merkle_root = compute_merkle_root(entries)
 
         # Build manifest
@@ -380,7 +377,7 @@ class TestManifestMerkle:
     def test_manifest_reproducibility(self, sample_files: List[Path]):
         """Test that manifest generation is reproducible."""
         # Create entries
-        entries = build_entries([(f, f"file{i+1}.txt") for i, f in enumerate(sample_files)])
+        entries = build_entries([(f, f"file{i + 1}.txt") for i, f in enumerate(sample_files)])
         merkle_root = compute_merkle_root(entries)
 
         # Build manifest twice

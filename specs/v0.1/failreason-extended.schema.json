@@ -10,7 +10,7 @@
       "type": "string",
       "enum": [
         "LowNovelty",
-        "LowCoverage", 
+        "LowCoverage",
         "HighRisk",
         "ConstraintBreach",
         "NonMinCoverage",
@@ -44,4 +44,3 @@
   "required": ["version", "id", "code", "handlers", "recovery_strategy"],
   "additionalProperties": false
 }
-

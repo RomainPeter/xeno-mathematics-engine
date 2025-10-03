@@ -25,6 +25,6 @@ jobs:
           else
           pip install --quiet pyyaml
           fi
-          
+
       - name: Run S1 checks
         run: python3 spec_pack/tools/run_s1.py

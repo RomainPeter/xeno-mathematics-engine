@@ -3,27 +3,28 @@
 Build Public Benchmark Pack
 Creates a zip file with summary.json, seeds, merkle.txt, sbom.json, reproduce.md
 """
-import json
-import zipfile
-import hashlib
+
 import argparse
+import hashlib
+import json
 import sys
 import time
-from pathlib import Path
+import zipfile
 from datetime import datetime
+from pathlib import Path
 from typing import Optional
 
 # Add current directory to Python path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
-from pefc.runner import run_pack_build
-from pefc.logging import setup_logging_from_config, get_logger, set_context
 from pefc.config.loader import get_config
-from pefc.summary import build_summary
-from pefc.pack.merkle import build_entries, compute_merkle_root, build_manifest
-from pefc.pack.zipper import ZipAdder
-from pefc.metrics.build_provider import build_provider
 from pefc.events import get_event_bus
 from pefc.events import topics as E
+from pefc.logging import get_logger, set_context, setup_logging_from_config
+from pefc.metrics.build_provider import build_provider
+from pefc.pack.merkle import build_entries, build_manifest, compute_merkle_root
+from pefc.pack.zipper import ZipAdder
+from pefc.runner import run_pack_build
+from pefc.summary import build_summary
 
 # Initialize logging (will be reconfigured with config)
 logger = get_logger(__name__)
@@ -34,8 +35,10 @@ try:
     from pefc.events.subscribers import LoggingSubscriber
 
     bus.subscribe("*", LoggingSubscriber(logger).handler, priority=-100)
-except Exception:
-    pass
+except Exception as e:
+    import logging
+
+    logging.warning(f"Failed to subscribe to event bus: {e}")
 
 
 class PublicBenchPackBuilder:

@@ -1,6 +1,7 @@
-from proofengine.verifier.runner import verify_pcap_dir
 import json
 import os
+
+from proofengine.verifier.runner import verify_pcap_dir
 
 
 def main():

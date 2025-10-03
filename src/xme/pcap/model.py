@@ -1,9 +1,11 @@
 from __future__ import annotations
-from typing import Dict, Optional, Literal, Any
-from pydantic import BaseModel, Field, ConfigDict
-from datetime import datetime
+
 import hashlib
+from datetime import datetime
+from typing import Any, Dict, Literal, Optional
+
 import orjson
+from pydantic import BaseModel, ConfigDict
 
 
 def canonical_dumps(obj: Any) -> bytes:
@@ -27,7 +29,7 @@ class PCAPEntry(BaseModel):
     type: Literal["action"] = "action"
     action: str
     actor: str
-    level: Literal["S0","S1","S2"] = "S0"
+    level: Literal["S0", "S1", "S2"] = "S0"
     obligations: Dict[str, str] = {}
     deltas: Dict[str, float] = {}
     timestamp: datetime

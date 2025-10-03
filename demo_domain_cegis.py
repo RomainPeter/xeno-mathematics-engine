@@ -8,8 +8,8 @@ import asyncio
 import time
 from typing import Dict
 
+from proofengine.domain.cegis_engine import CEGISConfig, CEGISEngine, CEGISMode
 from proofengine.domain.types import CodeSnippet
-from proofengine.domain.cegis_engine import CEGISEngine, CEGISConfig, CEGISMode
 
 
 def create_toy_repo_violations() -> Dict[str, CodeSnippet]:
@@ -54,9 +54,9 @@ def create_toy_repo_violations() -> Dict[str, CodeSnippet]:
 
 def print_cegis_result(result, title: str):
     """Print CEGIS result in a formatted way."""
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"🔍 {title}")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     print(f"✅ Success: {result.success}")
     print(f"🔄 Iterations: {result.iterations}")
@@ -73,11 +73,11 @@ def print_cegis_result(result, title: str):
 
     print(f"\n🚨 Counterexamples: {len(result.counterexamples)}")
     for i, ce in enumerate(result.counterexamples[:3]):  # Show first 3
-        print(f"  {i+1}. {ce.rule} at {ce.file_path}:{ce.line_number}")
+        print(f"  {i + 1}. {ce.rule} at {ce.file_path}:{ce.line_number}")
 
     print(f"\n📦 PCAP Emissions: {len(result.pcap_emissions)}")
     for i, pcap in enumerate(result.pcap_emissions):
-        print(f"  {i+1}. Iteration {pcap['iteration']}: {pcap['status']}")
+        print(f"  {i + 1}. Iteration {pcap['iteration']}: {pcap['status']}")
 
     if result.metadata:
         print("\n📋 Metadata:")
@@ -250,16 +250,16 @@ async def test_concurrent_execution():
 
     # Check all results
     for i, result in enumerate(results):
-        print(f"\n  Task {i+1}:")
+        print(f"\n  Task {i + 1}:")
         print(f"    Success: {result.success}")
         print(f"    Iterations: {result.iterations}")
         print(f"    Time: {result.convergence_time:.3f}s")
 
         # Check convergence criteria
-        assert result.iterations <= 5, f"Task {i+1} took {result.iterations} iterations > 5"
-        assert result.success, f"Task {i+1} should converge successfully"
-        assert result.final_candidate is not None, f"Task {i+1} should have final candidate"
-        assert result.is_converged, f"Task {i+1} should be converged"
+        assert result.iterations <= 5, f"Task {i + 1} took {result.iterations} iterations > 5"
+        assert result.success, f"Task {i + 1} should converge successfully"
+        assert result.final_candidate is not None, f"Task {i + 1} should have final candidate"
+        assert result.is_converged, f"Task {i + 1} should be converged"
 
     print(f"✅ Concurrent execution test passed in {total_time:.3f}s")
     return results
@@ -292,17 +292,19 @@ async def test_deterministic_mode():
 
     # Check deterministic behavior
     for i, result in enumerate(results):
-        print(f"\n  Run {i+1}:")
+        print(f"\n  Run {i + 1}:")
         print(f"    Success: {result.success}")
         print(f"    Iterations: {result.iterations}")
         print(f"    Candidate ID: {result.final_candidate.id}")
 
         # Check deterministic behavior
-        assert result.success, f"Run {i+1} should succeed"
-        assert result.iterations == results[0].iterations, f"Run {i+1} should have same iterations"
+        assert result.success, f"Run {i + 1} should succeed"
+        assert (
+            result.iterations == results[0].iterations
+        ), f"Run {i + 1} should have same iterations"
         assert (
             result.final_candidate.id == results[0].final_candidate.id
-        ), f"Run {i+1} should have same candidate"
+        ), f"Run {i + 1} should have same candidate"
 
     print("✅ Deterministic mode test passed")
     return results
@@ -414,9 +416,9 @@ async def run_demo():
         # Test performance
         await test_performance_benchmark()
 
-        print(f"\n{'='*60}")
+        print(f"\n{'=' * 60}")
         print("🎉 Domain CEGIS Demo Completed Successfully!")
-        print(f"{'='*60}")
+        print(f"{'=' * 60}")
         print("✅ All convergence tests passed")
         print("✅ All performance tests passed")
         print("✅ All concurrent execution tests passed")

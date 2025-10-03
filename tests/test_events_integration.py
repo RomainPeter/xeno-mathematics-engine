@@ -5,10 +5,12 @@ Integration smoke test for AE/CEGIS event emissions using MemorySink.
 import asyncio
 import uuid
 
-from pefc.events import EventBusConfig, StructuredEventBus, MemorySink, get_event_bus
-from orchestrator.engines.next_closure_engine import NextClosureEngine, AEContext
 from orchestrator.engines.cegis_async_engine import AsyncCegisEngine
 from orchestrator.engines.cegis_engine import CegisContext, Verdict
+from orchestrator.engines.next_closure_engine import (AEContext,
+                                                      NextClosureEngine)
+from pefc.events import (EventBusConfig, MemorySink, StructuredEventBus,
+                         get_event_bus)
 
 
 async def _run_smoke():

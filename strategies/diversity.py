@@ -3,10 +3,11 @@ Diversity strategies for Discovery Engine 2-Cat.
 Migrated from proof-engine-for-code.
 """
 
-import numpy as np
-from typing import Dict, List, Any
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any, Dict, List
+
+import numpy as np
 
 
 @dataclass

@@ -3,23 +3,16 @@ Code compliance verifier.
 Implements verify() with static analysis (LibCST/regex) + unit test généré -> Verdict|CE.
 """
 
+import os
 import re
 import subprocess
 import tempfile
-import os
 import time
-from typing import Dict, Any, List
 from dataclasses import dataclass
+from typing import Any, Dict, List
 
-from .types import (
-    Candidate,
-    Verdict,
-    Counterexample,
-    ComplianceResult,
-    ComplianceStatus,
-    Proof,
-    CodeSnippet,
-)
+from .types import (Candidate, CodeSnippet, ComplianceResult, ComplianceStatus,
+                    Counterexample, Proof, Verdict)
 
 
 @dataclass
@@ -187,25 +180,25 @@ def test_deprecated_api_fix():
     """Test that deprecated API is fixed."""
     # Test the patch
     {candidate.patch}
-    
+
     # Verify no deprecated APIs are used
     import ast
     import inspect
-    
+
     # Get the current frame's code
     frame = inspect.currentframe()
     code = frame.f_code
-    
+
     # Parse the code
     tree = ast.parse(code.co_code)
-    
+
     # Check for deprecated API calls
     for node in ast.walk(tree):
         if isinstance(node, ast.Call):
             if hasattr(node.func, 'id'):
                 assert node.func.id not in ['foo_v1', 'bar_v1', 'baz_v1'], \
                     f"Deprecated API {{node.func.id}} found"
-    
+
     print("✓ No deprecated APIs found")
 
 if __name__ == "__main__":
@@ -221,17 +214,17 @@ def test_naming_convention_fix():
     """Test that naming convention is followed."""
     # Test the patch
     {candidate.patch}
-    
+
     # Verify naming convention
     import inspect
-    
+
     # Get the current frame's code
     frame = inspect.currentframe()
     code = frame.f_code
-    
+
     # Check for snake_case naming
     snake_case_pattern = r'^[a-z][a-z0-9_]*$'
-    
+
     # This is a simplified check - in practice you'd parse the AST
     print("✓ Naming convention check passed")
 
@@ -248,17 +241,17 @@ def test_security_fix():
     """Test that security issues are fixed."""
     # Test the patch
     {candidate.patch}
-    
+
     # Verify no security issues
     import inspect
-    
+
     # Get the current frame's code
     frame = inspect.currentframe()
     code = frame.f_code
-    
+
     # Check for dangerous functions
     dangerous_functions = ['eval', 'exec', 'os.system']
-    
+
     # This is a simplified check - in practice you'd parse the AST
     print("✓ No security issues found")
 
@@ -274,7 +267,7 @@ def test_generic_fix():
     """Test generic fix."""
     # Test the patch
     {candidate.patch}
-    
+
     # Basic verification
     print("✓ Generic test passed")
 

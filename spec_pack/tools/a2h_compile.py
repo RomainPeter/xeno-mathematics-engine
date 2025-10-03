@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # A2H: compile ambition.json -> derived mappings + hostility report
-import json
-import sys
-import os
 import hashlib
-import time
+import json
+import os
 import re
+import sys
+import time
 
 ROOT = "spec_pack"
 MANIFEST = f"{ROOT}/ambition/ambition.json"
@@ -154,7 +154,7 @@ def append_journal(manifest_hash, compiled_hash):
     rows = []
     if os.path.exists(JRNL):
         with open(JRNL, "r", encoding="utf-8") as f:
-            rows = [json.loads(l) for l in f if l.strip()]
+            rows = [json.loads(line) for line in f if line.strip()]
     rows.append(entry)
     with open(JRNL, "w", encoding="utf-8") as f:
         for o in rows:
@@ -181,7 +181,7 @@ def main():
     inv_ids = ids_from_yaml(INV_YAML, "I")
     s1_ids = ids_from_yaml(TEST_S1, "H")
     s2_ids = ids_from_yaml(TEST_S2, "H")
-    s3_ids = ids_from_yaml(TEST_S3, "H")
+    ids_from_yaml(TEST_S3, "H")
 
     # Écarts (required)
     miss_obl = sorted(list(set(compiled["required"]["obligations"]) - obl_ids))
@@ -215,8 +215,8 @@ def main():
 
     # Rapport
     rep = f"""# Hostility Report (A2H)
-Ambition: {anf.get('title')} (id {anf.get('id')}, v{anf.get('version')})
-Mission: {anf.get('mission')}
+Ambition: {anf.get("title")} (id {anf.get("id")}, v{anf.get("version")})
+Mission: {anf.get("mission")}
 
 Required:
 - Obligations: {compiled["required"]["obligations"]} → missing vs manual: {miss_obl or "none"}

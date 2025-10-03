@@ -6,7 +6,7 @@ from pathlib import Path
 # Stubs d'intégration: importez vos modules si dispo
 try:
     from orchestrator.handlers.failreason import handle_fail
-    from orchestrator.state import XState, Journal
+    from orchestrator.state import Journal, XState
 except Exception:
     handle_fail = None
 

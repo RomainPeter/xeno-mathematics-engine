@@ -2,6 +2,7 @@
 """
 Tests simples pour PEFC CLI.
 """
+
 from typer.testing import CliRunner
 
 from pefc.cli import app

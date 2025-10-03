@@ -5,14 +5,13 @@ Tests gates, rollback logic, budget constraints, and strategy application.
 """
 
 from unittest.mock import Mock
-from proofengine.orchestrator.modes import TwoCategoryOrchestrator, ActiveResult
-from proofengine.orchestrator.strategy_api import (
-    StrategyContext,
-    StrategyRegistry,
-    Guards,
-)
+
+from proofengine.orchestrator.modes import (ActiveResult,
+                                            TwoCategoryOrchestrator)
 from proofengine.orchestrator.rewriter import PlanRewriter
-from proofengine.orchestrator.selector import StrategySelector, SelectionResult
+from proofengine.orchestrator.selector import SelectionResult, StrategySelector
+from proofengine.orchestrator.strategy_api import (Guards, StrategyContext,
+                                                   StrategyRegistry)
 
 
 class TestActiveGatedMode:

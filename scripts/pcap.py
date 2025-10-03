@@ -4,13 +4,13 @@ PCAP CLI v0.1 - Proof-Carrying Action toolchain
 Commands: new, verify, attest
 """
 
+import argparse
+import hashlib
 import json
 import sys
-import argparse
-from pathlib import Path
-from datetime import datetime
-import hashlib
 import uuid
+from datetime import datetime
+from pathlib import Path
 
 
 def load_schema(name):

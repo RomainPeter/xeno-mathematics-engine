@@ -1,6 +1,7 @@
 from __future__ import annotations
-from pefc.events.subscribers import PrometheusStub
+
 from pefc.events.bus import EventBus
+from pefc.events.subscribers import PrometheusStub
 
 
 def test_prometheus_stub_counting():

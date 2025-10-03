@@ -1,6 +1,8 @@
 from __future__ import annotations
-from pathlib import Path
+
 from dataclasses import dataclass
+from pathlib import Path
+
 from pefc.errors import SignatureError
 
 

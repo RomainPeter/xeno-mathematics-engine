@@ -2,7 +2,7 @@
 Deterministic Verifier stub for lab mode.
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 
 class VerifierStub:

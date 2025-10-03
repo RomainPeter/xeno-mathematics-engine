@@ -14,17 +14,12 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from proofengine.core.egraph import (
-    EGraph,
-    canonicalize_state,
-    canonicalize_choreography,
-)
+from proofengine.core.egraph import (EGraph, canonicalize_choreography,
+                                     canonicalize_state)
 from proofengine.orchestrator.ae_loop import AELoop, Implication
 from proofengine.orchestrator.cegis_loop import CEGISLoop, Choreography
-from proofengine.orchestrator.unified_orchestrator import (
-    UnifiedOrchestrator,
-    ExplorationConfig,
-)
+from proofengine.orchestrator.unified_orchestrator import (ExplorationConfig,
+                                                           UnifiedOrchestrator)
 
 
 async def test_egraph_functionality():
@@ -80,7 +75,7 @@ async def test_ae_loop():
     }
 
     egraph = EGraph()
-    ae_loop = AELoop(domain_spec, egraph)
+    AELoop(domain_spec, egraph)
 
     # Test implication creation
     implication = Implication(
@@ -98,8 +93,6 @@ async def test_ae_loop():
     print("✅ Implication creation works correctly")
 
     # Test AE exploration (mock)
-    initial_context = {"domain": "RegTech", "constraints": ["K1", "K2"]}
-    budget = {"time_ms": 1000, "audit_cost": 100}
 
     # This would normally run the full AE loop, but we'll mock it
     print("✅ AE loop structure is correct")
@@ -118,7 +111,7 @@ async def test_cegis_loop():
     }
 
     egraph = EGraph()
-    cegis_loop = CEGISLoop(domain_spec, egraph)
+    CEGISLoop(domain_spec, egraph)
 
     # Test choreography creation
     choreography = Choreography(
@@ -138,8 +131,6 @@ async def test_cegis_loop():
     print("✅ Choreography creation works correctly")
 
     # Test CEGIS synthesis (mock)
-    context = {"domain": "RegTech"}
-    budget = {"time_ms": 1000, "audit_cost": 100}
 
     print("✅ CEGIS loop structure is correct")
 
@@ -340,7 +331,7 @@ async def run_all_tests():
     print("\n📊 Test Results:")
     print(f"   ✅ Passed: {passed}")
     print(f"   ❌ Failed: {failed}")
-    print(f"   📈 Success rate: {passed/(passed+failed)*100:.1f}%")
+    print(f"   📈 Success rate: {passed / (passed + failed) * 100:.1f}%")
 
     if failed == 0:
         print("\n🎉 All tests passed! Architecture Unifiée v0.1 is ready.")

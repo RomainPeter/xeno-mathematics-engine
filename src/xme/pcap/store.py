@@ -1,11 +1,13 @@
 from __future__ import annotations
-from pathlib import Path
-from typing import Iterator, Union, List, Tuple
-from datetime import datetime, timezone
-import uuid
-import orjson
-from xme.pcap.model import PCAPEntry, RunHeader, canonical_dumps, sha256_hex
 
+import uuid
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Iterator, List, Tuple
+
+import orjson
+
+from xme.pcap.model import PCAPEntry, RunHeader, canonical_dumps, sha256_hex
 
 JSONObj = dict
 
@@ -46,12 +48,16 @@ class PCAPStore:
     def read_all(self) -> Iterator[dict]:
         if not self.path.exists():
             return iter(())
-        with self.path.open("rb") as f:
-            for line in f:
-                line = line.strip()
-                if not line:
-                    continue
-                yield orjson.loads(line)
+
+        def _gen() -> Iterator[dict]:
+            with self.path.open("rb") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    yield orjson.loads(line)
+
+        return _gen()
 
     def _leaves(self) -> List[str]:
         return [obj["hash"] for obj in self.read_all() if obj.get("type") == "action"]

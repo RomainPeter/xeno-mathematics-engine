@@ -2,9 +2,10 @@
 Tests for S2 vendors scenarios
 """
 
-import pytest
 import json
 from pathlib import Path
+
+import pytest
 
 
 class TestS2Vendors:

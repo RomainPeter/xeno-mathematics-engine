@@ -53,9 +53,9 @@ def system_call():
 
 def random_usage():
     """Function with unsafe random usage."""
-    import random
+    import secrets
 
-    password = str(random.random())  # Violation: unsafe random for password
+    password = secrets.token_hex(16)  # Fixed: use secrets for password generation
     return password
 
 

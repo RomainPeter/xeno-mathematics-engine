@@ -1,8 +1,9 @@
 from __future__ import annotations
+
 from pefc.capabilities.manager import CapabilityManager
-from pefc.capabilities.plugins.opa_proof import OPAProofGenerator
 from pefc.capabilities.plugins.hstree_proof import HSTreeProofGenerator
 from pefc.capabilities.plugins.ids_tests import IDSTestSynthesizer
+from pefc.capabilities.plugins.opa_proof import OPAProofGenerator
 
 
 def test_plan_pcap_security_policy_violation():

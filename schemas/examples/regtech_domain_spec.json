@@ -20,7 +20,7 @@
   "evidence_types": ["ci_logs", "opa_result", "static_analysis"],
   "admissible_equations": [
     "Normalize∘Normalize=Normalize",
-    "Verify∘Verify=Verify", 
+    "Verify∘Verify=Verify",
     "Meet assoc/comm/idemp",
     "Normalize∘Retrieve ↔ Retrieve∘Normalize",
     "Verify∘Normalize ↔ Normalize∘Verify"

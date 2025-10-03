@@ -3,8 +3,9 @@ Selection strategies for the unified orchestrator.
 Implements bandit, MCTS, and Pareto selection methods.
 """
 
-from typing import Dict, List, Any
 from dataclasses import dataclass
+from typing import Any, Dict, List
+
 import numpy as np
 
 

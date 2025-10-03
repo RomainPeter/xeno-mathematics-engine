@@ -3,13 +3,13 @@ Aggressive caching system for 2-category transformations.
 Implements TTL-based caches for OPA, SBOM, and LLM responses.
 """
 
+import hashlib
 import json
 import time
-import hashlib
-from typing import Dict, Any, Optional
-from pathlib import Path
 from dataclasses import dataclass
+from pathlib import Path
 from threading import Lock
+from typing import Any, Dict, Optional
 
 
 @dataclass

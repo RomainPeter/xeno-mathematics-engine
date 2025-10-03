@@ -1,7 +1,8 @@
-import sys
+import glob
 import json
 import os
-import glob
+import sys
+
 import numpy as np
 from scipy.stats import pearsonr
 
@@ -14,8 +15,10 @@ def load_metrics(root):
             with open(f) as fh:
                 m = json.load(fh)
                 data.append(m)
-        except Exception:
-            pass
+        except Exception as e:
+            import logging
+
+            logging.warning(f"Failed to load metrics from {f}: {e}")
     return data
 
 

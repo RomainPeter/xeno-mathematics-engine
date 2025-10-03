@@ -4,14 +4,14 @@ Determinism Test for Discovery Engine 2-Cat
 Ensures reproducible results across multiple runs with identical seeds
 """
 
+import hashlib
 import json
+import statistics
 import subprocess
 import sys
 import time
-import hashlib
 from pathlib import Path
-from typing import Dict, List, Any
-import statistics
+from typing import Any, Dict, List
 
 
 class DeterminismTester:
@@ -25,7 +25,7 @@ class DeterminismTester:
         print(f"🔬 Running determinism test with {self.num_runs} runs (seed: {self.seed})")
 
         for i in range(self.num_runs):
-            print(f"\n🏃 Run {i+1}/{self.num_runs}...")
+            print(f"\n🏃 Run {i + 1}/{self.num_runs}...")
             result = self._run_single_execution()
             self.results.append(result)
 

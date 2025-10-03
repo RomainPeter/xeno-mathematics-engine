@@ -3,11 +3,11 @@ Next-Closure algorithm for Formal Concept Analysis.
 Implements the Next-Closure algorithm with lectic order and concept iteration.
 """
 
-from typing import List, Iterator, Optional, Set
-from dataclasses import dataclass
 import time
+from dataclasses import dataclass
+from typing import Iterator, List, Optional, Set
 
-from .context import FormalContext, Intent, Attribute, Extent
+from .context import Attribute, Extent, FormalContext, Intent
 
 
 def lectic_leq(intent1: Intent, intent2: Intent, attribute_order: List[Attribute]) -> bool:

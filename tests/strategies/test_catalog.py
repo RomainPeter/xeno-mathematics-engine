@@ -3,15 +3,13 @@ Tests for the strategy catalog.
 Tests golden cases for each strategy.
 """
 
-from proofengine.strategies import (
-    SpecializeThenRetryStrategy,
-    AddMissingTestsStrategy,
-    RequireSemverStrategy,
-    ChangelogOrBlockStrategy,
-    DecomposeMeetStrategy,
-    RetryWithHardeningStrategy,
-)
 from proofengine.orchestrator.strategy_api import StrategyContext
+from proofengine.strategies import (AddMissingTestsStrategy,
+                                    ChangelogOrBlockStrategy,
+                                    DecomposeMeetStrategy,
+                                    RequireSemverStrategy,
+                                    RetryWithHardeningStrategy,
+                                    SpecializeThenRetryStrategy)
 
 
 class TestSpecializeThenRetryStrategy:

@@ -1,13 +1,16 @@
 """
 Schéma PSP (Proof Structure Protocol) avec validation et normalisation.
 """
+
 from __future__ import annotations
-from typing import List, Dict, Optional, Iterable
+
 from enum import Enum
-from pydantic import BaseModel, Field, field_validator, ConfigDict
-import orjson
-import networkx as nx
 from pathlib import Path
+from typing import Dict, List, Optional
+
+import networkx as nx
+import orjson
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 def _orjson_dumps(v, *, default):
@@ -57,7 +60,7 @@ class Cut(BaseModel):
 
 
 class PSP(BaseModel):
-    model_config = ConfigDict(json_dumps=_orjson_dumps, populate_by_name=True)
+    model_config = ConfigDict(populate_by_name=True)
 
     blocks: List[Block] = Field(default_factory=list)
     edges: List[Edge] = Field(default_factory=list)
@@ -69,6 +72,11 @@ class PSP(BaseModel):
     @classmethod
     def _validate_acyclic(cls, edges: List[Edge], info):
         blocks: List[Block] = info.data.get("blocks", [])
+        info.data["dag"] = cls._compute_dag_meta(blocks, edges)
+        return edges
+
+    @staticmethod
+    def _compute_dag_meta(blocks: List[Block], edges: List[Edge]) -> DAGMeta:
         g = nx.DiGraph()
         for b in blocks:
             g.add_node(b.id)
@@ -76,8 +84,7 @@ class PSP(BaseModel):
             g.add_edge(e.src, e.dst)
         if not nx.is_directed_acyclic_graph(g):
             raise ValueError("PSP graph must be acyclic")
-        info.data["dag"] = DAGMeta(nodes=g.number_of_nodes(), edges=g.number_of_edges(), acyclic=True)
-        return edges
+        return DAGMeta(nodes=g.number_of_nodes(), edges=g.number_of_edges(), acyclic=True)
 
     def canonical_json(self) -> str:
         return self.model_dump_json()
@@ -99,12 +106,10 @@ class PSP(BaseModel):
             key=lambda c: c.id,
         )
         # Recompute DAG meta
-        _ = self._validate_acyclic(self.edges, info=type("I", (), {"data": {"blocks": self.blocks}}))
+        self.dag = self._compute_dag_meta(self.blocks, self.edges)
         return self
 
-    def model_json_schema(self) -> dict:
-        # Expose pydantic-generated JSON Schema
-        return type(self).model_json_schema()
+    # Use BaseModel.model_json_schema (no override to avoid signature mismatch)
 
 
 def load_psp(path: str | Path) -> PSP:

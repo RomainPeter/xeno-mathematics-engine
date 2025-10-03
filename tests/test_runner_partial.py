@@ -1,6 +1,7 @@
-from pathlib import Path
 import json
-from pefc.runner import run_pack_build, BuildStatus
+from pathlib import Path
+
+from pefc.runner import BuildStatus, run_pack_build
 
 
 def write_cfg(tmp: Path, enable_sign: bool, key: str | None):
@@ -8,7 +9,7 @@ def write_cfg(tmp: Path, enable_sign: bool, key: str | None):
     y = tmp / "pack.yaml"
     y.write_text(
         f"""
-pack: {{ version: v0, pack_name: p, out_dir: "{tmp.as_posix()}", zip_name: "p-{ '{' }version{ '}' }.zip" }}
+pack: {{ version: v0, pack_name: p, out_dir: "{tmp.as_posix()}", zip_name: "p-{"{"}version{"}"}.zip" }}
 logging: {{ level: INFO, json: false }}
 metrics: {{
   sources: ["{tmp.as_posix()}/metrics/*.json"],
@@ -16,7 +17,7 @@ metrics: {{
   bounded_metrics: ["coverage_gain"], schema_path: "{tmp.as_posix()}/summary.schema.json"
 }}
 merkle: {{ style: v1, chunk_size: 65536 }}
-sign: {{ enabled: {str(enable_sign).lower()}, key_ref: {('"' + key + '"') if key else 'null'}, algorithm: cosign }}
+sign: {{ enabled: {str(enable_sign).lower()}, key_ref: {('"' + key + '"') if key else "null"}, algorithm: cosign }}
 """,
         encoding="utf-8",
     )

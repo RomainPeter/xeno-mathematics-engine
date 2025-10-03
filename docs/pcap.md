@@ -121,11 +121,11 @@ class CapabilityEngine:
     def issue_capability(self, subject, permissions, resource, expires):
         """Issue a new capability token."""
         pass
-    
+
     def verify_capability(self, token):
         """Verify a capability token."""
         pass
-    
+
     def revoke_capability(self, capability_id):
         """Revoke a capability."""
         pass
@@ -140,11 +140,11 @@ class ObligationManager:
     def create_obligation(self, policy_id, invariant_id, result, proof_ref):
         """Create a new obligation."""
         pass
-    
+
     def verify_obligation(self, obligation):
         """Verify an obligation is satisfied."""
         pass
-    
+
     def check_compliance(self, subject, resource):
         """Check compliance with obligations."""
         pass
@@ -231,7 +231,7 @@ class ObligationS0(BaseModel):
     invariant_id: str = Field(..., description="Invariant being enforced")
     result: str = Field(..., description="Verification result")
     proof_ref: str = Field(..., description="Reference to supporting proof")
-    
+
     class Config:
         json_schema_extra = {
             "example": {
@@ -298,14 +298,14 @@ def verify_proof_with_capability(proof, capability):
     """Verify a proof using a capability."""
     if not cap_engine.verify_capability(capability):
         raise ValueError("Invalid capability")
-    
+
     if not access_controller.check_access(
-        capability.subject, 
-        proof.id, 
+        capability.subject,
+        proof.id,
         "verify"
     ):
         raise ValueError("Insufficient permissions")
-    
+
     return psp_engine.verify_proof(proof)
 ```
 
@@ -317,7 +317,7 @@ def enforce_obligations(proof, obligations):
     for obligation in obligations:
         if not obligation_mgr.verify_obligation(obligation):
             raise ValueError(f"Obligation {obligation.policy_id} not satisfied")
-    
+
     return True
 ```
 
@@ -346,11 +346,11 @@ class CachedCapabilityEngine(CapabilityEngine):
     def __init__(self):
         super().__init__()
         self.cache = {}
-    
+
     def verify_capability(self, token):
         if token in self.cache:
             return self.cache[token]
-        
+
         result = super().verify_capability(token)
         self.cache[token] = result
         return result

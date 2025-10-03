@@ -1,7 +1,7 @@
 """
 Tests pour les vérifications PSP S1 (couverture Hasse minimale).
 """
-import pytest
+
 from xme.verifier.base import Verifier, create_obligation
 from xme.verifier.psp_checks import get_psp_obligations
 
@@ -13,22 +13,19 @@ def test_psp_hasse_minimal_valid():
         "blocks": [
             {"id": "block1", "kind": "axiom", "content": "A"},
             {"id": "block2", "kind": "lemma", "content": "B"},
-            {"id": "block3", "kind": "theorem", "content": "C"}
+            {"id": "block3", "kind": "theorem", "content": "C"},
         ],
-        "edges": [
-            {"src": "block1", "dst": "block2"},
-            {"src": "block2", "dst": "block3"}
-        ]
+        "edges": [{"src": "block1", "dst": "block2"}, {"src": "block2", "dst": "block3"}],
     }
-    
+
     verifier = Verifier()
     for obligation_id, level, check_func, description in get_psp_obligations():
         if level == "S1":
             obligation = create_obligation(obligation_id, level, check_func, description)
             verifier.register_obligation(obligation)
-    
+
     report = verifier.run_by_level(minimal_psp, "S1")
-    
+
     # La vérification Hasse minimale doit passer
     hasse_result = next((r for r in report.results if r.obligation_id == "psp_hasse_minimal"), None)
     assert hasse_result is not None
@@ -43,23 +40,23 @@ def test_psp_hasse_minimal_with_transitive_edge():
         "blocks": [
             {"id": "block1", "kind": "axiom", "content": "A"},
             {"id": "block2", "kind": "lemma", "content": "B"},
-            {"id": "block3", "kind": "theorem", "content": "C"}
+            {"id": "block3", "kind": "theorem", "content": "C"},
         ],
         "edges": [
             {"src": "block1", "dst": "block2"},
             {"src": "block2", "dst": "block3"},
-            {"src": "block1", "dst": "block3"}  # Arête transitive!
-        ]
+            {"src": "block1", "dst": "block3"},  # Arête transitive!
+        ],
     }
-    
+
     verifier = Verifier()
     for obligation_id, level, check_func, description in get_psp_obligations():
         if level == "S1":
             obligation = create_obligation(obligation_id, level, check_func, description)
             verifier.register_obligation(obligation)
-    
+
     report = verifier.run_by_level(transitive_psp, "S1")
-    
+
     # La vérification Hasse minimale doit échouer
     hasse_result = next((r for r in report.results if r.obligation_id == "psp_hasse_minimal"), None)
     assert hasse_result is not None
@@ -72,23 +69,23 @@ def test_psp_blocks_edges_consistency_valid():
     consistent_psp = {
         "blocks": [
             {"id": "block1", "kind": "axiom", "content": "A"},
-            {"id": "block2", "kind": "lemma", "content": "B"}
+            {"id": "block2", "kind": "lemma", "content": "B"},
         ],
-        "edges": [
-            {"src": "block1", "dst": "block2"}
-        ]
+        "edges": [{"src": "block1", "dst": "block2"}],
     }
-    
+
     verifier = Verifier()
     for obligation_id, level, check_func, description in get_psp_obligations():
         if level == "S1":
             obligation = create_obligation(obligation_id, level, check_func, description)
             verifier.register_obligation(obligation)
-    
+
     report = verifier.run_by_level(consistent_psp, "S1")
-    
+
     # La vérification cohérence doit passer
-    consistency_result = next((r for r in report.results if r.obligation_id == "psp_blocks_edges_consistency"), None)
+    consistency_result = next(
+        (r for r in report.results if r.obligation_id == "psp_blocks_edges_consistency"), None
+    )
     assert consistency_result is not None
     assert consistency_result.ok
     assert "consistent" in consistency_result.details.get("message", "").lower()
@@ -97,24 +94,22 @@ def test_psp_blocks_edges_consistency_valid():
 def test_psp_blocks_edges_consistency_self_loop():
     """Test que les auto-boucles échouent la vérification."""
     self_loop_psp = {
-        "blocks": [
-            {"id": "block1", "kind": "axiom", "content": "A"}
-        ],
-        "edges": [
-            {"src": "block1", "dst": "block1"}  # Auto-boucle!
-        ]
+        "blocks": [{"id": "block1", "kind": "axiom", "content": "A"}],
+        "edges": [{"src": "block1", "dst": "block1"}],  # Auto-boucle!
     }
-    
+
     verifier = Verifier()
     for obligation_id, level, check_func, description in get_psp_obligations():
         if level == "S1":
             obligation = create_obligation(obligation_id, level, check_func, description)
             verifier.register_obligation(obligation)
-    
+
     report = verifier.run_by_level(self_loop_psp, "S1")
-    
+
     # La vérification cohérence doit échouer
-    consistency_result = next((r for r in report.results if r.obligation_id == "psp_blocks_edges_consistency"), None)
+    consistency_result = next(
+        (r for r in report.results if r.obligation_id == "psp_blocks_edges_consistency"), None
+    )
     assert consistency_result is not None
     assert not consistency_result.ok
     assert "acyclic" in consistency_result.details.get("message", "").lower()
@@ -128,24 +123,24 @@ def test_psp_hasse_minimal_complex():
             {"id": "top", "kind": "axiom", "content": "Top"},
             {"id": "left", "kind": "lemma", "content": "Left"},
             {"id": "right", "kind": "lemma", "content": "Right"},
-            {"id": "bottom", "kind": "theorem", "content": "Bottom"}
+            {"id": "bottom", "kind": "theorem", "content": "Bottom"},
         ],
         "edges": [
             {"src": "top", "dst": "left"},
             {"src": "top", "dst": "right"},
             {"src": "left", "dst": "bottom"},
-            {"src": "right", "dst": "bottom"}
-        ]
+            {"src": "right", "dst": "bottom"},
+        ],
     }
-    
+
     verifier = Verifier()
     for obligation_id, level, check_func, description in get_psp_obligations():
         if level == "S1":
             obligation = create_obligation(obligation_id, level, check_func, description)
             verifier.register_obligation(obligation)
-    
+
     report = verifier.run_by_level(diamond_psp, "S1")
-    
+
     # La vérification Hasse minimale doit passer
     hasse_result = next((r for r in report.results if r.obligation_id == "psp_hasse_minimal"), None)
     assert hasse_result is not None

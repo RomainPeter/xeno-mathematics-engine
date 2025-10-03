@@ -1,12 +1,13 @@
 from __future__ import annotations
-from dataclasses import dataclass
-from pathlib import Path
-from typing import Optional
-import platform
-import sys
+
 import json
 import logging
+import platform
+import sys
+from dataclasses import dataclass
 from datetime import datetime, timezone
+from pathlib import Path
+from typing import Optional
 
 from pefc.pack.manifest_utils import load_manifest
 

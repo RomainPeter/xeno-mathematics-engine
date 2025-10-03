@@ -4,10 +4,10 @@ Provides structured failure reporting with severity levels.
 """
 
 import uuid
-from typing import Dict, List, Any, Optional
-from datetime import datetime
 from dataclasses import dataclass, field
+from datetime import datetime
 from enum import Enum
+from typing import Any, Dict, List, Optional
 
 
 class FailReasonType(Enum):

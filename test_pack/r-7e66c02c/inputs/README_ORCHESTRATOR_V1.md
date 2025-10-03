@@ -35,16 +35,16 @@ graph TD
     C --> D[CEGIS Phase]
     D --> E[Audit Pack]
     E --> F[Cleanup]
-    
+
     C --> C1[Next-Closure]
     C1 --> C2[Oracle Verification]
     C2 --> C3[PCAP Emission]
-    
+
     D --> D1[Candidate Proposal]
     D1 --> D2[Verification]
     D2 --> D3[Refinement]
     D3 --> D4[Convergence Check]
-    
+
     E --> E1[PCAPs]
     E1 --> E2[Incidents]
     E2 --> E3[Metrics]
@@ -136,31 +136,31 @@ config = OrchestratorV1Config(
     cegis_propose_timeout=10.0,
     cegis_verify_timeout=15.0,
     cegis_refine_timeout=10.0,
-    
+
     # CEGIS parameters
     cegis_max_iterations=10,
     cegis_max_stable_no_improve=3,
-    
+
     # Real component settings
     enable_budget_management=True,
     enable_async_scheduler=True,
     enable_failreason_emission=True,
-    
+
     # LLM settings
     llm_api_url="https://api.openai.com/v1/chat/completions",
     llm_api_key="your_key",
     llm_model="gpt-4",
     llm_max_tokens=2048,
     llm_temperature=0.1,
-    
+
     # Verifier settings
     verifier_timeout=20.0,
     verifier_tools=["static_analysis", "property_check", "test_execution"],
-    
+
     # Scheduler settings
     max_concurrent_tasks=10,
     scheduler_timeout=30.0,
-    
+
     # Budget settings
     budget_warning_threshold=0.8,
     budget_critical_threshold=0.95,

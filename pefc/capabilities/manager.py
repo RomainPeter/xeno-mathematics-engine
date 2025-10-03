@@ -1,7 +1,9 @@
 from __future__ import annotations
-from typing import Dict, Any, List
+
+from typing import Any, Dict, List
+
 from pefc.capabilities.core import Capability
-from pefc.pcap.model import PCAP, VVector, ProofSpec
+from pefc.pcap.model import PCAP, ProofSpec, VVector
 from pefc.pcap.utils import canonical_hash, sum_v
 
 

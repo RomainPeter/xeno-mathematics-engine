@@ -1,12 +1,7 @@
 import json
-from pefc.logging import (
-    init_logging,
-    get_logger,
-    set_context,
-    update_context,
-    clear_context,
-    get_context,
-)
+
+from pefc.logging import (clear_context, get_context, get_logger, init_logging,
+                          set_context, update_context)
 
 
 def test_context_set_and_get():

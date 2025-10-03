@@ -22,8 +22,10 @@ def _resolve_runner() -> Callable[[List[str], str], Tuple[int, str, str]]:
         candidate = getattr(legacy, "run_command", None)
         if candidate is not None and candidate is not run_command:
             return candidate  # patched version supplied by tests
-    except Exception:  # pragma: no cover - defensive
-        pass
+    except Exception as e:  # pragma: no cover - defensive
+        import logging
+
+        logging.debug(f"Legacy controller not available: {e}")
     return _run_command_impl
 
 

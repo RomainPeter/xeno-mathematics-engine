@@ -4,16 +4,16 @@ Provides EventBus with backpressure handling and structured telemetry.
 """
 
 import asyncio
-from collections import deque
-import logging
-from typing import Dict, Any, List, Optional, Callable, Union
-from dataclasses import dataclass, field
-import time
 import json
+import logging
+import time
+from collections import deque
+from dataclasses import dataclass, field
 from pathlib import Path
+from typing import Any, Callable, Dict, List, Optional, Union
 
+from .sinks import EventSink, FileJSONLSink, MemorySink, StdoutJSONLSink
 from .types import Event
-from .sinks import EventSink, StdoutJSONLSink, FileJSONLSink, MemorySink
 
 
 @dataclass
@@ -154,8 +154,10 @@ class EventBus:
                             # Best-effort pop left
                             self.buffer.popleft()
                             self.stats["dropped"] += 1
-                        except Exception:
-                            pass
+                        except Exception as e:
+                            import logging
+
+                            logging.warning(f"Error dropping event: {e}")
                     self.buffer.append(event)
                     self.stats["published"] += 1
                 else:
@@ -346,7 +348,10 @@ def replay_journal(path: Union[str, Path], callback: Callable[[Event], None]) ->
                 ev = Event.from_dict(data)
                 callback(ev)
                 count += 1
-            except Exception:
+            except Exception as e:
                 # Skip malformed lines but continue replay
+                import logging
+
+                logging.warning(f"Error replaying event: {e}")
                 continue
     return count

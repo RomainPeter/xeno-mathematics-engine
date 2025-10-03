@@ -2,9 +2,9 @@
 Deterministic LLM stub for lab mode.
 """
 
-from typing import Dict, Any, List, Optional
 import asyncio
 import random
+from typing import Any, Dict, List, Optional
 
 
 class LLMStub:

@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List
 
-import yaml
+import yaml  # type: ignore[import-untyped]
 
 
 @dataclass

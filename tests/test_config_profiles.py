@@ -1,7 +1,9 @@
 from __future__ import annotations
+
 import os
 import tempfile
 from pathlib import Path
+
 from pefc.config.loader import load_config
 
 

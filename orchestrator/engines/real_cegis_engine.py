@@ -4,17 +4,12 @@ Replaces mock components with real synthesis algorithms.
 """
 
 import uuid
-from typing import Dict, List, Any, Optional, Union
-from datetime import datetime
 from dataclasses import dataclass
+from datetime import datetime
+from typing import Any, Dict, List, Optional, Union
 
-from .cegis_engine import (
-    CegisEngine,
-    CegisContext,
-    Candidate,
-    Verdict,
-    Counterexample,
-)
+from .cegis_engine import (Candidate, CegisContext, CegisEngine,
+                           Counterexample, Verdict)
 
 
 @dataclass

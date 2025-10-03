@@ -2,16 +2,16 @@
 Plan rewriter with Φ calculation and cryptographic signatures.
 """
 
-import json
-import hmac
-import hashlib
 import base64
-from typing import Dict, Any, Optional
+import hashlib
+import hmac
+import json
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any, Dict, Optional
 
-from .strategy_api import Strategy, StrategyContext
 from ..metrics import WorkUnits
+from .strategy_api import Strategy, StrategyContext
 
 
 @dataclass

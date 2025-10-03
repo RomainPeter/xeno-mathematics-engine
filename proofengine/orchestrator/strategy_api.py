@@ -4,9 +4,9 @@ Defines interfaces for strategies, rewrite plans, guards, and checkers.
 """
 
 from abc import ABC, abstractmethod
-from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any, Dict, List, Optional, Tuple
 
 
 class RewriteOperation(Enum):

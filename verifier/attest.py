@@ -3,12 +3,15 @@ Système d'attestation pour le Proof Engine for Code v0.
 Gère la signature et la vérification des attestations.
 """
 
-import json
 import hashlib
+import json
+import os
 import time
-from typing import Dict, Any, Optional
-from cryptography.hazmat.primitives.asymmetric import ed25519
+from typing import Any, Dict, Optional
+
 from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import ed25519
+
 from proofengine.core.schemas import Attestation
 
 

@@ -4,8 +4,8 @@ Defines event structure v1 with correlation IDs and structured payloads.
 """
 
 from dataclasses import dataclass, field
-from typing import Dict, Any, Optional
 from datetime import datetime
+from typing import Any, Dict, Optional
 
 
 @dataclass

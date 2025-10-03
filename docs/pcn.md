@@ -50,14 +50,14 @@ def validate_proof_ref(proof_ref: str) -> bool:
     """Valide le format d'une référence de preuve."""
     if not proof_ref:
         return False
-    
+
     parts = proof_ref.split(":", 1)
     if len(parts) != 2:
         return False
-    
+
     proof_type, reference = parts
     valid_types = ["psp", "pcap", "merkle", "signature"]
-    
+
     return proof_type in valid_types and len(reference) > 0
 ```
 
@@ -195,10 +195,10 @@ xme referee status
 ```python
 def test_baptize_success():
     referee = Referee(cfg_path, reserve_path, symbols_path)
-    
+
     # Libérer le lineage
     AlienReserve(reserve_path).release("X123", "init")
-    
+
     # Baptiser
     verdict = referee.gate_baptism(
         lineage_id="X123",
@@ -206,7 +206,7 @@ def test_baptize_success():
         symbol="Xi_1",
         proof_ref="psp:proof123"
     )
-    
+
     assert verdict["ok"]
     assert verdict["entry"]["symbol"] == "Xi_1"
 ```
@@ -216,10 +216,10 @@ def test_baptize_success():
 ```python
 def test_baptize_embargoed():
     referee = Referee(cfg_path, reserve_path, symbols_path)
-    
+
     # Mettre sous embargo
     AlienReserve(reserve_path).register("X123", {"area": "demo"})
-    
+
     # Essayer de baptiser
     verdict = referee.gate_baptism(
         lineage_id="X123",
@@ -227,7 +227,7 @@ def test_baptize_embargoed():
         symbol="Xi_1",
         proof_ref="psp:proof123"
     )
-    
+
     assert not verdict["ok"]
     assert verdict["reason"] == "embargoed"
 ```
@@ -266,7 +266,7 @@ xme symbol baptize \
 def batch_baptize(concepts, lineage_id, proof_refs):
     """Baptise plusieurs concepts en lot."""
     referee = Referee(cfg_path, reserve_path, symbols_path)
-    
+
     results = []
     for concept, proof_ref in zip(concepts, proof_refs):
         verdict = referee.gate_baptism(
@@ -276,7 +276,7 @@ def batch_baptize(concepts, lineage_id, proof_refs):
             proof_ref=proof_ref
         )
         results.append(verdict)
-    
+
     return results
 ```
 
@@ -287,10 +287,10 @@ def verify_symbol_integrity(symbol_entry):
     """Vérifie l'intégrité d'un symbole."""
     if not symbol_entry.proof_ref:
         return False, "Missing proof reference"
-    
+
     # Vérifier la preuve selon le type
     proof_type, reference = symbol_entry.proof_ref.split(":", 1)
-    
+
     if proof_type == "psp":
         return verify_psp_proof(reference)
     elif proof_type == "pcap":

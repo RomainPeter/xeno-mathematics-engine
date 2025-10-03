@@ -5,22 +5,22 @@ Replaces all mocks with actual engines, adapters, and schedulers.
 
 import asyncio
 import uuid
-from typing import Dict, Any, Optional, List
-from datetime import datetime
 from dataclasses import dataclass
+from datetime import datetime
+from typing import Any, Dict, List, Optional
 
-from .engines.real_ae_engine import RealAEEngine
-from .engines.real_cegis_engine import RealCegisEngine
+from ..pefc.events.structured_bus import StructuredEventBus
+from ..pefc.incidents.types import Incident
+from ..pefc.pcap.model import PCAP
 from .adapters.llm_adapter import LLMAdapter
 from .adapters.verifier import Verifier
+from .config import OrchestratorConfig
+from .engines.real_ae_engine import RealAEEngine
+from .engines.real_cegis_engine import RealCegisEngine
+from .incidents.failreason import FailReasonFactory
+from .persistence import AuditPackBuilder, IncidentPersistence, PCAPPersistence
 from .scheduler.async_scheduler import AsyncScheduler
 from .scheduler.budget_manager import BudgetManager
-from .incidents.failreason import FailReasonFactory
-from .config import OrchestratorConfig
-from .persistence import PCAPPersistence, IncidentPersistence, AuditPackBuilder
-from ..pefc.events.structured_bus import StructuredEventBus
-from ..pefc.pcap.model import PCAP
-from ..pefc.incidents.types import Incident
 
 
 @dataclass

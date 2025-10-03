@@ -1,5 +1,7 @@
 from __future__ import annotations
+
 from typing import Any, Dict, List
+
 from pefc.metrics.types import RunRecord
 
 RESERVED = {"run_id", "id", "group", "mode", "count", "n_items", "agg", "runs"}
@@ -66,7 +68,10 @@ def provider_to_runs(provider, include_aggregates: bool, weight_key: str, dedup:
             counts["run"] += 1
             try:
                 runs.append(extract_run(obj, source_id, weight_key))
-            except Exception:
+            except Exception as e:
+                import logging
+
+                logging.warning(f"Failed to extract run: {e}")
                 continue
 
     # dedup run_id

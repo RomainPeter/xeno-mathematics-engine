@@ -1,9 +1,10 @@
 from __future__ import annotations
-from typing import Dict, List, Tuple
-import logging
 
-from pefc.metrics.types import RunRecord
+import logging
+from typing import Dict, List, Tuple
+
 from pefc.metrics.backends import choose_backend
+from pefc.metrics.types import RunRecord
 
 logger = logging.getLogger(__name__)
 

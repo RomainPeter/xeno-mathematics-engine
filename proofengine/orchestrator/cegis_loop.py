@@ -3,9 +3,9 @@ CEGIS (Counter-Example Guided Inductive Synthesis) loop implementation.
 Synthesizes choreographies that maximize gains under constraints K.
 """
 
-from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any, Dict, List, Optional
 
 from ..core.egraph import EGraph
 from ..verifier.opa_client import OPAClient

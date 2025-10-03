@@ -2,10 +2,11 @@
 """
 Simple verifier for CI
 """
-import json
-import sys
+
 import argparse
+import json
 import os
+import sys
 
 
 def main():

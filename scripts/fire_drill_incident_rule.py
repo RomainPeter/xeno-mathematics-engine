@@ -7,8 +7,8 @@ Inject fake ConstraintBreach → verify HS-Tree → test added to K → OPA pass
 import json
 import subprocess
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 
 def create_fake_constraint_breach():
@@ -59,7 +59,7 @@ def test_hs_tree_diagnostics():
         print(f"✅ Found {len(hitting_sets)} minimal hitting sets")
 
         for i, hs in enumerate(hitting_sets):
-            print(f"   Hitting set {i+1}: {hs}")
+            print(f"   Hitting set {i + 1}: {hs}")
 
         return hitting_sets
     except ImportError as e:

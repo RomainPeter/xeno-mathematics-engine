@@ -3,13 +3,13 @@ Event sinks for structured telemetry.
 Implements StdoutJSONLSink, FileJSONLSink, and MemorySink.
 """
 
-import json
 import gzip
+import json
 import sys
-from abc import ABC, abstractmethod
-from typing import Dict, Any, List, Optional
-from pathlib import Path
 import time
+from abc import ABC, abstractmethod
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 
 class EventSink(ABC):
@@ -83,8 +83,10 @@ class FileJSONLSink(EventSink):
                 try:
                     if self.file_path.stat().st_size > (self.rotate_mb * 1024 * 1024):
                         self._rotate_file()
-                except Exception:
-                    pass
+                except Exception as e:
+                    import logging
+
+                    logging.warning(f"Error checking file size for rotation: {e}")
 
             json_line = json.dumps(event_dict, separators=(",", ":"))
             if self.gzip_compress:
@@ -107,8 +109,10 @@ class FileJSONLSink(EventSink):
             if hasattr(self.current_file, "flush"):
                 try:
                     self.current_file.flush()
-                except Exception:
-                    pass
+                except Exception as e:
+                    import logging
+
+                    logging.warning(f"Error flushing file: {e}")
 
     def _should_rotate(self) -> bool:
         """Check if file should be rotated (not used with append strategy)."""
@@ -116,7 +120,10 @@ class FileJSONLSink(EventSink):
             return False
         try:
             return self.file_path.stat().st_size > (self.rotate_mb * 1024 * 1024)
-        except Exception:
+        except Exception as e:
+            import logging
+
+            logging.warning(f"Error checking file size: {e}")
             return False
 
     def _rotate_file(self) -> None:
@@ -245,7 +252,10 @@ class RotatingFileSink(EventSink):
         """Check if file should be rotated."""
         try:
             current_size = self.base_path.stat().st_size if self.base_path.exists() else 0
-        except Exception:
+        except Exception as e:
+            import logging
+
+            logging.warning(f"Error checking base path size: {e}")
             current_size = 0
         size_limit = self.max_size_mb * 1024 * 1024
 

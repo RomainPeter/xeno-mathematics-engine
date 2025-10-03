@@ -94,7 +94,7 @@ print("=" * 30)
 
 for i, issue in enumerate(issues, 1):
     print(
-        f"gh issue create --title \"{issue['title']}\" --body \"{issue['body']}\" --label {','.join(issue['labels'])}"
+        f'gh issue create --title "{issue["title"]}" --body "{issue["body"]}" --label {",".join(issue["labels"])}'
     )
 
 print(f"\nTotal: {len(issues)} issues for v0.1.1 hardening")

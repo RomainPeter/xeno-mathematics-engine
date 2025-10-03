@@ -5,9 +5,9 @@ Migrated from proof-engine-for-code.
 
 import hashlib
 import json
-from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any, Dict, List, Optional
 
 
 @dataclass

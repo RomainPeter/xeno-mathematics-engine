@@ -4,7 +4,7 @@ AE Engine interface for Attribute Exploration using Next-Closure algorithm.
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Dict, List, Any, Optional
+from typing import Any, Dict, List, Optional
 
 
 @dataclass

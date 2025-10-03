@@ -7,8 +7,8 @@ multi-criteria scoring, and deterministic fallback.
 
 import json
 import logging
-from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
+from typing import Any, Dict, List, Optional
 
 from proofengine.core.llm_client import LLMClient, LLMRequest, get_llm_client
 from proofengine.orchestrator.strategy_api import Strategy, StrategyContext
@@ -128,7 +128,7 @@ You are a strategy selector for 2-category transformations in a proof engine.
 CONTEXT:
 - FailReason: {context.failreason}
 - Operator: {context.operator}
-- Plan steps: {len(context.plan.get('steps', []))}
+- Plan steps: {len(context.plan.get("steps", []))}
 - Budgets: {context.budgets}
 - History: {len(context.history)} previous transformations
 

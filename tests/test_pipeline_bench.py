@@ -1,10 +1,12 @@
-from pathlib import Path
 import json
 import zipfile
+from pathlib import Path
+
 import pytest
+
 from pefc.config.loader import get_config
-from pefc.pipeline.loader import load_pipeline
 from pefc.pipeline.core import PipelineRunner
+from pefc.pipeline.loader import load_pipeline
 
 
 def _write(p: Path, obj):
@@ -99,8 +101,8 @@ def test_pipeline_smoke_builds_zip(tmp_path: Path):
 
 def test_dedup_guard(tmp_path: Path):
     """Test that duplicate arcnames are caught."""
-    from pefc.pipeline.core import PipelineContext
     from pefc.errors import PackBuildError
+    from pefc.pipeline.core import PipelineContext
 
     # Create context with duplicate files
     ctx = PipelineContext(
@@ -195,8 +197,8 @@ def test_manifest_integrity(tmp_path: Path):
 
 def test_pipeline_runner_exit_codes(tmp_path: Path):
     """Test pipeline runner exit codes."""
-    from pefc.pipeline.core import PipelineRunner, PackStep
     from pefc.errors import SignatureError
+    from pefc.pipeline.core import PackStep, PipelineRunner
 
     # Test success
     class SuccessStep(PackStep):

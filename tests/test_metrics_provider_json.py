@@ -1,7 +1,8 @@
-from pathlib import Path
 import json
-from pefc.metrics.providers import JsonMetricsProvider
+from pathlib import Path
+
 from pefc.metrics.parse import provider_to_runs
+from pefc.metrics.providers import JsonMetricsProvider
 from pefc.summary import build_summary
 
 

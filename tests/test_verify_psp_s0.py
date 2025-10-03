@@ -1,7 +1,7 @@
 """
 Tests pour les vérifications PSP S0.
 """
-import pytest
+
 from xme.verifier.base import Verifier, create_obligation
 from xme.verifier.psp_checks import get_psp_obligations
 
@@ -13,22 +13,19 @@ def test_psp_acyclic_valid():
         "blocks": [
             {"id": "block1", "kind": "axiom", "content": "A"},
             {"id": "block2", "kind": "lemma", "content": "B"},
-            {"id": "block3", "kind": "theorem", "content": "C"}
+            {"id": "block3", "kind": "theorem", "content": "C"},
         ],
-        "edges": [
-            {"src": "block1", "dst": "block2"},
-            {"src": "block2", "dst": "block3"}
-        ]
+        "edges": [{"src": "block1", "dst": "block2"}, {"src": "block2", "dst": "block3"}],
     }
-    
+
     verifier = Verifier()
     for obligation_id, level, check_func, description in get_psp_obligations():
         if level == "S0":
             obligation = create_obligation(obligation_id, level, check_func, description)
             verifier.register_obligation(obligation)
-    
+
     report = verifier.run_by_level(valid_psp, "S0")
-    
+
     assert report.ok_all
     assert len(report.results) >= 2  # Au moins acyclic et unique_ids
 
@@ -40,23 +37,23 @@ def test_psp_acyclic_with_cycle():
         "blocks": [
             {"id": "block1", "kind": "axiom", "content": "A"},
             {"id": "block2", "kind": "lemma", "content": "B"},
-            {"id": "block3", "kind": "theorem", "content": "C"}
+            {"id": "block3", "kind": "theorem", "content": "C"},
         ],
         "edges": [
             {"src": "block1", "dst": "block2"},
             {"src": "block2", "dst": "block3"},
-            {"src": "block3", "dst": "block1"}  # Cycle!
-        ]
+            {"src": "block3", "dst": "block1"},  # Cycle!
+        ],
     }
-    
+
     verifier = Verifier()
     for obligation_id, level, check_func, description in get_psp_obligations():
         if level == "S0":
             obligation = create_obligation(obligation_id, level, check_func, description)
             verifier.register_obligation(obligation)
-    
+
     report = verifier.run_by_level(cyclic_psp, "S0")
-    
+
     # La vérification acyclique doit échouer
     acyclic_result = next((r for r in report.results if r.obligation_id == "psp_acyclic"), None)
     assert acyclic_result is not None
@@ -69,23 +66,23 @@ def test_psp_unique_ids_valid():
     valid_psp = {
         "blocks": [
             {"id": "block1", "kind": "axiom", "content": "A"},
-            {"id": "block2", "kind": "lemma", "content": "B"}
+            {"id": "block2", "kind": "lemma", "content": "B"},
         ],
-        "edges": [
-            {"src": "block1", "dst": "block2"}
-        ]
+        "edges": [{"src": "block1", "dst": "block2"}],
     }
-    
+
     verifier = Verifier()
     for obligation_id, level, check_func, description in get_psp_obligations():
         if level == "S0":
             obligation = create_obligation(obligation_id, level, check_func, description)
             verifier.register_obligation(obligation)
-    
+
     report = verifier.run_by_level(valid_psp, "S0")
-    
+
     # La vérification unique_ids doit passer
-    unique_ids_result = next((r for r in report.results if r.obligation_id == "psp_unique_ids"), None)
+    unique_ids_result = next(
+        (r for r in report.results if r.obligation_id == "psp_unique_ids"), None
+    )
     assert unique_ids_result is not None
     assert unique_ids_result.ok
 
@@ -95,21 +92,23 @@ def test_psp_unique_ids_duplicate():
     duplicate_psp = {
         "blocks": [
             {"id": "block1", "kind": "axiom", "content": "A"},
-            {"id": "block1", "kind": "lemma", "content": "B"}  # ID dupliqué!
+            {"id": "block1", "kind": "lemma", "content": "B"},  # ID dupliqué!
         ],
-        "edges": []
+        "edges": [],
     }
-    
+
     verifier = Verifier()
     for obligation_id, level, check_func, description in get_psp_obligations():
         if level == "S0":
             obligation = create_obligation(obligation_id, level, check_func, description)
             verifier.register_obligation(obligation)
-    
+
     report = verifier.run_by_level(duplicate_psp, "S0")
-    
+
     # La vérification unique_ids doit échouer
-    unique_ids_result = next((r for r in report.results if r.obligation_id == "psp_unique_ids"), None)
+    unique_ids_result = next(
+        (r for r in report.results if r.obligation_id == "psp_unique_ids"), None
+    )
     assert unique_ids_result is not None
     assert not unique_ids_result.ok
     assert "duplicate" in unique_ids_result.details.get("message", "").lower()
@@ -118,24 +117,22 @@ def test_psp_unique_ids_duplicate():
 def test_psp_edges_reference_nonexistent_blocks():
     """Test que des arêtes référençant des blocs inexistants échouent."""
     invalid_psp = {
-        "blocks": [
-            {"id": "block1", "kind": "axiom", "content": "A"}
-        ],
-        "edges": [
-            {"src": "block1", "dst": "nonexistent"}  # Bloc inexistant!
-        ]
+        "blocks": [{"id": "block1", "kind": "axiom", "content": "A"}],
+        "edges": [{"src": "block1", "dst": "nonexistent"}],  # Bloc inexistant!
     }
-    
+
     verifier = Verifier()
     for obligation_id, level, check_func, description in get_psp_obligations():
         if level == "S0":
             obligation = create_obligation(obligation_id, level, check_func, description)
             verifier.register_obligation(obligation)
-    
+
     report = verifier.run_by_level(invalid_psp, "S0")
-    
+
     # La vérification unique_ids doit échouer
-    unique_ids_result = next((r for r in report.results if r.obligation_id == "psp_unique_ids"), None)
+    unique_ids_result = next(
+        (r for r in report.results if r.obligation_id == "psp_unique_ids"), None
+    )
     assert unique_ids_result is not None
     assert not unique_ids_result.ok
     assert "non-existent" in unique_ids_result.details.get("message", "").lower()
@@ -147,24 +144,23 @@ def test_psp_topological_consistency():
         "blocks": [
             {"id": "block1", "kind": "axiom", "content": "A"},
             {"id": "block2", "kind": "lemma", "content": "B"},
-            {"id": "block3", "kind": "theorem", "content": "C"}
+            {"id": "block3", "kind": "theorem", "content": "C"},
         ],
-        "edges": [
-            {"src": "block1", "dst": "block2"},
-            {"src": "block2", "dst": "block3"}
-        ]
+        "edges": [{"src": "block1", "dst": "block2"}, {"src": "block2", "dst": "block3"}],
     }
-    
+
     verifier = Verifier()
     for obligation_id, level, check_func, description in get_psp_obligations():
         if level == "S0":
             obligation = create_obligation(obligation_id, level, check_func, description)
             verifier.register_obligation(obligation)
-    
+
     report = verifier.run_by_level(valid_psp, "S0")
-    
+
     # La vérification topologique doit passer
-    topo_result = next((r for r in report.results if r.obligation_id == "psp_topo_consistency"), None)
+    topo_result = next(
+        (r for r in report.results if r.obligation_id == "psp_topo_consistency"), None
+    )
     assert topo_result is not None
     assert topo_result.ok
     assert "consistent" in topo_result.details.get("message", "").lower()

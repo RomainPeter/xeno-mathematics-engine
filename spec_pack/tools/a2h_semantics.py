@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 import argparse
+import hashlib
 import json
 import sys
-import hashlib
 from pathlib import Path
-from typing import Dict, List, Any, Tuple
+from typing import Any, Dict, List, Tuple
 
 try:
     import yaml
@@ -138,7 +138,7 @@ def expand_required_from_rules(
 
 
 def build_semantics_and_proof(required, present, anf_src, anf_obj, rules_used):
-    from z3 import Solver, Bool, sat
+    from z3 import Bool, Solver, sat
 
     solver = Solver()
     labels = {}
@@ -151,7 +151,7 @@ def build_semantics_and_proof(required, present, anf_src, anf_obj, rules_used):
             bools[_id] = v
             is_present = _id in present[kind]
             # constraint: v == is_present
-            solver.add(v == True if is_present else v == False)
+            solver.add(v is True if is_present else v is False)
             # tracked assertion that v must be True (if not present, contradiction)
             lbl = Bool(f"need_{kind}:{_id}")
             labels[_id] = lbl

@@ -15,6 +15,17 @@
           pip
           setuptools
           wheel
+          jsonschema
+          pydantic
+          typer
+          rich
+          orjson
+          networkx
+          pytest
+          black
+          mypy
+          bandit
+          types-pyyaml
         ]);
       in {
         devShells.default = pkgs.mkShell {
@@ -39,5 +50,3 @@
         };
       });
 }
-
-

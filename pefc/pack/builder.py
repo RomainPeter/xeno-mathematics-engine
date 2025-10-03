@@ -12,10 +12,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-from pefc.events.manifest import (
-    create_audit_manifest,
-    build_merkle_dataset_from_manifest,
-)
+from pefc.events.manifest import (build_merkle_dataset_from_manifest,
+                                  create_audit_manifest)
 
 
 @dataclass

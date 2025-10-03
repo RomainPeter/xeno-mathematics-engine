@@ -1,6 +1,7 @@
 from __future__ import annotations
-from typing import Protocol, Sequence, Mapping, Any
+
 from dataclasses import dataclass
+from typing import Any, Mapping, Protocol, Sequence
 
 
 @dataclass

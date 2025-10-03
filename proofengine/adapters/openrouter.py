@@ -2,9 +2,10 @@
 """
 OpenRouter adapter for LLM calls
 """
+
 import os
-from typing import Dict, Any, List, Optional
 from dataclasses import dataclass
+from typing import Any, Dict, List, Optional
 
 from ..core.llm_client import LLMClient, LLMConfig
 

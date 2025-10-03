@@ -1,16 +1,10 @@
-from pathlib import Path
 import json
+from pathlib import Path
+
+from pefc.config.model import (DocsConfig, LoggingConfig, MerkleConfig,
+                               MetricsConfig, OnePagerConfig, PackConfig,
+                               RootConfig, SBOMConfig)
 from pefc.onepager.render import build_onepager
-from pefc.config.model import (
-    RootConfig,
-    PackConfig,
-    LoggingConfig,
-    MetricsConfig,
-    MerkleConfig,
-    DocsConfig,
-    OnePagerConfig,
-    SBOMConfig,
-)
 
 
 def make_cfg(tmp: Path) -> RootConfig:

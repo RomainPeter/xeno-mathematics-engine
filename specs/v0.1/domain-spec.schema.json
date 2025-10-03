@@ -6,7 +6,7 @@
   "properties": {
     "version": { "type": "string", "const": "0.1.0" },
     "id": { "type": "string" },
-    "domain": { 
+    "domain": {
       "type": "string",
       "enum": ["RegTech", "Code", "Math", "Finance", "Healthcare"]
     },
@@ -93,4 +93,3 @@
     }
   }
 }
-

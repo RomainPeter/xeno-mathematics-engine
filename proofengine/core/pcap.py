@@ -23,7 +23,7 @@ def merkle_of(obj: Dict[str, object]) -> str:
 def write_pcap(entry: PCAP, out_dir: str = "out/pcap") -> str:
     os.makedirs(out_dir, exist_ok=True)
     digest = merkle_of(entry.to_dict())
-    path = os.path.join(out_dir, f"{int(time.time()*1000)}_{digest[:8]}.json")
+    path = os.path.join(out_dir, f"{int(time.time() * 1000)}_{digest[:8]}.json")
     with open(path, "w", encoding="utf-8") as handle:
         handle.write(entry.to_json())
     return path

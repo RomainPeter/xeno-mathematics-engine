@@ -2,20 +2,18 @@
 Tests for e-graph rules and canonicalization.
 """
 
-import pytest
-
+import os
 # Import our modules
 import sys
-import os
+
+import pytest
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from methods.egraph.canonicalize import (EGraphCanonicalizer,
+                                         canonicalize_choreography,
+                                         canonicalize_state)
 from methods.egraph.rules import EGraphRules, EquivalenceRule
-from methods.egraph.canonicalize import (
-    EGraphCanonicalizer,
-    canonicalize_state,
-    canonicalize_choreography,
-)
 
 
 class TestEGraphRules:

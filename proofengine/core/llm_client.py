@@ -5,14 +5,14 @@ Supports OpenRouter API with Kimi K2 model, auto-consistency (n=3),
 caching, and signed logs for audit trail.
 """
 
-import json
 import hashlib
 import hmac
-import time
+import json
 import logging
-from typing import Dict, List, Any, Tuple
+import time
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any, Dict, List, Tuple
 
 import requests
 import yaml

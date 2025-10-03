@@ -4,10 +4,10 @@ Orchestrator skeleton v0.1 with LLM integration
 Plan-Execute-Replan loop with real LLM calls
 """
 
-import json
 import argparse
-from pathlib import Path
+import json
 from datetime import datetime
+from pathlib import Path
 
 # Import LLM adapter
 from adapter_llm import OrchestratorLLMAdapter
@@ -62,15 +62,15 @@ class Orchestrator:
         print(f"\n📋 Executing plan with {len(self.plan.get('steps', []))} steps")
 
         for i, step in enumerate(self.plan.get("steps", [])):
-            print(f"\n--- Step {i+1}: {step.get('operator', 'unknown')} ---")
+            print(f"\n--- Step {i + 1}: {step.get('operator', 'unknown')} ---")
             success = self.execute_step(step)
 
             if not success:
-                print(f"❌ Step {i+1} failed, triggering replan...")
+                print(f"❌ Step {i + 1} failed, triggering replan...")
                 self.replan()
                 break
             else:
-                print(f"✅ Step {i+1} completed successfully")
+                print(f"✅ Step {i + 1} completed successfully")
 
         # Calculate final metrics
         end_time = datetime.utcnow()

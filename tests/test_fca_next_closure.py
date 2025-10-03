@@ -3,18 +3,15 @@ Tests for FCA Next-Closure algorithm.
 Tests contextes 4×4 et 5×3 with lectic order, no duplicates, and closure idempotence.
 """
 
-import pytest
 import time
 
-from proofengine.fca.context import FormalContext, Object, Attribute, Intent, Extent
-from proofengine.fca.next_closure import (
-    NextClosure,
-    closure,
-    lectic_leq,
-    Concept,
-    ConceptLattice,
-)
-from proofengine.fca.ae_engine import NextClosureAEEngine, AEContext, AEResult
+import pytest
+
+from proofengine.fca.ae_engine import AEContext, AEResult, NextClosureAEEngine
+from proofengine.fca.context import (Attribute, Extent, FormalContext, Intent,
+                                     Object)
+from proofengine.fca.next_closure import (Concept, ConceptLattice, NextClosure,
+                                          closure, lectic_leq)
 
 
 class TestFCAContexts:

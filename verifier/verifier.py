@@ -3,13 +3,13 @@ Main verifier for Discovery Engine 2-Cat.
 Migrated from proof-engine-for-code.
 """
 
-from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any, Dict, List, Optional
 
+from .attestation import AttestationGenerator
 from .opa_client import OPAClient
 from .static_analysis import StaticAnalyzer
-from .attestation import AttestationGenerator
 
 
 @dataclass

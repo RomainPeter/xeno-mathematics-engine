@@ -13,7 +13,6 @@ import sys
 from pathlib import Path
 from typing import Iterable
 
-
 MARKERS = ("<<<<<<<", "=======", ">>>>>>>")
 EXCLUDE_PREFIXES = ("out/", "test_pack/")
 
@@ -73,5 +72,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
-

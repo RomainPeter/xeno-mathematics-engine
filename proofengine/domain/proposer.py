@@ -4,8 +4,8 @@ Implements propose() with LLMAdapter micro-prompt déterministe (seed) -> Candid
 """
 
 import hashlib
-from typing import Dict, Any, Optional, List
 from dataclasses import dataclass
+from typing import Any, Dict, List, Optional
 
 from .types import Candidate, CodeSnippet
 

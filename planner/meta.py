@@ -39,7 +39,7 @@ class MetacognitivePlanner:
         utility = sum(1.0 - action.estimated_cost.risk for action in actions)
         confidence = min(1.0, 0.6 + 0.05 * len(actions))
         plan = PlannedSequence(
-            plan_id=f"plan-{hash(goal) & 0xffff:x}",
+            plan_id=f"plan-{hash(goal) & 0xFFFF:x}",
             actions=actions,
             estimated_utility=utility,
             confidence=confidence,

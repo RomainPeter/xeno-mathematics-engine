@@ -3,8 +3,9 @@
 Determinism Check Script
 Runs determinism test and reports results
 """
-import sys
+
 import subprocess
+import sys
 from pathlib import Path
 
 

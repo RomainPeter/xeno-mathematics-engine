@@ -2,22 +2,18 @@
 Tests pour le contrôleur déterministe.
 """
 
-import pytest
-import tempfile
 import os
-from unittest.mock import patch, MagicMock
-from controller.obligations import (
-    check_tests,
-    check_flake8,
-    check_mypy,
-    check_bandit,
-    check_complexity,
-    check_docstrings,
-    evaluate_obligations,
-    get_violation_summary,
-)
-from controller.patch import Workspace, PatchManager
+import tempfile
+from unittest.mock import MagicMock, patch
+
+import pytest
 from controller.deterministic import DeterministicController
+from controller.obligations import (check_bandit, check_complexity,
+                                    check_docstrings, check_flake8, check_mypy,
+                                    check_tests, evaluate_obligations,
+                                    get_violation_summary)
+from controller.patch import PatchManager, Workspace
+
 from proofengine.core.schemas import ObligationResults
 
 
@@ -279,7 +275,7 @@ class TestPatchManager:
         patch_text = "not a patch"
 
         result = manager.validate_patch(patch_text)
-                assert result["valid"] is False
+        assert result["valid"] is False
         assert len(result["errors"]) > 0
 
     def test_get_patch_info(self):

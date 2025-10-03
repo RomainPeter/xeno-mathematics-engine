@@ -2,8 +2,9 @@
 """
 Orchestrator LLM adapter with PromptContract
 """
+
 import json
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
 
 from proofengine.adapters.openrouter import OpenRouterAdapter
 
@@ -66,16 +67,16 @@ class OrchestratorLLMAdapter:
 
     def _contract_to_messages(self, contract: Dict[str, Any]) -> List[Dict[str, str]]:
         """Convert PromptContract to LLM messages"""
-        system_prompt = f"""You are a proof-carrying action generator. 
-Role: {contract['role']}
-Task: {contract['task']}
-Constraints: {', '.join(contract['constraints'])}
-Output must be valid JSON matching the schema at {contract['output_schema_uri']}"""
+        system_prompt = f"""You are a proof-carrying action generator.
+Role: {contract["role"]}
+Task: {contract["task"]}
+Constraints: {", ".join(contract["constraints"])}
+Output must be valid JSON matching the schema at {contract["output_schema_uri"]}"""
 
         user_prompt = f"""Generate a response for:
-Task: {contract['task']}
-Inputs: {json.dumps(contract['inputs'], indent=2)}
-Constraints: {json.dumps(contract['constraints'], indent=2)}
+Task: {contract["task"]}
+Inputs: {json.dumps(contract["inputs"], indent=2)}
+Constraints: {json.dumps(contract["constraints"], indent=2)}
 
 Return valid JSON only."""
 

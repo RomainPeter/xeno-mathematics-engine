@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from pefc.capabilities.handlers.opa import OPAHandler
 from pefc.capabilities.registry import IncidentCapabilityRegistry
 

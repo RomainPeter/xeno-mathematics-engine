@@ -3,11 +3,11 @@ E-graph rules v0.1 for Discovery Engine 2-Cat.
 Implements safe rules for canonicalization and equivalence.
 """
 
-from dataclasses import dataclass
-from typing import Dict, List, Any, Optional, Tuple
 import hashlib
 import json
+from dataclasses import dataclass
 from datetime import datetime
+from typing import Any, Dict, List, Optional, Tuple
 
 
 @dataclass

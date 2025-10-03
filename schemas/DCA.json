@@ -64,4 +64,3 @@
   },
   "required": ["id", "type", "context", "verdict", "timestamp"]
 }
-

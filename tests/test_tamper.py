@@ -5,8 +5,8 @@ Tests that modified PCAPs are rejected by verifier
 """
 
 import json
-import tempfile
 import os
+import tempfile
 
 
 def test_pcap_tamper_after_attestation():

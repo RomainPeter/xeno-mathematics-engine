@@ -24,5 +24,3 @@ Assurer que toute modification des artefacts déterministes (manifest, merkle, l
 ## Dépannage
 - Mismatch Merkle: vérifier l’ordre des fichiers, mtime normalisé, et l’exclusion d’artefacts non déterministes.
 - Dérive inattendue: comparer `manifest.json` (liste des fichiers, sha256) et rejouer la construction localement.
-
-

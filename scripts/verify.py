@@ -1,5 +1,6 @@
-import os
 import json
+import os
+
 from dotenv import load_dotenv
 
 
@@ -23,8 +24,8 @@ def main():
         return
     try:
         from proofengine.core.llm_client import LLMClient
-        from proofengine.planner.meta import propose_plan
         from proofengine.generator.stochastic import propose_actions
+        from proofengine.planner.meta import propose_plan
 
         client = LLMClient()
         ping = client.ping()

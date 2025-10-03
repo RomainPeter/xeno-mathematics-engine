@@ -5,14 +5,11 @@ Handles typosquatting and CVE vulnerabilities by pinning dependencies
 to specific versions and updating SBOM.
 """
 
-from typing import Dict, Any
-from proofengine.orchestrator.strategy_api import (
-    Strategy,
-    RewritePlan,
-    RewriteOperation,
-    Guards,
-    StrategyContext,
-)
+from typing import Any, Dict
+
+from proofengine.orchestrator.strategy_api import (Guards, RewriteOperation,
+                                                   RewritePlan, Strategy,
+                                                   StrategyContext)
 
 
 class PinDependencyStrategy(Strategy):

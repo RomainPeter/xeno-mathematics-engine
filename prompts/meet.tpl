@@ -1,4 +1,4 @@
-Synthétise options conformes à K pour H; propose 1 design concis et obligations correspondantes (ids K). 
+Synthétise options conformes à K pour H; propose 1 design concis et obligations correspondantes (ids K).
 
 Sortie JSON conforme PromptContract:
 {

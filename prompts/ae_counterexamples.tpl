@@ -42,4 +42,3 @@ Return a JSON object:
   - Violates conclusion: security_risk is false despite premise being true
 
 Generate counterexample now:
-

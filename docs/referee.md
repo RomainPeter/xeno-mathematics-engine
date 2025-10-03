@@ -208,14 +208,14 @@ from xme.referee.referee import Referee
 
 def run_discovery_with_governance():
     referee = Referee(cfg_path, reserve_path, symbols_path)
-    
+
     # Vérifier les budgets
     if not referee.enforce_budgets("X", 5, pcap_store):
         raise Exception("Budget X insuffisant")
-    
+
     # Exécuter la découverte
     result = run_discovery()
-    
+
     # Baptiser les nouveaux symboles
     for concept in result.concepts:
         verdict = referee.gate_baptism(
@@ -225,7 +225,7 @@ def run_discovery_with_governance():
             proof_ref=concept.proof_ref,
             pcap=pcap_store
         )
-        
+
         if not verdict["ok"]:
             print(f"Baptême refusé: {verdict['reason']}")
 ```

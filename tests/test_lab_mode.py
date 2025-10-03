@@ -7,12 +7,13 @@ import json
 import tempfile
 from pathlib import Path
 
-from pefc.events import EventBusConfig, StructuredEventBus, FileJSONLSink
-from orchestrator.orchestrator_lite import OrchestratorLite, OrchestratorLiteConfig
-from orchestrator.engines.next_closure_engine import NextClosureEngine
-from orchestrator.engines.cegis_async_engine import AsyncCegisEngine
 from orchestrator.adapters.llm_stub import LLMStub
 from orchestrator.adapters.verifier_stub import VerifierStub
+from orchestrator.engines.cegis_async_engine import AsyncCegisEngine
+from orchestrator.engines.next_closure_engine import NextClosureEngine
+from orchestrator.orchestrator_lite import (OrchestratorLite,
+                                            OrchestratorLiteConfig)
+from pefc.events import EventBusConfig, FileJSONLSink, StructuredEventBus
 
 
 async def _run_once(seed: int, audit_dir: Path) -> Path:
@@ -50,7 +51,10 @@ def _load_types(journal: Path):
         try:
             ev = json.loads(line)
             types.append(ev.get("type"))
-        except Exception:
+        except Exception as e:
+            import logging
+
+            logging.debug(f"Failed to parse line: {e}")
             continue
     return types
 

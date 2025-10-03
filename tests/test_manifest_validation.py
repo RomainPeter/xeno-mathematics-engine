@@ -2,16 +2,15 @@
 """
 Tests for manifest validation and verification.
 """
+
 import json
 import zipfile
 
 from typer.testing import CliRunner
 
 from pefc.cli import app
-from pefc.pack.merkle import build_entries, compute_merkle_root, build_manifest
-from pefc.pack.verify import (
-    verify_zip,
-)
+from pefc.pack.merkle import build_entries, build_manifest, compute_merkle_root
+from pefc.pack.verify import verify_zip
 
 
 class TestManifestValidation:

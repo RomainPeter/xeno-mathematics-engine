@@ -1,9 +1,10 @@
 from __future__ import annotations
-from dataclasses import dataclass, field
-from typing import Callable, Dict, List, Any, Tuple
-import time
-import threading
+
 import fnmatch
+import threading
+import time
+from dataclasses import dataclass, field
+from typing import Any, Callable, Dict, List, Tuple
 
 EventHandler = Callable[["Event"], None]
 
@@ -73,9 +74,11 @@ class EventBus:
         for idx, s in to_call:
             try:
                 s.handler(ev)
-            except Exception:
+            except Exception as e:
                 # Bus should never crash; let logger subscriber capture errors
-                pass
+                import logging
+
+                logging.warning(f"Event handler error: {e}")
             if s.once:
                 removals.append(s)
 

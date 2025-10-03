@@ -3,14 +3,15 @@ Vérifieur pour le Proof Engine for Code v0.
 Rejoue les PCAPs et vérifie l'intégrité.
 """
 
-import json
 import glob
-import time
 import hashlib
+import json
 import os
-from typing import Dict, Any
-from proofengine.core.schemas import PCAP, Attestation
+import time
+from typing import Any, Dict
+
 from proofengine.core.pcap import read_pcap, verify_pcap_chain
+from proofengine.core.schemas import PCAP, Attestation
 
 
 def verify_pcap_dir(pcap_dir: str = "out/pcap", audit_out: str = "out/audit") -> Dict[str, Any]:
@@ -109,9 +110,7 @@ def verify_single_pcap(pcap_file: str) -> Dict[str, Any]:
         # Vérifier le hash
         hash_valid = True
         try:
-            computed_hash = hashlib.sha256(
-                json.dumps(pcap.model_dump(), sort_keys=True).encode()
-            ).hexdigest()
+            hashlib.sha256(json.dumps(pcap.model_dump(), sort_keys=True).encode()).hexdigest()
             # Le hash est dans le nom du fichier, pas dans le PCAP lui-même
         except Exception:
             hash_valid = False

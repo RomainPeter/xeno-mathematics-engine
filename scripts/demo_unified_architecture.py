@@ -14,11 +14,9 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from proofengine.orchestrator.unified_orchestrator import (
-    UnifiedOrchestrator,
-    ExplorationConfig,
-)
 from proofengine.core.egraph import EGraph, canonicalize_state
+from proofengine.orchestrator.unified_orchestrator import (ExplorationConfig,
+                                                           UnifiedOrchestrator)
 
 
 async def demo_unified_architecture():

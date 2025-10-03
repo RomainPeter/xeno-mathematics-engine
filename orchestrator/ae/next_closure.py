@@ -3,9 +3,9 @@ Next-Closure algorithm for Attribute Exploration.
 Implements the core AE loop with implication generation and verification.
 """
 
-from typing import Dict, List, Any
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any, Dict, List
 
 from ..state import XState
 from .oracle import Oracle, OracleResult

@@ -3,9 +3,9 @@ Domain-specific modules for code compliance and verification.
 Provides types and implementations for code compliance rules.
 """
 
-from .types import Candidate, Verdict, Counterexample, ComplianceRule
 from .code_compliance import CodeComplianceEngine, ComplianceChecker
 from .rules import DeprecatedAPIRule, NamingConventionRule, SecurityRule
+from .types import Candidate, ComplianceRule, Counterexample, Verdict
 
 __all__ = [
     "Candidate",

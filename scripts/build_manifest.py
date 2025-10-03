@@ -2,6 +2,7 @@
 import argparse
 import json
 from pathlib import Path
+
 from pefc.events.manifest import create_audit_manifest
 
 

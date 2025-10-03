@@ -9,9 +9,8 @@ import tempfile
 import time
 from typing import Any, Dict, List, Tuple
 
-from proofengine.core.schemas import Proof, VJustification
-
 from obligations.policies import PolicyEngine
+from proofengine.core.schemas import Proof, VJustification
 
 
 class DeterministicRunner:
@@ -33,7 +32,7 @@ class DeterministicRunner:
         Exécute les vérifications de manière déterministe.
         Retourne les preuves et le coût total.
         """
-        start_time = self._get_time_ms()
+        _start_time = self._get_time_ms()
 
         # Fixer la graine pour la reproductibilité
         if seed is not None:
@@ -42,7 +41,7 @@ class DeterministicRunner:
             random.seed(seed)
 
         # Créer un environnement hermétique
-        with self._create_hermetic_env() as env:
+        with self._create_hermetic_env() as _env:
             # Exécuter les politiques
             proofs, cost = self.policy_engine.check_obligations(
                 {**context, "obligations": obligations}

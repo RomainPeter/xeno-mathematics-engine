@@ -8,7 +8,7 @@ import rego.v1
 # Allowlist (permissive licenses)
 allowlist_licenses := [
     "MIT",
-    "Apache-2.0", 
+    "Apache-2.0",
     "BSD-2-Clause",
     "BSD-3-Clause",
     "MPL-2.0",
@@ -19,7 +19,7 @@ allowlist_licenses := [
 # Denylist (incompatible licenses)
 denylist_licenses := [
     "AGPL-3.0",
-    "AGPL-3.0-only", 
+    "AGPL-3.0-only",
     "AGPL-3.0-or-later",
     "GPL-3.0",
     "GPL-3.0-only",

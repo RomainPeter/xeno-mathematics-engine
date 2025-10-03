@@ -2,6 +2,7 @@
 """
 Tests for pipeline pack ZIP creation and content validation.
 """
+
 import json
 import zipfile
 from pathlib import Path
@@ -30,7 +31,7 @@ class TestPipelinePackZip:
 
         # Add files to context
         for i, file_path in enumerate(sample_files):
-            context.add_file(f"file{i+1}.txt", file_path)
+            context.add_file(f"file{i + 1}.txt", file_path)
 
         # Create PackZip step
         step = PackZip({})
@@ -58,7 +59,7 @@ class TestPipelinePackZip:
 
             # Check that all files are present
             for i in range(len(sample_files)):
-                assert f"file{i+1}.txt" in names
+                assert f"file{i + 1}.txt" in names
 
     def test_zip_content_validation(self, temp_workspace: Path, sample_files: List[Path]):
         """Test that ZIP contains correct content."""
@@ -70,7 +71,7 @@ class TestPipelinePackZip:
 
         # Add files to context
         for i, file_path in enumerate(sample_files):
-            context.add_file(f"file{i+1}.txt", file_path)
+            context.add_file(f"file{i + 1}.txt", file_path)
 
         step = PackZip({})
         context.cfg.pack.pack_name = "test-pack"
@@ -101,7 +102,7 @@ class TestPipelinePackZip:
 
             # Check file contents
             for i, file_path in enumerate(sample_files):
-                file_data = zf.read(f"file{i+1}.txt")
+                file_data = zf.read(f"file{i + 1}.txt")
                 assert file_data == file_path.read_bytes()
 
     def test_no_duplicate_arcnames(self, temp_workspace: Path, sample_files: List[Path]):
@@ -138,7 +139,7 @@ class TestPipelinePackZip:
 
             # Add files to context
             for i, file_path in enumerate(sample_files):
-                context.add_file(f"file{i+1}.txt", file_path)
+                context.add_file(f"file{i + 1}.txt", file_path)
 
             step = PackZip({})
             context.cfg.pack.pack_name = "test-pack"
@@ -160,7 +161,7 @@ class TestPipelinePackZip:
 
         # Add files to context
         for i, file_path in enumerate(sample_files):
-            context.add_file(f"file{i+1}.txt", file_path)
+            context.add_file(f"file{i + 1}.txt", file_path)
 
         step = PackZip({})
         context.cfg.pack.pack_name = "test-pack"
@@ -318,7 +319,7 @@ class TestPipelinePackZip:
 
             # Add files to context
             for i, file_path in enumerate(sample_files):
-                context.add_file(f"file{i+1}.txt", file_path)
+                context.add_file(f"file{i + 1}.txt", file_path)
 
             step = PackZip({})
             context.cfg.pack.pack_name = "test-pack"
@@ -340,7 +341,7 @@ class TestPipelinePackZip:
 
         # Add files to context
         for i, file_path in enumerate(sample_files):
-            context.add_file(f"file{i+1}.txt", file_path)
+            context.add_file(f"file{i + 1}.txt", file_path)
 
         step = PackZip({})
         context.cfg.pack.pack_name = "test-pack"
@@ -373,7 +374,7 @@ class TestPipelinePackZip:
 
         # Add files to context
         for i, file_path in enumerate(sample_files):
-            context.add_file(f"file{i+1}.txt", file_path)
+            context.add_file(f"file{i + 1}.txt", file_path)
 
         step = PackZip({})
         context.cfg.pack.pack_name = "test-pack"
@@ -433,8 +434,8 @@ class TestPipelinePackZip:
 
         # Add same files to both contexts
         for i, file_path in enumerate(sample_files):
-            context1.add_file(f"file{i+1}.txt", file_path)
-            context2.add_file(f"file{i+1}.txt", file_path)
+            context1.add_file(f"file{i + 1}.txt", file_path)
+            context2.add_file(f"file{i + 1}.txt", file_path)
 
         # Run PackZip on both
         step1 = PackZip({})

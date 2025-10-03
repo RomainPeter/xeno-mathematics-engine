@@ -3,12 +3,8 @@ Add Missing Tests Strategy.
 Handles coverage.missing_tests failures by inserting test step before Verify.
 """
 
-from ..orchestrator.strategy_api import (
-    Strategy,
-    StrategyContext,
-    RewritePlan,
-    RewriteOperation,
-)
+from ..orchestrator.strategy_api import (RewriteOperation, RewritePlan,
+                                         Strategy, StrategyContext)
 
 
 class AddMissingTestsStrategy(Strategy):

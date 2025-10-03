@@ -1,5 +1,7 @@
 from __future__ import annotations
+
 import pytest
+
 from pefc.config.model import RootConfig
 from pefc.policy.factory import make_ids, make_risk
 from pefc.policy.interfaces import ArmStats

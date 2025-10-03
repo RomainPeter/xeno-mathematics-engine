@@ -1,4 +1,4 @@
-from pefc.logging import init_logging, get_logger, set_context
+from pefc.logging import get_logger, init_logging, set_context
 
 
 def test_text_logging_basic(capsys):

@@ -3,14 +3,14 @@ System profiler for 2-category transformations.
 Provides lightweight profiling and performance analysis.
 """
 
-import time
 import cProfile
-import pstats
 import io
-from typing import Dict, Any, Optional, List
-from dataclasses import dataclass
+import pstats
+import time
 from contextlib import contextmanager
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 
 @dataclass

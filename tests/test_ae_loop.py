@@ -2,12 +2,12 @@
 Tests for AE Next-Closure loop.
 """
 
-import pytest
 import os
-from unittest.mock import Mock, patch
-
 # Import our modules
 import sys
+from unittest.mock import Mock, patch
+
+import pytest
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 

@@ -7,16 +7,16 @@ Demonstrates end-to-end pipeline with real Next-Closure and CEGIS engines.
 import asyncio
 import json
 import logging
-import tempfile
 import shutil
-from pathlib import Path
+import tempfile
 from datetime import datetime
-from typing import Dict, Any
+from pathlib import Path
+from typing import Any, Dict
 
-from orchestrator.orchestrator import Orchestrator
 from orchestrator.config import OrchestratorConfig
-from orchestrator.engines.next_closure_engine import NextClosureEngine
 from orchestrator.engines.cegis_async_engine import AsyncCegisEngine
+from orchestrator.engines.next_closure_engine import NextClosureEngine
+from orchestrator.orchestrator import Orchestrator
 from pefc.events.structured_bus import StructuredEventBus
 
 
@@ -286,18 +286,18 @@ async def run_demo():
         for i, result in enumerate(state.ae_results):
             if result.success:
                 print(
-                    f"  ✓ Étape {i+1}: {len(result.concepts)} concepts, {len(result.implications)} implications"
+                    f"  ✓ Étape {i + 1}: {len(result.concepts)} concepts, {len(result.implications)} implications"
                 )
             else:
-                print(f"  ✗ Étape {i+1}: Échec - {result.error}")
+                print(f"  ✗ Étape {i + 1}: Échec - {result.error}")
 
         # CEGIS Results
         print(f"🔄 CEGIS - Itérations: {len(state.cegis_results)}")
         for i, result in enumerate(state.cegis_results):
             if result.success:
-                print(f"  ✓ Itération {i+1}: Candidat {result.candidate.id} vérifié")
+                print(f"  ✓ Itération {i + 1}: Candidat {result.candidate.id} vérifié")
             else:
-                print(f"  ✗ Itération {i+1}: Échec - {result.error}")
+                print(f"  ✗ Itération {i + 1}: Échec - {result.error}")
 
         # Incidents
         print(f"⚠️  Incidents: {len(state.incidents)}")

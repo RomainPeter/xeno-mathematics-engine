@@ -1,6 +1,7 @@
 from __future__ import annotations
-from pathlib import Path
+
 import logging
+from pathlib import Path
 
 from pefc.pipeline.core import PackStep, PipelineContext
 from pefc.summary import build_summary

@@ -1,13 +1,14 @@
 from __future__ import annotations
-from pathlib import Path
-from typing import Any, Dict, List, Tuple, Optional
+
 import json
 import logging
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
 
-from pefc.metrics.types import RunRecord
-from pefc.metrics.engine import aggregate as aggregate_backend
 from pefc.events import get_event_bus
 from pefc.events import topics as E
+from pefc.metrics.engine import aggregate as aggregate_backend
+from pefc.metrics.types import RunRecord
 
 logger = logging.getLogger(__name__)
 
@@ -133,8 +134,9 @@ def _validate_schema_if_any(doc: Dict[str, Any], schema_path: Optional[Path]) ->
     if not schema_path:
         return
     try:
-        import fastjsonschema
         import json as _json
+
+        import fastjsonschema
     except Exception:
         logger.warning("schema validation skipped (fastjsonschema not available)")
         return

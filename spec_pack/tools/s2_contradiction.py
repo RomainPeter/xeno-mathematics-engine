@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 import json
-import time
 import os
 import subprocess
 import sys
+import time
 from datetime import datetime, timezone
 
 EVIDENCE = "spec_pack/samples/evidence.jsonl"
@@ -23,7 +23,7 @@ def load_jsonl(path):
     if not os.path.exists(path):
         return []
     with open(path, "r", encoding="utf-8") as f:
-        return [json.loads(l) for l in f if l.strip()]
+        return [json.loads(line) for line in f if line.strip()]
 
 
 def dump_jsonl(path, items):

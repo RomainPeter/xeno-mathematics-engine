@@ -1,15 +1,17 @@
-import os
 import json
-import time
+import os
 import shutil
+import time
+
 from dotenv import load_dotenv
-from proofengine.core.schemas import XState, PCAP, VJustification
-from proofengine.core.pcap import write_pcap, now_iso, merkle_of
-from proofengine.core.delta import compute_delta
-from proofengine.planner.meta import propose_plan
-from proofengine.generator.stochastic import propose_actions
+
 from proofengine.controller.obligations import ensure_tools, evaluate_all
 from proofengine.controller.patch import Workspace
+from proofengine.core.delta import compute_delta
+from proofengine.core.pcap import merkle_of, now_iso, write_pcap
+from proofengine.core.schemas import PCAP, VJustification, XState
+from proofengine.generator.stochastic import propose_actions
+from proofengine.planner.meta import propose_plan
 
 
 def jdump(path, obj):

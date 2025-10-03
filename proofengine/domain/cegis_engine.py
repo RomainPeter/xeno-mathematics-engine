@@ -5,22 +5,15 @@ Implements concurrent propose and verify with convergence testing.
 
 import asyncio
 import time
-from typing import Dict, Any, Optional, List
 from dataclasses import dataclass, field
 from enum import Enum
+from typing import Any, Dict, List, Optional
 
-from .types import (
-    Candidate,
-    Verdict,
-    Counterexample,
-    ComplianceResult,
-    CodeSnippet,
-    ComplianceStatus,
-    Proof,
-)
 from .proposer import ProposalEngine
+from .refiner import RefinementContext, RefinementEngine
+from .types import (Candidate, CodeSnippet, ComplianceResult, ComplianceStatus,
+                    Counterexample, Proof, Verdict)
 from .verifier import ComplianceVerifier, VerificationContext
-from .refiner import RefinementEngine, RefinementContext
 
 
 class CEGISMode(Enum):

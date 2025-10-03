@@ -5,14 +5,11 @@ Implements enhanced security guards with no-net and no-secrets policies
 to prevent data exfiltration and secret exposure.
 """
 
-from typing import Dict, List, Any
-from proofengine.orchestrator.strategy_api import (
-    Strategy,
-    RewritePlan,
-    RewriteOperation,
-    Guards,
-    StrategyContext,
-)
+from typing import Any, Dict, List
+
+from proofengine.orchestrator.strategy_api import (Guards, RewriteOperation,
+                                                   RewritePlan, Strategy,
+                                                   StrategyContext)
 
 
 class GuardBeforeStrategy(Strategy):
