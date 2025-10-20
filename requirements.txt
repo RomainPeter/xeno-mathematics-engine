@@ -212,7 +212,7 @@ rpds-py==0.27.1
     # via
     #   jsonschema
     #   referencing
-ruff==0.13.2
+ruff==0.14.1
     # via -r requirements.in
 shellingham==1.5.4
     # via typer
@@ -252,4 +252,3 @@ virtualenv==20.34.0
     # via pre-commit
 watchdog==6.0.0
     # via mkdocs
-fastjsonschema==2.18.0
