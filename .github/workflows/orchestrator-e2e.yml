@@ -28,7 +28,7 @@ jobs:
         run: |
           bash scripts/demo_orchestrator.sh
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: orchestrator-e2e-artifacts
           path: |
